@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/export.css">	
+	</head>
+	<body>
+		<div class="wrapBox">
+			<div class="proCont">
+				<div class="proContTop clearfix">
+					<div class="topTit l">
+						<span class="masterList">推广账号管理</span>
+						<span><em>&gt;</em>导出推广计划</span>
+					</div>
+					<div class="topRight r">
+						<a href="<?php echo U('System/promote/index', array('proid_id'=>$pro['proid']['proid_id']));?>" class="return">返回</a>
+					</div>
+				</div>
+				<form method="post" action="">
+					<div class="exproContMiddle">
+						<div class="proRow clearfix">
+							<div class="exLeft l"><i>&#42</i>推广账号:</div>
+							<div class="exRight l">
+								<option value="{$pro['proid']['proid_id']}">{$pro['proid']['accountname']}</option>
+							</div>
+						</div>
+						<div class="proRow clearfix" id="planselect">
+							<div class="exLeft l">推广计划:</div>
+							<div class="exRight l">
+								<select class="exSelect" name="pro_lev_ids">
+									<option value="0" selected="selected">请选择推广计划</option>
+									<foreach name = "pro['promoteList']" item = "promote">
+										<option value="{$promote['pro_lev_id']}">{$promote['name']}</option>
+									</foreach>
+								</select>
+							</div>
+						</div>
+						<div class="proRow clearfix" style="display: none;" id="planunitselect">
+							<div class="exLeft l">推广单元:</div>
+							<div class="exRight l">
+								<select class="exSelect" name="pro_lev_id">
+									<option value="0" selected="selected">请选择推广单元</option>
+								</select>
+							</div>
+						</div>
+						<div class="proRow clearfix">
+							<div class="exLeft l">关键词:</div>
+							<div class="exRight l">
+								<input type="text" class="exInp" name="keyword" value="">
+							</div>
+						</div>
+						<div class="proRow clearfix">
+							<div class="exLeft l">&nbsp;</div>
+							<div class="exRight l">
+								<input type="submit"  class="exSubmit" value="提交">
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/jquery.mousewheel.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script 'text/javascript'>
+			$('#planselect').find('.exSelect').change(function() {
+					$('#planunitselect').show();
+		            //获取node_id
+		           var pro_lev_id = $(this).val();
+
+		           $.ajax({
+		           		url:"<?php echo U('System/Promote/prolevPlanunitList');?>",
+		           		dataType:'json',
+		           		type:'post',
+		           		data:{pro_lev_id:pro_lev_id},
+		           		success:function(redata){
+		           			if(redata.code==0){
+		           				var str = '<option value="0" selected="selected">请选择推广计划单元</option>';
+		           				$.each(redata.data,function(n,value) {  
+		           					str+='<option value="'+value.pro_lev_id+'" >'+value.name+'</option>';
+		           				});
+		           				$('#planunitselect').find('.exSelect').html(str);
+		           			}
+		           		}
+		           });
+		        });
+		</script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+	</body>
+</html>

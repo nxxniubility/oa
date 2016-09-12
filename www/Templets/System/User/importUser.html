@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/external.min.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/importCustomer.css">	
+	</head>
+	<body>
+		<div class="wrapBox">
+			<div class="imCont">
+				<div class="proContTop clearfix">
+					<div class="topTit l">
+						<span class="masterList">客户列表</span>
+						<span><em>&gt;</em>导入客户</span>
+					</div>
+					<div class="topRight r">
+						<a href="{:U('System/User/importTemplateList/type/2')}" class="newPlan">设置导入模版</a>
+						<a href="{:U('System/User/userList')}" class="return">返回</a>
+					</div>
+				</div>
+				<div class="imMiddle clearfix">
+					<form method="post" action="{:U('System/User/importUser',array('system_user_id'=>$system_user_id))}" enctype="multipart/form-data" onsubmit="return check(this)">
+						<div class="imRow clearfix">
+							<div class="inRowLeft">操作说明：</div>
+							<div class="inRowRight">
+								<p class="pOne">
+									1、每次导入只能导入一种渠道的客户信息
+									<em>2、可上传的文件类型xls，xlsx</em>
+									<em>3、每一个Excel文件第一行必须设置表头字段，否则数据导入将会遗漏</em>
+								</p>
+							</div>
+						</div>
+						<div class="imRow clearfix">
+							<div class="inRowLeft"><i>&#42</i>选择客户模板：</div>
+							<div class="inRowRight">
+								<select class="imSelect" name="setpages_id">
+									<option selected="selected" value="">请选择模板</option>
+									<foreach name = "setPages" item = "page">
+										<option value="{$page['setpages_id']}">{$page['pagesname']}</option>
+									</foreach>
+								</select>
+							</div>
+						</div>
+						<div class="imRow clearfix">
+							<div class="inRowLeft"><i>&#42</i>选择文件：</div>
+							<div class="inRowRight">
+								<div class="imUploadBox" id="imUploadBox">
+									<span>上传文件</span>
+									<input type="file" name="file"  class="imUploadBtn"  onChange="var path=$(this).val();$('#uploadfile').val(path);$('#imUploadBox  p').html('已选文件：'+get_file_name(path));">
+                                   <input type="hidden" name="uploadfile"  id="uploadfile">
+                                    <br/>
+                                    <p   style="color:#f00;"></p>
+								</div>
+							</div>
+						</div>
+
+						<div class="imRow clearfix">
+							<div class="inRowLeft">&nbsp;</div>
+							<div class="inRowRight">
+								<input type="submit" class="imSubmit" value="提交">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>	
+		</div>
+		
+<!-- 		<div class="dn">
+			<div class="imLoading popup" id="popup1">
+				<div class="loadTips">正在导入，请稍等</div>
+			</div>
+		</div> -->
+		
+		<script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
+    	<script src="__PUBLIC__/js/jquery.lib.min.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+    	<!--<script src="__PUBLIC__/js/importCustomer.js"></script>-->
+    	<script type="text/javascript">
+			function getDate(tm){
+				var tt=new Date(parseInt(tm) * 1000).toLocaleString().replace(/\//g, "-").replace(/下午/g, " ").replace(/上午/g, " ");
+				return tt;
+			}    
+
+		 	function check(f){
+		        if( f.setpages_id.value == '' ){
+				    layer.msg('请选择模板,没有请添加',{icon:2});
+		            return false;
+		        }
+		    }
+		    function get_file_name(str)
+			{
+				var arr=str.split('\\');
+				return arr[arr.length-1];
+			   	
+			}
+		</script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+	</body>
+</html>

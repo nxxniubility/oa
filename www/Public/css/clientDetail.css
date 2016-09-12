@@ -1,0 +1,299 @@
+.wrapBox { padding: 0 20px; background: #fff;}
+.proCont { width: 1130px; margin-bottom: 40px;}
+.proContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.proContTop .topTit { line-height: 14px; font-size: 0; cursor: default;}
+.proContTop .topTit span { float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
+.proContTop .topTit span.masterList { color: #53b567; border-bottom: 2px solid #53b567;}
+.proContTop .topTit span em { margin: 0 4px;}
+.topRight { height: 55px; font-size: 0;}
+.topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
+.title{padding:0 0 20px 0;width:100%;float:left;color:#333333;}
+.red{color:#f00;}
+.tab{height:33px;float:left;width:100%;border:1px solid #DEDEDE;width:auto}
+.tab div{background:#efefef;width:208px;float:left;height:33px;line-height:33px;text-align:center;border-right:1px solid #DEDEDE;cursor:pointer;}
+.tab div:last-child{border:none;}
+.tab div.cur{background:#54B568;color:#fff;}
+.addContMiddle { padding: 40px; background: #fff;float:left;}
+.content{width:100%;float:left;display:none;}
+.content.active{display:block;}
+.content-child{width:100%;float:left;padding:10px;border-bottom:1px solid #EFEFEF;}
+.content .content-child:last-child{border-bottom:none;}
+.contenCol{width:349px;float:left;height:40px;line-height:40px;}
+.contenColLeft{width:120px;text-align:right;float:left;}
+.contenColRight{float:left;text-align:left;width:229px;overflow:hidden;}
+.contenColLeft i{color:#f00;}
+.w100{width:100%;}
+.w50{width:50%;}
+.auto{width:auto;}
+.colWidth2{width:698px;}
+.remark{width:900px;background:#F8F8F8;min-height:200px;padding:5px;line-height: 1.4;}
+.backrecord{width:900px;min-height:100px;padding:5px 5px 5px 9px;}
+.hauto{height:auto;}
+.listRight {
+  float: left;
+  margin-top:22px;
+  width:100%;
+}
+.list-l{float:left;}
+.list-r{float:left;margin-left:20px;border-left: 1px solid #ccc;padding-bottom:30px;}
+.listRight li {
+ min-height: 164px;
+}
+.listRight li.active i{background-position: 0 -12px;}
+.listRight li.active .wrBox2 {
+  border-color: #53b567;
+}
+.listRight li.active  .wrTriangle {
+  background-position: 0 -40px;
+}
+.listRight li.active  .wrBox2 .wrBox2Tit {
+  color: #53b567;
+}
+.listRight li.active  .wrBox2 .wrBox2Cont {
+  background: #53b567;
+}
+.listRight li.active  .wrBox2 .wrReason{
+	color:#fff;
+}
+.backTitle{font-weight:bold;padding:8px 0;}
+.backCon{height:auto;min-height:40px;margin-bottom:8px;}
+.listRight li .backTime{border-top:1px solid #ccc;padding:15px 0;}
+.listRight li.active .backTime{border-top:1px solid #fff;padding:15px 0;}
+.list-l img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: relative;
+  top: -35px;
+}
+.listRight ul {
+  margin-top: 38px;
+  padding-bottom: 8px;
+}
+.listRight li{float:left;width:100%;}
+.listRight li i {
+  float: left;
+  width: 18px;
+  height: 11px;
+  margin-left: -10px;
+  background: url(../images/adWithReview_01-01.png) no-repeat;
+  background-position: 0 0;
+}
+.listRight .wrBox2 {
+  position: relative;
+  top: -14px;
+  left: 22px;
+  float: left;
+  width: 768px;
+  min-height: 162px;
+  border: 1px solid #ccc;
+}
+.listRight .wrBox2 .wrTriangle {
+  position: absolute;
+  top: 10px;
+  left: -16px;
+  width: 18px;
+  height: 17px;
+  background: url(../images/adWithReview_01-01.png) no-repeat;
+  background-position: 0 -23px;
+}
+.listRight .wrBox2 .wrBox2Tit {
+  height: 40px;
+  line-height: 40px;
+  color: #333;
+  text-indent: 26px;
+}
+.wrBox2Tit div{width:200px;float:left;}
+.listRight .wrBox2 .wrBox2Cont {
+  padding-right: 25px;
+  background: #efefef;
+}
+.wrReason {
+  padding-top:7px;
+  padding-left: 26px;
+  color: #333;
+}
+.wrBox2Cont .wrReason p {
+  line-height: 14px;
+}
+.h20{height:20px;}
+.h162{height:162px;float:left;}
+.return.mr10{margin-right:20px;}
+.return.active{background:#54B568;color:#fff;border: 1px solid #54B568;}
+.contenColRight .input {
+  display: block;
+  width: 208px;
+  height: 28px;
+  line-height: 28px;
+  margin-right: 5px;
+  text-align: left;
+  text-indent: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  margin-top:8px;
+  float:left;
+}
+a.watch{background:#F7F7F7;width:208px;float:left;height:33px;line-height:33px;text-align:center;border:1px solid#CECECE;color:#A1A1A1;}
+select {
+  width: 208px;
+  height: 30px;
+  display: inline-block;
+  margin-top: 8px;
+  margin-right: 15px;
+  border: 1px solid #ddd;
+}
+.nsSubmit {
+  display: block;
+  width: 94px;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 10px;
+  color: #fff;
+  text-align: center;
+  border: none;
+  background: #53b567;
+  cursor: pointer;
+}
+.w50{width:60px!important;}
+.w80{width:80px!important;}
+.w120{width:140px!important;}
+.w300{width:300px!important;}
+.w310{width:310px!important;}
+.w380{width:380px!important;}
+.w563{width:558px!important;}
+.b-radio-wrapper {display: -moz-inline-stack;display: inline-block;zoom:1;margin-right:20px;cursor:pointer;}
+.b-radio-wrapper label{cursor:pointer;}
+a.b-radio {display: inline-block; background: url('../images/back-radio.png') no-repeat 0px 0px;vertical-align: middle;height: 14px;width: 14px;}
+a.b-radio-checked {background-position: -14px 0px;}
+.l-row {height: 20px;margin: 10px 0;line-height: 20px;}
+.hidden {display: none;}
+.mr0{margin-right:0!important;}
+
+/*=================================== 黄金分割线 ===================================*/
+.dn { display: none;}
+.reApplyBox { position: relative; width: 465px; height: auto; background: #fff;}
+.alBoxCont { width: 490px; margin: 0 auto; padding-top: 35px;}
+.alBoxCont .alRow { margin-bottom: 20px;}
+.alRow .alRowLeft, .alRow .alRowRight { float: left; line-height: 30px;}
+.alRow .alRowLeft { width: 103px; margin-right: 18px; text-align: right; color: #333;}
+.alRow .alRowLeft i { color: #d00202;}
+.alRow .alRowRight { color: #494949;}
+.alRow .alRowRight select, .alRow .alRowRight .alInp { text-indent: 12px; border: 1px solid #ccc; background: #fff;}
+.alRow .alRowRight select { width: 260px; height: 30px; line-height: 30px; color: #555;}
+.alRow .alRowRight .alInp { width: 258px; height: 28px; line-height: 28px; margin-top: -2px; text-indent: 16px;}
+.alRow .alRowRight label { float: left; width: 40px; height: 30px; margin-right: 50px; cursor: pointer;}
+.alRow .alRowRight .alRadio { width: 14px; height: 14px; vertical-align: middle;}
+.alRow .alRowRight span { color: #494949;}
+.alRow .alRowRight .reasonBox { width: 360px; height: 237px;}
+.alRow .alRowRight .reasonBox img { width: 100%; vertical-align: middle;}
+.alRow .alRowRight .alSubmit { display: block; width: 65px; height: 30px; line-height: 30px; font-size: 12px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
+
+.redemption { position: relative; width: 950px; height: 524px; background: #fff;}
+.rtCont { padding: 40px 30px 0 10px;}
+.rtCont .rtRow { margin-bottom: 20px;}
+.rtRow .rtRowLeft, .rtRow .rtRowRight { float: left; line-height: 30px; color: #333;}
+.rtRow .rtRowLeft { width: 82px; margin-right: 15px; text-align: right;}
+.rtRow .rtRowLeft i { margin-right: 4px; color: #d00202;}
+.returningWay, .rtBox1, .rtBox2 { float: left;}
+.returningWay { width: 160px; height: 30px; line-height: 30px; margin-right: 22px; border: 1px solid #ccc; background: #fff;}
+.rtBox1, .rtBox2 { height: 30px;}
+.rtBox1 { margin-right: 15px;}
+.rtBox1 label, .rtBox2 label { margin-right: 10px;}
+.rtBox1 label i, .rtBox2 label i { margin-right: 4px; color: #d00202;}
+.rtBox1 label, .rtBox1 select { float: left;}
+.rtBox1 select { width: 140px; height: 30px; line-height: 30px; border: 1px solid #ccc;}
+.rtBox2 .afTime, .reApplyBox .afTime, .tabTime .afTime { width: 138px; height: 28px; line-height: 28px; color: #a6a7a7; text-indent: 20px; border: 1px solid #ccc; background: #fff url(../images/datePicker.png) no-repeat 110px center;}
+.rtBox2 .afTime:focus, .reApplyBox .afTime:focus,  .tabTime .afTime:focus {border-color: #53b567; background: #fff url(../images/datePicker_click.png) no-repeat 110px center;}
+.rtBox2 label, .rtBox2 input, .rtBox2 span, .rtBox2 select { float: left;}
+.rtBox2 .rtInp { width: 128px; height: 28px; line-height: 28px; margin-right: 7px; color: #333; text-indent: 10px; border: 1px solid #ccc; background: #fff;}
+.rtBox2 .hourSelect, .rtBox2 .minuteSelect { width: 54px; height: 30px; line-height: 30px; color: #333; border: 1px solid #ccc; background: #fff;}
+.rtBox2 span { margin: 0 5px; color: #333;}
+.rtRowRight .rtEditor { display: block; width: 802px; height: 302px; vertical-align: middle;}
+.rtRowRight .rtSubmit { display: block; width: 65px; height: 30px; line-height: 30px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
+/*****************选择操作者弹框*********/
+.panel3>.panelConcent{ background-color: #fff; width:1000px; height:500px; }
+.panel3>.panelConcent>p{height: 40px; width: 930px; border-bottom: 1px solid #ccc;}
+.panel3>.panelConcent>p>span{font-size: 15px; color: #000; font-weight: bold; margin-left: 20px; line-height: 40px;}
+.panel3>.panelConcent>p>b{color: #ddd; margin-left: 780px; cursor: pointer;}
+.panel3>.panelConcent .div{width:95%; margin: 15px 2.5% 0px;}
+.panel3>.panelConcent .div select{width: 120px; height: 30px; float: left; margin-top: 13px; margin-right: 15px; border: 1px solid #ddd;}
+.panel3>.panelConcent .div input{width: 150px; height: 30px; float: left; margin-top: 13px; border: 1px solid #ddd; margin-right: 15px; color: #999; text-indent: 10px;}
+.panel3>.panelConcent .div button{width: 80px; line-height: 30px; float: left; margin-top: 13px; background-color: #53b567; font-size: 15px; color: #fff; border:none;}
+.panel3 .Capacity{width: 95%; height: 365px; margin: 20px auto 20px; font-size: 12px; border: 1px solid #e1e6eb; overflow-y: scroll;}
+.panel3 .overflow{overflow: hidden;}
+.panel3 .Capacity dl{border-bottom: 1px solid #e1e6eb;}
+.panel3 .Capacity dl.proTit{background: #f5f6fa;}
+.panel3 .Capacity dl:last-child{border-bottom: none;}
+.panel3 .Capacity dt, .Capacity dd{float: left; line-height: 43px; word-wrap: break-word; word-break: break-all;}
+.panel3 .Capacity dt{font-weight: bold; color: #717171;}
+.panel3 .Capacity dd{color: #696969;}
+/*.panel3 .Capacity .wOne{width: 10.6%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wTwo{width: 10.2%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wThr{width: 14%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wFou{width: 14%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wFiv{width: 14%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wSix{width: 14%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wSev{padding-left: 15px; font-weight: 500;}*/
+.panel3 .Capacity .wOne{width: 8.5%; padding-left: 0; text-indent: 10px; font-weight: 500;}
+.panel3 .Capacity .wTwo{width: 9.2%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wThr{width: 12.57%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wFou{width: 12.57%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wFiv{width: 12.57%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wSix {width: 12.57%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wSev {width: 12.56%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wEig {width: 12.56%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wNin {width: 6.9%;padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wNin i{display: inline-block; width: 45px; line-height: 28px; cursor: pointer; background-color: #53b567; text-align: center; color: #fff;}
+.panel3 .Capacity dl.proTit dt { line-height: 25px;}
+.panel3 .Capacity .proSequence  span{margin-left: 10px;}
+/*赎回弹窗‘下次回放’元素样式*/
+.pzTime input, .pzTime select, .pzTime span { float: left;}
+.pzTime input { margin-right: 10px;}
+.pzTime select { margin-top: 0;}
+.pzTime span { margin: 0 10px;}
+.alRow .alRowRight .reasonBox textarea { width: 355px; height: 162px; border: 1px solid #ccc; background: #fff; resize: none;}
+/*p*/
+.edui-default .edui-toolbar { line-height: 1.4;}
+.waytype, .wayResult { margin-top: 0;}
+.waytype { margin-left: 5px;}
+.tabTime .afTime, .tabTime select { margin-top: 5px;}
+.tabTime span, .tabTime select { float: left;}
+.tabTime span { margin: 0 5px;}
+.gldp-default .monyear select {width: auto;height:auto;margin-top: 0;margin-right: 0;}
+
+.huifang { margin-bottom: 20px;}
+.mb20 { margin-bottom: 20px;}
+.listRight ul { margin-top: 0; padding-top: 58px;}
+.limitDes { height: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+/*回访记录change*/
+.reWay, .results, .reTime { height: 30px; margin-bottom: 10px; padding-left: 40px;}
+.reWay .reTit, .reWay ol, .results .reTit, .results ol { float: left;}
+.reWay .reTit, .results .reTit { line-height: 30px; margin-right: 10px;}
+.reWay .reTit em, .results .reTit em { margin-right: 3px; color: #f00;}
+.reWay ol, .results ol { margin: 0; padding: 0;}
+.reWay li, .results li { float: left; width: 90px; height: 30px; line-height: 30px; min-height: 0; margin-right: 10px; color: #999; text-align: center; background: #eaeaea; cursor: pointer;}
+.reWay li:hover, .results li:hover { color: #fff; background: #53b567;}
+.reWay li.curr, .results li.curr { color: #fff; background: #53b567;}
+.reTime .contenColLeft { width: auto; line-height: 30px; margin-right: 13px;}
+.reTime .contenColRight { width: auto;}
+.reTime .tabTime .afTime, .reTime .tabTime select { margin-top: 0;}
+.tabTime span { line-height: 30px;}
+#submit3 { margin-left: 10px;}
+
+/*放弃*/
+#panel4 .alRow .alRowLeft, #panel4 .alRow .alRowRight { line-height: 15px;}
+#panel4 .alRow .alRowLeft.alGiveUp { line-height: 30px;}
+#panel4 .alRow .alRowRight select { margin-top: 0;}
+#panel4 .alRow .alRowRight textarea {width:354px;height: 116px;border: 1px solid #ccc; resize: none;}
+
+/*申请预报*/
+#panel2 .alRow .alRowRight select { margin-top: 0;}
+#panel2 .alRow  .forecastingTips { position: relative;}
+#panel2 .alRow  .forecastingTips span { position: absolute; top: 0; right: -100px; display: block; line-height: 30px; color: #a6a7a7;}
+
+/*系统信息-备注*/
+.applicationDetails .remark { margin-top: 10px; padding: 10px 0 0 15px; border: 1px solid #efefef;}
+
+/*修改*/
+.alRow .alRowRight .alSubmit {width:100px;}

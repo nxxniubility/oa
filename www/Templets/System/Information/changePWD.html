@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/personalInformation.css">
+	</head>
+	<body>
+		<div class="wrapBox" id="pwdWrap">
+			<div class="infoCont">
+				<div class="infoContTop clearfix">
+					<div class="topTit l">修改密码</div>
+					<div class="topRight r">
+					</div>
+				</div>
+				<div class="infoContMiddle clearfix">
+					<div class="changeRow clearfix">
+						<div class="middleLeft">用户名:</div>
+						<div class="middleRight">{$username}</div>
+					</div>
+					<div class="changeRow clearfix">
+						<div class="middleLeft">旧密码:</div>
+						<div class="middleRight">
+							<input type="password" class="changeInp" name="oldPassword">
+						</div>
+					</div>
+					<div class="changeRow clearfix">
+						<div class="middleLeft">新密码:</div>
+						<div class="middleRight">
+							<input type="password" class="changeInp" name="password">
+						</div>
+					</div>
+					<div class="changeRow clearfix">
+						<div class="middleLeft">重复新密码:</div>
+						<div class="middleRight">
+							<input type="password" class="changeInp" name="confirmPassword">
+						</div>
+					</div>
+					<div class="changeRow clearfix">
+						<div class="middleLeft">短信验证码:</div>
+						<div class="middleRight">
+							<input type="text" class="changeInp changeCodes" name="phoneverify" placeholder="请输入短信验证码">
+							<input type="button" class="changeObtain" value="获取验证码" id="getCode">
+							<input type="button" class="changeObtain" value="" id="countdown" style="display: none">
+						</div>
+					</div>
+					<div class="changeRow clearfix">
+						<div class="middleLeft">&nbsp;</div>
+						<div class="middleRight">
+							<input type="submit" value="提交" class="changeSubmit">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+
+		<script>
+			$(function(){
+				$('.changeSubmit').click(function(){
+					var data = {
+						oldPassword:$(':input[name="oldPassword"]').val(),
+						password:$(':input[name="password"]').val(),
+						confirmPassword:$(':input[name="confirmPassword"]').val(),
+						phoneverify:$(':input[name="phoneverify"]').val()
+					};
+					common_ajax(data);
+				});
+
+				/*点击验证码框事件*/
+				$('#getCode').click(function(){
+					var data = {
+						username:"{$username}",
+						smsType:'pwdEdit'
+					};
+					common_ajax(data,"{:U('System/Admin/randVerifyCode')}",'no',codeTime);
+				});
+			});
+
+			//配置定时器
+			function codeTime(){
+				var thisObj = $('#getCode');
+				var lodingObj = $('#countdown');
+				var sh;
+				var time = 60;
+				thisObj.hide();
+				lodingObj.show();
+				setInterval(codeInterval,1000);
+				function codeInterval(){
+					if(time!=0){
+						var str = '等待'+time+'秒';
+						lodingObj.val(str);
+						time = time-1;
+						return time;
+					}else{
+						thisObj.show();
+						lodingObj.hide();
+						clearInterval(sh);
+					}
+				}
+			}
+		</script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+	</body>
+</html>

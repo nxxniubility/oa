@@ -1,0 +1,126 @@
+.wrapBox { padding: 0 20px; background: #fff;}
+.proCont { width: 1130px; margin-bottom: 40px;}
+.proContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.proContTop .topTit { line-height: 14px; font-size: 0; cursor: default;}
+.proContTop .topTit span { float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
+.proContTop .topTit span.masterList { color: #53b567; border-bottom: 2px solid #53b567;}
+.proContTop .topTit span em { margin: 0 4px;}
+.topRight { height: 55px; font-size: 0;}
+.topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
+
+.tab{height:33px;float:left;width:1048px;border:1px solid #dedede;}
+.tab div{background:#efefef;width:261px;float:left;height:33px;line-height:33px;text-align:center;border-right:1px solid #DEDEDE;cursor:pointer;}
+/*.tab div:last-child{border:none;}*/
+.tab div.cur{background:#54B568;color:#fff;}
+.addContMiddle { padding: 40px; background: #fff;float:left;}
+.content{width:100%;float:left;display:none;}
+.content.active{display:block;}
+.content-child{width:100%;float:left;padding:10px 0 10px 0;border-bottom:1px solid #EFEFEF;}
+.content .content-child:last-child{border-bottom:none;}
+.contenCol{width:349px;float:left;height:40px;line-height:40px;}
+.contenColLeft{width:120px;text-align:right;float:left;}
+.contenColRight{float:left;text-align:left;width:229px;overflow:hidden;}
+.contenColLeft i{color:#f00;}
+.w100{width:100%;}
+.w50{width:50%;}
+.auto{width:auto;}
+.colWidth2{width:698px;}
+.remark{width:900px;background:#F8F8F8;min-height:200px;padding:5px;}
+.hauto{height:auto;}
+.listRight{float: left;margin-top: 22px;width: 100%;}
+.list-l{float: left;}
+.list-r{float: left;margin-left: 20px;border-left: 1px solid #ccc;padding-bottom: 30px;}
+.listRight li{min-height: 164px;}
+.listRight li.active i{background-position: 0 -12px;}
+.listRight li.active .wrBox2{border-color: #53b567;}
+.listRight li.active .wrTriangle{background-position: 0 -40px;}
+.listRight li.active .wrBox2 .wrBox2Tit{color: #53b567;}
+.listRight li.active .wrBox2 .wrBox2Cont{background: #53b567;}
+.listRight li.active .wrBox2 .wrReason{color: #fff;}
+.backTitle{font-weight: bold;padding: 8px 0;}
+.backCon{height: auto;min-height: 40px;}
+.listRight li .backTime{border-top: 1px solid #ccc;padding: 15px 0;}
+.listRight li.active .backTime{border-top: 1px solid #fff;padding: 15px 0;}
+.list-l img{width: 80px;height: 80px;border-radius: 50%;position: relative;top: -35px;}
+.listRight ul{margin-top: 38px;padding-bottom: 8px;}
+.listRight li{float: left;width: 100%;}
+.listRight li i{float: left;width: 18px;height: 11px;margin-left: -10px;background: url(../images/adWithReview_01-01.png) no-repeat;background-position: 0 0;}
+.listRight .wrBox2{position: relative;top: -14px;left: 22px;float: left;width: 768px;min-height: 162px;border: 1px solid #ccc;}
+.listRight .wrBox2 .wrTriangle{position: absolute;top: 10px;left: -16px;width: 18px;height: 17px;background: url(../images/adWithReview_01-01.png) no-repeat;background-position: 0 -23px;}
+.listRight .wrBox2 .wrBox2Tit{height: 40px;line-height: 40px;color: #333;text-indent: 26px;}
+.wrBox2Tit div{width: 200px;float: left;}
+.listRight .wrBox2 .wrBox2Cont{padding-right: 25px;background: #efefef;}
+.wrReason{padding-top: 7px;padding-left: 26px;color: #333;}
+.wrBox2Cont .wrReason p{line-height: 14px;}
+.h20{height: 20px;}
+.h162{height: 162px;float: left;}
+
+/*=================================== 黄金分割线 ===================================*/
+.dn { display: none;}
+.reApplyBox { position: relative; width: 565px; height: 550px; background: #fff;}
+.alBoxCont { width: 490px; margin: 0 auto; padding-top: 40px;}
+.alBoxCont .alRow { margin-bottom: 20px;}
+.alRow .alRowLeft, .alRow .alRowRight { float: left; line-height: 30px;}
+.alRow .alRowLeft { width: 103px; margin-right: 18px; text-align: right; color: #333;}
+.alRow .alRowLeft i { color: #d00202;}
+.alRow .alRowRight { color: #494949;}
+.alRow .alRowRight select, .alRow .alRowRight .alInp { text-indent: 12px; border: 1px solid #ccc; background: #fff;}
+.alRow .alRowRight select { width: 360px; height: 30px; line-height: 30px;}
+.alRow .alRowRight .alInp { width: 358px; height: 28px; line-height: 28px; margin-top: -2px;}
+.alRow .alRowRight label { float: left; width: 40px; height: 30px; margin-right: 50px; cursor: pointer;}
+.alRow .alRowRight .alRadio { width: 14px; height: 14px; vertical-align: middle;}
+.alRow .alRowRight span { color: #494949;}
+.alRow .alRowRight .reasonBox { width: 360px; height: 237px;}
+.alRow .alRowRight .reasonBox img { width: 100%; vertical-align: middle;}
+.alRow .alRowRight .alSubmit { display: block; width: 65px; height: 30px; line-height: 30px; font-size: 12px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
+
+.redemption { position: relative; width: 950px; height: 524px; background: #fff;}
+.rtCont { padding: 40px 30px 0 10px;}
+.rtCont .rtRow { margin-bottom: 20px;}
+.rtRow .rtRowLeft, .rtRow .rtRowRight { float: left; line-height: 30px; color: #333;}
+.rtRow .rtRowLeft { width: 82px; margin-right: 15px; text-align: right;}
+.rtRow .rtRowLeft i { margin-right: 4px; color: #d00202;}
+.returningWay, .rtBox1, .rtBox2 { float: left;}
+.returningWay { width: 160px; height: 30px; line-height: 30px; margin-right: 22px; border: 1px solid #ccc; background: #fff;}
+.rtBox1, .rtBox2 { height: 30px;}
+.rtBox1 { margin-right: 15px;}
+.rtBox1 label, .rtBox2 label { margin-right: 10px;}
+.rtBox1 label i, .rtBox2 label i { margin-right: 4px; color: #d00202;}
+.rtBox1 label, .rtBox1 select { float: left;}
+.rtBox1 select { width: 140px; height: 30px; line-height: 30px; border: 1px solid #ccc;}
+.rtBox2 .afTime{ width: 138px; height: 28px; line-height: 28px; color: #a6a7a7; text-indent: 20px; border: 1px solid #ccc; background: #fff url(../images/datePicker.png) no-repeat 110px center;}
+.rtBox2 .afTime:focus{border-color: #53b567; background: #fff url(../images/datePicker_click.png) no-repeat 110px center;}
+.rtBox2 label, .rtBox2 input, .rtBox2 span, .rtBox2 select { float: left;}
+.rtBox2 .rtInp { width: 128px; height: 28px; line-height: 28px; margin-right: 7px; color: #333; text-indent: 10px; border: 1px solid #ccc; background: #fff;}
+.rtBox2 .hourSelect, .rtBox2 .minuteSelect { width: 54px; height: 30px; line-height: 30px; color: #333; border: 1px solid #ccc; background: #fff;}
+.rtBox2 span { margin: 0 5px; color: #333;}
+.rtRowRight .rtEditor { display: block; width: 802px; height: 302px; vertical-align: middle;}
+.rtRowRight .rtSubmit { display: block; width: 65px; height: 30px; line-height: 30px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
+/*****************选择操作者弹框*********/
+.panel3{background-color:#ddd; width:100%; min-height: 200%; position: absolute; top: 00px; bottom: 0px; background-color: #000; filter: progid:DXImageTransform.Microsoft.Alpha(opacity=20); background-color:rgba(0,0,0,0.15); display:none ;}
+.panel3>.panelConcent{position: absolute; background-color: #fff; width:930px; height:650px; top:170px; left:13%; /*border: 8px solid rgba(0,0,0,0.6);*/ border: 8px solid #696969;}
+.panel3>.panelConcent>p{height: 40px; width: 930px; border-bottom: 1px solid #ccc;}
+.panel3>.panelConcent>p>span{font-size: 15px; color: #000; font-weight: bold; margin-left: 20px; line-height: 40px;}
+.panel3>.panelConcent>p>b{color: #ddd; margin-left: 780px; cursor: pointer;}
+.panel3>.panelConcent .div{width:100%; margin: 15px 45px 0px;}
+.panel3>.panelConcent .div select{width: 120px; height: 30px; display: inline-block; margin-top: 13px; margin-right: 15px; border: 1px solid #ddd;}
+.panel3>.panelConcent .div input{width: 150px; height: 30px; display: inline-block; border: 1px solid #ddd; margin-right: 15px; color: #ddd; text-indent: 10px;}
+.panel3>.panelConcent .div button{width: 80px; line-height: 30px; display: inline-block; background-color: #53b567; font-size: 15px; color: #fff; border:none;}
+.panel3 .Capacity{width: 90%; height: 500px; margin: 20px auto 20px; font-size: 12px; border: 1px solid #e1e6eb; overflow-y: scroll;}
+.panel3 .overflow{overflow: hidden;}
+.panel3 .Capacity dl{border-bottom: 1px solid #e1e6eb;}
+.panel3 .Capacity dl.proTit{background: #f5f6fa;}
+.panel3 .Capacity dl:last-child{border-bottom: none;}
+.panel3 .Capacity dt, .Capacity dd{float: left; line-height: 43px; word-wrap: break-word; word-break: break-all;}
+.panel3 .Capacity dt{font-weight: bold; color: #717171;}
+.panel3 .Capacity dd{color: #696969;}
+.panel3 .Capacity .wOne{width: 10.6%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wTwo{width: 10.2%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wThr{width: 14%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wFou{width: 14%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wFiv{width: 14%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wSix{width: 14%; padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wSev{padding-left: 15px; font-weight: 500;}
+.panel3 .Capacity .wSev i{display: inline-block; width: 45px; line-height: 28px; cursor: pointer; background-color: #53b567; text-align: center; color: #fff;}
+.panel3 .Capacity dl.proTit dt { line-height: 25px;}

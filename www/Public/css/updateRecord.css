@@ -1,0 +1,92 @@
+/**/
+.wrapBox{padding: 0 20px; background: #fff;}
+.proCont{width: 1130px; margin-bottom: 40px;}
+.proContTop{height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.proContTop .topTit{line-height: 14px; font-size: 0; cursor: default;}
+.proContTop .topTit span{float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
+.proContTop .topTit span.masterList{color: #53b567; border-bottom: 2px solid #53b567;}
+.proContTop .topTit span em{margin: 0 4px;}
+.topRight{height: 55px; font-size: 0;}
+.topRight .addPromotion, .topRight .batchEdit, .topRight .proImport, .topRight .proExport, .topRight .return{display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .addPromotion:hover, .topRight .batchEdit:hover, .topRight .proImport:hover, .topRight .proExport:hover, .topRight .return:hover{color: #fff; border-color: #53b567; background: #53b567;}
+.topRight .addPromotion, .topRight .batchEdit, .topRight .proImport, .topRight .proExport{margin-right: 20px;}
+/*.proContMiddle{width: 100%; margin: 20px auto 20px; font-size: 12px; border: 1px solid #e1e6eb;}
+.proContMiddle dl{border-bottom: 1px solid #e1e6eb;}
+.proContMiddle dl.proTit{background: #f5f6fa;}
+.proContMiddle dt, .proContMiddle dd{float: left; line-height: 43px; word-wrap: break-word; word-break: break-all;}
+.proContMiddle dt{font-weight: bold; color: #717171;}
+.proContMiddle dd,
+.proContMiddle dd a,
+.proContMiddle dd a:visited{color: #696969;}
+.proContMiddle .wOne{width: 17.6%; padding-left: 15px; font-weight: 500;}
+.proContMiddle .wTwo{width: 34.5%;}
+.proContMiddle .wThr{width: 23.8%;}
+.proContMiddle .wFou{width: 15%;}
+.proContMiddle .wFiv{width: 6%;}
+.proContMiddle .proSelect{display: inline-block; width: 40px; height: 40px;}
+.proContMiddle .proSelect i{display: inline-block; width: 12px; height: 6px; margin-left: 13px; background: url(../images/newSys_icon-01.png) no-repeat; background-position: 0 -60px;}
+.proContMiddle .proSelect:hover i{background-position: 0 -70px;}*/
+.otherOperation{position: relative; width: 0px; display: none;}
+.otherIcon{position: absolute; top: -9px; left: -36px; width: 110px; height: 88px; font-size: 12px; background: url(../images/promotion_list-08.png) no-repeat; cursor: pointer;}
+.otherIcon li:first-child{margin-top: 6px;}
+.otherIcon li{cursor: pointer; margin: auto; height: 40px; line-height: 40px; border-bottom: 1px solid #e7eaee; color: #767676;}
+.otherIcon li:last-child{border-bottom: none;}
+.otherIcon li:hover{background: #4dbe88;}
+.otherIcon li span, .otherIcon li em{display: inline-block;}
+.otherIcon li span{width: 21px; margin: 0 8px; vertical-align: sub; background: url(../images/promotion_list-02.png) no-repeat;}
+.otherIcon li span.setEdit{height: 18px; background-position: 0 -62px;}
+.otherIcon li span.setDel{height: 16px; background-position: 0 -101px;}
+.otherIcon li em{font-size: 14px; color: #3b3a48;}
+.otherIcon li:hover em{color: #fff;}
+.otherIcon li:hover span.setEdit{background-position: 0 -82px;}
+.otherIcon li:hover span.setDel{background-position: 0 -119px;}
+.fw{font-weight: 600}
+.hover:hover{background-color: #ebebeb}
+
+.collegaPage{line-height: 32px; margin: 22px 0; font-size: 12px; color: #9c9b9b; text-align: right;}
+.pageCount, .pageJump, .pageNum{display: inline-block; height: 30px;}
+.pageCount, .pageNum{margin-right: 20px;}
+.pageNum{font-size: 0; border: 1px solid #ccc; background: #fff;}
+.pageNum a, .pageNum span{display: inline-block; height: 30px; line-height: 30px; padding: 0 12px; font-size: 12px;}
+.pageNum a{color: #333;}
+.pageNum span{color: #999; cursor: pointer;}
+.pageNum span.current, .pageNum a:hover{color: #fff; background: #4dbe88;}
+.pageNum .pagination, .pageNum .returnFirst, .pageNum .returnNext, .pageNum .returnPrev{border-right: 1px solid #ccc;}
+.pageNum a.pageCurr{color: #fff; background: #4dbe88;}
+.pageJump{margin-right: 40px;}
+.jumpNum, .jumpBtn{display: inline-block; font-size: 12px; color: #333; text-align: center; border: 1px solid #ccc; background: #fff;}
+.jumpNum{width: 38px; height: 29px; margin-right: 10px;}
+.jumpBtn{width: 33px; height: 30px; line-height: 30px;}
+.first, .prev, .num, .next{border-right: 1px solid #ccc;}
+
+/*p*/
+.proContMiddle dl { min-height: 43px;}
+
+/*0906*/
+.wrapBox#updateWrap .proCont { width:auto;min-width:1130px;}
+
+.firNum span, .proListID{ float: left;}
+.updateOperation a, .updateOperation a:visited {color: #696969;}
+.proListID { display: inline-block; width: 20px; height: 43px; background: url(../images/promotion_list-01.png) no-repeat center; cursor: pointer;}
+.proSelect { display: inline-block; width: 40px; height: 40px;}
+.proSelect i{ display: inline-block; width: 12px; height: 6px; margin-left: 13px; background: url(../images/newSys_icon-01.png) no-repeat; background-position: 0 -60px;}
+.updateOperation:hover .proSelect i{background-position: 0 -70px;}
+
+.wrapBox#updateWrap .pageJump {margin-right:0;}
+
+/*列表*/
+#updateTable { width:100%;height:auto;margin:20px auto;font-size:12px;border:1px solid #e1e6eb;border-bottom:none;}
+#updateTable tr { height:43px;line-height:43px;}
+#updateTable th, #updateTable td { text-align:left;border-bottom:1px solid #e1e6eb;}
+#updateTable th { font-weight:700;color:#717171;background:#f5f6fa;}
+#updateTable th.firNum { text-indent:15px;}
+#updateTable tr:hover th { background:#f5f6fa;}
+
+#updateTable td, #updateTable td a { color:#696969;}
+#updateTable td { background:#fff;}
+#updateTable td.firNum { text-indent:15px;}
+#updateTable tr:hover td, #updateTable tr:hover td.firNum {background:#f5f6fa;}
+
+
+
+

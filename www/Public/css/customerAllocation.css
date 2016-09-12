@@ -1,0 +1,83 @@
+.clearfix:after, .clearfix:before { display: table; content: " ";}
+.clearfix:after { clear: both;}
+/**/
+.wrapBox { padding: 0 20px; background: #fff;}
+.proCont { width: 1130px; margin-bottom: 40px;}
+.proContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.proContTop .topTit { line-height: 14px; font-size: 0; cursor: default;}
+.proContTop .topTit span { float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
+.proContTop .topTit span.masterList { color: #53b567; border-bottom: 2px solid #53b567;}
+.proContTop .topTit span em { margin: 0 4px;}
+.topRight { height: 55px; font-size: 0;}
+.topRight .newPlan, .topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .newPlan:hover, .topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
+.topRight .newPlan { margin-right: 36px;}
+
+.setContList { width: 100%; margin: 20px auto;}
+/*没内容*/
+.nothings { margin-top: 44px;}
+.nothings p { line-height: 12px; font-size: 12px; color: #262626; text-align: center;}
+
+/*有内容*/
+.setContList { width: 100%; border: 1px solid #e1e6eb;}
+.setContList dl { font-size: 0; border-bottom: 1px solid #e1e6eb;}
+.setContList dl.setTit { background: #f5f6fa;}
+.setContList dl.on { background: #ebebeb;}
+.setContList dt, .setContList dd { display: inline-block; line-height: 43px; font-size: 12px;}
+.setContList dt { color: #999;}
+.setContList dd { color: #696969;}
+.setContList dl.setTit .wOne { text-indent: 16px;}
+.setContList dl .wOne { text-indent: 26px;}
+.setContList .wOne { width: 26.4%;}
+.setContList .wTwo { width: 30%;}
+.setContList .wThr { width: 33%;}
+.setContList .wFou { width: 10.4%;}
+.setContList dl.on dd.wThr { color: #53b567;}
+.setContList .proSelect { display: inline-block; width: 40px; height: 40px;}
+.setContList .proSelect i { display: inline-block; width: 12px; height: 6px; margin-left: 6px; background: url(../images/newSys_icon-01.png) no-repeat; background-position: 0 -60px;}
+.setContList .proSelect:hover i { background-position: 0 -70px;}
+.otherOperation { position: relative;width: 0px;display: none;}
+.triangle { background: rgba(0, 0, 0, 0) url("../images/organization_01-01.png") no-repeat scroll 0 0;height: 6px;left: 8px;position: absolute;top: -14px;width: 10px;z-index: 5;}
+.otherIcon { position: absolute; top: -9px; left: -44px; width: 110px; height: auto; font-size: 12px; border: 1px solid #53b567; background: #fff; /* background:  url(../images/promotion_list-08.png) no-repeat; */ cursor: pointer;}
+/* .otherIcon li:first-child{margin-top: 6px;} */
+.otherIcon li {cursor: pointer;margin: auto; height: 40px; line-height: 40px; border-bottom: 1px solid #e7eaee;color: #767676;}
+.otherIcon li:last-child { border-bottom: none;}
+.otherIcon li:hover {background: #4dbe88;}
+.otherIcon li span, .otherIcon li em { display: inline-block;}
+.otherIcon li span { width: 21px; margin: 0 8px; vertical-align: sub; background: url(../images/promotion_list-02.png) no-repeat;}
+.otherIcon li span.setEdit { height: 18px; background-position: 0 -62px;}
+.otherIcon li span.setDel { height: 16px; background-position: 0 -101px;}
+.otherIcon li em { font-size: 14px; color: #3b3a48;}
+.otherIcon li:hover em { color: #fff;}
+.otherIcon li:hover span.setEdit { background-position: 0 -82px;}
+.otherIcon li:hover span.setDel { background-position: 0 -119px;}
+
+/*============================================ 黄金分割线  ============================================*/
+.newTemplate { position: relative; display: none; height: 497px; border: 8px solid #7a7a7a; background: #fff;}
+.setTop { height: 40px; line-height: 40px; border-bottom: 1px solid #ccc;}
+.setTop span { float: left; padding: 0 20px; font-weight: bold; color: #333;}
+.setTop .setClose { float: right; width: 40px; height: 40px; background: url(../images/promotion_list-04.png) no-repeat center center; cursor: pointer;}
+.newMiddle { margin-top: 40px;}
+.newRow { margin-bottom: 30px;}
+.newRow .newLeft, .newRow .newRight { line-height: 30px; color: #333;}
+.newRow .newLeft { width: 120px; height: 30px; margin-right: 20px; text-align: right;}
+.newRow .newLeft i { margin-right: 4px; color: #d00202;}
+.newRow .newRight .newIpn { width: 378px; height: 28px; line-height: 28px; text-indent: 10px; border: 1px solid #ccc; background: #fff;}
+.newRow .newRight .newIpn:focus, .newRight .newSelect:focus { border-color: #53b567;}
+.newRight .newSelect { width: 380px; height: 30px; line-height: 30px; font-size: 12px; color: #555; text-indent: 10px; border: 1px solid #ccc; background: #fff;}
+.newRight .headForm { width: 350px; height: 138px; padding: 14px; border: 1px solid #ccc;}
+.newRight .headForm li { float: left; margin-right: 30px; margin-bottom: 22px; color: #333; overflow: hidden;}
+.newRight .headForm li.mr0 { margin-right: 0;}
+.newRight .headForm li:last-child { margin-bottom: 0;}
+.newRight .headForm li .formInp { width: 60px; height: 28px; line-height: 28px; text-align: center; border: 1px solid #ccc; background: #fff;}
+.newRight .headForm li .formInp:focus { border-color: #53b567;}
+.newRight .headForm li span { float: left; width: 85px; height: 14px; line-height: 14px; margin-top: 15px; margin-left: 10px; overflow: hidden;}
+.newRight .newTips { line-height: 12px; font-size: 12px; color: #d00202;}
+.tipsRow { margin-bottom: 10px;}
+.newFont { font-size: 0;}
+.newRight .setSubmit, .newRight .setCancel { display: inline-block; width: 100px; height: 30px; line-height: 30px; font-size: 14px; color: #fff; text-align: center;}
+.newRight .setSubmit { margin-right: 40px; border: none; background: #53b567;}
+.newRight .setCancel { background: #dbdddc;}
+
+/*============================================ 黄金分割线  ============================================*/
+.pageJump { margin: 0;}

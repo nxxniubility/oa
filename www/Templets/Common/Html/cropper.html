@@ -1,0 +1,88 @@
+<!-- 投递简历弹出框1 工作地址不符提示 S -->
+<link rel="stylesheet" href="__PUBLIC__/js/cropper/cropper_box.css" />
+<div class="cropperBoxOne" id="cropperBoxOne">
+    <div class="do_tit clearfix">
+        <span>图片裁剪</span>
+        <i></i>
+    </div>
+    <div class="do_cont">
+        <div class="do_cont_box">
+           
+            <div class="do_container">
+                <img  src=""  id="cut_img" />           
+            
+            </div>
+            <div class="do_btns">
+                <a href="javascript:;" class="do_confirm"  data-cut-img=""> 确定 </a>
+                <a href="javascript:;" class="do_cancel"> 取消 </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="__PUBLIC__/js/cropper/cropper.min.css" />
+<script type="text/javascript" src="__PUBLIC__/js/cropper/cropper.min.js" ></script>
+<script type="text/javascript">
+
+var  cropper_hander={};
+//  投递简历弹出框2 选择投递简历
+$('.cropperBoxOne .do_confirm').on('click',function(){		
+	$(".cropperBoxOne").hide();	
+	$img_style=$(this).attr('data-cut-img');	
+	var data=cropper_hander.img.data('cropper');
+	cropper_hander.callback(parseInt(data.x)+'-'+parseInt(data.y)+'-'+parseInt(data.width)+'-'+parseInt(data.height)+"a")
+	
+});
+$('.cropperBoxOne .do_tit  i').on('click',function(){		
+	$(".cropperBoxOne").hide();		
+});
+$('.cropperBoxOne .do_cancel').on('click',function(){		
+	$(".cropperBoxOne").hide();		
+});
+function cropper_box_show(img_src,opt,func)//调用裁剪框
+{	
+    
+    cropper_box_position();
+	cropper_hander.img=$(".cropperBoxOne #cut_img");
+	cropper_hander.img.attr("src",img_src);
+	
+	//cropper_hander.img.cropper
+	//if($(".cropper-container img").length>0){
+		//$(".cropper-container img").attr("src",img_src+'?v'+Math.random());
+		//$(".cropper-crop-box img").attr("src",img_src+'?v'+Math.random());
+	//}
+	
+	
+	$(".cropperBoxOne").show();
+	opt1={
+		 aspectRatio: 1,
+		 strict:true,
+		 crop: function(data) {
+				// 出来裁切后的图片数据
+				cropper_hander.img.data('cropper',data);
+		 },
+		 
+	};
+	opt2=$.extend({},opt1,opt);		
+	cropper_hander.cropper=cropper_hander.img.cropper( opt2 );
+	cropper_hander.callback=func;
+	
+}
+
+$(window).resize(function(){	
+	cropper_box_position();	
+});
+
+var cropper_box_position=function(){
+    var def1=$(window).height()-$('#cropperBoxOne').outerHeight();
+	var def2=$(window).width()-$('#cropperBoxOne').outerWidth();
+	if(def1<0)def1=0;
+	if(def2<0)def2=0;
+   	$('#cropperBoxOne').css('top',$(document).scrollTop()+def1/2+'px');
+	$('#cropperBoxOne').css('left',$(document).scrollLeft()+def2/2+'px');	
+}
+$(document).scroll(function(e) {
+    cropper_box_position();
+});
+
+</script>

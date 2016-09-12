@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/ImportClient.css">	
+	</head>
+	<style>
+		.wTwo{ width: 25.5% !important;}
+		.wFou{ width: 15% !important;}
+	</style>
+	<body>
+		<div class="wrapBox">
+			<div class="imCont">
+				<div class="imContTop clearfix">
+					<div class="proContTop clearfix">
+						<div class="topTit l">
+							<span class="masterList">推广计划列表</span>
+							<span><em>&gt;</em>导入推广计划 </span>
+						</div>
+						<div class="topRight r">
+							<a href="{:U('System/Proid/addSetTemplate')}" class="newPlan">添加新模板</a>
+							<a href="{:U('System/Proid/index', array('proid_id'=>$proid_id))}" class="return">返回</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="toggle">
+					<div class="tLeft">
+						导入成功数据
+					</div>
+
+					<div class="tRight">
+						导入失败数据
+					</div>
+				</div>
+				<div class="win">
+					<div class="info">
+						<div class="infoLeft">
+							导入推广计划成功数据: <span>{$successCount}</span>条
+						</div>
+						<!-- <a href="javascript:;" class="infoRight">
+							下载成功数据表
+						</a> -->
+					</div>
+
+					<div class="atList">
+						<dl class="setTit clearfix">
+							<dt class="wOne">编号</dt>
+							<dt class="wTwo">计划</dt>
+							<dt class="wTwo">单元</dt>
+							<dt class="wFou">关键字</dt>
+						</dl>
+						<foreach name = "success" item = "succ" key="k">
+							<dl class="clearfix">
+								<dd class="wOne">{$k}</dd>
+								<dd class="wTwo">{$succ['plan']}</dd>
+								<dd class="wTwo">{$succ['planunit']}</dd>
+								<dd class="wFou">{$succ['keyword']}</dd>
+							</dl>
+						</foreach>
+					</div>			
+				</div>
+
+				<div class="lost">
+
+					<div class="info">
+						<div class="infoLeft">
+							导入推广计划失败数据: <span>{$faileCount}</span>条
+						</div>
+						<!-- <a href="javascript:;" class="infoRight">
+							下载失败数据表
+						</a> -->
+					</div>
+					<div class="atList">
+						<dl class="setTit clearfix">
+							<dt class="wOne">编号</dt>
+							<dt class="wTwo">计划</dt>
+							<dt class="wThr">单元</dt>
+							<dt class="wFou">关键字</dt>
+							<dt class="wFou">失败原因</dt>
+						</dl>
+						<foreach name = "faile" item = "succ" key="k">
+							<dl class="clearfix">
+								<dd class="wOne">{$k}</dd>
+								<dd class="wTwo">{$succ['plan']}</dd>
+								<dd class="wThr">{$succ['planunit']}</dd>
+								<dd class="wFou">{$succ['keyword']}</dd>
+								<dd class="wFou">{$succ['msg']}</dd>
+							</dl>
+						</foreach>
+					</div>
+				</div>
+
+
+
+				</div>
+			</div>
+		
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+    	<script src="__PUBLIC__/js/ImportClient.js"></script>
+	</body>
+</html>
