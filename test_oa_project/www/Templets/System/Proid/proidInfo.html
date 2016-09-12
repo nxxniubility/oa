@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/desPromotion.css">
+	</head>
+	<body>
+		<div class="wrapBox" id="proInfoWrap">
+			<div class="proCont">
+				<div class="proContTop clearfix">
+					<div class="topTit l">
+						<span class="masterList">推广账号管理</span>
+						<span><em>&gt;</em>推广账号详情 </span>
+					</div>
+					<div class="topRight r">
+						<a href="<?php echo U('System/Proid/id') ?>" class="return">返回</a>
+					</div>
+				</div>
+				<div class="addContMiddle">
+					<form method="post" action="{:U('System/Proid/proidInfo',array('proid_id'=>$proid_id))}">
+						<div class="addRow clearfix">
+							<div class="addRowLeft">推广账户:</div>
+							<div class="addRowRight">{$proInfo['accountname']}</div>
+						</div>
+						<div class="addRow clearfix">
+							<div class="addRowLeft">所属渠道:</div>
+							<div class="addRowRight">{$proInfo['channelName']}</div>
+						</div>
+						<div class="addRow clearfix">
+							<div class="addRowLeft">域名:</div>
+							<div class="addRowRight">{$proInfo['domain']}</div>
+						</div>
+						<div class="addRow clearfix">
+							<div class="addRowLeft">统计代码:</div>
+							<div class="addRowRight detailTongji">
+								<p>
+									{$proInfo['totalcode']}
+								</p>	
+							</div>
+						</div>
+						<div class="addRow clearfix">
+							<div class="addRowLeft">PC客服代码:</div>
+							<div class="addRowRight">{$proInfo['pcservice']}</div>
+						</div>
+						<div class="addRow clearfix">
+							<div class="addRowLeft">移动客服代码:</div>
+							<div class="addRowRight">{$proInfo['mservice']}</div>
+						</div>
+						<div class="addRow clearfix">
+							<div class="addRowLeft">离线宝PC代码:</div>
+							<div class="addRowRight detailTongji">
+								<p>
+									{$proInfo['pcoffcode']}
+								</p>	
+							</div>
+						</div>
+						<div class="addRow clearfix">
+							<div class="addRowLeft">离线宝移动代码:</div>
+							<div class="addRowRight detailTongji">
+								<p>
+									{$proInfo['moffcode']}
+								</p>	
+							</div>
+						</div>
+						<div class="addRow clearfix">
+							<div class="addRowLeft">备注:</div>
+							<div class="addRowRight">{$proInfo['remark']}</div>
+						</div>
+						<div class="addRow clearfix">
+							<div class="addRowLeft"></div>
+							<div class="addRowRight">
+								<a href="<?php echo U('System/Proid/id') ?>" class="submitBtn" >返回</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

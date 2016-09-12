@@ -1,0 +1,3 @@
+<?php
+//000000072000a:2:{s:4:"code";s:1:"0";s:4:"data";a:1:{i:0;a:18:{s:14:"system_user_id";s:5:"53236";s:8:"username";s:16:"lmRpk5yXY3FlapY=";s:8:"realname";s:9:"简历哥";s:4:"face";s:0:"";s:5:"email";s:24:"qin_jian@zelinonline.com";s:3:"sex";s:1:"1";s:8:"check_id";s:1:"1";s:10:"isuserinfo";s:1:"1";s:8:"usertype";s:2:"50";s:9:"logintime";s:10:"1466844379";s:7:"loginip";s:14:"183.15.243.198";s:7:"zone_id";s:1:"6";s:9:"zonelevel";s:1:"3";s:8:"zonename";s:6:"深圳";s:10:"createtime";s:10:"1447122024";s:8:"createip";s:14:"183.14.149.213";s:14:"engaged_status";s:1:"2";s:10:"role_names";s:22:"邀约部/邀约主管";}}}
+?>

@@ -1,0 +1,25 @@
+<div class="link">
+    <div class="l">{$controllername}&nbsp;&nbsp;&gt;&nbsp;&nbsp;{$actionname}</div>
+    <div class="r">
+
+        <foreach name="btn" item="btn">
+        <div class="btn mt20 mr10 l"><a href="{$btn.url}" title="{$btn.text}">{$btn.text}</a></div>
+        </foreach>
+         <!--<div class="btn mt20 mr10 l"></div>-->
+         <!-- <div class="return mt20 l">返回</div>-->
+    </div>
+</div>
+<div class="content_title">
+    <ul class="title_list l">
+        <foreach name="titlelist" item="title">
+            <li
+            <if condition="$key eq $status">class="on"</if>
+            >
+            <if condition="$title.titleurl neq ''"><a href="{$title.titleurl}"></if>
+            {$title.titlename}
+            <if condition="$title.titleurl neq ''"></a></if>
+            </li>
+        </foreach>
+    </ul>
+
+</div>

@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>模板详情页-泽林在线教育平台</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css"/>
+    <link rel="stylesheet" href="__PUBLIC__/css/main.css" />
+    <link rel="stylesheet" href="__PUBLIC__/css/external.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/templateList.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/datepicker/jquery-ui.css"/>
+</head>
+
+<body>
+
+<div class="wrapBox body-templateList">
+    <div class="proCont2">
+        <div class="proContTop clearfix">
+            <div class="topTit l">
+                <span class="masterList">专题页列表</span>
+                <span><em>&gt;</em>专题页详情 </span>
+            </div>
+            <div class="topRight r">
+                <a href="{$data['url_pages']}" id="addTemplate" class="addAccount">返回</a>
+            </div>
+        </div>
+        <div class="templateList desTplist">
+            <div class="detailPro" style="display: block;">
+                <p class="p1">
+                    <img src="{$data['pagesInfo']['litpic']}" width="100%">
+                </p>
+                <p class="p2">
+                </p>
+                <p class="p3">创建时间：{:date('Y-m-d H:i:s',$data['pagesInfo']['createtime'])}</p>
+                <foreach name="data['pagesType']" item="v" key="k">
+                    <if condition="$v['pagestype_id'] eq $data['pagesInfo']['pagestype_id']">
+                        <p class="p3">模板分类：{$v.typename}</p>
+                    </if>
+                </foreach>
+                <p class="p3 h30">
+                    <a target="_blank" href="{:U('home/propage/preview',array('pages_id'=>$data['pagesInfo']['pages_id']))}">预览模板</a>
+                </p>
+                <p class="p4 b1">信息转化率：0%</p>
+                <p class="p4 m20 b2">预报率：0%</p>
+                <p class="p4 m20 b3">访问：0</p>
+            </div>
+            <div class="content_title">
+                <ul class="title_list desLi l">
+                    <li class="on" style="border-top: 2px solid #53b567;">
+                        	推广链接详情
+                    </li>
+                </ul>
+            </div>
+            <form method="get" action="">
+                <div class="search">
+                    <div class="l">
+                        <form method="get" action="">
+                            <!--<select class="searchSelect l" name="terminal_id">-->
+                                <!--<option value="" selected="selected">所属终端</option>-->
+                                <!--<foreach name="data['terminalAll']" item="v" key="k" >-->
+                                    <!--<option value="{$v.terminal_id}">{$v.terminalname}</option>-->
+                                <!--</foreach>-->
+                            <!--</select>-->
+                            <select class="searchSelect l" name="channel_id">
+                                <option value="" selected="selected">推广渠道</option>
+                                <foreach name = "data['channel']['data']" item = "channel">
+                                    <option value="{$channel['channel_id']}">{$channel['channelname']}</option>
+                                    <if condition="!empty($channel['children'])">
+                                        <foreach name = "channel['children']" item = "channel2">
+                                            <option value="{$channel2['channel_id']}">&nbsp;&nbsp;├─ {$channel2['channelname']}</option>
+                                        </foreach>
+                                    </if>
+                                </foreach>
+                            </select>
+                            <input type="submit" class="searchSearch2" value="搜索">
+                        </form>
+                    </div>
+                </div>
+            </form>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table  tl">
+                <tbody>
+                <tr class="table_title">
+                    <td>标题</td>
+                    <td>所属用户</td>
+                    <td>推广渠道</td>
+                    <td>关键词</td>
+                    <td>总访问</td>
+                    <td>信息转化率</td>
+                    <td>预报转化率</td>
+                </tr>
+                <foreach name="data['promoteList']['data']" item="v" key="k">
+                    <tr class="table_content">
+                        <td>{$v.plan}</td>
+                        <td>{$v.realname}</td>
+                        <td>{$v.channelname}</td>
+                        <td>{$v.keyword} </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                        <td> -- </td>
+                    </tr>
+                </foreach>
+                </tbody>
+            </table>
+            <div class='collegaPage clearfix'>
+                {$data['paging']}
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

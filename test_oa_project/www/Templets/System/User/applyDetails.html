@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/external.min.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/applyDetails.css">
+	</head>
+	<body>
+		<div class="wrapBox">
+			<div class="proCont">
+				<div class="proContTop clearfix">
+					<div class="topTit l">
+						<span class="masterList">申请转入列表</span>
+						<span><em>&gt;</em>申请详情</span>
+					</div>
+					<div class="topRight r">
+						<if condition="($applyUserDetails[0][applystatus] eq 20) and ($applyUserDetails[0][reapply] eq 1) " >
+							<if condition="($data['canReApply'] eq 1)" >
+								<a href="javascript:;" class="newPlan" id="reApply">重新申请转入客户</a>
+							</if>
+						</if>
+						<a href="javascript:history.go(-1);" class="return">返回</a>
+					</div>
+				</div>
+				<div class="adWithReviewCont">
+					<div class="wrTopInfo">
+						<table cellpadding="0" cellspacing="0">
+							<tr class="oneTr">
+								<td>
+									<label>真实姓名：</label>
+									<span>{$applyUserDetails[0].realname}</span>
+								</td>
+								<td>
+									<label><i>&#42</i>手机号码：</label>
+									<span>{$applyUserDetails[0].username}</span>
+								</td>
+								<td>
+									<label>固定电话：</label>
+									<span>{$applyUserDetails[0].tel}</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label>QQ：</label>
+									<span>{$applyUserDetails[0].qq}</span>
+								</td>
+								<td>
+									<label>邮箱：</label>
+									<span>{$applyUserDetails[0].email}</span>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="wrTopInfo">
+						<table cellpadding="0" cellspacing="0">
+							<tr class="oneTr">
+								<td>
+									<label><i>&#42</i>所属渠道：</label>
+									<span>{$applyUserDetails[0].channelname}</span>
+								</td>
+								<td>
+									<label>搜索词：</label>
+									<span>{$applyUserDetails[0].searchword}</span>
+								</td>
+								<td></td>
+							</tr>
+							<tr>
+								<!--<td>
+									<label>咨询页面：</label>
+									<span>{$applyUserDetails[0].interviewurl}</span>
+								</td>-->
+								<table class="zixun">
+									<tr>
+										<td>
+											<label>咨询页面：</label>
+											<span>{$applyUserDetails[0].interviewurl}</span>
+										</td>
+									</tr>
+								</table>
+							</tr>
+						</table>
+					</div>
+					<div class="wrTopInfo">
+						<table cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<label><i>&#42</i>信息质量：</label>
+									<span>{$applyUserDetails[0].infoquality}</span>
+								</td>
+								<td>
+									<label>意向课程：</label>
+									<span>{$applyUserDetails[0].coursename}</span>
+								</td>
+								<td></td>
+							</tr>
+						</table>
+					</div>
+					<div class="wrTopInfo">
+						<table cellpadding="0" cellspacing="0">
+							<tr>
+								<!-- 是否是转介绍： 是 -->
+								<td>
+									<label>转介绍：</label>
+									<span>{:$applyUserDetails[0][introducermobile] ? '是' : '否'  }</span>
+								</td>
+								<td>
+									<label><i>&#42</i>转介绍人手机：</label>
+									<span>{$applyUserDetails[0].introducermobile}</span>
+								</td>
+								<td></td>
+							</tr>
+						</table>
+					</div>
+					<div class="wrListBox clearfix">
+						<div class="listRight">
+							<ul class="clearfix">
+								<li>
+									<if condition = "!empty($applyUserDetails[0][apply_face])">
+										<img src="{$applyUserDetails[0][apply_face]}">
+									<elseif condition="$applyUserDetails[0][apply_sex] eq 1"/>
+										<img src="__PUBLIC__/images/personalInfo_01-02.jpg">
+									<else/>
+										<img src="__PUBLIC__/images/personalInfo_01-01.jpg">
+									</if>
+									<i></i>
+									<div class="wrBox2">
+										<div class="wrTriangle"></div>
+										<div class="wrBox2Tit">
+											<span style="margin-right: 84px;">申请者：{$applyUserDetails[0].apply_realname}</span>
+											<span>申请时间：{$applyUserDetails[0].applytime|date='Y-m-d H:i:s',###}</span>
+										</div>
+										<div class="wrBox2Cont">
+											<div class="wrReason">
+												<p><span>&#42</span>申请理由：</p>
+												<p>{$applyUserDetails[0].applyreason|htmlspecialchars_decode}</p>
+											</div>
+										</div>
+									</div>
+								</li>
+
+								<li {:$applyUserDetails[0][applystatus]==30?'class="by"':''}>
+									<if condition = "($applyUserDetails[0][applystatus] neq 10)">
+										<if condition = "!empty($applyUserDetails[0][auditor_face])">
+											<img src="{$applyUserDetails[0][auditor_face]}">
+										<elseif condition="$applyUserDetails[0][auditor_sex] eq 1"/>
+											<img src="__PUBLIC__/images/personalInfo_01-02.jpg">
+										<else/>
+											<img src="__PUBLIC__/images/personalInfo_01-01.jpg">
+										</if>
+									</if>
+									<i></i>
+									<div class="wrBox2">
+										<div class="wrTriangle"></div>
+										<div class="wrBox2Tit">
+											<span {:$applyUserDetails[0][applystatus]!=30?'style="margin-right: 84px;"':''}>审核转入：{$applyUserDetails[0].status2}</span>
+											<if condition = "($applyUserDetails[0][applystatus] neq 10)">
+												<span {:$applyUserDetails[0][applystatus]!=30?'style="margin-right: 84px;"':''}>审核者：{$applyUserDetails[0].auditor_realname}</span>
+												<span>审核时间：{$applyUserDetails[0].auditortime|date='Y-m-d H:i:s',###}</span>
+											</if>
+										</div>
+										<div class="wrBox2Cont">
+											<div class="wrReason">
+												<if condition = "($applyUserDetails[0][applystatus] neq 10)">
+													{$applyUserDetails[0].auditorreason|htmlspecialchars_decode}
+												<else/>
+													您的申請正在急速审核中,请耐心等待！
+												</if>
+											</div>
+										</div>
+									</div>
+								</li>
+
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="dn">
+			<!-- 可以重新申请转入客户 S -->
+			<div class="reApplyBox popup" id="popup1">
+					<div class="alBoxCont">
+						<div class="alRow clearfix">
+							<div class="alRowLeft"><i>&#42</i>所属渠道:</div>
+							<div class="alRowRight">
+								<select class="atChannelSelect" naatChannelSelectme="key" name="atChannelSelect">
+									<option value="0" selected="selected">--全部渠道--</option>
+									<foreach name="data['channel']['data']" item="v" key="k">
+										<option value="{$v['channel_id']}">{$v.channelname}</option>
+										<if condition="!empty($v['children'])">
+											<foreach name = "v['children']" item = "v2">
+												<option value="{$v2['channel_id']}">&nbsp;&nbsp;├─ {$v2['channelname']}</option>
+											</foreach>
+										</if>
+									</foreach>
+								</select>
+							</div>
+						</div>
+						<div class="alRow clearfix">
+							<div class="alRowLeft">搜索词:</div>
+							<div class="alRowRight">
+								<input type="text" class="alInp" name="searchWord">
+							</div>
+						</div>
+						<div class="alRow clearfix">
+							<div class="alRowLeft">咨询页面:</div>
+							<div class="alRowRight">
+								<input type="text" class="alInp"  name="consultPage">
+							</div>
+						</div>
+						<div class="alRow clearfix">
+							<div class="alRowLeft">转介绍:</div>
+							<div class="alRowRight singleBox">
+								<label for="alCorrect">
+									<input type="radio" value="1" class="alRadio" id="alCorrect" name="alWhether" checked="checked">
+									<span>是</span>
+								</label>
+								<label for="alWrong">
+									<input type="radio" value="0" class="alRadio" id="alWrong" name="alWhether">
+									<span>否</span>
+								</label>
+							</div>
+						</div>
+						<div class="alRow clearfix">
+							<div class="alRowLeft"><i>&#42</i>转介绍人手机:</div>
+							<div class="alRowRight">
+								<input type="tel" class="alInp" name="recommendMan">
+							</div>
+						</div>
+						<div class="alRow clearfix">
+							<div class="alRowLeft"><i>&#42</i>申请理由:</div>
+							<div class="alRowRight">
+								<div class="reasonBox">
+									<textarea name="apply_applyreason" cols="30" rows="10" class="reasonTxt"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="alRow clearfix">
+							<div class="alRowLeft">&nbsp;</div>
+							<div class="alRowRight">
+								<input type="submit" class="alSubmit" value="提交申请">
+							</div>
+						</div>
+					</div>
+			</div>
+			<!-- 可以重新申请转入客户 E -->
+			<!-- 不能重新申请传入客户 S -->
+			<div class="notApply popup" id="popup2">
+				<span>当前客户已经归属某位同事，不可申请转入</span>
+				<input type="button" class="naEtermine" value="确定">
+			</div>
+			<!-- 不能重新申请传入客户 E -->
+		</div>
+
+		<script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
+		<script src="__PUBLIC__/js/jquery.lib.min.js"></script>
+		<script src="__PUBLIC__/js/applyDetails.js"></script>
+		<include  file="Common@Html/ueditor_min" />
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+
+		<script>
+			$('#reApply').click(function() {
+				var obj;
+				if({$data['canReApply']}){
+				 	if({$applyUserDetails[0]['userstatus']} == 160){
+						if({$data['auditFlag']} == 1){
+							layer.msg('该客户已被其它人申请,正在审核中', {icon:2});
+							return;
+						}
+					 }else{
+						 layer.msg('该客户不在回库状态,不能申请', {icon:2});
+						 return;
+					 }
+					 obj = $("#popup1");  //设置申请框
+				 }else{
+					 obj = $("#popup2"); //设置提示不能申请的框
+				 }
+				 $.colorbox({
+				 inline: true,
+				 href: obj,//obj,
+				 overlayClose: false,
+				 title: "申请转入客户"
+				 });
+			});
+			$('.alSubmit').click(function () {
+				var data = {
+					user_id: {$applyUserDetails[0].user_id},
+					channel_id: $(':input[name="atChannelSelect"]').val(),
+					searchword: $(':input[name="searchWord"]').val(),
+					interviewurl: $(':input[name="consultPage"]').val(),
+					introducermobile: $(':input[name="recommendMan"]').val(),
+					applyreason : $(':input[name="apply_applyreason"]').val()
+				};
+				if($(':input[name="atChannelSelect"]').val() == 0){
+					layer.msg('请选择渠道', {icon:2});
+					return;
+				}
+				if($(':input[name="alWhether"]:checked').val()==1){
+					if($(':input[name="recommendMan"]').val().length!=11){
+						layer.msg('请输入正确的转介绍人手机号码', {icon:2});
+						return;
+					}
+				}
+				if($(':input[name="apply_applyreason"]').val().length == 0){
+					layer.msg('请输入申请理由', {icon:2});
+					return;
+				}
+				common_ajax(data,"{:U('System/User/apply')}", 'reload');
+			});
+
+		</script>
+
+	</body>
+</html>

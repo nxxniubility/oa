@@ -1,0 +1,131 @@
+/**/
+.wrapBox { padding: 0 20px; background: #fff;}
+.feCont { width: 1130px; margin-bottom: 20px;}
+.feContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.feContTop .topTit { line-height: 14px; font-size: 0; cursor: default;}
+.feContTop .topTit span { float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
+.feContTop .topTit span.masterList { color: #53b567; border-bottom: 2px solid #53b567;}
+.feContTop .topTit span em { margin: 0 4px;}
+.topRight { height: 55px; font-size: 0;}
+.topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
+
+.feMiddle { margin: 20px auto 40px; font-size: 12px;}
+.feMiddleTop, .feMiddleList { float: left; width: 100%;}
+.feMiddleTop { margin-bottom: 20px;}
+.selectbox2 dl{color:#a6a7a7;border-color:#ccc}
+.selectbox2 dl dt{border-bottom:none;background:#fff}
+.selectbox2 dl dd{font-size:12px}
+.selectbox2 dl dt.on{border-bottom:1px solid #ccc;background:#fff}
+.selectbox2 dl dd:hover{ background:#eaedf1 none repeat scroll 0 0}
+.selectbox2 .arrow{width:50px;background:transparent url(../images/Descending.png) no-repeat center center}
+.selectbox2 .arrow_on{background:transparent url(../images/Ascending.png) no-repeat center center}
+.selectbox2{font-size:12px;height:30px;line-height:30px;position:relative;width:300px}
+.selectbox2 dl{border:1px solid #ccc;color:#555;margin:0;position:absolute;width:100%}
+.selectbox2 dl.on{border:1px solid #ccc;overflow-y: auto;overflow-x: hidden;max-height: 150px;width: calc(100% + 10px);}
+.selectbox2 dl dt{cursor:pointer;overflow:hidden;padding-left:10px}
+.selectbox2 dl dt.on{background:#e6e6e6 none repeat scroll 0 0;border-bottom:1px solid #ccc;}
+.selectbox2 dl dd{background:#fff none repeat scroll 0 0;border-bottom:1px solid #ccc;cursor:pointer;margin:0;padding:0 10px;position:relative;z-index:10;padding-left:25px}
+.selectbox2 dl dd.on{border-bottom:1px solid #4dbe88}
+.selectbox2 dl dd:hover{background:#eaedf1 none repeat scroll 0 0;}
+.selectbox2 dl dd:last-child { border-bottom: none;}
+.selectbox2 .arrow {height:30px;width: 30px;}
+.selectbox2 .ddoption {border:medium none;display:none;height:200px;overflow-y:scroll}
+.select_title2 {display:none;font-size:12px;font-weight:bold;width:100%;margin-left:-10px;padding-left:10px;border-bottom:1px solid #ccc;color: #696969;}
+.select_title2:hover { background: #eaedf1;}
+.selectbox2 {width:178px;margin-right:20px}
+.selectbox2 .caption{cursor:default}
+.selectbox2 .caption2 { cursor: default; background: #fff;}
+.select_title3 { display:none; font-size:12px; font-weight: bold; width:100%; margin-left:-10px; padding-left:10px; border-bottom:1px solid #ccc; color: #696969;}
+.fxDone { display: none;}
+.area .select_title2 { padding-left: 35px;}
+.area dl dd { padding-left: 55px;}
+.selectbox {margin-right: 20px;font-size:12px;height:30px;line-height:30px;position:relative;width:200px}
+.selectbox dl {border:1px solid #ccc;color:#555;margin:0;position:absolute;width:100%}
+.selectbox dl.on {border:1px solid #ccc;overflow-y: auto;overflow-x: hidden;max-height: 150px;width: calc(100% + 10px);}
+.selectbox dl dt {cursor:pointer;overflow:hidden;padding-left:10px;border-bottom: none;background: #fff;}
+.selectbox dl dt.on {background:#e6e6e6 none repeat scroll 0 0;border-bottom:1px solid #ccc;}
+.selectbox dl dd {background:#fff none repeat scroll 0 0;border-bottom:1px solid #ccc;cursor:pointer;margin:0;padding:0 10px;position:relative;z-index:10}
+.selectbox dl dd.on{border-bottom:1px solid #ccc;}
+.selectbox dl dd:hover{background:#eaedf1 none repeat scroll 0 0;color:#555;}
+.selectbox dl dd:last-child { border-bottom: none;}
+.selectbox .arrow {background:transparent url(../images/Descending.png) no-repeat scroll 8px 12px;height:30px;width:30px;background-position-x: 8px;background-position-y: 12px;}
+.selectbox .arrow_on {background:transparent url(../images/Ascending.png) no-repeat scroll 8px 12px;background-position-x: 8px;background-position-y: 12px;}
+.select_title {overflow: hidden;width: calc(100% - 30px);white-space: nowrap;word-break: keep-all;text-overflow: ellipsis;}
+.chooseCenter { width: 138px;}
+.feSearchBox { width: auto; height: 30px; line-height: 30px;}
+.searchInp { width: 130px; margin-right: 0;}
+.feInp { float: left; width: 198px; height: 30px; margin-right: 20px; font-size: 12px;text-indent: 20px; color: #555; border: 1px solid #ccc; border-left: none;}
+.feSearchSubmit { float: left; width: 66px; height: 30px; line-height: 30px; font-size: 12px; color: #fff; border: none; background: #53b567; cursor: pointer;}
+
+.feMiddleList { margin-bottom: 40px; border: 1px solid #e1e6eb;}
+.feMiddleList dl { border-bottom: 1px solid #e1e6eb;}
+.feMiddleList dl.feTit { background: #f5f6fa;}
+.feMiddleList dl:last-child { border-bottom: none;}
+.feMiddleList dt, .feMiddleList dd { float: left; line-height: 43px; word-wrap:break-word; word-break:break-all; text-align: left;}
+.feMiddleList dt { color: #999;}
+.feMiddleList dd { color: #696969;}
+.proSequence span, .proSequence .proListID { float: left;}
+.feMiddleList .proListID { display: inline-block; width: 20px; height: 43px; background: url(../images/promotion_list-01.png) no-repeat center; cursor: pointer;}
+.feMiddleList .wOne,
+.feMiddleList .wTwo,
+.feMiddleList .wThr,
+.feMiddleList .wFou,
+.feMiddleList .wFiv,
+.feMiddleList .wSix,
+.feMiddleList .wSev,
+.feMiddleList .wEig,
+.feMiddleList .wNin,
+.feMiddleList .wTen,
+.feMiddleList .wEle { padding: 0 .2%;}
+.feMiddleList .wOne { width: 3.8%; padding-left: 20px;}
+.feMiddleList .wTwo { width: 6%;}
+.feMiddleList .wThr { width: 5.1%;}
+.feMiddleList .wFou { width: 6.5%;}
+.feMiddleList .wFiv { width: 15.4%;}
+.feMiddleList .wSix { width: 10.2%;}
+.feMiddleList .wSev { width: 5.1%;}
+.feMiddleList .wEig { width: 10.4%;}
+.feMiddleList .wNin { width: 14.5%;}
+.feMiddleList .wTen { width: 10.2%;}
+.feMiddleList .wEle { width: 5.8%;}
+.feMiddleList .wOne input[type="checkbox"] { margin-top: -2px; vertical-align: middle;}
+.feMiddleList .wThr img { width: 30px; height: 30px; vertical-align: middle;}
+.feMiddleList .proSelect { display: inline-block; width: 40px; height: 40px;}
+.feMiddleList .proSelect i { display: inline-block; width: 12px; height: 6px; margin-left: 13px; background: url(../images/newSys_icon-01.png) no-repeat; background-position: 0 -60px;}
+.feMiddleList .proSelect:hover i { background-position: 0 -70px;}
+.otherOperation { position: relative;width: 0px;display: none;z-index: 1;}
+.triangle { position: absolute; top: -14px; left: 14px; width: 10px; height: 6px; background: url(../images/organization_01-01.png) no-repeat; z-index: 1;}
+.otherIcon { position: absolute; top: -9px; left: -35px; width: 110px; font-size: 12px; border: 1px solid #53b567; background: #fff; cursor: pointer;}
+.otherIcon li {cursor: pointer;margin: auto; height: 39px; line-height: 39px; border-bottom: 1px solid #e7eaee;color: #767676;background: #fff;}
+.otherIcon li:last-child { border-bottom: none;}
+.otherIcon li:hover {background: #4dbe88;}
+.otherIcon li span, .otherIcon li em { display: inline-block;}
+.otherIcon li span { width: 21px; margin: 0 8px; vertical-align: sub; background: url(../images/promotion_list-02.png) no-repeat;}
+.otherIcon li span.plan { height: 16px; background-position: 0 0;}
+.otherIcon li span.view { height: 12px; background-position: 0 -35px;}
+.otherIcon li span.modify { height: 18px; background-position: 0 -62px;}
+.otherIcon li span.delete { height: 16px; background-position: 0 -101px;}
+.otherIcon li span.fileDetail { height: 18px; vertical-align: middle; background-position: 0 -244px;}
+.otherIcon li span.fileChange{ height: 16px; background-position: 0 -280px;}
+.otherIcon li em { font-size: 14px; color: #3b3a48;}
+.otherIcon li:hover em { color: #fff;}
+.otherIcon li:hover span.plan { background-position: 0 -17px;}
+.otherIcon li:hover span.view { background-position: 0 -48px;}
+.otherIcon li:hover span.modify { background-position: 0 -82px;}
+.otherIcon li:hover span.delete { background-position: 0 -119px;}
+.otherIcon li:hover span.fileDetail { background-position: 0 -261px;}
+.otherIcon li:hover span.fileChange{ background-position: 0 -297px;}
+
+.feOptions { height: 60px; line-height: 60px; padding: 0 20px; background: #f5f6fa;}
+.leftChoose { float: left; font-size: 12px; color: #333;}
+.leftChoose .feCheckBox1 { margin-top: -2px; vertical-align: middle;}
+.leftChoose span { margin: 0 16px;}
+.leftChoose .delInp { width: 78px; height: 28px; line-height: 28px; text-align: center; border: 1px solid #ccc; background: #f7f7f7; cursor: pointer;}
+/*=================================== 黄金分割线：分页 ===================================*/
+.collegaPage { float: right; margin: 15px 0 0;}
+.next { border-right: none;}
+.pageJump { margin-right: 0;}
+
+
+

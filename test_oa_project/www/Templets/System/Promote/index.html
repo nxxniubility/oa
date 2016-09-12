@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/dpsprogramList.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/dpsListSearch.css">
+	</head>
+	<body>
+		<div class="wrapBox">
+			<div class="proCont">
+				<div class="proContTop clearfix">
+					<div class="topTit l">
+						<span class="masterList">推广账号管理</span>
+						<span><em>&gt;</em>推广计划列表 </span>
+					</div>
+					<div class="topRight r">
+						<a href="<?php echo U('System/promote/addPromote', array('proid_id'=>$data['proid_id']));?>" class="addPromotion">添加推广计划</a>
+						<a href="<?php echo U('System/promote/editPromoteList', array('proid_id'=>$data['proid_id']));?>" class="batchEdit">批量修改推广</a>
+						<a href="<?php echo U('System/promote/inputPlan', array('proid_id'=>$data['proid_id']));?>" class="proImport">导入推广计划</a>
+						<a href="<?php echo U('System/promote/outPlan', array('proid_id'=>$data['proid_id']));?>" class="proExport">导出推广计划</a>
+						<a href="<?php echo U('System/promote/id');?>" class="return">返回</a>
+					</div>
+				</div>
+				<div class="proSearch clearfix">
+					<form method="post" action="{:U('System/Promote/index',array('proid_id'=>$proid_id))}">
+						<div class="selectbox l">
+		                    <dl class="select">
+		                        <dt>
+		                            <div class="select_title l">选择计划</div>
+		                            <div class="arrow r"></div>
+		                        </dt>
+		                        <foreach name = "promoteList" item = "promote">
+		                        	<dd class="fxDone" data-value="{$promote['pro_lev_id']}">{$promote['name']}</dd>
+								</foreach>
+		                    </dl>
+							<input type="hidden" name="pro_lev_id" value="">
+		                </div>
+		                
+		                <div class="feSearchBox l">
+		                    <div class="selectbox searchInp l">
+		                        <dl class="select">
+		                            <dt>
+		                            <div class="select_title l">{:($data['request']['key_name']=='keyword')?'关键字':($data['request']['key_name']=='promote_id')?'推广ID':'选择搜索类型'}</div>
+		                            <div class="arrow r"></div>
+		                            </dt>
+		                            <dd class="fxDone" data-value="keyword">关键字</dd>
+		                            <dd class="fxDone" data-value="promote_id">推广ID</dd>
+		                        </dl>
+		                        <input type="hidden" name="key_name" value="">
+		                    </div>
+		                    <input type="text" class="feInp" name="key_val" value="{$data['request']['key_val']}">
+		                    <input type="submit" class="searchSearch2" value="搜索">
+		                </div>
+					</form>
+				</div>
+				<div class="proContMiddle">
+					<dl class="proTit clearfix">
+						<dt class="wOne proSequence clearfix">
+							<span>推广ID</span>
+							<i class="proListID"></i>
+						</dt>
+						<dt class="wTwo">推广账号</dt>
+						<dt class="wThr">推广渠道</dt>
+						<dt class="wFou">推广计划</dt>
+						<dt class="wFiv">推广单元</dt>
+						<dt class="wSix">关键词</dt>
+						<dt class="wSev">PC推广地址</dt>
+						<dt class="wEig">移动推广地址</dt>
+						<dt class="wNin">操作</dt>
+					</dl>
+					
+					<foreach name = "data['promoteListAll']['promoteList']" item = "promote">
+					<dl class="clearfix">
+						<dd class="wOne proListDetails">
+							<span>{$promote['promote_id']}</span>
+							<!-- <div class="detailBox clearfix">
+								<div class="leftImg"><img src="../../../Public/images/programList_01-02.jpg"></div>
+								<div class="rightCont clearfix">
+									<p class="theme">ps培训主题</p>
+									<p class="time">创建时间：2015-11-02 15:15:43</p>
+									<p class="pang conversionRate">信息转化率：0%</p>
+									<p class="pang forecastingRates">预报率：0%</p>
+									<p class="pang views">访问：0</p>
+								</div>
+							</div> -->
+						</dd>
+
+						<dd class="wTwo">{$promote['accountname']}&nbsp;</dd>
+						<dd class="wThr">{$promote['channelname']}&nbsp;</dd>
+						<dd class="wFou">{$promote['plan']}&nbsp;</dd>
+						<dd class="wFiv">{$promote['planunit']}&nbsp;</dd>
+						<dd class="wSix">{$promote['keyword']}&nbsp;</dd>
+						<dd class="wSev"><a href="{$promote['pc_pages']}" target="_blank">查看</a>&nbsp;</dd>
+						<dd class="wEig"><a href="{$promote['m_pages']}" target="_blank">查看</a>&nbsp;</dd>
+						<dd class="wNin">
+							<a href="javascript:;" class="proSelect"><i></i></a>
+							<div class="otherOperation">
+		                        <div class="otherIcon">
+		                            <ul>
+		                                <li class="status">
+		                                	<a href="<?php echo U('System/Promote/editPromote',array('promote_id'=>$promote['promote_id'])); ?>">
+			                                    <span class="setEdit"></span>
+			                                    <em>修改</em>
+			                                </a>
+		                                </li>
+
+		                                <li class="edit" onclick="delPro('{$promote.promote_id}')">
+		                                    <span class="setDel"></span>
+		                                    <em>删除</em>
+		                                </li>
+		                            </ul>
+		                        </div>
+		                    </div>
+						</dd>
+						</dl>
+					</foreach>
+					
+				</div>	
+				<div class='collegaPage clearfix'>
+					{$data['paging']}
+				</div>
+			</div>
+		</div>
+		
+		
+		
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/programList.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/regionlManagement.js"></script>
+		<script src="__PUBLIC__/js/dpsListSearch.js"></script>
+		<script 'text/javascript'>
+
+			$('#planselect').change(function() {
+				$('#planunitselect').show();
+	            //获取node_id
+	            var pro_lev_id = $(this).val();
+	            $.ajax({
+	           		url:"<?php echo U('System/Promote/prolevPlanunitList');?>",
+	           		dataType:'json',
+	           		type:'post',
+	           		data:{pro_lev_id:pro_lev_id},
+	           		success:function(redata){
+	           			if(redata.code==0){
+	           				var str = '<option value="0" selected="selected">请选择推广计划单元</option>';
+	           				$.each(redata.data,function(n,value) {  
+	           					str+='<option value="'+value.pro_lev_id+'" >'+value.name+'</option>';
+	           				});
+
+	           				$('#planunitselect').html(str);
+	           			}
+	           		}
+	           });
+	        });
+		    function delPro(promote_id){
+		        layer.confirm('确定要删除该计划？', {
+		            btn: ['确定','取消'] //按钮
+		        }, function(){
+		            var data = {
+		                promote_id:promote_id,
+		                type:'del'
+		            };
+		            common_ajax(data,'{$urlDelPromote}','reload');
+		        }, function(){});
+		    }
+
+		</script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+	</body>
+</html>

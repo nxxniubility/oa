@@ -1,0 +1,93 @@
+.clearfix:after, .clearfix:before { display: table; content: " ";}
+.clearfix:after { clear: both;}
+/**/
+.wrapBox { padding: 0 20px; background: #fff;}
+.proCont { width: 1130px; margin-bottom: 40px;}
+.proContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.proContTop .topTit { line-height: 14px; font-size: 0; cursor: default;}
+.proContTop .topTit span { float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
+.proContTop .topTit span.masterList { color: #53b567; border-bottom: 2px solid #53b567;}
+.proContTop .topTit span em { margin: 0 4px;}
+.topRight { height: 55px; font-size: 0;}
+.topRight .newPlan, .topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .newPlan:hover, .topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
+.topRight .newPlan { width: 136px; margin-right: 20px;}
+
+/*=================================== 黄金分割线 ===================================*/
+.adWithReviewCont { height: auto; padding-left: 43px;}
+.wrTopInfo { padding: 19px 0; border-bottom: 1px solid #efefef;}
+.wrTopInfo table { width: 100%; height: 43px;}
+.wrTopInfo tr { line-height: 16px;}
+.wrTopInfo tr + tr { margin-top: 20px;}
+.wrTopInfo td { width: 33.33%;}
+.wrTopInfo label, .wrTopInfo span { float: left; color: #333;}
+.wrTopInfo label { width: 80px; text-align: right;}
+.wrTopInfo label i { color: #d00202;}
+.wrTopInfo .oneTr label, .wrTopInfo .oneTr span { margin-bottom: 20px;}
+.wrTopInfo .oneTr span { margin-left: 5px;}
+
+.wrListBox { margin-top: 22px;}
+.wrListBox .listRight ul {  margin-top: 38px; margin-left: 106px; padding-bottom: 8px; border-left: 1px solid #ccc;}
+.wrListBox .listRight li { height: 164px;}
+.wrListBox .listRight li + li { margin-top: 32px;}
+.wrListBox .listRight li img { float: left; width: 80px; height: 80px; margin-top: -33px;  margin-left: -100px; border-radius: 50%;}
+.wrListBox .listRight li i { float: left; width: 18px; height: 11px; margin-left: -10px; background: url(../images/adWithReview_01-01.png) no-repeat; background-position: 0 0;}
+.wrListBox .listRight .wrBox2 { position: relative;  top: -14px; left: 22px; float: left; width: 768px; height: 162px; border: 1px solid #ccc;}
+.wrListBox .listRight .wrBox2 .wrTriangle { position: absolute; top: 10px; left: -16px; width: 18px; height: 17px; background: url(../images/adWithReview_01-01.png) no-repeat; background-position: 0 -23px;}
+.wrListBox .listRight .wrBox2 .wrBox2Tit { height: 40px; line-height: 40px; color: #333; text-indent: 26px;}
+.wrListBox .listRight .wrBox2 .wrBox2Cont { height: 122px; padding-right: 25px; background: #efefef;}
+.wrBox2Cont .wrReason { padding-top: 25px; padding-left: 26px; color: #333;}
+.wrBox2Cont .wrReason p { line-height: 14px; margin-bottom: 12px;}
+.wrBox2Cont .wrReason p span { margin-right: 3px; color: #d00202;}
+/*pending: 待审核*/
+.wrListBox .listRight li.pending i { background-position: 0 -12px;}
+.wrListBox .listRight li.pending .wrBox2 { border-color: #53b567;}
+.wrListBox .listRight li.pending .wrTriangle { background-position: 0 -40px;}
+.wrListBox .listRight li.pending .wrBox2 .wrBox2Tit { color: #53b567;}
+.wrListBox .listRight li.pending .wrBox2 .wrBox2Cont { background: #53b567;}
+.wrListBox .listRight li.pending .wrBox2 .wrBox2Cont .wrReason { padding-top: 40px; color: #fff;}
+/*by: 通过*/
+.wrListBox .listRight li.by i { background-position: 0 -12px;}
+.wrListBox .listRight li.by .wrBox2 { border-color: #53b567;}
+.wrListBox .listRight li.by .wrTriangle { background-position: 0 -40px;}
+.wrListBox .listRight li.by .wrBox2 .wrBox2Tit { color: #53b567;}
+.wrListBox .listRight li.by .wrBox2 .wrBox2Tit span { margin-right: 84px;}
+.wrListBox .listRight li.by .wrBox2 .wrBox2Cont { background: #53b567;}
+.wrListBox .listRight li.by .wrBox2 .wrBox2Cont .wrReason { padding-top: 40px; color: #fff;}
+/*fail:不通过*/
+.wrListBox .listRight li.fail i { background-position: 0 -12px;}
+.wrListBox .listRight li.fail .wrBox2 { border-color: #53b567;}
+.wrListBox .listRight li.fail .wrTriangle { background-position: 0 -40px;}
+.wrListBox .listRight li.fail .wrBox2 .wrBox2Tit { color: #53b567;}
+.wrListBox .listRight li.fail .wrBox2 .wrBox2Tit span { margin-right: 84px;}
+.wrListBox .listRight li.fail .wrBox2 .wrBox2Cont { background: #53b567;}
+.wrListBox .listRight li.fail .wrBox2 .wrBox2Cont .wrReason { color: #fff;}
+.wrListBox .listRight li.fail .wrBox2 .wrBox2Cont .wrReason p span { color: #fff;}
+
+.dn { display: none;}
+.reApplyBox { position: relative; width: 565px; height: 550px; background: #fff;}
+.alBoxCont { width: 490px; margin: 0 auto; padding-top: 40px;}
+.alBoxCont .alRow { width: 100%; margin-bottom: 20px;}
+.alRow .alRowLeft, .alRow .alRowRight { float: left; line-height: 30px;}
+.alRow .alRowLeft { width: 103px; margin-right: 18px; text-align: right; color: #333;}
+.alRow .alRowLeft i { color: #d00202;}
+.alRow .alRowRight { color: #494949;}
+.alRow .alRowRight select, .alRow .alRowRight .alInp { text-indent: 12px; border: 1px solid #ccc; background: #fff;}
+.alRow .alRowRight select { width: 360px; height: 30px; line-height: 30px;}
+.alRow .alRowRight .alInp { width: 358px; height: 28px; line-height: 28px; margin-top: -2px;}
+.alRow .alRowRight label { float: left; width: 40px; height: 30px; margin-right: 50px; cursor: pointer;}
+.alRow .alRowRight .alRadio { width: 14px; height: 14px; vertical-align: middle;}
+.alRow .alRowRight span { color: #494949;}
+.alRow .alRowRight .reasonBox { width: 360px;/*  height: 237px;overflow: hidden;*/}
+.alRow .alRowRight .reasonBox img { width: 100%; vertical-align: middle;}
+.alRow .alRowRight .alSubmit { display: block; width: 65px; height: 30px; line-height: 30px; margin-top: 40px; font-size: 12px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
+
+/*已被申请，不能再重新申请*/
+.notApply { position: relative; width: 404px; height: 152px; text-align: center; background: #fff;}
+.notApply span { display: block; line-height: 14px; margin: 38px auto 43px; color: #d00202;}
+.notApply .naEtermine { display: block; width: 100px; height: 30px; line-height: 30px; margin: 0 auto; color: #fff; border: none; background: #53b567; cursor: pointer;}
+/*tanceng*/
+#colorbox, #cboxOverlay, #cboxWrapper { z-index: 9;}
+.edui-default .edui-toolbar .edui-combox .edui-combox-body { line-height: 22px;}
+
+.wrTopInfo .zixun td span { margin-left: 5px;}

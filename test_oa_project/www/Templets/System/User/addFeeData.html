@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/SubmitPaymentInformation.css">
+</head>
+<body>
+<div class="wrapBox">
+    <div class="newEmployeesCont">
+        <div class="nsContTop clearfix">
+            <div class="topTit l">
+                <span class="masterList">客户列表</span>
+                <span><em>&gt;</em>提交缴费资料</span>
+            </div>
+            <div class="topRight r">
+                <a href="javascript:history.go(-1);" class="return">返回</a>
+            </div>
+        </div>
+
+        <div class="toggle">
+            <div class="tLeft">
+            </div>
+
+            <div class="tRight">
+            </div>
+        </div>
+
+
+        <div class="nsMiddle">
+            <if condition="(empty($data['userInfo']['username']) || $data['userInfo']['username']==0)">
+                <div class="nsRow clearfix">
+                    <div class="nsLeft"><i>&#42</i>客户手机号码:</div>
+                    <div class="nsRight">
+                        <if condition="!empty($data['userInfo']['username'])">
+                            {:decryptPhone($data['userInfo']['username'],C('PHONE_CODE_KEY'))}
+                            <else/>
+                            <input type="text" class="nsInp" name="username" value="{:decryptPhone($data['userInfo']['username'],C('PHONE_CODE_KEY'))}">
+                        </if>
+                    </div>
+                </div>
+            </if>
+
+            <div class="nsRow clearfix">
+                <div class="nsLeft"><i>&#42</i>所在城市:</div>
+                <div class="nsRight">
+                    <select class="nsOut getarea" data-value="2" autocomplete="off">
+                        <option value="0">请选择省份</option>
+                        <foreach name="data['area']" item="v">
+                            <option value="{$v.id}">{$v.name}</option>
+                        </foreach>
+                    </select>
+
+                    <select name="area_id_temp" class="nsOut getarea" data-value="3" autocomplete="off" style="display: none">
+                        <option value="0">请先选择省份</option>
+                    </select>
+
+                    <select name="area_id" class="nsOut getarea" data-value="4" autocomplete="off" style="display: none">
+                        <option value="0">请先选择省份</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="nsRow clearfix">
+                <div class="nsLeft"><i>&#42</i>街道地址:</div>
+                <div class="nsRight">
+                    <input type="text" class="nsInp" name="address" value="{:$data['userInfo']['address']!=0?$data['userInfo']['address']:''}">
+                </div>
+            </div>
+            <div class="nsRow clearfix">
+                <div class="nsLeft"><i>&#42</i>身份证号码:</div>
+                <div class="nsRight">
+                    <input type="text" class="nsInp" name="identification" value="{:$data['userInfo']['identification']!=0?$data['userInfo']['identification']:''}">
+                </div>
+            </div>
+            <div class="nsRow clearfix">
+                <div class="nsLeft"><i>&#42</i>紧急联系人:</div>
+                <div class="nsRight">
+                    <input type="text" class="nsInp" name="urgentname" value="{:$data['userInfo']['urgentname']!=0?$data['userInfo']['urgentname']:''}">
+                </div>
+            </div>
+            <div class="nsRow clearfix">
+                <div class="nsLeft"><i>&#42</i>紧急联系人手机号:</div>
+                <div class="nsRight">
+                    <input type="text" class="nsInp" name="urgentmobile" value="{:$data['userInfo']['urgentmobile']!=0?$data['userInfo']['urgentmobile']:''}">
+                </div>
+            </div>
+
+
+            <div class="nsRow clearfix">
+                <div class="nsLeft">&nbsp;</div>
+                <div class="nsRight">
+                    <input type="submit" class="nsSubmit subtn1" value="下一步">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="moneyInfo">
+                <div class="nsRow clearfix">
+                    <div class="nsLeft"><i>&#42</i>进班课程:</div>
+                    <div class="nsRight">
+                        <div class="selectbox2 l">
+                            <dl class="select2">
+                                <dt>
+                                    <div class="select_title l">选择课程</div>
+                                    <div class="arrow r"></div>
+                                </dt>
+                                <foreach name="data['course']" item="v">
+                                    <dd class="fxDone course_price" data-name="course_id" data-count="{$v.price}" data-value="{$v.course_id}">{$v.coursename}</dd>
+                                </foreach>
+                            </dl>
+                            <input type="hidden" name="course_id">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nsRow clearfix">
+                    <div class="nsLeft"><i>&#42</i>学习方式:</div>
+                    <div class="nsRight">
+                        <div class="selectbox2 l">
+                            <dl class="select2">
+                                <dt>
+                                <div class="select_title l">选择方式</div>
+                                <div class="arrow r"></div>
+                                </dt>
+                                <foreach name="data['studytype']" item="v">
+                                    <dd class="fxDone" data-name="studytype" data-value="{$v.num}">{$v.text}</dd>
+                                </foreach>
+                            </dl>
+                            <input type="hidden" name="studytype">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="nsRow clearfix">
+                    <div class="nsLeft"><i>&#42</i>是否贷款:</div>
+                    <div class="nsRight">
+                        <label for="radioYes" class="manLabel">
+                            <input type="radio" name="nsY" value="1" class="nsRadio yes" id="radioYes"  checked="checked">
+                            <span>是</span>
+                        </label>
+                        <label for="radioNo">
+                            <input type="radio" name="nsY" value="0" class="nsRadio no" id="radioNo">
+                            <span>否</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="nsRow clearfix nsYes">
+                    <div class="nsLeft"><i>&#42</i>贷款机构:</div>
+                    <div class="nsRight">
+                        <div class="selectbox2 l">
+                            <dl class="select2">
+                                <dt>
+                                <div class="select_title l">选择机构</div>
+                                <div class="arrow r"></div>
+                                </dt>
+                                <foreach name="data['loan_institutions']" item="v">
+                                    <dd class="fxDone" data-name="loan_institutions_id" data-value="{$v.num}">{$v.text}</dd>
+                                </foreach>
+                            </dl>
+                            <input type="hidden" name="loan_institutions_id">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nsRow clearfix nsNo">
+                    <div class="nsLeft"><i>&#42</i>延期付款:</div>
+                    <div class="nsRight">
+                        <div class="selectbox2 l">
+                            <dl class="select2">
+                                <dt>
+                                <div class="select_title l">不延期</div>
+                                <div class="arrow r"></div>
+                                </dt>
+                                <dd class="fxDone" data-name="delay" data-value="0">不延期</dd>
+                                <dd class="fxDone" data-name="delay" data-value="1">1个月</dd>
+                                <dd class="fxDone" data-name="delay" data-value="2">2个月</dd>
+                                <dd class="fxDone" data-name="delay" data-value="3">3个月</dd>
+                                <dd class="fxDone" data-name="delay" data-value="4">4个月</dd>
+                            </dl>
+                            <input type="hidden" name="delay" value="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="nsRow clearfix nsNo">
+                    <div class="nsLeft"><i>&#42</i>分期付款:</div>
+                    <div class="nsRight">
+                        <div class="selectbox2 l">
+                            <dl class="select2">
+                                <dt>
+                                <div class="select_title l">不分期</div>
+                                <div class="arrow r"></div>
+                                </dt>
+                                <dd class="fxDone" data-name="instalments" data-value="0">不分期</dd>
+                                <dd class="fxDone" data-name="instalments" data-value="2">分2期</dd>
+                                <dd class="fxDone" data-name="instalments" data-value="3">分3期</dd>
+                                <dd class="fxDone" data-name="instalments" data-value="5">分5期</dd>
+                                <dd class="fxDone" data-name="instalments" data-value="6">分6期</dd>
+                                <dd class="fxDone" data-name="instalments" data-value="8">分8期</dd>
+                                <dd class="fxDone" data-name="instalments" data-value="12">分12期</dd>
+                            </dl>
+                            <input type="hidden" name="instalments" value="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="nsRow clearfix">
+                    <div class="nsLeft"><i>&#42</i>学费总额:</div>
+                    <div class="nsRight">
+                        <input type="text" class="nsInp" name="coursecount" value="" disabled="">
+                    </div>
+                </div>
+                <div class="nsRow clearfix">
+                    <div class="nsLeft">优惠方式:</div>
+                    <div class="nsRight clearfix">
+                        <input type="button" class="nsSelectPost l " value="选择优惠方式">
+                        <sapn id="discount_names"></sapn>
+                        <input type="hidden" name="discount_id" value="" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="nsRow clearfix">
+                    <div class="nsLeft">&nbsp;</div>
+                    <div class="nsRight">
+                        <div class="topRight1 l">
+                            <a href="javascript:;" class="return return_btn">返回上一步</a>
+                        </div>
+                        <input type="submit" class="nsSubmit subtn2" value="提交">
+                    </div>
+                </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="department">
+    <div class="nsTop clearfix">
+        <span>优惠项</span>
+        <div class="nsClose"></div>
+    </div>
+    <div class="nsCont">
+        <foreach name="data['discount']" item="v" key="k">
+            <div class="nsDeparMiddle">
+                <dl class="nsTit clearfix">
+                    {$v.dname}（{$v.remark}）
+                </dl>
+                <dl class="nsTit clearfix">
+                    <dt class="wNsOne">选中</dt>
+                    <dt class="wNsTwo">优惠项目</dt>
+                    <dt class="wNsThr">优惠金额</dt>
+                    <dt class="wNsFou">说明</dt>
+                </dl>
+                <if condition="!empty($v['children'])">
+
+                    <foreach name="v['children']" item="v2" key="k2">
+                        <dl class="clearfix">
+                            <dd class="wNsOne"><input type="radio" name="nsChk{$k}" value="{$v2.discount_id}" class="nsSelectChk"></dd>
+                            <dd class="wNsTwo">{$v2.dname}</dd>
+                            <dd class="wNsThr" data-value="{$v2.dmoney}">￥{$v2.dmoney}</dd>
+                            <dd class="wNsFou">{$v2.remark}</dd>
+                        </dl>
+                    </foreach>
+                </if>
+
+            </div>
+        </foreach>
+
+
+    </div>
+
+    <input type="button" class="nsDetermine discount_btn" value="确定">
+    <input type="button" class="qx_cancel" value="无优惠">
+</div>
+
+
+
+<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/SubmitPaymentInformation.js"></script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+<script src="__PUBLIC__/js/checkform.js"></script>
+<script>
+$(function(){
+    $('.course_price').click(function(){
+        $(':input[name="coursecount"]').val($(this).attr('data-count'));
+        
+    })
+    //异步获取省市区
+    $('.getarea').on('change', function(){
+        var pid = $(this).val();
+        var deep = $(this).attr('data-value');
+        if(deep!=4){
+            $.ajax({
+                url:"{:U('System/User/addFeeData',array('id'=>$data['user_id']))}",
+                type:'post',
+                dataType:'json',
+                data:{pid:pid,deep:deep,type:'getArea'},
+                success:function(reflag){
+                    if(reflag.code==0){
+                        var html ='';
+                        if(deep=='2'){
+                            html += '<option value="0">请选择城市</option>';
+                            $('.getarea').eq(1).show();
+                            $('.getarea').eq(2).hide().html('');
+                        }else{
+                            html += '<option value="0">请选择区/县</option>';
+                            $('.getarea').eq(2).show();
+                        }
+                        $.each(reflag.data,function(k,v){
+                            html += '<option value="'+v.id+'">'+v.name+'</option>';
+                        });
+                        $('.getarea').eq((parseInt(deep)-1)).html(html);
+                    }else{
+                        if(deep=='2'){
+                            $('.getarea').eq(0).siblings('.getarea').hide().html('');
+                        }else{
+                            $('.getarea').eq(2).hide().html('');
+                        }
+
+                    }
+                }
+            });
+        };
+    });
+    //选择优惠方式
+    $('.discount_btn').click(function(){
+        var discount = '';
+        var discount_names = '';
+        var discount_num = 0;
+        $('.nsSelectChk:checked').each(function(i){
+            if(i==0){
+                discount += $(this).val();
+                discount_names += $(this).parent().siblings('.wNsTwo').text();
+                discount_num = parseInt($(this).parent().siblings('.wNsThr').attr('data-value').split('.')[0]);
+            }else{
+                discount += ','+$(this).val();
+                discount_names += ','+$(this).parent().siblings('.wNsTwo').text();
+                discount_num = discount_num+parseInt($(this).parent().siblings('.wNsThr').attr('data-value').split('.')[0]);
+            }
+        });
+        if(discount_num.length>0 || discount_num!=''){
+            if(discount_num>2000){
+                discount_num=2000;
+            }
+        }
+        $('#discount_names').html(discount_names+'（共优惠：￥'+discount_num+')');
+        $(':input[name="discount_id"]').val(discount);
+    })
+    //下一步
+    var username = '';
+    var area_id = '';
+    var address = '';
+    var identification = '';
+    var urgentname = '';
+    var urgentmobile = '';
+    $('.subtn1').click(function(){
+        if($(':input[name="area_id"]').css('display')=='none'){
+            area_id = $(':input[name="area_id_temp"]').val();
+        }else{
+            area_id = $(':input[name="area_id"]').val();
+        }
+        address = $(':input[name="address"]').val();
+        identification = $(':input[name="identification"]').val();
+        urgentname = $(':input[name="urgentname"]').val();
+        urgentmobile = $(':input[name="urgentmobile"]').val();
+
+        if($(':input[name="username"]').length>0){
+            username = $(':input[name="username"]').val();
+            if(!checkMobile(username)){
+                layer.msg('手机号码格式有误',{icon:2});
+            }
+        }
+        if(area_id==0){
+            layer.msg('请选择所在城市',{icon:2});
+        }else if(!checkCodeValid(identification)){
+            layer.msg('身份证格式有误',{icon:2});
+        }else if(!checkMobile(urgentmobile)){
+            layer.msg('紧急联系人手机号码格式有误',{icon:2});
+        }else if(address.length==0 || identification.length==0 || urgentname.length==0 || urgentmobile.length==0){
+            layer.msg('请确保填写资料不能为空',{icon:2});
+        }else{
+            $(".moneyInfo").show();$(".nsMiddle").hide();
+        }
+    });
+    $('.subtn2').click(function(){
+        var course_id = $(':input[name="course_id"]').val();
+        var studytype = $(':input[name="studytype"]').val();
+        var nsY = $(':input[name="nsY"]:checked').val();
+        var delay = $(':input[name="delay"]').val();
+        var instalments = $(':input[name="instalments"]').val();
+        var loan_institutions_id = $(':input[name="loan_institutions_id"]').val();
+        var discount_id = $(':input[name="discount_id"]').val();
+        var coursecount = $(':input[name="coursecount"]').val();
+        if(nsY==1){
+            delay = 0;
+            instalments = 0;
+        }else{
+            loan_institutions_id = 0;
+        }
+        if(course_id.length>0 && studytype.length>0){
+            var data = {
+                type : 'addFee',
+                username : username,
+                area_id : area_id,
+                address : address,
+                identification : identification,
+                urgentname : urgentname,
+                urgentmobile : urgentmobile,
+                course_id : course_id,
+                studytype : studytype,
+                delay : delay,
+                instalments : instalments,
+                loan_institutions_id : loan_institutions_id,
+                discount_id:discount_id,
+                coursecount:coursecount
+            };
+            common_ajax(data);
+        }else{
+            layer.msg('请确保填写资料不能为空',{icon:2});
+        }
+    });
+});
+</script>
+</body>
+</html>

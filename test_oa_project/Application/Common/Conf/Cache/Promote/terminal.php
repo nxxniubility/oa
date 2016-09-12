@@ -1,0 +1,1 @@
+a:2:{i:0;a:3:{s:11:"terminal_id";s:1:"1";s:12:"terminalname";s:5:"PC端";s:6:"status";s:1:"1";}i:1;a:3:{s:11:"terminal_id";s:1:"2";s:12:"terminalname";s:9:"移动端";s:6:"status";s:1:"1";}}
