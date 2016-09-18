@@ -7,6 +7,7 @@
 */
 namespace Api\Controller;
 use Common\Controller\ApiBaseController;
+use Common\Service\ApiService;
 use Common\Service\DataService;
 
 class DataController extends ApiBaseController
