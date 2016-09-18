@@ -28,6 +28,7 @@ class ApiController extends BaseController
         // 执行HTTP请求
         curl_setopt($ch , CURLOPT_URL , $url);
         $res = curl_exec($ch);
+        curl_close ( $ch );
         $res = json_decode($res);
         if($res->showapi_res_code==0){
             return array('code'=>0,'data'=>array('city'=>$res->showapi_res_body->city,'county'=>$res->showapi_res_body->county));
@@ -97,6 +98,7 @@ class ApiController extends BaseController
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch , CURLOPT_URL , $url);
         $send_flag = curl_exec($ch);
+        curl_close ( $ch );
         if(strpos($send_flag,'OK')!==false){
             return array('code'=>0, 'msg'=>'短信已经发送');
         }else{

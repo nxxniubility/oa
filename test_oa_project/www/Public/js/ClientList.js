@@ -492,14 +492,32 @@ $(".column_name").click(function(){
 });
 //筛选选择
 $('.details').find('a').click(function(){
-    $(this).parent().parent().find('a').removeClass('on_hover');
-    $(this).addClass('on_hover');
-    if($(this).parent().parent().hasClass('specialul')){
-            $(".specialul").css("height","51px");
-        };
     //是否赋值？
+    var data_value = $(this).attr('data-value');
     var data_id = $(this).parents('ul').attr('data-id');
     var data_num = $(this).attr('data-num');
+    //是否多选？
+    if($(this).hasClass('multiple')){
+        if($(this).hasClass('on_hover')){
+            $(this).removeClass('on_hover');
+        }else{
+            $(this).addClass('on_hover');
+        }
+        data_value = '';
+        $(this).parents('ul').find('.on_hover').each(function(){
+            if(data_value==''){
+                data_value += $(this).attr('data-value');
+            }else{
+                data_value += ','+$(this).attr('data-value');
+            };
+        });
+    }else{
+        $(this).parent().parent().find('a').removeClass('on_hover');
+        $(this).addClass('on_hover');
+    };
+    if($(this).parent().parent().hasClass('specialul')){
+        $(".specialul").css("height","51px");
+    };
     //是否隐藏时间？
     if($(this).parent().hasClass('clickli')){
         if($(this).parent().parent().hasClass('specialul')){
@@ -528,7 +546,7 @@ $('.details').find('a').click(function(){
             }
         });
     }else{
-        $(':input[name="'+data_id+'"]').val($(this).attr('data-value'));
+        $(':input[name="'+data_id+'"]').val(data_value);
         if($(this).parent().siblings(".selectbox1").length>0){
             $(this).parent().siblings(".selectbox1").css('visibility', 'hidden');
 

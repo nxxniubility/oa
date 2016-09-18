@@ -16,7 +16,7 @@ return array(
     'DB_PWD'    => 'sunles_Aaa',
     'DB_PORT'   => '3306',
     'DB_PREFIX' => 'zl_',
-	
+
 
 //
 //	 'DB_TYPE'   => 'mysql',

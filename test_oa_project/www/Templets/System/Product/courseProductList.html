@@ -1,225 +1,214 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
-    <title>系统首页-{$siteinfo.sitename}</title>
-    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
-    <link rel="stylesheet" href="__PUBLIC__/css/regionlManagement.css">
-    <link rel="stylesheet" href="__PUBLIC__/css/courseProductList.css">
-</head>
-<body>
-<div class="wrapBox">
-    <div class="regionCont">
-        <div class="regionContTop clearfix">
-            <div class="topTit l"><span class="masterList">产品线管理</span></div>
-            <div class="topRight r">
-                <a href="javascript:;" class="addZones create_btn" data-pid="0">添加产品</a>
-            </div>
-        </div>
-        <div class="regionContMiddle">
-            <dl class="regionTit  clearfix">
-                <dt class="wOne regionSequence clearfix">
-                    <span>排序</span>
-                    <i class="oergList"></i>
-                </dt>
-                <dt class="wTwo regionSequence clearfix">
-                    <span>ID</span>
-                    <i class="oergList"></i>
-                </dt>
-                <dt class="wCname">产品名称</dt>
-                <dt class="wCdip">产品描述</dt>
-                <dt class="wFou">所属平台</dt>
-                <dt class="wFou">价格</dt>
-                <dt class="wCbtn">操作</dt>
-            </dl>
-            <foreach name = "data['list']" item="v" key="k">
-                <dl class="oneRegions clearfix">
-                    <dd class="wOne regionSequence clearfix">
-                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-                    </dd>
-                    <dd class="wTwo regionSequence clearfix">{$v.course_product_id}</dd>
-                    <dd class="wCname">{$v.productname}</dd>
-                    <dd class="wCdip">{$v.description}</dd>
-                    <dd class="wFou">{:$data['proList'][$v['productplatform']]}</dd>
-                    <dd class="wFou">{$v.price}</dd>
-                    <dd class="wCbtn osOperation clearfix">
-                        <a href="javascript:;" class="regionSelect"><i></i></a>
-                        <div class="otherOperation">
-                            <div class="triangle"></div>
-                            <div class="otherIcon">
-                                <ul>
-                                    <li class="edit_btn" data-name="{$v.productname}" data-id="{$v.course_product_id}" data-price="{$v.price}" data-productplatform="{$v.productplatform}" data-description="{$v.description}">
-                                        <a href="javascript:;">
-                                            <span class="modify"></span>
-                                            <em>修改</em>
-                                        </a>
-                                    </li>
-                                    <li class="del_btn" data-id="{$v.course_product_id}">
-                                    <a href="javascript:;">
-                                    <span class="delete"></span>
-                                    <em>删除</em>
-                                    </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+	    <title>系统首页-{$siteinfo.sitename}</title>
+	    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+	    <link rel="stylesheet" href="__PUBLIC__/css/system.product.css">
+	</head>
+	<body>
+		<div class="wrapBox" id="productWrap">
+		    <div class="regionCont">
+		        <div class="regionContTop clearfix">
+		            <div class="topTit l"><span class="masterList">产品线管理</span></div>
+		            <div class="topRight r">
+		                <a href="javascript:;" class="addProduct create_btn" data-pid="0">添加产品</a>
+		            </div>
+		        </div>
+		        
+		        <table cellpadding="0" cellspacing="0" id="productTable">
+		        	<tr>
+		        		<th class="firItem">
+		        			<span>ID</span>
+		                    <i class="oergList"></i>
+		        		</th>
+		        		<th>产品名称</th>
+		        		<th>产品描述</th>
+		        		<th>所属平台</th>
+		        		<th>价格</th>
+		        		<th>操作</th>
+		        	</tr>
+		        	<foreach name = "data['list']" item="v" key="k">
+		        		<tr>
+		        			<td class="firItem">{$v.course_product_id}</td>
+		        			<td>{$v.productname}</td>
+		        			<td>{$v.description}</td>
+		        			<td>{:!empty($data['proList'][$v['productplatform']])?$data['proList'][$v['productplatform']]:'--'; }</td>
+		        			<td>{$v.price}</td>
+		        			<td class="osOperation">
+		        				<a href="javascript:;" class="regionSelect"><i></i></a>
+		                        <div class="otherOperation">
+		                            <div class="triangle"></div>
+		                            <div class="otherIcon">
+		                                <ul>
+		                                    <li class="edit_btn" data-name="{$v.productname}" data-id="{$v.course_product_id}" data-price="{$v.price}" data-productplatform="{$v.productplatform}" data-description="{$v.description}">
+		                                        <a href="javascript:;">
+		                                            <span class="modify"></span>
+		                                            <em>修改</em>
+		                                        </a>
+		                                    </li>
+		                                    <li class="del_btn" data-id="{$v.course_product_id}">
+		                                    <a href="javascript:;">
+		                                    <span class="delete"></span>
+		                                    <em>删除</em>
+		                                    </a>
+		                                    </li>
+		                                </ul>
+		                            </div>
+		                        </div>
+		        			</td>
+		        		</tr>
+					</foreach>
+		        </table>
 
-                    </dd>
-                </dl>
-            </foreach>
-        </div>
-    </div>
-</div>
-
-<!-- 弹窗(添加渠道) S  -->
-<div class="zidingyi_box create_box" style="padding-top: 15px; padding-bottom: 15px;">
-    <div class="z_rows clearfix">
-        <span><i>*</i>产品名称：</span>
-        <input type="text" class="z_inp"  name="create_name">
-    </div>
-    <div class="z_rows clearfix">
-        <span><i>*</i>价格：</span>
-        <input type="text" class="z_inp" name="create_price" value="0.00" autocomplete="off">
-    </div>
-    <div class="z_rows clearfix">
-        <span><i>*</i>所属产品：</span>
-        <select name="create_productplatform" autocomplete="off" style="width: 210px; height: 27px;color: #a6a7a7;">
-            <option value="">请选择类型</option>
-            <foreach name="data['proList']" item="v" key="k">
-                <option value="{$k}">{$v}</option>
-            </foreach>
-        </select>
-    </div>
-    <div class="z_rows clearfix" style="height:65px;">
-        <span><i>*</i>产品描述：</span>
-        <textarea style="color: #a6a7a7;height: 65px;width: 211px;" name="create_description" autocomplete="off"></textarea>
-    </div>
-    <div class="z_rows txt_center mt35 clearfix">
-        <input type="button" value="确定" class="z_confirm create_subtn">
-        <input type="button" value="取消" class="z_cancel" >
-    </div>
-</div>
-<!-- 弹窗(添加渠道) E  -->
-<!-- 弹窗(修改渠道) S  -->
-<div class="zidingyi_box edit_box" style="padding-top: 15px; padding-bottom: 15px;">
-    <div class="z_rows clearfix">
-        <span><i>*</i>产品名称：</span>
-        <input type="text" class="z_inp"  name="edit_name">
-    </div>
-    <div class="z_rows clearfix">
-        <span><i>*</i>价格：</span>
-        <input type="text" class="z_inp" name="edit_price" value="0.00" autocomplete="off">
-    </div>
-    <div class="z_rows clearfix">
-        <span><i>*</i>所属产品：</span>
-        <select name="edit_productplatform" autocomplete="off" style="width: 210px; height: 27px;color: #a6a7a7;">
-            <option value="">请选择类型</option>
-            <foreach name="data['proList']" item="v" key="k">
-                <option value="{$k}">{$v}</option>
-            </foreach>
-        </select>
-    </div>
-    <div class="z_rows clearfix" style="height:65px;">
-        <span><i>*</i>产品描述：</span>
-        <textarea style="color: #a6a7a7;height: 65px;width: 211px;" name="edit_description" autocomplete="off"></textarea>
-    </div>
-    <div class="z_rows txt_center mt35 clearfix">
-        <input type="button" value="确定" class="z_confirm edit_subtn">
-        <input type="button" value="取消" class="z_cancel" >
-    </div>
-</div>
-<!-- 弹窗(修改渠道) E  -->
-<input type="hidden" name="temp_id" autocomplete="off">
-
-
-<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-<script src="__PUBLIC__/js/layer/layer.js"></script>
-<script src="__PUBLIC__/js/clannelList.js"></script>
-<script>
-    var create_courseProduct_href = "{:U('System/Product/createCourseProduct')}";
-    var edit_courseProduct_href = "{:U('System/Product/editCourseProduct')}";
-    var del_courseProduct_href = "{:U('System/Product/delCourseProduct')}";
-    //添加窗口-----------------------------------------------
-    $('.create_btn').click(function(){
-        $(':input[name="create_pid"]').val($(this).attr('data-pid'));
-        layer.open({
-            type: 1,					//  页面层
-            title: '添加产品',			//	显示标题栏
-            area: ['404px','auto'],
-            shade: .6,					//	遮罩
-            time: 0,					//  关闭自动关闭
-            shadeClose: false,			//	遮罩控制关闭层
-            closeBtn: false,			//	不显示关闭按钮
-            shift: 1,					//	出现动画
-            content: $(".create_box") 	//  加载主体内容
-        });
-        $('.z_cancel').on('click',function(){
-            layer.closeAll(); 		// 关闭
-        });
-    });
-    //添加提交
-    $('.create_subtn').click(function(){
-        var data = {
-            productname : $(':input[name="create_name"]').val(),
-            price : $(':input[name="create_price"]').val(),
-            productplatform : $(':input[name="create_productplatform"]').val(),
-            description : $(':input[name="create_description"]').val()
-        };
-        common_ajax2(data, create_courseProduct_href, 'reload');
-    });
-    //修改窗口-----------------------------------------------
-    $('.edit_btn').click(function(){
-        $(':input[name="temp_id"]').val($(this).attr('data-id'));
-        $(':input[name="edit_name"]').val($(this).attr('data-name'));
-        $(':input[name="edit_price"]').val($(this).attr('data-price'));
-        $(':input[name="edit_productplatform"]').find('option[value="'+$(this).attr('data-productplatform')+'"]').attr("selected",true);
-        $(':input[name="edit_description"]').val($(this).attr('data-description'));
-        layer.open({
-            type: 1,					//  页面层
-            title: '修改产品',			//	显示标题栏
-            area: ['404px','auto'],
-            shade: .6,					//	遮罩
-            time: 0,					//  关闭自动关闭
-            shadeClose: false,			//	遮罩控制关闭层
-            closeBtn: false,			//	不显示关闭按钮
-            shift: 1,					//	出现动画
-            content: $(".edit_box") 	//  加载主体内容
-        });
-        $('.z_cancel').on('click',function(){
-            layer.closeAll(); 		// 关闭
-        });
-    });
-    //修改提交
-    $('.edit_subtn').click(function(){
-        var data = {
-            course_product_id : $(':input[name="temp_id"]').val(),
-            productname : $(':input[name="edit_name"]').val(),
-            price : $(':input[name="edit_price"]').val(),
-            productplatform : $(':input[name="edit_productplatform"]').val(),
-            description : $(':input[name="edit_description"]').val()
-        };
-        common_ajax2(data, edit_courseProduct_href, 'reload');
-    });
-    //删除 提交-------------------------------------
-    $('.del_btn').click(function(){
-        var id = $(this).attr('data-id');
-        layer.confirm('确定要删除该产品？', {
-            btn: ['确定','取消'] //按钮
-        }, function(){
-            var data = {
-                course_product_id : id
-            };
-            common_ajax2(data, del_courseProduct_href, 'reload');
-        }, function(){});
-    })
-
-</script>
-<script src="__PUBLIC__/js/common_ajax.js"></script>
-
-
-
-
-
-</body>
+		    </div>
+		</div>
+		
+		<!-- 添加弹窗 S  -->
+		<div class="product_box create_box">
+		    <div class="z_rows clearfix">
+		        <span><i>*</i>产品名称：</span>
+		        <input type="text" class="z_inp"  name="create_name">
+		    </div>
+		    <div class="z_rows clearfix">
+		        <span><i>*</i>价格：</span>
+		        <input type="text" class="z_inp" name="create_price" value="0.00" autocomplete="off">
+		    </div>
+		    <div class="z_rows clearfix">
+		        <span><i>*</i>所属产品：</span>
+		        <select class="rowSelect" name="create_productplatform" autocomplete="off" style="">
+		            <option value="">请选择类型</option>
+		            <foreach name="data['proList']" item="v" key="k">
+		                <option value="{$k}">{$v}</option>
+		            </foreach>
+		        </select>
+		    </div>
+		    <div class="z_rows clearfix">
+		        <span><i>*</i>产品描述：</span>
+		        <textarea class="proDescribe" maxlength="200" name="create_description" autocomplete="off"></textarea>
+		    </div>
+		    <div class="z_rows txt_center mt35 clearfix">
+		        <input type="button" value="确定" class="z_confirm create_subtn">
+		        <input type="button" value="取消" class="z_cancel" >
+		    </div>
+		</div>
+		<!-- 添加弹窗 E  -->
+		<!-- 修改弹窗 S  -->
+		<div class="product_box edit_box">
+		    <div class="z_rows clearfix">
+		        <span><i>*</i>产品名称：</span>
+		        <input type="text" class="z_inp"  name="edit_name">
+		    </div>
+		    <div class="z_rows clearfix">
+		        <span><i>*</i>价格：</span>
+		        <input type="text" class="z_inp" name="edit_price" value="0.00" autocomplete="off">
+		    </div>
+		    <div class="z_rows clearfix">
+		        <span><i>*</i>所属产品：</span>
+		        <select class="rowSelect" name="edit_productplatform" autocomplete="off">
+		            <option value="">请选择类型</option>
+		            <foreach name="data['proList']" item="v" key="k">
+		                <option value="{$k}">{$v}</option>
+		            </foreach>
+		        </select>
+		    </div>
+		    <div class="z_rows clearfix">
+		        <span><i>*</i>产品描述：</span>
+		        <textarea class="proDescribe" name="edit_description" autocomplete="off"></textarea>
+		    </div>
+		    <div class="z_rows txt_center mt35 clearfix">
+		        <input type="button" value="确定" class="z_confirm edit_subtn">
+		        <input type="button" value="取消" class="z_cancel" >
+		    </div>
+		</div>
+		<!-- 修改弹窗 E  -->
+		
+		<input type="hidden" name="temp_id" autocomplete="off">
+		
+		
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/clannelList.js"></script>
+		<script>
+		    var create_courseProduct_href = "{:U('System/Product/createCourseProduct')}";
+		    var edit_courseProduct_href = "{:U('System/Product/editCourseProduct')}";
+		    var del_courseProduct_href = "{:U('System/Product/delCourseProduct')}";
+		    //添加窗口-----------------------------------------------
+		    $('.create_btn').click(function(){
+		        $(':input[name="create_pid"]').val($(this).attr('data-pid'));
+		        layer.open({
+		            type: 1,					//  页面层
+		            title: '添加产品',			//	显示标题栏
+		            area: ['404px','auto'],
+		            shade: .6,					//	遮罩
+		            time: 0,					//  关闭自动关闭
+		            shadeClose: false,			//	遮罩控制关闭层
+		            closeBtn: false,			//	不显示关闭按钮
+		            shift: 1,					//	出现动画
+		            content: $(".create_box") 	//  加载主体内容
+		        });
+		        $('.z_cancel').on('click',function(){
+		            layer.closeAll(); 		// 关闭
+		        });
+		    });
+		    //添加提交
+		    $('.create_subtn').click(function(){
+		        var data = {
+		            productname : $(':input[name="create_name"]').val(),
+		            price : $(':input[name="create_price"]').val(),
+		            productplatform : $(':input[name="create_productplatform"]').val(),
+		            description : $(':input[name="create_description"]').val()
+		        };
+		        common_ajax2(data, create_courseProduct_href, 'reload');
+		    });
+		    //修改窗口-----------------------------------------------
+		    $('.edit_btn').click(function(){
+		        $(':input[name="temp_id"]').val($(this).attr('data-id'));
+		        $(':input[name="edit_name"]').val($(this).attr('data-name'));
+		        $(':input[name="edit_price"]').val($(this).attr('data-price'));
+		        $(':input[name="edit_productplatform"]').find('option[value="'+$(this).attr('data-productplatform')+'"]').attr("selected",true);
+		        $(':input[name="edit_description"]').val($(this).attr('data-description'));
+		        layer.open({
+		            type: 1,					//  页面层
+		            title: '修改产品',			//	显示标题栏
+		            area: ['404px','auto'],
+		            shade: .6,					//	遮罩
+		            time: 0,					//  关闭自动关闭
+		            shadeClose: false,			//	遮罩控制关闭层
+		            closeBtn: false,			//	不显示关闭按钮
+		            shift: 1,					//	出现动画
+		            content: $(".edit_box") 	//  加载主体内容
+		        });
+		        $('.z_cancel').on('click',function(){
+		            layer.closeAll(); 		// 关闭
+		        });
+		    });
+		    //修改提交
+		    $('.edit_subtn').click(function(){
+		        var data = {
+		            course_product_id : $(':input[name="temp_id"]').val(),
+		            productname : $(':input[name="edit_name"]').val(),
+		            price : $(':input[name="edit_price"]').val(),
+		            productplatform : $(':input[name="edit_productplatform"]').val(),
+		            description : $(':input[name="edit_description"]').val()
+		        };
+		        common_ajax2(data, edit_courseProduct_href, 'reload');
+		    });
+		    //删除 提交-------------------------------------
+		    $('.del_btn').click(function(){
+		        var id = $(this).attr('data-id');
+		        layer.confirm('确定要删除该产品？', {
+		            btn: ['确定','取消'] //按钮
+		        }, function(){
+		            var data = {
+		                course_product_id : id
+		            };
+		            common_ajax2(data, del_courseProduct_href, 'reload');
+		        }, function(){});
+		    })
+		
+		</script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+	</body>
 </html>

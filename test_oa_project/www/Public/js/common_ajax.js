@@ -81,10 +81,8 @@ function common_ajax2(data,url,loca,fun,showload){
                     };
                 };
             }else{
-                if(reflag.msg){
-                    layer.msg(reflag.msg,{icon:1});
-                };
                 if(loca=='reload'){
+                    layer.closeAll();
                     setTimeout(function(){
                         //var loca_url = window.location.href;
                         //window.location.href = loca_url+'#main';
@@ -100,6 +98,9 @@ function common_ajax2(data,url,loca,fun,showload){
                     setTimeout(function(){
                         window.location.href = reflag.data;
                     },1500);
+                };
+                if(reflag.msg){
+                    layer.msg(reflag.msg,{icon:1});
                 };
             };
             return false;

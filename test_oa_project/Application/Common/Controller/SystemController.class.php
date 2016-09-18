@@ -65,6 +65,9 @@ class SystemController extends BaseController
      * @return boolean
      */
     public function isLogin(){
+        if(!session(C('USER_AUTH_KEY'))){
+            $this->redirect(C('USER_AUTH_GATEWAY'));
+        }
         $userInfo = $this->system_user;
         $this->assign('userinfo',$userInfo);
         //判断是否开启禁止登录功能

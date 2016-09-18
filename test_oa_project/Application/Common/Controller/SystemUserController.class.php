@@ -430,6 +430,8 @@ class SystemUserController extends BaseController
         $userInfo = D('SystemUser')->where(array('system_user_id'=>$data['system_user_id']))->find();
         if($userInfo['username']!=$data['username']){
             $data['password'] == '';
+            $isUsername = D('SystemUser')->where(array('username'=>$data['username']))->find();
+            if(!empty($isUsername)) return array('code'=>'3', 'msg'=>'该手机号码已被注册', 'sign'=>'username');
         }
         $userInfoCheck = D('SystemUser')->where(array('check_id'=>$data['check_id']))->find();
         if(!empty($userInfoCheck)) {
@@ -888,7 +890,7 @@ class SystemUserController extends BaseController
     public function SystemUserLogsAlarm($systemUserId,$data)
     {
         session('login_alarm',null);
-        $result = D('SystemUserLogs')->field('city')->where(array('system_user_id'=>$systemUserId,'status'=>0,'district'=>array('EXP','IS NOT NULL')))->limit('0,10')->select();
+        $result = D('SystemUserLogs')->field('city')->where(array('system_user_id'=>$systemUserId,'status'=>0))->order('system_user_logs_id desc')->limit('0,10')->select();
         $d_arr = array();
         if(!empty($result)){
             foreach($result as $k=>$v){
@@ -912,20 +914,81 @@ class SystemUserController extends BaseController
                     $role_id = D('RoleUser')->field('role_id')->where(array('user_id'=>$systemUserId))->find();
                     $superiorid = D('Role')->field('superiorid')->where(array('id'=>$role_id))->find();
                     if(!empty($superiorid)){
+                        //记录已发送数组
+                        $send_username = array();
                         $superiorUser = D('RoleUser')->field('username')->where(array('role_id'=>$superiorid))->join('__SYSTEM_USER__ ON __SYSTEM_USER__.system_user_id=__ROLE_USER__.user_id')->select();
                         if(!empty($superiorUser)){
                             foreach($superiorUser as $v){
                                 $sendsuperior_data = array(
                                     "time"=>date("Y-m-d H:i:s", $time),
                                     "city"=>$data['data']['city'],
-                                    "realanme"=>$info['realname'],
+                                    "realname"=>$info['realname'],
                                     "mobile"=>decryptPhone($v['username'], C('PHONE_CODE_KEY')),
                                 );
                                 $apiController->sendSms('alarmsuperior', $sendsuperior_data);
+                                $send_username[] = $v['username'];
+                            }
+                        }
+                        //额外通知高层人员
+                        if(C('SMSHINT_USER')){
+                            $smshint_user = C('SMSHINT_USER');
+                            $smshint_list = D('SystemUser')->field('username')->where(array('system_user_id'=>array('IN',$smshint_user)))->select();
+                            if(!empty($smshint_list)){
+                                foreach($smshint_list as $v){
+                                    if(!in_array($v['username'],$send_username)){
+                                        $sendsuperior_data = array(
+                                            "time"=>date("Y-m-d H:i:s", $time),
+                                            "city"=>$data['data']['city'],
+                                            "realname"=>$info['realname'],
+                                            "mobile"=>decryptPhone($v['username'], C('PHONE_CODE_KEY')),
+                                        );
+                                        $apiController->sendSms('alarmsuperior', $sendsuperior_data);
+                                    }
+                                }
                             }
                         }
                     }
                     return true;
+                }
+                return true;
+            }elseif(in_array(date('H'), array('23','24','1','2','3','4','5','6','7'))){
+                $info = D('SystemUser')->field('username,realname')->where(array('system_user_id'=>$systemUserId))->find();
+                $apiController = new ApiController();
+                $time = time();
+                $role_id = D('RoleUser')->field('role_id')->where(array('user_id'=>$systemUserId))->find();
+                $superiorid = D('Role')->field('superiorid')->where(array('id'=>$role_id))->find();
+                if(!empty($superiorid) && $superiorid!=0) {
+                    //记录已发送数组
+                    $send_username = array();
+                    $superiorUser = D('RoleUser')->field('username')->where(array('role_id' => $superiorid))->join('__SYSTEM_USER__ ON __SYSTEM_USER__.system_user_id=__ROLE_USER__.user_id')->select();
+                    if (!empty($superiorUser)) {
+                        foreach ($superiorUser as $v) {
+                            $sendsuperior_data = array(
+                                "time" => date("Y-m-d H:i:s", $time),
+                                "realname" => $info['realname'],
+                                "mobile" => decryptPhone($v['username'], C('PHONE_CODE_KEY')),
+                            );
+                            $apiController->sendSms('alarmlatesuperior', $sendsuperior_data);
+                            $send_username[] = $v['username'];
+                        }
+                    }
+                }
+                //额外通知高层人员
+                if(C('SMSHINT_USER')){
+                    $smshint_user = C('SMSHINT_USER');
+                    $smshint_list = D('SystemUser')->field('username')->where(array('system_user_id'=>array('IN',$smshint_user)))->select();
+                    if(!empty($smshint_list)){
+                        foreach($smshint_list as $v){
+                            if(!in_array($v['username'],$send_username)){
+                                $sendsuperior_data = array(
+                                    "time" => date("Y-m-d H:i:s", $time),
+                                    "realname" => $info['realname'],
+                                    "mobile" => decryptPhone($v['username'], C('PHONE_CODE_KEY')),
+                                );
+                                $apiController->sendSms('alarmlatesuperior', $sendsuperior_data);
+                            }
+                        }
+                    }
                 }
                 return true;
             }

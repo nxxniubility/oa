@@ -3,6 +3,7 @@
 namespace Common\Controller;
 
 use Common\Controller\BaseController;
+use Common\Service\RedisUserService;
 
 class UserController extends BaseController
 {
@@ -117,6 +118,8 @@ class UserController extends BaseController
     {
         //参数处理
         $where = $this->dispostWhere($where);
+//        $RedisUserService = new RedisUserService();
+//        $result = $RedisUserService->getList($where);
         $field = array(
             "{$this->DB_PREFIX}user.user_id",
             "{$this->DB_PREFIX}user.username",
@@ -217,18 +220,13 @@ class UserController extends BaseController
             $data_info['user_id'] = $reUserId;
             $reUserInfo = D('UserInfo')->data($data_info)->add();
         }
-        //添加统计
-        $dataMarket['system_user_id'] = $data['system_user_id'];
-        $dataMarket['name'] = 'addnum';
-        $dataMarket['user_id'] = $reUserId;
-        $dataController = new DataController();
-        $dataController->addDataMarket($dataMarket);
         //添加数据记录
         $dataLog['operattype'] = '1';
         $dataLog['operator_user_id'] = $data['system_user_id'];
         $dataLog['system_user_id'] = $data['system_user_id'];
-        $dataLog['user_id'] = $data['user_id'];
+        $dataLog['user_id'] = $reUserId;
         $dataLog['logtime'] = time();
+        $dataController = new DataController();
         $dataController->addDataLogs($dataLog);
         //添加分配记录
         $logs = $this->allocationLogs($data, $data['system_user_id']);
@@ -351,6 +349,14 @@ class UserController extends BaseController
                 $data['callbacktime'] = time();
                 $data_user['callbacknum'] = array('exp','callbacknum+1');
                 $data_user['lastvisit'] = $data['callbacktime'];
+                //添加数据记录
+                $dataLog['operattype'] = '11';
+                $dataLog['operator_user_id'] = $data['system_user_id'];
+                $dataLog['system_user_id'] = $data['system_user_id'];
+                $dataLog['user_id'] = $data['user_id'];
+                $dataLog['logtime'] = time();
+                $dataController = new DataController();
+                $dataController->addDataLogs($dataLog);
             }else{
                 $data['callbacktime'] = !empty($data['nexttime'])?$data['nexttime']:time();
                 $data_user['lastvisit'] = $data['callbacktime'];
@@ -601,18 +607,13 @@ class UserController extends BaseController
                 $data_callback['nexttime'] = $_time;
                 $data_callback['remark'] = '审核申请转入操作：申请人-'.$systemUser['realname'].(!empty($toSysUser['realname'])?'，预所属人-'.$toSysUser['realname'].'。':'。');
                 $this->addCallback($data_callback,2);
-                //添加统计
-                $dataMarket['system_user_id'] = $data['system_user_id'];
-                $dataMarket['name'] = 'applynum';
-                $dataMarket['user_id'] = $applyInfo['user_id'];
-                $dataController = new DataController();
-                $dataController->addDataMarket($dataMarket);
                 //添加数据记录
                 $dataLog['operattype'] = '4';
                 $dataLog['operator_user_id'] = $data['system_user_id'];
                 $dataLog['system_user_id'] = $userData['system_user_id'];
                 $dataLog['user_id'] = $data['user_id'];
                 $dataLog['logtime'] = time();
+                $dataController = new DataController();
                 $dataController->addDataLogs($dataLog);
                 D()->commit();
                 return array('code'=>0,'msg'=>'审核通过');
@@ -668,28 +669,17 @@ class UserController extends BaseController
                     $data_callback['remark'] = '客户回库(管理操作):'.$data['remark'];
                     $data_callback['callbacktype'] = 14;
                 }
-                //添加统计
-                $dataMarket['system_user_id'] = $data['system_user_id'];
-                $dataMarket['name'] = 'directorrecovernum';
-                $dataMarket['user_id'] = $data['user_id'];
-                $dataController = new DataController();
-                $dataController->addDataMarket($dataMarket);
+                //添加数据记录
+                $dataLog['operattype'] = '8';
             }else{
-                $data_callback['remark'] = '客户放弃：'.$data['remark'];
-                $data_callback['callbacktype'] = 2;
-                //添加统计
-                $dataMarket['system_user_id'] = $data['system_user_id'];
-                $dataMarket['name'] = 'restartnum';
-                $dataMarket['user_id'] = $data['user_id'];
-                $dataController = new DataController();
-                $dataController->addDataMarket($dataMarket);
+                //添加数据记录
+                $dataLog['operattype'] = '6';
             }
-            //添加数据记录
-            $dataLog['operattype'] = '8';
             $dataLog['operator_user_id'] = $data['system_user_id'];
             $dataLog['system_user_id'] = $data['system_user_id'];
             $dataLog['user_id'] = $data['user_id'];
             $dataLog['logtime'] = $time;
+            $dataController = new DataController();
             $dataController->addDataLogs($dataLog);
             $this->addCallback($data_callback,2);
             D()->commit();
@@ -759,23 +749,18 @@ class UserController extends BaseController
             }else{
                 $data_callback['remark'] = '客户转出';
                 $data_callback['callbacktype'] = 1;
+                //添加数据记录
+                $dataLog['operattype'] = '5';
+                $dataLog['operator_user_id'] = $data['system_user_id'];
+                $dataLog['system_user_id'] = $data['tosystem_user_id'];
+                $dataLog['user_id'] = $data['user_id'];
+                $dataLog['logtime'] = $_time;
+                $dataController = new DataController();
+                $dataController->addDataLogs($dataLog);
             }
             $this->addCallback($data_callback,2);
             //新增分配记录
             $this->allocationLogs($userList,$data['tosystem_user_id']);
-            //添加统计
-            $dataMarket['system_user_id'] = $data['tosystem_user_id'];
-            $dataMarket['name'] = 'switchnum';
-            $dataMarket['user_id'] = $data['user_id'];
-            $dataController = new DataController();
-            $dataController->addDataMarket($dataMarket);
-            //添加数据记录
-            $dataLog['operattype'] = '5';
-            $dataLog['operator_user_id'] = $data['system_user_id'];
-            $dataLog['system_user_id'] = $data['tosystem_user_id'];
-            $dataLog['user_id'] = $data['user_id'];
-            $dataLog['logtime'] = $_time;
-            $dataController->addDataLogs($dataLog);
             D()->commit();
             return array('code'=>0,'msg'=>'数据分配成功');
         }else{
@@ -852,18 +837,13 @@ class UserController extends BaseController
             $this->addCallback($data_callback,2);
             //新增分配记录
             $this->allocationLogs($userList,$data['tosystem_user_id']);
-            //添加统计
-            $dataMarket['system_user_id'] = $data['tosystem_user_id'];
-            $dataMarket['name'] = 'acceptnum';
-            $dataMarket['user_id'] = $data['user_id'];
-            $dataController = new DataController();
-            $dataController->addDataMarket($dataMarket);
             //添加数据记录
             $dataLog['operattype'] = '3';
             $dataLog['operator_user_id'] = $data['system_user_id'];
             $dataLog['system_user_id'] = $data['tosystem_user_id'];
             $dataLog['user_id'] = $data['user_id'];
             $dataLog['logtime'] = $_time;
+            $dataController = new DataController();
             $dataController->addDataLogs($dataLog);
             //出库隐藏历史回访记录
             $this->heiddenOldInfo($data['user_id']);
@@ -906,18 +886,13 @@ class UserController extends BaseController
         $data_callback['system_user_id'] = $data['system_user_id'];
         $data_callback['remark'] = $data['remark'];
         $reflag = $this->addCallback($data_callback);
-        //添加统计
-        $dataMarket['system_user_id'] = $data['system_user_id'];
-        $dataMarket['name'] = 'redeemnum';
-        $dataMarket['user_id'] = $data['user_id'];
-        $dataController = new DataController();
-        $dataController->addDataMarket($dataMarket);
         //添加数据记录
         $dataLog['operattype'] = '9';
         $dataLog['operator_user_id'] = $data['system_user_id'];
         $dataLog['system_user_id'] = $data['system_user_id'];
         $dataLog['user_id'] = $data['user_id'];
         $dataLog['logtime'] = time();
+        $dataController = new DataController();
         $dataController->addDataLogs($dataLog);
         if($reflag['code']==0){
             D()->commit();
@@ -954,12 +929,14 @@ class UserController extends BaseController
         $data_callback['system_user_id'] = $data['system_user_id'];
         $data_callback['remark'] = '客户上门到访,转出客户(前台操作)';
         $reflag = $this->addCallback($data_callback);
-        //添加统计
-        $dataMarket['system_user_id'] = $data['system_user_id'];
-        $dataMarket['name'] = 'visitnum';
-        $dataMarket['user_id'] = $data['user_id'];
+        //添加数据记录
+        $dataLog['operattype'] = '12';
+        $dataLog['operator_user_id'] = $data['system_user_id'];
+        $dataLog['system_user_id'] = $data['system_user_id'];
+        $dataLog['user_id'] = $data['user_id'];
+        $dataLog['logtime'] = time();
         $dataController = new DataController();
-        $dataController->addDataMarket($dataMarket);
+        $dataController->addDataLogs($dataLog);
         if($reflag['code']==0){
             return array('code'=>0,'msg'=>'确认到访成功');
         }

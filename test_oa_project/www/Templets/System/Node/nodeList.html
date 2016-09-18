@@ -5,9 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
     <title>系统首页-{$siteinfo.sitename}</title>
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
-    <link rel="stylesheet" href="__PUBLIC__/js/layer/layer.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/layer/skin/layer.css">
     <link rel="stylesheet" href="__PUBLIC__/css/regionlManagement.css">
-    <link rel="stylesheet" href="__PUBLIC__/css/nodeList.css">
 </head>
 <body>
 <div class="wrapBox">
@@ -155,7 +154,7 @@
 <input type="hidden" name="temp_level" autocomplete="off">
 
 <!-- 弹窗(弹窗名字可修改) S  -->
-<div class="zidingyi_box" style="padding-top: 15px; padding-bottom: 15px;">
+<div class="zidingyi_box">
 
 	<div class="z_rows clearfix">
 		<span><i>*</i>节点名称：</span>
@@ -167,8 +166,8 @@
     </div>
     <div class="z_rows clearfix">
         <span><i>*</i>导航显示：</span>
-        <label><input name="node_display" type="radio" value="3" checked="checked"/>显示 </label>
-        <label style="margin-left: 12px;"><input name="node_display" type="radio" value="1" />隐藏 </label>
+        <label class="showNav"><input name="node_display" type="radio" value="3" checked="checked"/>显示 </label>
+        <label><input name="node_display" type="radio" value="1" />隐藏 </label>
     </div>
 	<div class="z_rows clearfix">
 		<span><i>*</i>节点排序：</span>

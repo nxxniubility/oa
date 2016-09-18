@@ -1,6 +1,7 @@
 <?php
 namespace System\Controller;
 use Common\Controller\BaseController;
+use Common\Service\RedisUserService;
 
 class MoveController extends BaseController
 {
@@ -66,9 +67,9 @@ class MoveController extends BaseController
         // $save2['school'] = 0;
         // $upda = D("UserInfo")->where($where)->save($save2);
 // dump($upda);
-// dump($oldList);        
+// dump($oldList);
 // exit;
-      
+
        ///////////////////////////////////
        ///问题3：学历值不存在于数据库
        // $save['education_id'] = 0;
@@ -85,7 +86,7 @@ class MoveController extends BaseController
 
        ///////////////////////////////////
        ///问题5：薪酬存在：“格式化”等字样
-       // 
+       //
 
 
 
@@ -1345,6 +1346,23 @@ class MoveController extends BaseController
 //        $this->redirect('/System/Move/updateCallBack',array('p' =>$p+1,'count' => $count));
 //    }
 
+   public function addRedis()
+   {
+        $count = I('count');
+        if(empty($count)){
+            $count =  M('User')->count();
+        }
+        $p = I('p');
+        $p = empty($p) ? 1 : $p;
+
+       if($p<=ceil($count/1000)) {
+           $user = M('User')->limit((($p - 1) * 1000) . ',1000')->order('user_id desc')->select();
+
+           $RedisUserService = new RedisUserService();
+           $RedisUserService->addUser($user);
+           $this->redirect('/System/Move/addRedis',array('p' =>$p+1,'count' => $count));
+       }
+   }
 
 
 
@@ -2288,7 +2306,7 @@ class MoveController extends BaseController
         }
     }
 
-    
+
     function updateCreateuser(){
         exit();
         set_time_limit(0);

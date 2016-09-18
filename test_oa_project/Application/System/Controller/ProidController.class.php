@@ -576,7 +576,7 @@ class ProidController extends SystemController
         if(IS_POST) {
             $pagestype_id = I('post.pagestype_id');
             $type = I('post.type',null);
-            if( isset($type) && $type=='del' ){
+            if( $type=='del' ){
                 $request['status'] = 0;
                 $result = $proidMain->editPagesType($request,$pagestype_id);
                 if($result['code'] != 0){
@@ -584,7 +584,7 @@ class ProidController extends SystemController
                 }else {
                     $this->success('删除成功', 0);
                 }
-            }else if( isset($type) && $type=='addEdit' ){
+            }else if( $type=='addEdit' ){
                 $request['addPagesType'] = I('post.addPagesType');
                 $request['editPagesType'] = I('post.editPagesType');
                 if(empty($request['addPagesType']) && empty($request['editPagesType'])){
@@ -885,29 +885,17 @@ class ProidController extends SystemController
                     $promote['keyword'] = array('like', "%{$pro['key_val']}%" );
                 }
             }
-        }
+        }     
         $promList = $proidMain->getPromoteList($promote,(($re_page-1)*15).',15');
-        $data['promoteListAll'] = $promList['msg'];
-        $result = $channelMain->getAllChannel();
-        $data['channelList'] = $result['data'];
-
         //加载分页类
         $data['paging'] = $this->Paging($re_page,15,$data['promoteListAll']['count'],$proid);
         $data['proid_id'] = $proid['proid_id'];
-        foreach ($data['promoteListAll']['promoteList'] as $key => $promote) {
-            $proid = $proidMain->getProInfo($promote['proid_id']);
-            if ($proid['code'] != 0) {
-               $channeldata = $channelMain->getChannel($proid['msg']['channel_id']);
-               $channelname = $channeldata['data'];
-            }
-            $data['promoteListAll']['promoteList'][$key]['channelname'] = $channelname['channelName'];
-            $data['promoteListAll']['promoteList'][$key]['accountname'] = $proid['msg']['accountname'];
-            
-        }
-        $promoteList = $proidMain->getProLevPlanList($proid_id);
+        $proidInfo = $proidMain->getProInfo($promote['proid_id']);
         $this->assign('proid_id', $proid_id);    
-        $this->assign('promoteList', $promoteList['msg']);    
+        $this->assign('promoteList', $promList['msg']);  
+
         $this->assign('data', $data);
+        $this->assign('proidInfo', $proidInfo['msg']);
         $this->assign('urlDelPromote', U("System/Proid/delPro"));
         $this->display();
 
@@ -1045,7 +1033,6 @@ class ProidController extends SystemController
         $promoteInfo['mServicecode']['data'] = $mser['msg'];
         $promoteInfo['pc_page']=D("Pages")->where(array('pages_id'=>$promoteInfo['pc_pages_id']))->getField('subject');
         $promoteInfo['m_page']=D("Pages")->where(array('pages_id'=>$promoteInfo['m_pages_id']))->getField('subject');
-        
         $pcPagesTypeList = $proidMain->getPagesType($pc);
         $promoteInfo['pcPagesTypeList'] = $pcPagesTypeList['msg'];
         $mPagesTypeList = $proidMain->getPagesType($m);

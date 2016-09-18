@@ -71,11 +71,11 @@
 						<th>移动推广地址</th>
 						<th>操作</th>
 					</tr>
-					<foreach name = "data['promoteListAll']['promoteList']" item = "promote">
+					<foreach name = "promoteList['promoteList']" item = "promote">
 						<tr>
 							<td class="firItem"><span>{$promote['promote_id']}</span></td>
-							<td>{$promote['accountname']}</td>
-							<td>{$promote['channelname']}</td>
+							<td>{$proidInfo['accountname']}</td>
+							<td>{$proidInfo['channelName']}</td>
 							<td>{$promote['plan']}</td>
 							<td>{$promote['planunit']}</td>
 							<td>{$promote['keyword']}</td>

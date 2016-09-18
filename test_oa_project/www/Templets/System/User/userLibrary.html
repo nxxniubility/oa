@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
     <title>系统首页-{$siteinfo.sitename}</title>
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
-    <link rel="stylesheet" href="__PUBLIC__/css/ClientList.css?v=20160822">
+    <link rel="stylesheet" href="__PUBLIC__/css/ClientList.css?v=20160912">
     <link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
     <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
     <style>
@@ -53,13 +53,13 @@
         <div class="Filter">
             <div class="frame">
                 <div class="details">
-                    <span>客户状态：</span>
+                    <span>客户状态：<i style="color: red;">（可多选）</i></span>
+                    <?php $getstatusarr = explode(',',$data['request']['status']);?>
                     <ul data-id="status">
-                        <li><a href="javascript:;" data-value="0" {:$data['request']['status']==0?'class="on_hover"':''}>全部</a></li>
-                        <li><a href="javascript:;" data-value="20" {:$data['request']['status']==20?'class="on_hover"':''}>待联系</a></li>
-                        <li><a href="javascript:;" data-value="30" {:$data['request']['status']==30?'class="on_hover"':''}>待跟进</a></li>
-                        <li><a href="javascript:;" data-value="70" {:$data['request']['status']==70?'class="on_hover"':''}>交易</a></li>
-                        <li><a href="javascript:;" data-value="160" {:$data['request']['status']==160?'class="on_hover"':''}>回库</a></li>
+                        <li><a href="javascript:;" data-value="20" {:(empty($getstatusarr[0]))?'class="multiple on_hover"':((in_array(20,$getstatusarr))?'class="multiple on_hover"':'class="multiple"')}>待联系</a></li>
+                        <li><a href="javascript:;" data-value="30" {:(empty($getstatusarr[0]))?'class="multiple on_hover"':((in_array(30,$getstatusarr))?'class="multiple on_hover"':'class="multiple"')}>待跟进</a></li>
+                        <li><a href="javascript:;" data-value="70" {:(empty($getstatusarr[0]))?'class="multiple on_hover"':((in_array(70,$getstatusarr))?'class="multiple on_hover"':'class="multiple"')}>交易</a></li>
+                        <li><a href="javascript:;" data-value="160" {:(empty($getstatusarr[0]))?'class="multiple on_hover"':(in_array(160,$getstatusarr)?'class="multiple on_hover"':'class="multiple"')}>回库</a></li>
                     </ul>
                 </div>
                 <div class="details">
@@ -414,7 +414,7 @@
                 </div>
                 <table cellpadding="0" cellspacing="0" width="40" id="table3">
                     <thead>
-                    <th>操作</th>
+                        <th>操作</th>
                     </thead>
                     <tbody>
                     <foreach name="data['userAll']" item="v" key="k">
@@ -796,8 +796,6 @@
                 <div id="allocation_body">
 
                 </div>
-
-
             </div>
         </div>
     </div>
