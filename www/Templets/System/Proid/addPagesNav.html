@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="__PUBLIC__/css/templateList.css">
 </head>
 <body>
-<div class="wrapBox">
+<div class="wrapBox" id="addPagesWrap">
     <div class="proCont">
         <div class="proContTop clearfix">
             <div class="topTit l">
@@ -22,8 +22,8 @@
         </div>
         <div class="addContMiddle">
             <div class="addMiddle2">
-                <span class="tlStep1"></span>
-                <span class="tlStep22"></span>
+                <span class="tlStep1 fl"><em>设置专题页信息</em><i></i></span>
+                <span class="tlStep2 fr"><em>选择导航（非必填项）</em><i></i></span>
             </div>
 
             <!-- 选择导航区域 S -->
@@ -225,7 +225,7 @@
                     if(reflag.data.paging){
                         var str = '';
                         $.each(reflag.data.data,function(k,v){
-                            str+='<li> <a href="javascript:;"><div class="picBox data-value="'+v.pages_id+'"> <img src="'+v.litpic+'"> </div> <div class="snId">'+v.pages_id+'</div> <div class="snLiteral">'+v.subject+'</div> </a></li>';
+                            str+='<li> <a href="javascript:;"><div class="picBox data-value="'+v.pages_id+'"> <img src="'+v.litpic+'"> </div> <div class="snId"><span>'+v.pages_id+'</span></div> <div class="snLiteral">'+v.subject+'</div> </a></li>';
                         });
                         $('.templateUl').empty().append(str);
                         $('#paging_body').empty().append(reflag.data.paging);

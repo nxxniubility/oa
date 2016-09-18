@@ -43,6 +43,12 @@ return array(
             "smsdata_id" => "SMS_13460608",
             "smsdata" => array("city"=>"","realname"=>"",'time'=>"","product"=>"OA系统")
         ),
+        //深夜登录短信提醒(上级)
+        "alarmlatesuperior" => array(
+            "signName" => "登录提醒",
+            "smsdata_id" => "SMS_14761824",
+            "smsdata" =>  array("realname"=>"",'time'=>"","product"=>"OA系统")
+        ),
         //员工发送短信到客户
         "sendUser" => array(
             "signName" => "信息通知",

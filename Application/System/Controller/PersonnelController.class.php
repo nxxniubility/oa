@@ -99,7 +99,7 @@ class PersonnelController extends SystemController {
             //是否只修改排序值 --其他ajax调用
             if(empty($departmentname)) $this->ajaxReturn(1, '部门名称不能为空', '', 'departmentname');
             $requery_data['departmentname'] = $departmentname;
-            $requery_data['departmentname_id'] = $departmentname_id;
+            $requery_data['department_id'] = $departmentname_id;
             $departmentMain = new DepartmentMain();
             $result = $departmentMain->edit($requery_data);
             //修改部门成功
