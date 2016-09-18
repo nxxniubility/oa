@@ -12,6 +12,7 @@ use Common\Controller\SystemUserController;
 use Common\Controller\ProidController;
 use Common\Controller\UserController as UserMain;
 use Common\Controller\ZoneController;
+use Api\Controller\UserController as ApiUser;
 
 class UserController extends SystemController
 {
@@ -102,16 +103,12 @@ class UserController extends SystemController
         if (IS_POST) {
             //获取参数请求
             $request = I('post.');
-            if (empty($request['username']) && empty($request['tel']) && empty($request['qq'])) $this->ajaxReturn(11, '手机号码 / 固定电话 / QQ 至少填写一项');
-            if (empty($request['infoquality'])) $this->ajaxReturn(11, '信息质量不能为空');
-            if (empty($request['channel_id'])) $this->ajaxReturn(11, '所属渠道不能为空');
-            if (empty($request['course_id']) && $request['course_id']!=0 || $request['course_id']==null) $this->ajaxReturn(11, '请选择意向课程');
-            if (empty($request['remark'])) $this->ajaxReturn(11, '备注不能为空');
             $request['system_user_id'] = $this->system_user_id;
             $request['zone_id'] = $this->system_user['zone_id'];
             //添加客户
-            $userMain = new UserMain();
-            $reflag = $userMain->createUser($request);
+            $ApiUser = new ApiUser();
+            $reflag = $ApiUser->addUser($request);
+            $reflag = Array (json_decode($reflag));
             //返回数据操作状态 是否前台添加的客户
             $type = I('get.type');
             if ($type == 'visit') {
@@ -163,20 +160,18 @@ class UserController extends SystemController
             $request = I('post.');
             //修改用户信息
             if ($request['type'] == 'edituser') {
-                //实例验证类
-                $checkform = new \Org\Form\Checkform();
-                if (!empty($request['qq']) && !$checkform->checkInt($request['qq']) && strlen($request['qq'])>=5 &&strlen($request['qq'])<=12) $this->ajaxReturn(1, 'QQ号码格式有误');
-                if (!empty($request['email']) && !$checkform->isEmail($request['email'])) $this->ajaxReturn(1, '邮箱地址格式有误');
                 $request['user_id'] = $user_id;
                 $request['system_user_id'] = $this->system_user_id;
-                $userMain = new UserMain();
-                $reflag = $userMain->editUser($request);
+                $ApiUser = new ApiUser();
+                $reflag = $ApiUser->editUser($request);
+                $reflag = Array (json_decode($reflag));
                 if($reflag['code']==0){
                     if(!empty($request['remark'])){
                         $_request['user_id'] = $user_id;
                         $_request['system_user_id'] = $this->system_user_id;
                         $_request['remark'] = $request['remark'];
-                        $reflag_info = $userMain->editUserInfo($_request);
+                        $reflag_info = $ApiUser->editUser($_request);
+                        $reflag_info = Array (json_decode($reflag_info));
                     }
                     //返回数据操作状态
                     if ($reflag_info['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
@@ -192,24 +187,19 @@ class UserController extends SystemController
                 if (!empty($request['birthday'])) $request['birthday'] = strtotime("-{$checkform->getStrInt($request['birthday'])} year");
                 $request['user_id'] = $user_id;
                 $request['system_user_id'] = $this->system_user_id;
-                $userMain = new UserMain();
-                $reflag = $userMain->editUserInfo($request);
+                $ApiUser = new ApiUser();
+                $reflag = $ApiUser->editUserInfo($request);
+                $reflag = Array (json_decode($reflag));
                 //返回数据操作状态
                 if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
                 else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
             } else if ($request['type'] == 'addcallback') {
-                //添加回访记录
-                if (empty($request['nextvisit'])) $this->ajaxReturn(1, '回访时间不能为空', '', 'nextvisit');
-                if (empty($request['waytype'])) $this->ajaxReturn(1, '请选择回访方式');
-                if (empty($request['attitude_id'])) $this->ajaxReturn(1, '请选择跟进结果');
-                if (empty($request['remark'])) $this->ajaxReturn(1, '备注不能为空');
                 $request['nexttime'] = strtotime(($request['nextvisit']). ' ' .($request['nextvisit_hi']));
-                if($request['nexttime']>strtotime('+15 day')) $this->ajaxReturn(1, '回访时间设置不能大于十五天', '', 'nextvisit');
-                if($request['nexttime']<time()) $this->ajaxReturn(1, '回访时间设置不能小于当前时间', '', 'nextvisit');
                 $request['user_id'] = $user_id;
                 $request['system_user_id'] = $this->system_user_id;
-                $userMain = new UserMain();
-                $reflag = $userMain->addCallback($request,1);
+                $ApiUser = new ApiUser();
+                $reflag = $ApiUser->addCallback($request,1);
+                $reflag = Array (json_decode($reflag));
                 //返回数据操作状态
                 if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
                 else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -224,20 +214,20 @@ class UserController extends SystemController
             } else if ($request['type'] == 'getSmsLogs') {
                 //短信记录
                 $getWhere['user_id'] = $user_id;
-                $userMain = new UserMain();
-                $userLog = $userMain->getUserSmsLog($getWhere,$callbackType);
+                $ApiUser = new ApiUser();
+                $userLog = $ApiUser->getUserSmsLog($getWhere,$callbackType);
                 //返回数据操作状态
                 if ($userLog['code'] == 0) $this->ajaxReturn(0, '', $userLog['data']);
                 else  $this->ajaxReturn($userLog['code'], $userLog['msg']);
             }
         }else{
             //客户详情
-            $userMain = new UserMain();
-            $userInfo = $userMain->getUserInfo($user_id);
+            $ApiUser = new ApiUser();
+            $userInfo = $ApiUser->getUserInfo(array('user_id'=>$user_id));
             $data['userInfo'] = $userInfo['data'];
             if ($data['userInfo']['status'] != 160 && $data['userInfo']['system_user_id'] == $this->system_user_id) $data['isSelf'] = 1;
             //回访记录
-            $callbackList = $userMain->getUserCallback($user_id, $callbackType);
+            $callbackList = $ApiUser->getUserCallback(array('user_id'=>$user_id,'callbackType'=>$callbackType));
             $data['callbackList'] = $callbackList['data'];
             //获取学历表
             $educationMain = new EducationController();
