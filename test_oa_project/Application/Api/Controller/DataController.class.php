@@ -23,10 +23,10 @@ class DataController extends ApiBaseController
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getDataLogs($data=null)
+    public function getDataLogs($requesr=null)
     {
         //外部调用？
-        if($data===null){
+        if($requesr===null){
             $where['logtime'] = I('param.logtime',null);
             $where['operattype'] = I('param.operattype',null);
             $where['system_user_id'] = I('param.system_user_id',null);
@@ -35,15 +35,26 @@ class DataController extends ApiBaseController
             $where['user_id'] = I('param.user_id',null);
             $where['operator_user_id'] = I('param.operator_user_id',null);
         }else{
-            $where = $data;
+            $where = $requesr;
         }
-        //去除数组空值
-        $where = array_filter($where);
-        //获取接口服务层
-        $DataService = new DataService();
-        $result = $DataService->getDataLogs($where);
-        //返回参数
-        $this->ajaxReturn(0, '获取成功', $result);
+        $getService = function($where) {
+            //去除数组空值
+            $where = array_filter($where);
+            //获取接口服务层
+            $DataService = new DataService();
+            $result = $DataService->getDataLogs($where);
+            //返回参数
+            if($result['code']==0){
+                return array('code'=>0,'msg'=>'获取成功','data'=>$result['data']);
+            }
+            return array('code'=>$result['code'],'msg'=>$result['msg']);
+        };
+        $reData = $getService($where);
+        if(!empty($request)){
+            return $reData;
+        }else{
+            $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
+        }
     }
 
     /*
@@ -52,10 +63,10 @@ class DataController extends ApiBaseController
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function addDataLogs($data=null)
+    public function addDataLogs($requesr=null)
     {
         //外部调用？
-        if($data===null){
+        if($requesr===null){
             $where['operattype'] = I('param.operattype',null);
             $where['operator_user_id'] = I('param.operator_user_id',null);
             $where['user_id'] = I('param.user_id',null);
@@ -66,17 +77,28 @@ class DataController extends ApiBaseController
             $where['channel_id'] = I('param.channel_id',null);
             $where['infoquality'] = I('param.infoquality',null);
         }else{
-            $where = $data;
+            $where = $requesr;
         }
-        //去除数组空值
-        $where = array_filter($where);
-        //参数添加
-        $where['logtime'] = time();
-        //获取接口服务层
-        $DataService = new DataService();
-        $result = $DataService->addDataLogs($where);
-        //返回参数
-        $this->ajaxReturn(0, '添加成功', $result);
+        $getService = function($where) {
+            //去除数组空值
+            $where = array_filter($where);
+            //参数添加
+            $where['logtime'] = time();
+            //获取接口服务层
+            $DataService = new DataService();
+            $result = $DataService->addDataLogs($where);
+            //返回参数
+            if($result['code']==0){
+                return array('code'=>0,'msg'=>'获取成功','data'=>$result['data']);
+            }
+            return array('code'=>$result['code'],'msg'=>$result['msg']);
+        };
+        $reData = $getService($where);
+        if(!empty($request)){
+            return $reData;
+        }else{
+            $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
+        }
     }
 
 
@@ -88,22 +110,33 @@ class DataController extends ApiBaseController
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getDataMarket($data=null)
+    public function getDataMarket($requesr=null)
     {
         //外部调用？
-        if($data===null){
+        if($requesr===null){
             $where['daytime'] = I('param.daytime',null);
             $where['system_user_id'] = I('param.system_user_id',null);
         }else{
-            $where = $data;
+            $where = $requesr;
         }
-        //去除数组空值
-        $where = array_filter($where);
-        //获取接口服务层
-        $DataService = new DataService();
-        $result = $DataService->getDataMarket($where);
-        //返回参数
-        $this->ajaxReturn(0, '获取成功', $result);
+        $getService = function($where){
+            //去除数组空值
+            $where = array_filter($where);
+            //获取接口服务层
+            $DataService = new DataService();
+            $result = $DataService->getDataMarket($where);
+            //返回参数
+            if($result['code']==0){
+                return array('code'=>0,'msg'=>'获取成功','data'=>$result['data']);
+            }
+            return array('code'=>$result['code'],'msg'=>$result['msg']);
+        };
+        $reData = $getService($where);
+        if(!empty($request)){
+            return $reData;
+        }else{
+            $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
+        }
     }
 
     /*
@@ -112,26 +145,37 @@ class DataController extends ApiBaseController
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function addDataMarket($data=null)
+    public function addDataMarket($requesr=null)
     {
         //外部调用？
-        if($data===null){
+        if($requesr===null){
             $where['user_id'] = I('param.user_id',null);
             $where['system_user_id'] = I('param.system_user_id',null);
             $where['name'] = I('param.name',null);
         }else{
-            $where = $data;
+            $where = $requesr;
         }
-        //去除数组空值
-        $where = array_filter($where);
-        //必要参数？
-        if( empty($where['user_id']) || empty($where['system_user_id']) || empty($where['name']) ){
-            $this->ajaxReturn(1, '缺少必要参数');
+        $getService = function($where) {
+            //去除数组空值
+            $where = array_filter($where);
+            //必要参数？
+            if (empty($where['user_id']) || empty($where['system_user_id']) || empty($where['name'])) {
+                return array('code'=>1,'msg'=>'参数异常');
+            }
+            //获取接口服务层
+            $DataService = new DataService();
+            $result = $DataService->addDataMarket($where);
+            //返回参数
+            if($result['code']==0){
+                return array('code'=>0,'msg'=>'获取成功','data'=>$result['data']);
+            }
+            return array('code'=>$result['code'],'msg'=>$result['msg']);
+        };
+        $reData = $getService($where);
+        if(!empty($request)){
+            return $reData;
+        }else{
+            $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
         }
-        //获取接口服务层
-        $DataService = new DataService();
-        $result = $DataService->addDataMarket($where);
-        //返回参数
-        $this->ajaxReturn(0, '添加成功', $result);
     }
 }

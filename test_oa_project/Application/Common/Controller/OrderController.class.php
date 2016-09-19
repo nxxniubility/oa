@@ -574,7 +574,7 @@ class OrderController extends BaseController
             $_discount_id = explode(',', $str);
             $dmoney_num = 0;
             foreach ($_discount_id as $k => $v) {
-                $reInfo = D('User')->getFeeDiscountInfo($v);
+                $reInfo = D('Discount')->field('dmoney')->where(array('discount_id'=>$v))->find();
                 $dmoney_num = $dmoney_num + round($reInfo['dmoney']);
             }
             if ($dmoney_num > C('ADMIN_USER_MAX_DISCOUNT')) {
@@ -615,9 +615,11 @@ class OrderController extends BaseController
     {
         foreach($where as $k=>$v){
             if($k=='role_id'){
-                $ids = $this->getRoleIds($v);
-                if($ids){
-                    $where["{$this->DB_PREFIX}order.system_user_id"] = array('IN', $ids);
+                if(!empty($v)){
+                    $ids = $this->getRoleIds($v);
+                    if($ids!==false){
+                        $where["{$this->DB_PREFIX}order.system_user_id"] = array('IN', $ids);
+                    }
                 }
             }elseif($k=='status'){
                 $where["{$this->DB_PREFIX}order.".$k] = array('IN', $v);;
@@ -657,10 +659,13 @@ class OrderController extends BaseController
             ->where(array('role_id'=>$role_id))
             ->select();
         $systemUserArr = array();
-        foreach($reList as $v){
-            $systemUserArr[] = $v['user_id'];
+        if(!empty($reList)){
+            foreach($reList as $v){
+                $systemUserArr[] = $v['user_id'];
+            }
+            return $systemUserArr;
         }
-        return $systemUserArr;
+        return '0';
     }
 
     /**

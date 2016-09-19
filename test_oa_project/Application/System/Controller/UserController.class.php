@@ -108,7 +108,6 @@ class UserController extends SystemController
             //添加客户
             $ApiUser = new ApiUser();
             $reflag = $ApiUser->addUser($request);
-            $reflag = Array (json_decode($reflag));
             //返回数据操作状态 是否前台添加的客户
             $type = I('get.type');
             if ($type == 'visit') {
@@ -171,7 +170,6 @@ class UserController extends SystemController
                         $_request['system_user_id'] = $this->system_user_id;
                         $_request['remark'] = $request['remark'];
                         $reflag_info = $ApiUser->editUser($_request);
-                        $reflag_info = Array (json_decode($reflag_info));
                     }
                     //返回数据操作状态
                     if ($reflag_info['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
@@ -189,7 +187,6 @@ class UserController extends SystemController
                 $request['system_user_id'] = $this->system_user_id;
                 $ApiUser = new ApiUser();
                 $reflag = $ApiUser->editUserInfo($request);
-                $reflag = Array (json_decode($reflag));
                 //返回数据操作状态
                 if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
                 else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -199,7 +196,6 @@ class UserController extends SystemController
                 $request['system_user_id'] = $this->system_user_id;
                 $ApiUser = new ApiUser();
                 $reflag = $ApiUser->addCallback($request,1);
-                $reflag = Array (json_decode($reflag));
                 //返回数据操作状态
                 if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
                 else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -390,14 +386,10 @@ class UserController extends SystemController
     public function redeemUser()
     {
         $request = I('post.');
-        //赎回客户
-        if (empty($request['nexttime'])) $this->ajaxReturn(1, '回访时间不能为空', '', 'recover_nextvisit');
-        else $request['nexttime'] = strtotime($request['nexttime']);
-        if (empty($request['remark'])) $this->ajaxReturn(1, '备注不能为空');
         //获取转入申请不可分配的数据
         $request['system_user_id'] = $this->system_user_id;
-        $userMain = new UserMain();
-        $reflag = $userMain->redeemUser($request);
+        $ApiUser = new ApiUser();
+        $reflag = $ApiUser->redeemUser($request);
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -440,16 +432,12 @@ class UserController extends SystemController
     public function abandonUser()
     {
         $request = I('post.');
-        if(empty($request['flag']) || $request['flag']!=10){
-            if (empty($request['abandon_attitude_id'])) $this->ajaxReturn(1, '放弃原因不能为空');
-        }
-        if (empty($request['abandon_remark'])) $this->ajaxReturn(1, '备注不能为空');
         $data['user_id'] = $request['user_id'];
         $data['attitude_id'] = $request['abandon_attitude_id'];
         $data['remark'] = $request['abandon_remark'];
         $data['system_user_id'] = $this->system_user_id;
-        $userMain = new UserMain();
-        $reflag = $userMain->abandonUser($data);
+        $ApiUser = new ApiUser();
+        $reflag = $ApiUser->abandonUser($data);
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -462,9 +450,9 @@ class UserController extends SystemController
     public function editUserMark()
     {
         $request = I('post.');
-        $userMain = new UserMain();
         $request['system_user_id'] = $this->system_user_id;
-        $reflag = $userMain->editUser($request);
+        $ApiUser = new ApiUser();
+        $reflag = $ApiUser->editUser($request);
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -496,8 +484,8 @@ class UserController extends SystemController
     {
         $request = I('post.');
         $request['system_user_id'] = $this->system_user_id;
-        $userMain = new UserMain();
-        $reflag = $userMain->affirmVisit($request);
+        $ApiUser = new ApiUser();
+        $reflag = $ApiUser->affirmVisit($request);
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -523,10 +511,10 @@ class UserController extends SystemController
             if ($reSystemList !== false) $this->ajaxReturn(0, '', $reSystemList);
             else  $this->ajaxReturn(1);
         } else if ($request['type'] == 'submit') {
-            $userMain = new UserMain();
-            $request['tosystem_user_id'] = $request['system_user_id'];
             $request['system_user_id'] = $this->system_user_id;
-            $reflag = $userMain->allocationUser($request);
+            $request['tosystem_user_id'] = $request['system_user_id'];
+            $ApiUser = new ApiUser();
+            $reflag = $ApiUser->allocationUser($request);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
             else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -555,8 +543,8 @@ class UserController extends SystemController
         } else if ($request['type'] == 'submit') {
             $request['tosystem_user_id'] = $request['system_user_id'];
             $request['system_user_id'] = $this->system_user_id;
-            $userMain = new UserMain();
-            $reflag = $userMain->restartUser($request, 1);
+            $ApiUser = new ApiUser();
+            $reflag = $ApiUser->restartUser($request);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
             else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -773,8 +761,8 @@ class UserController extends SystemController
         } else if ($request['type'] == 'submit') {
             $request['tosystem_user_id'] = $request['system_user_id'];
             $request['system_user_id'] = $this->system_user_id;
-            $userMain = new UserMain();
-            $reflag = $userMain->restartUser($request, 2);
+            $ApiUser = new ApiUser();
+            $reflag = $ApiUser->restartUserManage($request);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
             else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -793,8 +781,8 @@ class UserController extends SystemController
         $data['attitude_id'] =0;
         $data['remark'] = $request['abandon_remark'];
         $data['system_user_id'] = $this->system_user_id;
-        $userMain = new UserMain();
-        $reflag = $userMain->abandonUser($data, 2);
+        $ApiUser = new ApiUser();
+        $reflag = $ApiUser->abandonUserManage($data, 2);
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -820,10 +808,10 @@ class UserController extends SystemController
             if ($reSystemList !== false) $this->ajaxReturn(0, '', $reSystemList);
             else  $this->ajaxReturn(1);
         } else if ($request['type'] == 'submit') {
-            $userMain = new UserMain();
             $request['tosystem_user_id'] = $request['system_user_id'];
             $request['system_user_id'] = $this->system_user_id;
-            $reflag = $userMain->allocationUser($request, 2);
+            $ApiUser = new ApiUser();
+            $reflag = $ApiUser->allocationUserManage($request);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
             else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');

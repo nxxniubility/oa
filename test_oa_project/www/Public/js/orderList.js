@@ -25,7 +25,7 @@ $(function(){
             //	alert("ie8");
             var url_from = $('#subForm').attr('action');
             var newstr=url_from.replace("pjax_body","main");
-            $('#subForm').attr('onsubmit',' ').attr('action',newstr);
+            $('#subForm').attr('onsubmit',' ');
         }
     }
     //pjax
@@ -117,6 +117,14 @@ $(function(){
 | 异步提交处理
 |-----------------------------------------------------------------------------------
 */
+function chkInt(strForText){
+    var str = /^[0-9]+.?[0-9]*$/;
+    var reg = new RegExp(str);
+    if(!reg.test(strForText)) {
+        return false;
+    }
+    return true;
+};
 $(function(){
     //审核提交
     $(document).on('click','.auditPass,.auditNotPassed', function(){
@@ -136,6 +144,13 @@ $(function(){
 
     //退订金
     $(document).on('click','#depositSub', function(){
+        if($(':input[name="deposit_cost"]').val().length>10){
+            layer.msg('金额不能大于10位数', {icon:2});
+            return false;
+        }else if(!chkInt($(':input[name="deposit_cost"]').val())){
+            layer.msg('金额只能输入数字', {icon:2});
+            return false;
+        }
         var data = {
             type:'deposit',
             order_id : $('input[name="order_id"]').val(),
@@ -149,6 +164,13 @@ $(function(){
 
     //收款
     $(document).on('click','#receivablesSub', function(){
+        if($(':input[name="receivables_cost"]').val().length>10){
+            layer.msg('金额不能大于10位数', {icon:2});
+            return false;
+        }else if(!chkInt($(':input[name="receivables_cost"]').val())){
+            layer.msg('金额只能输入数字', {icon:2});
+            return false;
+        }
         var data = {
             order_id : $('input[name="order_id"]').val(),
             practicaltime : $('input[name="receivables_practicaltime"]').val(),
@@ -161,6 +183,13 @@ $(function(){
 
     //退款
     $(document).on('click','#returnSub', function(){
+        if($(':input[name="return_cost"]').val().length>10){
+            layer.msg('金额不能大于10位数', {icon:2});
+            return false;
+        }else if(!chkInt($(':input[name="return_cost"]').val())){
+            layer.msg('金额只能输入数字', {icon:2});
+            return false;
+        }
         var data = {
             order_id : $('input[name="order_id"]').val(),
             practicaltime : $('input[name="return_practicaltime"]').val(),

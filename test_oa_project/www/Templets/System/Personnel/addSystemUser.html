@@ -46,12 +46,10 @@
                                 <div class="select_title l">请选择所属区域</div>
                                 <div class="arrow r"></div>
                                 </dt>
+                                <dd class="fxDone" data-level="{$data['zoneAll']['level']}" data-value="{$data['zoneAll']['zone_id']}">{$data['zoneAll']['name']}</dd>
                                 <foreach name="data['zoneAll']['children']" item="v" key="k">
                                     <dd class="fxDone" data-level="{$v.level}" data-value="{$v.zone_id}">{$v.name}</dd>
 
-                                    <foreach name="v['children']" item="v2" key="k2">
-                                        <dd class="fxDone" data-level="{$v2.level}" data-value="{$v2.zone_id}">{$v2.name}</dd>
-                                    </foreach>
                                 </foreach>
                             </dl>
                         </div>
