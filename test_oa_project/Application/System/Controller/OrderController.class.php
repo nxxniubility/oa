@@ -2,6 +2,7 @@
 namespace System\Controller;
 
 use Common\Controller\CourseController;
+use Common\Controller\CourseProductController;
 use Common\Controller\SystemController;
 use Common\Controller\OrderController as OrderMainController;
 use Common\Controller\DepartmentController;
@@ -107,8 +108,8 @@ class OrderController extends SystemController
         $orderInfo = $orderMainController->getOrderInfo($order_id);
         $data['info'] = $orderInfo['data'];
         //课程列表
-        $courseMain = new CourseController();
-        $courseList = $courseMain->getList();
+        $CourseProductController = new CourseProductController();
+        $courseList = $CourseProductController->getList();
         $data['courseList'] = $courseList['data'];
         //优惠方式
         $data['discount'] = $orderMainController->getDiscount();

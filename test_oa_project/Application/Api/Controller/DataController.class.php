@@ -122,6 +122,14 @@ class DataController extends ApiBaseController
         $getService = function($where){
             //去除数组空值
             $where = array_filter($where);
+            if(!empty($where['daytime'])){
+                $daytime = explode('-', $where['daytime']);
+                if(count($daytime)>1){
+                    $where['daytime'] = array(array('EGT',$daytime[0]),array('ELT',$daytime[1]));
+                }else{
+                    $where['daytime'] = $daytime[0];
+                }
+            }
             //获取接口服务层
             $DataService = new DataService();
             $result = $DataService->getDataMarket($where);
@@ -132,7 +140,7 @@ class DataController extends ApiBaseController
             return array('code'=>$result['code'],'msg'=>$result['msg']);
         };
         $reData = $getService($where);
-        if(!empty($request)){
+        if(!empty($requesr)){
             return $reData;
         }else{
             $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
