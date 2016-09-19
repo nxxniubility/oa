@@ -631,7 +631,6 @@ class ProidController extends SystemController
     {
         $proidMain = new ProidMain();
         $request = I("get.");
-        // $re_page = isset($request['page'])?$request['page']:1;
         unset($request['page']);
         foreach ($request as $key => $req) {
             if ($req) {
@@ -646,14 +645,6 @@ class ProidController extends SystemController
             $value['createtime'] = date('Y-m-d H:d:s', $value['createtime']);
             $data['proList']['data'][$key] = $value;
         }
-        //加载分页类
-        $pagingClass = new \Org\Util\Paging();
-        $pagingClass->page = $re_page;
-        $pagingClass->count = (isset($proList['count'])?$proList['count']:0);
-        $pagingClass->shownum = 7;
-        $pagingClass->url = U('System/Proid/id').'?'.http_build_query($request).'&page=';
-        $pagingClass->type = 'system';
-        $data['paging'] = $pagingClass->createPaging();
         $this->assign('data', $data);
         $this->display();
     }
@@ -667,6 +658,25 @@ class ProidController extends SystemController
         $proidMain = new ProidMain();
         $channelMain = new ChannelMain();
         $pro['system_user_id'] = $this->system_user_id;
+
+        $pc['terminal_id'] = 2;
+        $pc['status'] = 1;
+        $pc['system_user_id'] = $this->system_user_id;                             
+        $pcser = $proidMain->getOwnServicecode($pc);
+        if ($pcser['code'] != 0) {
+            $this->error('么有PC客服代码');
+        }else{
+            $pcserviceList['data'] = $pcser['msg'];
+        }
+        $m['status'] = 1;
+        $m['terminal_id'] = 1;
+        $m['system_user_id'] = $this->system_user_id;
+        $mser = $proidMain->getOwnServicecode($m);
+        if ($mser['code'] != 0) {
+            $this->error('么有移动客服代码');
+        }else{
+            $mserviceList['data'] = $mser['msg'];
+        }
         if(IS_POST) {              
             $proid['accountname'] = I("post.accountname");
             $proid['channel_id'] = I("post.channel_id");
@@ -711,22 +721,7 @@ class ProidController extends SystemController
         if (!$channelList) {
             $this->ajaxReturn(9,'没有渠道可供选择');
         }
-        $pc['terminal_id'] = 2;
-        $pc['status'] = 1;
-        $pc['system_user_id'] = $this->system_user_id;
-        $m['status'] = 1;
-        $m['terminal_id'] = 1;
-        $m['system_user_id'] = $this->system_user_id;                             
-        $pcser = $proidMain->getOwnServicecode($pc);
-        $pcserviceList['data'] = $pcser['msg'];
-        $mser = $proidMain->getOwnServicecode($m);
-        $mserviceList['data'] = $mser['msg'];
-        // if ($pcserviceList['data']['code'] != 0) {
-        //     $this->ajaxReturn(10,'没有PC客服代码可供选择');
-        // }
-        // if ($mserviceList['data']['code'] != 0) {
-        //     $this->ajaxReturn(11,'没有移动客服可供选择');
-        // }
+        
         $result = $proidMain->proidList($pro);
         $proList = $result['msg'];
         $proList['channelList'] = $channelList;
@@ -776,39 +771,38 @@ class ProidController extends SystemController
                 $this->error('修改失败');
             }
             $this->success('修改成功', 0, U('System/Proid/id'));
-        }else{
-            $channelAll = $channelMain->getAllChannel();
-            $channelList = $channelAll['data'];
-            if (!$channelList) {
-                $this->error('没有渠道可供选择');
-            }
-            $result = $proidMain->getProInfo($proid_id);
-            $proidInfo = $result['msg'];
-            $pc['terminal_id'] = 2;
-            $pc['status'] = 1;
-            $system_user_id = $this->system_user_id;
-            $pc['system_user_id'] = $system_user_id;
-            $m['status'] = 1;
-            $m['terminal_id'] = 1;
-            $m['system_user_id'] = $system_user_id;                          
-            
-            $pcser= $proidMain->getOwnServicecode($pc);
-            $pcserviceList['data']= $pcser['msg'];
-            $pcserviceList['pcservice_id'] = $proidInfo['pcservice_id'];
-            
-            $mser = $proidMain->getOwnServicecode($m);
-            $mserviceList['data']= $mser['msg'];
-            $mserviceList['mservice_id'] = $proidInfo['mservice_id'];
-            
-            $proList['data'] = $proidInfo;
-            $proList['channelList'] = $channelList;
-            $this->assign('proid_id',$proid_id);
-            $this->assign('proList', $proList);
-
-            $this->assign('pcserviceList', $pcserviceList);
-            $this->assign('mserviceList', $mserviceList);
-            $this->display();
         }
+        $channelAll = $channelMain->getAllChannel();
+        $channelList = $channelAll['data'];
+        if (!$channelList) {
+            $this->error('没有渠道可供选择');
+        }
+        $result = $proidMain->getProInfo($proid_id);
+        $proidInfo = $result['msg'];
+        $pc['terminal_id'] = 2;
+        $pc['status'] = 1;
+        $system_user_id = $this->system_user_id;
+        $pc['system_user_id'] = $system_user_id;
+        $m['status'] = 1;
+        $m['terminal_id'] = 1;
+        $m['system_user_id'] = $system_user_id;                          
+        
+        $pcser= $proidMain->getOwnServicecode($pc);
+        $pcserviceList['data']= $pcser['msg'];
+        $pcserviceList['pcservice_id'] = $proidInfo['pcservice_id'];
+        
+        $mser = $proidMain->getOwnServicecode($m);
+        $mserviceList['data']= $mser['msg'];
+        $mserviceList['mservice_id'] = $proidInfo['mservice_id'];
+        
+        $proList['data'] = $proidInfo;
+        $proList['channelList'] = $channelList;
+        $this->assign('proid_id',$proid_id);
+        $this->assign('proList', $proList);
+
+        $this->assign('pcserviceList', $pcserviceList);
+        $this->assign('mserviceList', $mserviceList);
+        $this->display();
     }
 
     /**

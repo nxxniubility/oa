@@ -140,8 +140,10 @@ class OrderController extends SystemController
         }
         $request['system_user_id'] = $this->system_user_id;
         if (!$request['order_id']) $this->ajaxReturn(1, '参数信息有误');
-        if (!$request['payway']) $this->ajaxReturn(1, '收款方式不能为空');
-        if (!$request['practicaltime']) $this->ajaxReturn(1, '请输入收款时间');
+        if ($request['status'] == 'success') {
+            if (!$request['payway']) $this->ajaxReturn(2, '收款方式不能为空');
+        }
+        if (!$request['practicaltime']) $this->ajaxReturn(3, '请输入收款时间');
         //添加参数
         $request['practicaltime'] = strtotime($request['practicaltime']);
         $result = $orderMainController->auditOrder($request);
@@ -321,26 +323,37 @@ class OrderController extends SystemController
     {
         if (IS_POST) {
             $request = I("post.");
-            if (!$request['pid']) {
-                $request['pid'] = 0;
-            }
             if (!$request['dname']) {
                 $this->ajaxReturn(1,'请填写优惠名称');
+            }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
+                $this->ajaxReturn(2,'不能包含特殊字符');
+            }
+            if (strlen($request['dname'])>=40) {
+                $this->ajaxReturn(2,'优惠名称过长');
+            }
+            if(preg_match("/[^\d.]/",$request['dmoney'])){
+                $this->ajaxReturn(3,'优惠金额不能包含其他字符');
             }
             if (!$request['dmoney']) {
-                $this->ajaxReturn(2,'请填写优惠金额');
-            }elseif($request['dmoney'] && !$request['pid']){
-                $this->ajaxReturn(2,'请选择优惠所属分类');
+                $this->ajaxReturn(4,'请填写优惠金额');
+            }elseif($request['dmoney']>2000){
+                $this->ajaxReturn(6,'优惠金额不能大于2000');
             }
             if (!$request['remark']) {
-                $this->ajaxReturn(3,'请填写优惠详情');
+                $this->ajaxReturn(7,'请填写优惠详情');
             }
+            if(!$request['pid']){
+                $this->ajaxReturn(8,'请选择优惠所属分类');
+            }  
+            if (strlen($request['remark'])>=100) {
+                $this->ajaxReturn(2,'优惠详情过长');
+            }       
             $orderMain = new OrderMainController();
             $result = $orderMain->createDiscount($request);
             if ($result === false) {
-                $this->ajaxReturn(4,'创建优惠失败');
+                $this->ajaxReturn(9,'创建优惠失败');
             }
-            $this->ajaxReturn(0,U("创建优惠成功"));
+            $this->ajaxReturn(0,"创建优惠成功");
         }
     }
 
@@ -356,22 +369,30 @@ class OrderController extends SystemController
                 $request['pid'] = 0;
             }
             if (!$request['dname']) {
-                $this->ajaxReturn(1,'请填写优惠名称');
+                $this->ajaxReturn(1,'请填写优惠分类名称');
+            }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
+                $this->ajaxReturn(2,'不能包含特殊字符');
+            }
+            if (strlen($request['dname'])>=40) {
+                $this->ajaxReturn(3,'优惠分类名称过长');
             }
             if (!$request['remark']) {
-                $this->ajaxReturn(3,'请填写优惠详情');
+                $this->ajaxReturn(4,'请填写优惠详情');
+            }
+            if (strlen($request['remark'])>=100) {
+                $this->ajaxReturn(5,'优惠详情过长');
             }
             $orderMain = new OrderMainController();
             $result = $orderMain->createParentDiscount($request);
             if ($result === false) {
-                $this->ajaxReturn(4,'创建优惠失败');
+                $this->ajaxReturn(6,'创建优惠失败');
             }
             $this->ajaxReturn(0,"创建优惠成功");
         }
     }
 
     /*
-    *修改优惠
+    *修改优惠分类
     *@author nxx
     */
     public function editDiscount()
@@ -384,7 +405,12 @@ class OrderController extends SystemController
                 $save['remark'] = $request['remark'];
                 $save['type'] = $request['type'];
                 if (!$save['dname']) {
-                    $this->ajaxReturn(1,'优惠名称不得为空');
+                    $this->ajaxReturn(1,'请填写优惠名称');
+                }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$save['dname'])){
+                    $this->ajaxReturn(2,'不能包含特殊字符');
+                }
+                if (strlen($save['dname'])>=40) {
+                    $this->ajaxReturn(3,'优惠名称过长');
                 }
                 $update = D("DiscountParent")->where("discount_parent_id = $discount_parent_id")->save($save);
                 if ($update === false || $update<0) {
@@ -396,10 +422,20 @@ class OrderController extends SystemController
                     $request['pid'] = 0;
                 }
                 if (!$request['dname']) {
-                    $this->ajaxReturn(1,'优惠名称不得为空');
+                    $this->ajaxReturn(1,'请填写优惠名称');
+                }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
+                    $this->ajaxReturn(2,'不能包含特殊字符');
+                }
+                if (strlen($request['dname'])>=40) {
+                    $this->ajaxReturn(3,'优惠名称过长');
+                }
+                if(preg_match("/[^\d.]/",$request['dmoney'])){
+                    $this->ajaxReturn(3,'优惠金额不能包含其他字符');
                 }
                 if (!$request['dmoney']) {
-                    $this->ajaxReturn(2,'优惠金额有误');
+                    $this->ajaxReturn(4,'请填写优惠金额');
+                }elseif($request['dmoney']>2000){
+                    $this->ajaxReturn(6,'优惠金额不能大于2000');
                 }
                 $update = D("Discount")->where("discount_id = $request[discount_id]")->save($request);
                 if ($update === false) {

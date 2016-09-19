@@ -641,7 +641,7 @@ class UserController extends SystemController
             $order = 'nextvisit ASC';
         }else{
             $order = 'createtime DESC';
-        }
+        }      
         //日期转换时间戳
         foreach ($where as $k => $v) {
             if (!empty($where[$k]) && $where[$k]!='1@0') {
