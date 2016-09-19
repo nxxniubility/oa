@@ -78,7 +78,7 @@
 		    <div class="z_rows clearfix">
 		        <span><i>*</i>所属产品：</span>
 		        <select class="rowSelect" name="create_productplatform" autocomplete="off" style="">
-		            <option value="">请选择类型</option>
+		            <option value="0">请选择类型</option>
 		            <foreach name="data['proList']" item="v" key="k">
 		                <option value="{$k}">{$v}</option>
 		            </foreach>
@@ -107,7 +107,7 @@
 		    <div class="z_rows clearfix">
 		        <span><i>*</i>所属产品：</span>
 		        <select class="rowSelect" name="edit_productplatform" autocomplete="off">
-		            <option value="">请选择类型</option>
+		            <option value="0">请选择类型</option>
 		            <foreach name="data['proList']" item="v" key="k">
 		                <option value="{$k}">{$v}</option>
 		            </foreach>
@@ -154,6 +154,25 @@
 		    });
 		    //添加提交
 		    $('.create_subtn').click(function(){
+				if($(':input[name="create_name"]').val().length>20){
+					layer.msg('产品名称不能大于20位字符', {icon:2});
+					return false;
+				}else if($(':input[name="create_price"]').val().length>10){
+					layer.msg('产品价格不能大于10位数', {icon:2});
+					return false;
+				}else if(!chkInt($(':input[name="create_price"]').val())){
+					layer.msg('产品价格只能输入数字', {icon:2});
+					return false;
+				}else if($(':input[name="create_description"]').val().length>50){
+					layer.msg('产品描述不能大于50位字符', {icon:2});
+					return false;
+				}else if($(':input[name="create_name"]').val().length==0){
+					layer.msg('请输入产品名称', {icon:2});
+					return false;
+				}else if($(':input[name="create_description"]').val().length==0){
+					layer.msg('请输入产品描述', {icon:2});
+					return false;
+				}
 		        var data = {
 		            productname : $(':input[name="create_name"]').val(),
 		            price : $(':input[name="create_price"]').val(),
@@ -162,6 +181,14 @@
 		        };
 		        common_ajax2(data, create_courseProduct_href, 'reload');
 		    });
+			function chkInt(strForText){
+				var str = /^[0-9]+.?[0-9]*$/;
+				var reg = new RegExp(str);
+				if(!reg.test(strForText)) {
+					return false;
+				}
+				return true;
+			};
 		    //修改窗口-----------------------------------------------
 		    $('.edit_btn').click(function(){
 		        $(':input[name="temp_id"]').val($(this).attr('data-id'));
@@ -186,6 +213,25 @@
 		    });
 		    //修改提交
 		    $('.edit_subtn').click(function(){
+				if($(':input[name="edit_name"]').val().length>20){
+					layer.msg('产品名称不能大于20位字符', {icon:2});
+					return false;
+				}else if($(':input[name="edit_price"]').val().length>10){
+					layer.msg('产品价格不能大于10位数', {icon:2});
+					return false;
+				}else if(!chkInt($(':input[name="edit_price"]').val())){
+					layer.msg('产品价格只能输入数字', {icon:2});
+					return false;
+				}else if($(':input[name="edit_description"]').val().length>50){
+					layer.msg('产品描述不能大于50位字符', {icon:2});
+					return false;
+				}else if($(':input[name="edit_name"]').val().length==0){
+					layer.msg('请输入产品名称', {icon:2});
+					return false;
+				}else if($(':input[name="edit_description"]').val().length==0){
+					layer.msg('请输入产品描述', {icon:2});
+					return false;
+				}
 		        var data = {
 		            course_product_id : $(':input[name="temp_id"]').val(),
 		            productname : $(':input[name="edit_name"]').val(),

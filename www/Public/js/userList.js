@@ -27,6 +27,13 @@ $(function(){
     });
     //创建订单
     $(document).on('click', '#reserve_submit', function(){
+        if($(':input[name="reserve_subscription"]').val().length>10){
+            layer.msg('定金不能大于10位数', {icon:2});
+            return false;
+        }else if(!chkInt($(':input[name="reserve_subscription"]').val())){
+            layer.msg('定金只能输入数字', {icon:2});
+            return false;
+        }
         var data = {
             type : 'reserve',
             user_id:$(':input[name="temp_user_id"]').val(),
@@ -35,8 +42,16 @@ $(function(){
             subscription : $(':input[name="reserve_subscription"]').val()
         };
         common_ajax2(data, createOrder_href, 'reload');
-
     });
+
+    function chkInt(strForText){
+        var str = /^[0-9]+.?[0-9]*$/;
+        var reg = new RegExp(str);
+        if(!reg.test(strForText)) {
+            return false;
+        }
+        return true;
+    };
     //设置自定义列
     $(document).on('click', '#column_submit', function(){
         var columnname = '';
