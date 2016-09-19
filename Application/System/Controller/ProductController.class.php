@@ -40,7 +40,7 @@ class ProductController extends SystemController
     {
         //获取数据
         $data = I("post.");
-        if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(21,'请选择所属课程');
+        if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(21,'请选择产品类型');
         //执行操作
         $courseProductController = new CourseProductController();
         $reflag = $courseProductController->cerate_courseProduct($data);
@@ -58,7 +58,7 @@ class ProductController extends SystemController
     {
         //获取数据
         $data = I("post.");
-        if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(21,'请选择所属课程');
+        if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(21,'请选择产品类型');
         //执行操作
         $courseProductController = new CourseProductController();
         $reflag = $courseProductController->edit_courseProduct($data);

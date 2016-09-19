@@ -98,7 +98,11 @@ class OrderController extends BaseController
             foreach($result as $k=>$v){
                 //添加类型名称
                 $result[$k]['course_name'] = (empty($v['course_id']) || $v['course_id']==0)?'':$courseArr[$v['course_id']];
-                $result[$k]['studytype_name'] = $studytypeArr[$v['studytype']]['text'];
+                if($v['status']<40){
+                    $result[$k]['studytype_name'] = '';
+                }else{
+                    $result[$k]['studytype_name'] = $studytypeArr[$v['studytype']]['text'];
+                }
                 $result[$k]['loan_institutions_name'] = ($v['status']>=40 && $v['loan_institutions_id']!=0)?$loan_institutionsArr[$v['loan_institutions_id']]['text']:'';
                 $result[$k]['payway_name'] = $receivetypeArr[$v['payway']]['text'];
                 $result[$k]['finish_time'] = ($v['finishtime']!=0)?date('Y-m-d H:i:s', $v['finishtime']):'';
