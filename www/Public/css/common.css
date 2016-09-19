@@ -17,6 +17,8 @@ input, textarea, select { font-family: microsoft yahei;}
 .clearfix:after, .clearfix:before { display: table; content: " ";}
 .clearfix:after { clear: both;}
 .dn{display: none}
+.fl {float:left;}
+.fr {float:right;}
 /**/
 /*头部样式*/
 .header{height:50px; line-height:50px; background:#53b567;}
