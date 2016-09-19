@@ -96,14 +96,20 @@ $(document).on('click', '.chart_tab li', function(){
 $('.chart_topright select').change(function(){
 	var _curVal = $(this).children('option:selected').val(),
 		_p = $('.please_select'),
-		_daily_stats = $('#daily_stats'),
-		_channel = $('#channel_bar'),
+		_chartnav=$('.chart_tab .cur').attr('data-value'),
+		_daily_stats = $('#'+_chartnav).find('.daily_stats'),
+		_channel = $('#'+_chartnav).find('.daily_channel'),
+		_channel_bar = $('#'+_chartnav).find('.channel_bar'),
+		_channel_pie = $('#'+_chartnav).find('.channel_pie'),
 		_quality = $('#quality'),
 		_course = $('#course');
 	if(_curVal == '0'){
 		_p.show();
 		//_daily_stats.hide();
-		_channel.hide();
+		//_channel.hide();
+		_daily_stats.empty();
+		_channel_bar.empty();
+		_channel_pie.empty();
 		_quality.hide();
 		_course.hide();
 	}else if(_curVal == '1'){
@@ -111,14 +117,16 @@ $('.chart_topright select').change(function(){
 		_daily_stats.show();
 		_p.hide();
 		//_channel.hide();
+		_channel_bar.empty();
+		_channel_pie.empty();
 		_quality.hide();
 		_course.hide();
-		
 	}else if(_curVal == '2'){
 		channelPie();
+		channelBar();
 		_channel.show();
 		_p.hide();
-		_daily_stats.hide();
+		_daily_stats.empty();
 		_quality.hide();
 		_course.hide();
 		
@@ -132,39 +140,42 @@ $('.chart_topright select').change(function(){
 });
 
 //  各图标初始化
-//dailyStats();	//  新增量每日统计线型
-channelBar();	//  新增量来源渠道柱状
-channelPie();	//  新增量来源渠道饼状
+dailyStats();	//  新增量每日统计线型
+//channelBar();	//  新增量来源渠道柱状
+//channelPie();	//  新增量来源渠道饼状
 
 //  新增量
-function dailyStats(){
-	$('#daily_stats').highcharts({
-		chart:{className:'daily_stats'},
-		title: null,						//  标题
-		subtitle: null,						//  副标题
-		credits: {enabled:false},
-		tooltip: {
-	        shared: true,
-	        crosshairs: true,
-	    },
-		xAxis:{
-			type:'datetime',
-			//categories: ['08-01','08-02','08-03','08-04','08-05','08-06','08-07','08-08','08-09','08-10','08-11','08-12','08-13','08-14','08-15','08-16','08-17','08-18','08-19','08-20','08-21','08-22','08-23','08-24','08-25','08-26','08-27','08-28','08-29','08-30','08-31',],
-			dateTimeLabelFormats: {
-				day: '%b-%e'
+function dailyStats(days,values){
+	_chartnav=$('.chart_tab .cur').attr('data-value');
+	$('#'+_chartnav).find('.daily_stats').highcharts({
+		chart: {
+			type: 'line'
+		},
+		title: {
+			text: null
+		},
+		subtitle: {
+			text: null
+		},
+		xAxis: {
+			categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+		},
+		yAxis: {
+			title: {
+				text: false
 			}
 		},
-		yAxis:{
-			allowDecimals: false,
-			title:{
-				text:false,
+		plotOptions: {
+			line: {
+				dataLabels: {
+					enabled: true
+				},
+				enableMouseTracking: false
 			}
 		},
-		series:[{
+		series: [{
 			name: '新增量',
-			data:[10,16,1,40,32,20,56,33,101,21,15,14,110,90,94,39,54,35,67,74,32,6,89,66,44,59,24,53,81,76,53],
-			pointStart: Date.UTC(2016, 0, 1),
-			pointInterval: 24 * 3600 * 1000
+			data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
 		}]
 	});
 }
@@ -173,7 +184,8 @@ function dailyStats(){
 
 //  来源渠道-柱状图
 function channelBar(){
-	$('#channel_bar').highcharts({
+	_chartnav=$('.chart_tab .cur').attr('data-value');
+	$('#'+_chartnav).find('.channel_bar').highcharts({
 		chart:{
 			className:'channel_bar',
 			type:'bar'
@@ -232,7 +244,8 @@ function channelBar(){
 
 // 来源渠道-圆饼图
 function channelPie(){
-	$('#channel_pie').highcharts({
+	_chartnav=$('.chart_tab .cur').attr('data-value');
+	$('#'+_chartnav).find('.channel_pie').highcharts({
 		chart: {
 			className:'channel_pie',
 	        plotBackgroundColor: null,

@@ -117,7 +117,7 @@ class DataService extends BaseService
         //退单率
         //总转率
         $newArr = array();
-        $newArr['count']['addcount'] = 0;
+        $SystemUserService = new SystemUserService();
         foreach($result as $k=>$v){
             //总数
             $newArr['count']['addcount'] = $newArr['count']['addcount']+$v['addnum'];
@@ -134,21 +134,28 @@ class DataService extends BaseService
             $newArr['count']['refundcount'] = $newArr['count']['refundcount']+$v['refundnum'];
             //天数单位
             $newArr['days'][$v['daytime']]['day'] = mb_substr($v['daytime'],0,4).'-'.mb_substr($v['daytime'],4,2).'-'.mb_substr($v['daytime'],6,2);
-            $newArr['days'][$v['daytime']]['addcount'] = $v['addnum'];
-            $newArr['days'][$v['daytime']]['acceptcount'] = $v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum'];
-            $newArr['days'][$v['daytime']]['switchcount'] = +$v['switchnum']+$v['switchmanagenum'];
-            $newArr['days'][$v['daytime']]['restartcount'] = $v['restartnum'];
-            $newArr['days'][$v['daytime']]['recyclecount'] = $v['recyclenum'];
-            $newArr['days'][$v['daytime']]['redeemcount'] = $v['redeemnum'];
-            $newArr['days'][$v['daytime']]['callbackcount'] = $v['callbacknum'];
-            $newArr['days'][$v['daytime']]['attitudecount'] = $v['attitudenum'];
-            $newArr['days'][$v['daytime']]['allocationcount'] = $v['acceptcount']-$v['switchcount'];
-            $newArr['days'][$v['daytime']]['visitcount'] = $v['visitnum'];
-            $newArr['days'][$v['daytime']]['ordercount'] = $v['ordernum'];
-            $newArr['days'][$v['daytime']]['refundcount'] = $v['refundnum'];
+            $newArr['days'][$v['daytime']]['addcount'] = $newArr['days'][$v['daytime']]['addcount'] + $v['addnum'];
+            $newArr['days'][$v['daytime']]['acceptcount'] = $newArr['days'][$v['daytime']]['acceptcount'] + $v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum'];
+            $newArr['days'][$v['daytime']]['switchcount'] = $newArr['days'][$v['daytime']]['switchcount'] + $v['switchnum']+$v['switchmanagenum'];
+            $newArr['days'][$v['daytime']]['restartcount'] = $newArr['days'][$v['daytime']]['restartcount'] + $v['restartnum'];
+            $newArr['days'][$v['daytime']]['recyclecount'] = $newArr['days'][$v['daytime']]['recyclecount'] + $v['recyclenum'];
+            $newArr['days'][$v['daytime']]['redeemcount'] = $newArr['days'][$v['daytime']]['redeemcount'] + $v['redeemnum'];
+            $newArr['days'][$v['daytime']]['callbackcount'] = $newArr['days'][$v['daytime']]['callbackcount'] + $v['callbacknum'];
+            $newArr['days'][$v['daytime']]['attitudecount'] = $newArr['days'][$v['daytime']]['attitudecount'] + $v['attitudenum'];
+            $newArr['days'][$v['daytime']]['allocationcount'] = $newArr['days'][$v['daytime']]['allocationcount'] + $v['acceptcount']-$v['switchcount'];
+            $newArr['days'][$v['daytime']]['visitcount'] = $newArr['days'][$v['daytime']]['visitcount'] + $v['visitnum'];
+            $newArr['days'][$v['daytime']]['ordercount'] = $newArr['days'][$v['daytime']]['ordercount'] + $v['ordernum'];
+            $newArr['days'][$v['daytime']]['refundcount'] = $newArr['days'][$v['daytime']]['refundcount'] + $v['refundnum'];
             //员工
-            $newArr['systemuser'][$v['system_user_id']]['system_user_id'] = $v['system_user_id'];
-            $newArr['systemuser'][$v['system_user_id']]['addcount'] = $newArr['systemuser'][$v['system_user_id']]['addnum']+$v['addnum'];
+            if(empty($newArr['systemuser'][$v['system_user_id']]['system_user_id'])){
+                $where['system_user_id'] = $v['system_user_id'];
+                $info = $SystemUserService->getListCache($where);
+                $info = $info['data'];
+                $newArr['systemuser'][$v['system_user_id']]['realname'] = $info['realname'];
+                $newArr['systemuser'][$v['system_user_id']]['rolename'] = $info['rolename'];
+                $newArr['systemuser'][$v['system_user_id']]['system_user_id'] = $v['system_user_id'];
+            }
+            $newArr['systemuser'][$v['system_user_id']]['addcount'] = $newArr['systemuser'][$v['system_user_id']]['addcount']+$v['addnum'];
             $newArr['systemuser'][$v['system_user_id']]['acceptcount'] = $newArr['systemuser'][$v['system_user_id']]['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum'];
             $newArr['systemuser'][$v['system_user_id']]['switchcount'] = $newArr['systemuser'][$v['system_user_id']]['switchcount']+$v['switchnum']+$v['switchmanagenum'];
             $newArr['systemuser'][$v['system_user_id']]['restartcount'] = $newArr['systemuser'][$v['system_user_id']]['restartcount']+$v['restartnum'];
@@ -162,6 +169,32 @@ class DataService extends BaseService
             $newArr['systemuser'][$v['system_user_id']]['refundcount'] = $newArr['systemuser'][$v['system_user_id']]['refundcount']+$v['refundnum'];
         }
         return array('code'=>0,'data'=>$newArr);
+    }
+    /*
+    |--------------------------------------------------------------------------
+    | 获取营销数据
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getDataMarketInfo($where)
+    {
+        $arr = array(
+            'addcount'=>'1',
+            'acceptcount'=>'1,2,3,4',
+            'switchcount'=>'5,15',
+            'restartcount'=>'6',
+            'recyclecount'=>'7',
+            'redeemcount'=>'9',
+            'callbackcount'=>'10',
+            'attitudecount'=>'11',
+            'visitcount'=>'12',
+            'ordercount'=>'13',
+            'refundcount'=>'14',
+        );
+        $new_where['operattype'] = array('IN',$arr[$where['type']]);
+        $new_where['logtime'] = $where['daytime'];
+        $redata = D('DataLogs')->where($new_where)->select();
+        return array('code'=>0,'data'=>$redata);
     }
 
     /*

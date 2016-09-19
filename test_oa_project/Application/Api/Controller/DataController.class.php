@@ -147,6 +147,51 @@ class DataController extends ApiBaseController
         }
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取营销数据详情
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getDataMarketInfo($requesr=null)
+    {
+        //外部调用？
+        if($requesr===null){
+            $where['type'] = I('param.type',null);
+            $where['daytime'] = I('param.daytime',null);
+            $where['system_user_id'] = I('param.system_user_id',null);
+        }else{
+            $where = $requesr;
+        }
+        $getService = function($where){
+            //去除数组空值
+            $where = array_filter($where);
+            if(!empty($where['daytime'])){
+                $daytime = explode('-', $where['daytime']);
+                if(count($daytime)>1){
+                    $where['daytime'] = array(array('EGT',strtotime($daytime[0])),array('ELT',strtotime($daytime[1])));
+                }else{
+                    $where['daytime'] = $daytime[0];
+                }
+            }
+            //获取接口服务层
+            $DataService = new DataService();
+            $result = $DataService->getDataMarketInfo($where);
+            //返回参数
+            if($result['code']==0){
+                return array('code'=>0,'msg'=>'获取成功','data'=>$result['data']);
+            }
+            return array('code'=>$result['code'],'msg'=>$result['msg']);
+        };
+        $reData = $getService($where);
+        if(!empty($requesr)){
+            return $reData;
+        }else{
+            $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | 添加营销数据

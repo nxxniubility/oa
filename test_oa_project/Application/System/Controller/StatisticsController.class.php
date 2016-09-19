@@ -14,13 +14,19 @@ class StatisticsController extends SystemController
     */
     public function market()
     {
+        //实例化
         $DataController = new DataController();
-        $where = array(
-            'daytime'=>'20160918-20160919'
-        );
+        $where['daytime'] = '20160918-20160919';
+        if(IS_POST){
+            $request = I('post.');
+            $where['type'] = $request['type'];
+            //获取接口数据
+            $dataMarketInfo = $DataController->getDataMarketInfo($where);
+            dump($dataMarketInfo);
+        }
+        //获取接口数据
         $dataMarket = $DataController->getDataMarket($where);
         $data['dataMarket'] = $dataMarket['data'];
-        print_r($data['dataMarket']);
         $this->assign('data', $data);
         $this->display();
     }
