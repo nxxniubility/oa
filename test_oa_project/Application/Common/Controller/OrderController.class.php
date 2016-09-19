@@ -741,6 +741,9 @@ class OrderController extends BaseController
      */
     public function createDiscount($request)
     {
+        if (!$request['repeat']) {
+            $request['repeat'] = 0;
+        }
         $discount_id = D("Discount")->data($request)->add();
         if ($discount_id) {
             return $discount_id;

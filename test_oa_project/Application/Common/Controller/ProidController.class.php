@@ -684,7 +684,7 @@ class ProidController extends BaseController
     }
 
     /**
-     * 获取批量修改计划的搜索条件
+     * 获取计划
      * @author Nixx
     */
     public function getProLevPlanList($proid_id)
