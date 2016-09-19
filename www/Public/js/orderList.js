@@ -144,13 +144,6 @@ $(function(){
 
     //退订金
     $(document).on('click','#depositSub', function(){
-        if($(':input[name="deposit_cost"]').val().length>10){
-            layer.msg('金额不能大于10位数', {icon:2});
-            return false;
-        }else if(!chkInt($(':input[name="deposit_cost"]').val())){
-            layer.msg('金额只能输入数字', {icon:2});
-            return false;
-        }
         var data = {
             type:'deposit',
             order_id : $('input[name="order_id"]').val(),

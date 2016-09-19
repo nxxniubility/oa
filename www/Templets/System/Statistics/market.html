@@ -302,11 +302,11 @@
 	        				<th>总转率</th>
 	        			</tr>
 	        			<tr>
-	        				<td class="firItem">1328</td>
-	        				<td>1328</td>
-	        				<td>251</td>
-	        				<td>500</td>
-	        				<td>0</td>
+	        				<td class="firItem">{$data.dataMarket.count.addcount}</td>
+							<td>{$data.dataMarket.count.allocationcount}</td>
+							<td>{$data.dataMarket.count.visitcount}</td>
+	        				<td>{$data.dataMarket.count.ordercount}</td>
+	        				<td>{$data.dataMarket.count.refundcount}</td>
 	        				<td>88.9%</td>
 	        				<td>90.0%</td>
 	        				<td>0.9%</td>
@@ -403,94 +403,61 @@
 			        					<i class="sr_down"></i>
 		        					</div>
 		        				</th>
-		        				<th><div class="container"><span>新增量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>出库量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>待联系量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>待跟进量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>已回访量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>系统回收量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>转出量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>放弃量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>到访量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>签单量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>退单量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>到访率</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>面转率</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>退单率</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>总转率</span><i class="sr_down"></i></div></th>
-		        			</tr>
-		        			<tr class="sr_total">
-		        				<td>合计</td>
-		        				<td>1329</td>
-		        				<td>1329</td>
-		        				<td>345</td>
-		        				<td>455</td>
-		        				<td>155</td>
-		        				<td>78</td>
-		        				<td>48</td>
-		        				<td>36</td>
-		        				<td>1245</td>
-		        				<td class="red">2</td>
-		        				<td>12</td>
-		        				<td>84%</td>
-		        				<td>10%</td>
-		        				<td>5%</td>
-		        				<td>12%</td>
-		        			</tr>
-		        			<tr>
-		        				<td>2016-08-31</td>
-		        				<td>1329</td>
-		        				<td>1329</td>
-		        				<td>345</td>
-		        				<td>455</td>
-		        				<td>155</td>
-		        				<td>55</td>
-		        				<td>48</td>
-		        				<td>36</td>
-		        				<td>1245</td>
-		        				<td class="red">5</td>
-		        				<td>12</td>
-		        				<td>84%</td>
-		        				<td>10%</td>
-		        				<td>5%</td>
-		        				<td>12%</td>
-		        			</tr>
-		        			<tr>
-		        				<td>2016-08-31</td>
-		        				<td>1329</td>
-		        				<td>1329</td>
-		        				<td>345</td>
-		        				<td>455</td>
-		        				<td>155</td>
-		        				<td>38</td>
-		        				<td>48</td>
-		        				<td>36</td>
-		        				<td>1245</td>
-		        				<td class="red">1</td>
-		        				<td>12</td>
-		        				<td>84%</td>
-		        				<td>10%</td>
-		        				<td>5%</td>
-		        				<td>12%</td>
-		        			</tr>
-		        			<tr>
-		        				<td>2016-08-31</td>
-		        				<td>1329</td>
-		        				<td>1329</td>
-		        				<td>345</td>
-		        				<td>455</td>
-		        				<td>155</td>
-		        				<td>68</td>
-		        				<td>48</td>
-		        				<td>36</td>
-		        				<td>1245</td>
-		        				<td class="red">2</td>
-		        				<td>12</td>
-		        				<td>84%</td>
-		        				<td>10%</td>
-		        				<td>5%</td>
-		        				<td>12%</td>
-		        			</tr>
+								<th><div class="container"><span>新增量</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>出库量</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>转出量</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>放弃量</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>系统回收量</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>赎回量</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>已回访量</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>跟进次数</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>到访量</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>订单量</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>退款量</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>到访率</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>面转率</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>退单率</span><i class="sr_down"></i></div></th>
+								<th><div class="container"><span>总转率</span><i class="sr_down"></i></div></th>
+							</tr>
+							<tr class="sr_total">
+								<td>合计</td>
+								<td>{$data.dataMarket.count.addcount}</td>
+								<td>{$data.dataMarket.count.acceptcount}</td>
+								<td>{$data.dataMarket.count.switchcount}</td>
+								<td>{$data.dataMarket.count.restartcount}</td>
+								<td>{$data.dataMarket.count.recyclecount}</td>
+								<td>{$data.dataMarket.count.redeemcount}</td>
+								<td class="red">{$data.dataMarket.count.callbackcount}</td>
+								<td>{$data.dataMarket.count.attitudecount}</td>
+								<td>{$data.dataMarket.count.visitcount}</td>
+								<td>{$data.dataMarket.count.ordercount}</td>
+								<td>{$data.dataMarket.count.refundcount}</td>
+								<td>28.26%</td>
+								<td>24.50%</td>
+								<td>10.49%</td>
+								<td>17.63%</td>
+							</tr>
+							<foreach name="data['dataMarket']['days']" item="v" key="k">
+								<tr>
+									<td>{$v.day}</td>
+									<td>{$v.addcount}</td>
+									<td>{$v.acceptcount}</td>
+									<td>{$v.switchcount}</td>
+									<td>{$v.restartcount}</td>
+									<td>{$v.recyclecount}</td>
+									<td>{$v.redeemcount}</td>
+									<td>{$v.callbackcount}</td>
+									<td>{$v.attitudecount}</td>
+									<td>{$v.visitcount}</td>
+									<td class="red">{$v.ordercount}</td>
+									<td>{$v.refundcount}</td>
+									<td>84%</td>
+									<td>10%</td>
+									<td>5%</td>
+									<td>12%</td>
+								</tr>
+							</foreach>
+
 		        		</table>
 		        	</div>
 	        		
@@ -503,41 +470,41 @@
 		        				<th><div class="container"><span>职位</span></div></th>
 		        				<th><div class="container"><span>新增量</span><i class="sr_down"></i></div></th>
 		        				<th><div class="container"><span>出库量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>待联系量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>待跟进量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>已回访量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>系统回收量</span><i class="sr_down"></i></div></th>
 		        				<th><div class="container"><span>转出量</span><i class="sr_down"></i></div></th>
 		        				<th><div class="container"><span>放弃量</span><i class="sr_down"></i></div></th>
+		        				<th><div class="container"><span>系统回收量</span><i class="sr_down"></i></div></th>
+		        				<th><div class="container"><span>赎回量</span><i class="sr_down"></i></div></th>
+		        				<th><div class="container"><span>已回访量</span><i class="sr_down"></i></div></th>
+		        				<th><div class="container"><span>跟进次数</span><i class="sr_down"></i></div></th>
 		        				<th><div class="container"><span>到访量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>签单量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>退单量</span><i class="sr_down"></i></div></th>
+		        				<th><div class="container"><span>订单量</span><i class="sr_down"></i></div></th>
+		        				<th><div class="container"><span>退款量</span><i class="sr_down"></i></div></th>
 		        				<th><div class="container"><span>到访率</span><i class="sr_down"></i></div></th>
 		        				<th><div class="container"><span>面转率</span><i class="sr_down"></i></div></th>
 		        				<th><div class="container"><span>退单率</span><i class="sr_down"></i></div></th>
 		        				<th><div class="container"><span>总转率</span><i class="sr_down"></i></div></th>
 		        				<th><div class="container"><span>操作</span></div></th>
 		        			</tr>
-		        			<tr class="sr_total">
-		        				<td>合计</td>
-		        				<td>&nbsp;</td>
-		        				<td>1329</td>
-		        				<td>1200</td>
-		        				<td>568</td>
-		        				<td>231</td>
-		        				<td>130</td>
-		        				<td>78</td>
-		        				<td>356</td>
-		        				<td>421</td>
-		        				<td>351</td>
-		        				<td>87</td>
-		        				<td>9</td>
-		        				<td>28.26%</td>
-		        				<td>24.50%</td>
-		        				<td>10.49%</td>
-		        				<td>17.63%</td>
-		        				<td>&nbsp;</td>
-		        			</tr>
+							<tr class="sr_total">
+								<td>合计</td>
+								<td>&nbsp;</td>
+								<td>{$data.dataMarket.count.addcount}</td>
+								<td>{$data.dataMarket.count.acceptcount}</td>
+								<td>{$data.dataMarket.count.switchcount}</td>
+								<td>{$data.dataMarket.count.restartcount}</td>
+								<td>{$data.dataMarket.count.recyclecount}</td>
+								<td>{$data.dataMarket.count.redeemcount}</td>
+								<td>{$data.dataMarket.count.callbackcount}</td>
+								<td>{$data.dataMarket.count.attitudecount}</td>
+								<td>{$data.dataMarket.count.visitcount}</td>
+								<td>{$data.dataMarket.count.ordercount}</td>
+								<td>{$data.dataMarket.count.refundcount}</td>
+								<td>28.26%</td>
+								<td>24.50%</td>
+								<td>10.49%</td>
+								<td>17.63%</td>
+								<td>&nbsp;</td>
+							</tr>
 		        			<tr>
 		        				<td>张雪</td>
 		        				<td>咨询专员</td>

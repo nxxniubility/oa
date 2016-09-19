@@ -16,9 +16,12 @@ class StatisticsController extends SystemController
     {
         $DataController = new DataController();
         $where = array(
-            daytime
+            'daytime'=>'20160918-20160919'
         );
-        $redata = $DataController->getDataMarket();
-        dump($redata);
+        $dataMarket = $DataController->getDataMarket($where);
+        $data['dataMarket'] = $dataMarket['data'];
+        print_r($data['dataMarket']);
+        $this->assign('data', $data);
+        $this->display();
     }
 }

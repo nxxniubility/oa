@@ -99,7 +99,69 @@ class DataService extends BaseService
     */
     public function getDataMarket($where)
     {
-        return D('DataMarket')->where($where)->select();
+        $result = D('DataMarket')->where($where)->select();
+        //新增量 addnum
+        //出库量 addnum + acceptnum + directoroutnum + applynum
+        //转出量 switchnum + switchmanagenum
+        //放弃量 restartnum
+        //系统回收量 recyclenum
+        //赎回量 redeemnum
+        //已回访量 callbacknum
+        //跟进次数 attitudenum
+        //分配量 出库量 - 转出量
+        //到访量 visitnum
+        //订单量 ordernum
+        //退款量 refundnum
+        //到访率
+        //面转率
+        //退单率
+        //总转率
+        $newArr = array();
+        $newArr['count']['addcount'] = 0;
+        foreach($result as $k=>$v){
+            //总数
+            $newArr['count']['addcount'] = $newArr['count']['addcount']+$v['addnum'];
+            $newArr['count']['acceptcount'] = $newArr['count']['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum'];
+            $newArr['count']['switchcount'] = $newArr['count']['switchcount']+$v['switchnum']+$v['switchmanagenum'];
+            $newArr['count']['restartcount'] = $newArr['count']['restartcount']+$v['restartnum'];
+            $newArr['count']['recyclecount'] = $newArr['count']['recyclecount']+$v['recyclenum'];
+            $newArr['count']['redeemcount'] = $newArr['count']['redeemcount']+$v['redeemnum'];
+            $newArr['count']['callbackcount'] = $newArr['count']['callbackcount']+$v['callbacknum'];
+            $newArr['count']['attitudecount'] = $newArr['count']['attitudecount']+$v['attitudenum'];
+            $newArr['count']['allocationcount'] = $newArr['count']['allocationcount']+$newArr['count']['acceptcount']-$newArr['count']['switchcount'];
+            $newArr['count']['visitcount'] = $newArr['count']['visitcount']+$v['visitnum'];
+            $newArr['count']['ordercount'] = $newArr['count']['ordercount']+$v['ordernum'];
+            $newArr['count']['refundcount'] = $newArr['count']['refundcount']+$v['refundnum'];
+            //天数单位
+            $newArr['days'][$v['daytime']]['day'] = mb_substr($v['daytime'],0,4).'-'.mb_substr($v['daytime'],4,2).'-'.mb_substr($v['daytime'],6,2);
+            $newArr['days'][$v['daytime']]['addcount'] = $v['addnum'];
+            $newArr['days'][$v['daytime']]['acceptcount'] = $v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum'];
+            $newArr['days'][$v['daytime']]['switchcount'] = +$v['switchnum']+$v['switchmanagenum'];
+            $newArr['days'][$v['daytime']]['restartcount'] = $v['restartnum'];
+            $newArr['days'][$v['daytime']]['recyclecount'] = $v['recyclenum'];
+            $newArr['days'][$v['daytime']]['redeemcount'] = $v['redeemnum'];
+            $newArr['days'][$v['daytime']]['callbackcount'] = $v['callbacknum'];
+            $newArr['days'][$v['daytime']]['attitudecount'] = $v['attitudenum'];
+            $newArr['days'][$v['daytime']]['allocationcount'] = $v['acceptcount']-$v['switchcount'];
+            $newArr['days'][$v['daytime']]['visitcount'] = $v['visitnum'];
+            $newArr['days'][$v['daytime']]['ordercount'] = $v['ordernum'];
+            $newArr['days'][$v['daytime']]['refundcount'] = $v['refundnum'];
+            //员工
+            $newArr['systemuser'][$v['system_user_id']]['system_user_id'] = $v['system_user_id'];
+            $newArr['systemuser'][$v['system_user_id']]['addcount'] = $newArr['systemuser'][$v['system_user_id']]['addnum']+$v['addnum'];
+            $newArr['systemuser'][$v['system_user_id']]['acceptcount'] = $newArr['systemuser'][$v['system_user_id']]['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum'];
+            $newArr['systemuser'][$v['system_user_id']]['switchcount'] = $newArr['systemuser'][$v['system_user_id']]['switchcount']+$v['switchnum']+$v['switchmanagenum'];
+            $newArr['systemuser'][$v['system_user_id']]['restartcount'] = $newArr['systemuser'][$v['system_user_id']]['restartcount']+$v['restartnum'];
+            $newArr['systemuser'][$v['system_user_id']]['recyclecount'] = $newArr['systemuser'][$v['system_user_id']]['recyclecount']+$v['recyclenum'];
+            $newArr['systemuser'][$v['system_user_id']]['redeemcount'] = $newArr['systemuser'][$v['system_user_id']]['redeemcount']+$v['redeemnum'];
+            $newArr['systemuser'][$v['system_user_id']]['callbackcount'] = $newArr['systemuser'][$v['system_user_id']]['callbackcount']+$v['callbacknum'];
+            $newArr['systemuser'][$v['system_user_id']]['attitudecount'] = $newArr['systemuser'][$v['system_user_id']]['attitudecount']+$v['attitudenum'];
+            $newArr['systemuser'][$v['system_user_id']]['allocationcount'] = $newArr['systemuser'][$v['system_user_id']]['allocationcount']+$newArr['systemuser'][$v['system_user_id']]['acceptcount']-$newArr['systemuser'][$v['system_user_id']]['switchcount'];
+            $newArr['systemuser'][$v['system_user_id']]['visitcount'] = $newArr['systemuser'][$v['system_user_id']]['visitcount']+$v['visitnum'];
+            $newArr['systemuser'][$v['system_user_id']]['ordercount'] = $newArr['systemuser'][$v['system_user_id']]['ordercount']+$v['ordernum'];
+            $newArr['systemuser'][$v['system_user_id']]['refundcount'] = $newArr['systemuser'][$v['system_user_id']]['refundcount']+$v['refundnum'];
+        }
+        return array('code'=>0,'data'=>$newArr);
     }
 
     /*
