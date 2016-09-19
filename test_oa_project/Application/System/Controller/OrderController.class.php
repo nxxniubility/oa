@@ -331,8 +331,9 @@ class OrderController extends SystemController
             if (strlen($request['dname'])>=40) {
                 $this->ajaxReturn(2,'优惠名称过长');
             }
-            if(preg_match("/[^\d.]/",$request['dmoney'])){
-                $this->ajaxReturn(3,'优惠金额不能包含其他字符');
+            // [^\d.]
+            if(preg_match("/.??/",$request['dmoney']) || preg_match("/[^\d]/",$request['dmoney'])){
+                $this->ajaxReturn(3,"优惠金额不能包含其他字符或者'.'出现多次");
             }
             if (!$request['dmoney']) {
                 $this->ajaxReturn(4,'请填写优惠金额');
@@ -429,8 +430,8 @@ class OrderController extends SystemController
                 if (strlen($request['dname'])>=40) {
                     $this->ajaxReturn(3,'优惠名称过长');
                 }
-                if(preg_match("/[^\d.]/",$request['dmoney'])){
-                    $this->ajaxReturn(3,'优惠金额不能包含其他字符');
+                if(preg_match("/.??/",$request['dmoney']) || preg_match("/[^\d]/",$request['dmoney'])){
+                    $this->ajaxReturn(3,"优惠金额不能包含其他字符或者'.'不能出现多次");
                 }
                 if (!$request['dmoney']) {
                     $this->ajaxReturn(4,'请填写优惠金额');
