@@ -14,8 +14,8 @@ $('.addPreferential').on('click', function(){
         content: $(".preBox"),	    //  加载主体内容
         scrollbar: false
     });
-
 	$('.preCancel').on('click',function(){
+        $(':input[name="fbChk"]').prop('checked',false);
 		layer.closeAll();
 	});
 });
