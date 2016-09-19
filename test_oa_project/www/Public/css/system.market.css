@@ -146,7 +146,8 @@
 #sr_everyday .container:hover i.sr_up,
 #sr_staff .container:hover i.sr_up {background:url(../images/market_sortup-04.png) no-repeat center right;}
 #sr_everyday td, #sr_staff td {font-size:14px;color:#696969;background:#fff;}
-#sr_staff td a {display:block;height:43px;font-size:14px;color:#333;}
+#sr_staff td a {display:block;height:43px;font-size:14px;color:#53b567;}
+#sr_staff td a:hover {text-decoration:underline;}
 #sr_everyday td.red, #sr_staff td.red {color:#ff0000;}
 #sr_everyday tr.sr_total:hover td,
 #sr_staff tr.sr_total:hover td {background:#fff;}
