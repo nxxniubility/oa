@@ -44,6 +44,9 @@ class ProductController extends SystemController
             $this->ajaxReturn(1,'产品名称不为空');
         }
         $data['price'] = round($data['price'], 2);
+        if(preg_match("/.??/",$data['price']) || preg_match("/[^\d]/",$data['price'])){
+            $this->ajaxReturn(3,"优惠金额不能包含其他字符或者'.'出现多次");
+        }
         if ($data['price'] == 0) {
             $this->ajaxReturn(3,'产品价格不能过低');
         }
