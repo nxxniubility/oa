@@ -226,7 +226,7 @@ function channelBar(){
             formatter: function () {
                 return '<b>' + this.x + '</b><br/>' +
                     this.series.name + ': ' + this.y + '<br/>' +
-                    'Total: ' + this.point.stackTotal;
+                    '总量: ' + this.point.stackTotal;
             }
         },
          plotOptions: {
