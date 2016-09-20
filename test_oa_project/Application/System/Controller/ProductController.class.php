@@ -43,12 +43,8 @@ class ProductController extends SystemController
         if (!$data['productname']) {
             $this->ajaxReturn(1,'产品名称不为空');
         }
-        $data['price'] = round($data['price'], 2);
-        if(preg_match("/.??/",$data['price']) || preg_match("/[^\d]/",$data['price'])){
-            $this->ajaxReturn(3,"优惠金额不能包含其他字符或者'.'出现多次");
-        }
-        if ($data['price'] == 0) {
-            $this->ajaxReturn(3,'产品价格不能过低');
+        if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$data['price'])){
+            $this->ajaxReturn(3,"优惠金额最多只能输入2位小数且不能有其他字符");
         }
         if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(4,'请选择产品类型');
         //执行操作
@@ -71,12 +67,8 @@ class ProductController extends SystemController
         if (!$data['productname']) {
             $this->ajaxReturn(1,'产品名称不为空');
         }
-        $data['price'] = round($data['price'], 2);
-        if(preg_match("/.??/",$data['price']) || preg_match("/[^\d]/",$data['price'])){
-            $this->ajaxReturn(3,"优惠金额不能包含其他字符或者'.'出现多次");
-        }
-        if ($data['price'] == 0) {
-            $this->ajaxReturn(4,'产品价格不能过低');
+        if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$data['price'])){
+            $this->ajaxReturn(3,"优惠金额最多只能输入2位小数且不能有其他字符");
         }
         if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(5,'请选择产品类型');
         //执行操作
