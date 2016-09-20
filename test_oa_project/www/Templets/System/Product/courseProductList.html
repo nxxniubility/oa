@@ -85,7 +85,7 @@
 		        </select>
 		    </div>
 		    <div class="z_rows clearfix">
-		        <span><i>*</i>产品描述：</span>
+		        <span>产品描述：</span>
 		        <textarea class="proDescribe" maxlength="200" name="create_description" autocomplete="off"></textarea>
 		    </div>
 		    <div class="z_rows txt_center mt35 clearfix">
@@ -114,7 +114,7 @@
 		        </select>
 		    </div>
 		    <div class="z_rows clearfix">
-		        <span><i>*</i>产品描述：</span>
+		        <span>产品描述：</span>
 		        <textarea class="proDescribe" name="edit_description" autocomplete="off"></textarea>
 		    </div>
 		    <div class="z_rows txt_center mt35 clearfix">
@@ -168,9 +168,6 @@
 					return false;
 				}else if($(':input[name="create_name"]').val().length==0){
 					layer.msg('请输入产品名称', {icon:2});
-					return false;
-				}else if($(':input[name="create_description"]').val().length==0){
-					layer.msg('请输入产品描述', {icon:2});
 					return false;
 				}
 		        var data = {
@@ -228,10 +225,11 @@
 				}else if($(':input[name="edit_name"]').val().length==0){
 					layer.msg('请输入产品名称', {icon:2});
 					return false;
-				}else if($(':input[name="edit_description"]').val().length==0){
-					layer.msg('请输入产品描述', {icon:2});
-					return false;
 				}
+				// else if($(':input[name="edit_description"]').val().length==0){
+				// 	layer.msg('请输入产品描述', {icon:2});
+				// 	return false;
+				// }
 		        var data = {
 		            course_product_id : $(':input[name="temp_id"]').val(),
 		            productname : $(':input[name="edit_name"]').val(),

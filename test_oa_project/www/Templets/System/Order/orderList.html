@@ -361,7 +361,7 @@
             <div class="selectbox l">
                 <dl class="select">
                     <dt>
-                    <div class="select_title l">选择方式</div>
+                    <div class="select_title l">选择中心</div>
                     <div class="arrow r"></div>
                     </dt>
                     <foreach name="data['zoneAll']" item="v1" key="k1">
@@ -381,7 +381,7 @@
                         </if>
                     </foreach>
                 </dl>
-                <input type="hidden" name="receivables_zone_id">
+                <input type="hidden" name="receivables_zone_id" aotucomplete="off" value="">
             </div>
         </div>
         </if>
@@ -398,7 +398,7 @@
                         <dd class="fxDone" data-value="{$v.num}">{$v.text}</dd>
                     </foreach>
                 </dl>
-                <input type="hidden" name="receivables_payway">
+                <input type="hidden" name="receivables_payway" autocomplete="off">
             </div>
         </div>
         <div class="reRow clearfix">
@@ -449,7 +449,7 @@
                 <div class="selectbox l">
                     <dl class="select">
                         <dt>
-                        <div class="select_title l">选择方式</div>
+                        <div class="select_title l">选择中心</div>
                         <div class="arrow r"></div>
                         </dt>
                         <foreach name="data['zoneAll']" item="v1" key="k1">
@@ -469,7 +469,7 @@
                             </if>
                         </foreach>
                     </dl>
-                    <input type="hidden" name="return_zone_id">
+                    <input type="hidden" name="return_zone_id" aotucomplete="off" value="">
                 </div>
             </div>
         </if>
@@ -488,12 +488,12 @@
                         </if>
                     </foreach>
                 </dl>
-                <input type="hidden" name="return_payway">
+                <input type="hidden" name="return_payway" autocomplete="off"> 
             </div>
         </div>
         <div class="raRow clearfix">
             <span><i>&#42</i>退款金额：</span>
-            <input type="text" class="raRefundInp" name="return_cost">
+            <input type="text" class="raRefundInp" name="return_cost" autocomplete="off">
         </div>
         <div class="raRow clearfix">
             <span><i>&#42</i>退款日期：</span>
@@ -547,7 +547,7 @@
                         </if>
                     </foreach>
                 </dl>
-                <input type="hidden" name="audit_payway">
+                <input type="hidden" name="audit_payway" autocomplete="off">
             </div>
         </div>
         <div class="aoRow clearfix add">
@@ -589,7 +589,7 @@
                 <div class="selectbox l">
                     <dl class="select">
                         <dt>
-                        <div class="select_title l">选择方式</div>
+                        <div class="select_title l">选择中心</div>
                         <div class="arrow r"></div>
                         </dt>
                         <foreach name="data['zoneAll']" item="v1" key="k1">
@@ -609,7 +609,7 @@
                             </if>
                         </foreach>
                     </dl>
-                    <input type="hidden" name="deposit_zone_id">
+                    <input type="hidden" name="deposit_zone_id" aotucomplete="off" value="">
                 </div>
             </div>
         </if>
@@ -628,7 +628,7 @@
                         </if>
                     </foreach>
                 </dl>
-                <input type="hidden" name="deposit_payway">
+                <input type="hidden" name="deposit_payway" aotucomplete="off" value="">
             </div>
         </div>
         <div class="raRow clearfix">

@@ -63,6 +63,8 @@ class OrderController extends SystemController
         //获取区域下
         $zoneMain = new ZoneController();
         $data['zoneAll']['children'] = $zoneMain->getZoneList($this->system_user['zone_id']);
+        $centersign = 10;
+        $centerList = $zoneMain->getZoneCenter($centersign);
         //获取职位及部门
         $departmentMain = new DepartmentController();
         $data['departmentAll'] = $departmentMain->getList();
@@ -77,6 +79,7 @@ class OrderController extends SystemController
         $data['request'] = $requestG;
         $data['zone_id'] = $this->system_user['zone_id'];
         $this->assign('data', $data);
+        $this->assign('centerList', $centerList);
         $this->display();
     }
     /*
@@ -164,6 +167,9 @@ class OrderController extends SystemController
         if(empty($request['cost']) || !$checkform->checkInt($request['cost'])) $this->ajaxReturn(1, '请输入收款金额', '', 'receivables_cost');
         if(empty($request['payway'])) $this->ajaxReturn(1, '请输入收款方式！');
         if(empty($request['practicaltime'])) $this->ajaxReturn(1, '请输入收款日期！', '', 'receivables_practicaltime');
+        if (empty($request['zone_id'])) {
+            $this->ajaxReturn(1, '请选择中心！', '', 'receivables_practicaltime');
+        }
         //添加参数
         $request['practicaltime'] = strtotime($request['practicaltime']);
         $request['system_user_id'] = $this->system_user_id;
@@ -185,13 +191,17 @@ class OrderController extends SystemController
         $request['system_user_id'] = $this->system_user_id;
         if(empty($request['order_id'])) $this->ajaxReturn(1, '参数信息有误');
         if(empty($request['practicaltime'])) $this->ajaxReturn(1, '请输入退款日期！');
+        $orderLog = D("OrderLogs")->where("order_id = $request[order_id]")->field("practicaltime")->order("practicaltime desc")->find();
+        $request['practicaltime'] = strtotime($request['practicaltime']);
+        if ($request['practicaltime'] < $orderLog['practicaltime']) {
+            $this->ajaxReturn(1,"退款日期有误");
+        }       
         if(empty($request['payway'])) $this->ajaxReturn(1, '退款方式！');
         if(empty($request['type']) || $request['type']!='deposit'){
             if(empty($request['cost'])) $this->ajaxReturn(1, '退款金额！');
         }
         //添加参数
         $request['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-        $request['practicaltime'] = strtotime($request['practicaltime']);
         //获取接口
         $orderMainController = new OrderMainController();
         $result = $orderMainController->refundOrder($request);
@@ -335,6 +345,10 @@ class OrderController extends SystemController
             // [^\d.]
             if(preg_match("/.??/",$request['dmoney']) || preg_match("/[^\d]/",$request['dmoney'])){
                 $this->ajaxReturn(3,"优惠金额不能包含其他字符或者'.'出现多次");
+            }
+            $request['dmoney'] = round($request['dmoney'], 2);
+            if ($request['dmoney'] == 0) {
+                $this->ajaxReturn(3,'优惠金额不能过低');
             }
             if (!$request['dmoney']) {
                 $this->ajaxReturn(4,'请填写优惠金额');
