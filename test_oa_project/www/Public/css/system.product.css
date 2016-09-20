@@ -13,9 +13,9 @@
 
 /*=================================== 黄金分割线 ===================================*/
 .oergList { display: inline-block; width: 20px; height: 43px; background: url(../images/promotion_list-01.png) no-repeat center; cursor: pointer;}
-.regionSelect { float: left; display: block; width: 40px; height: 40px;}
-.regionSelect i { display:block; width: 12px; height: 6px; margin: 20px 13px 16px 13px; background: url(../images/newSys_icon-01.png) no-repeat; background-position: 0 -60px;}
-.regionSelect:hover i { background-position: 0 -70px;}
+.proSelect { float: left; display: block; width: 40px; height: 40px;}
+.proSelect i { display:block; width: 12px; height: 6px; margin: 20px 13px 16px 13px; background: url(../images/newSys_icon-01.png) no-repeat; background-position: 0 -60px;}
+.proSelect:hover i { background-position: 0 -70px;}
 .otherOperation { position: relative; width: 0; display: none; z-index: 1;}
 .triangle { position: absolute; top: 29px; left: 14px; width: 10px; height: 6px; background: url(../images/organization_01-01.png) no-repeat; z-index: 1;}
 .otherIcon { position: absolute; top: 34px; left: -42px; width: 122px; font-size: 12px; border: 1px solid #53b567; border-radius: 3px; background: #fff; }

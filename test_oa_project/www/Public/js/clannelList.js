@@ -1,11 +1,15 @@
-//  操作弹框的点击事件
-
-$(document).on('click', '.regionSelect',
-    function(event){
-        $(this).next().toggle().closest('dl').siblings().find('.otherOperation').hide();
-        //阻止点击document对当前事件的影响
-        event.stopPropagation();
-    });
+//  操作弹框的点击事件-渠道管理
+$(document).on('click', '.regionSelect',function(event){
+    $(this).next().toggle().closest('dl').siblings().find('.otherOperation').hide();
+    //阻止点击document对当前事件的影响
+    event.stopPropagation();
+});
+//  操作弹框的点击事件-产品线管理
+$(document).on('click', '.proSelect',function(event){
+    $(this).next().toggle().closest('tr').siblings().find('.otherOperation').hide();
+    //阻止点击document对当前事件的影响
+    event.stopPropagation();
+});
 
 $(document).click(function() {
     $('.otherOperation').hide();
