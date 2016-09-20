@@ -26,7 +26,7 @@ class OrderController extends SystemController
         $requestG = $where = I('get.');
         $where['zone_id'] = !empty($where['zone_id'])?$where['zone_id']:$this->system_user['zone_id'];
         unset($where['page']);
-        // unset($where['_pjax']);
+        unset($where['_pjax']);
         //日期转换时间戳
         foreach ($where as $k => $v) {
             if ($k == 'finishtime') {
@@ -37,7 +37,7 @@ class OrderController extends SystemController
                 $where['createtime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
             }
         }
-dump($where);
+// dump($where);
         if(IS_POST){
             $requestP = I('post.');
             if($requestP['type']=='getPaging') {
@@ -348,7 +348,7 @@ dump($where);
                 $this->ajaxReturn(2,'优惠名称过长');
             }
             if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['price'])){
-                $this->ajaxReturn(3,"优惠金额最多只能输入2位小数且不能有其他字符");
+                $this->ajaxReturn(3,"优惠金额最多只能输入2位小数,且必须为数字");
             }
             if (!$request['dmoney']) {
                 $this->ajaxReturn(4,'请填写优惠金额');
@@ -446,7 +446,7 @@ dump($where);
                     $this->ajaxReturn(3,'优惠名称过长');
                 }
                 if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['price'])){
-                    $this->ajaxReturn(3,"优惠金额最多只能输入2位小数且不能有其他字符");
+                    $this->ajaxReturn(3,"优惠金额最多只能输入2位小数,且必须为数字");
                 }
                 if (!$request['dmoney']) {
                     $this->ajaxReturn(4,'请填写优惠金额');
