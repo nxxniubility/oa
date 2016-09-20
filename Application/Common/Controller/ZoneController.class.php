@@ -62,4 +62,10 @@ class ZoneController extends BaseController
         return $newZoneList;
     }
 
+    public function getZoneCenter($centersign)
+    {
+        $centerList = D("Zone")->where("centersign = $centersign")->select();
+        return $centerList;
+    }
+
 }

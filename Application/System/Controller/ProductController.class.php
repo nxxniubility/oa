@@ -40,7 +40,14 @@ class ProductController extends SystemController
     {
         //获取数据
         $data = I("post.");
-        if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(21,'请选择产品类型');
+        if (!$data['productname']) {
+            $this->ajaxReturn(1,'产品名称不为空');
+        }
+        $data['price'] = round($data['price'], 2);
+        if ($data['price'] == 0) {
+            $this->ajaxReturn(3,'产品价格不能过低');
+        }
+        if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(4,'请选择产品类型');
         //执行操作
         $courseProductController = new CourseProductController();
         $reflag = $courseProductController->cerate_courseProduct($data);
