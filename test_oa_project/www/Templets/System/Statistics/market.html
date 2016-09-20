@@ -307,10 +307,10 @@
 							<td>{$data.dataMarket.count.visitcount}</td>
 	        				<td>{$data.dataMarket.count.ordercount}</td>
 	        				<td>{$data.dataMarket.count.refundcount}</td>
-	        				<td>88.9%</td>
-	        				<td>90.0%</td>
-	        				<td>0.9%</td>
-	        				<td>11.9%</td>
+	        				<td>{$data.dataMarket.count.visitratio}%</td>
+	        				<td>{$data.dataMarket.count.conversionratio}%</td>
+	        				<td>{$data.dataMarket.count.chargebackratio}%</td>
+	        				<td>{$data.dataMarket.count.totalratio}%</td>
 	        			</tr>
 	        		</table>
 	        	</div>
@@ -437,10 +437,10 @@
 								<td>{$data.dataMarket.count.visitcount}</td>
 								<td>{$data.dataMarket.count.ordercount}</td>
 								<td>{$data.dataMarket.count.refundcount}</td>
-								<td>28.26%</td>
-								<td>24.50%</td>
-								<td>10.49%</td>
-								<td>17.63%</td>
+								<td>{$data.dataMarket.count.visitratio}%</td>
+								<td>{$data.dataMarket.count.conversionratio}%</td>
+								<td>{$data.dataMarket.count.chargebackratio}%</td>
+								<td>{$data.dataMarket.count.totalratio}%</td>
 							</tr>
 							<foreach name="data['dataMarket']['days']" item="v" key="k">
 								<tr>
@@ -456,10 +456,10 @@
 									<td>{$v.visitcount}</td>
 									<td class="red">{$v.ordercount}</td>
 									<td>{$v.refundcount}</td>
-									<td>84%</td>
-									<td>10%</td>
-									<td>5%</td>
-									<td>12%</td>
+									<td>{$v.visitratio}%</td>
+									<td>{$v.conversionratio}%</td>
+									<td>{$v.chargebackratio}%</td>
+									<td>{$v.totalratio}%</td>
 								</tr>
 							</foreach>
 
@@ -504,10 +504,10 @@
 								<td>{$data.dataMarket.count.visitcount}</td>
 								<td>{$data.dataMarket.count.ordercount}</td>
 								<td>{$data.dataMarket.count.refundcount}</td>
-								<td>28.26%</td>
-								<td>24.50%</td>
-								<td>10.49%</td>
-								<td>17.63%</td>
+								<td>{$v.visitratio}%</td>
+								<td>{$v.conversionratio}%</td>
+								<td>{$v.chargebackratio}%</td>
+								<td>{$v.totalratio}%</td>
 								<td>&nbsp;</td>
 							</tr>
 							<foreach name="data['dataMarket']['systemuser']" item="v" key="k">
@@ -525,10 +525,10 @@
 									<td>{$v.visitcount}</td>
 									<td class="red">{$v.ordercount}</td>
 									<td>{$v.refundcount}</td>
-									<td>84%</td>
-									<td>10%</td>
-									<td>5%</td>
-									<td>12%</td>
+									<td>{$v.visitratio}%</td>
+									<td>{$v.conversionratio}%</td>
+									<td>{$v.chargebackratio}%</td>
+									<td>{$v.totalratio}%</td>
 									<td><a href="market.personnel.html">详情</a></td>
 								</tr>
 							</foreach>

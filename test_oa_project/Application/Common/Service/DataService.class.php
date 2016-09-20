@@ -74,14 +74,16 @@ class DataService extends BaseService
                     'operator_user_id'=>$data['operator_user_id'],
                 );
                 $temp_system_user_id = $v['system_user_id'];
+                $temp_zone_id = $v['zone_id'];
                 $userIds[] = $v['user_id'];
 
             }
             $addLog_flag = D('DataLogs')->addAll($add_arr);
             //添加营销统计---------------------
-            $dataMarket['system_user_id'] = $temp_system_user_id;
             $statusArr = $this->statusArr;
             $dataMarket['name'] = $statusArr[$data['operattype']];
+            $dataMarket['system_user_id'] = $temp_system_user_id;
+            $dataMarket['zone_id'] = $temp_zone_id;
             $dataMarket['user_id'] = $userIds;
             $addMarket_flag = $this->addDataMarket($dataMarket);
         }
@@ -99,7 +101,16 @@ class DataService extends BaseService
     */
     public function getDataMarket($where)
     {
-        $result = D('DataMarket')->where($where)->select();
+        if(!empty($where['zone_id'])){
+            $zoneIds = $this->getZoneIds($where['zone_id']);
+            $_where['zone_id'] = array('IN',$zoneIds);
+        }
+        if(!empty($where['role_id'])){
+            $systemIds = $this->getRoleIds($where['role_id']);
+            $_where['system_user_id'] = array('IN',$systemIds);
+        }
+        $_where['daytime'] = $where['daytime'];
+        $result = D('DataMarket')->where($_where)->select();
         //新增量 addnum
         //出库量 addnum + acceptnum + directoroutnum + applynum
         //转出量 switchnum + switchmanagenum
@@ -112,13 +123,14 @@ class DataService extends BaseService
         //到访量 visitnum
         //订单量 ordernum
         //退款量 refundnum
-        //到访率
-        //面转率
-        //退单率
-        //总转率
+        //到访率  到访量/出库量
+        //面转率 ordernum/visitnum
+        //退单率 refundnum/ordernum
+        //总转率 （ordernum-refundnum）/出库量
         $newArr = array();
         $SystemUserService = new SystemUserService();
         foreach($result as $k=>$v){
+            $_count = count($result);
             //总数
             $newArr['count']['addcount'] = $newArr['count']['addcount']+$v['addnum'];
             $newArr['count']['acceptcount'] = $newArr['count']['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum'];
@@ -132,6 +144,12 @@ class DataService extends BaseService
             $newArr['count']['visitcount'] = $newArr['count']['visitcount']+$v['visitnum'];
             $newArr['count']['ordercount'] = $newArr['count']['ordercount']+$v['ordernum'];
             $newArr['count']['refundcount'] = $newArr['count']['refundcount']+$v['refundnum'];
+            if(($_count-1)==$k){
+                $newArr['count']['visitratio'] = round($newArr['count']['visitcount']/$newArr['count']['acceptcount'],4)*100;
+                $newArr['count']['conversionratio'] = round($newArr['count']['ordercount']/$newArr['count']['visitcount'],4)*100;
+                $newArr['count']['chargebackratio'] = round($newArr['count']['refundcount']/$newArr['count']['ordercount'],4)*100;
+                $newArr['count']['totalratio'] = round(($newArr['count']['ordercount']-$newArr['count']['refundcount'])/$newArr['count']['acceptcount'],4)*100;
+            }
             //天数单位
             $newArr['days'][$v['daytime']]['day'] = mb_substr($v['daytime'],0,4).'-'.mb_substr($v['daytime'],4,2).'-'.mb_substr($v['daytime'],6,2);
             $newArr['days'][$v['daytime']]['addcount'] = $newArr['days'][$v['daytime']]['addcount'] + $v['addnum'];
@@ -146,6 +164,12 @@ class DataService extends BaseService
             $newArr['days'][$v['daytime']]['visitcount'] = $newArr['days'][$v['daytime']]['visitcount'] + $v['visitnum'];
             $newArr['days'][$v['daytime']]['ordercount'] = $newArr['days'][$v['daytime']]['ordercount'] + $v['ordernum'];
             $newArr['days'][$v['daytime']]['refundcount'] = $newArr['days'][$v['daytime']]['refundcount'] + $v['refundnum'];
+            //-率
+            $newArr['days'][$v['daytime']]['visitratio'] = round($newArr['days'][$v['daytime']]['visitcount']/$newArr['days'][$v['daytime']]['acceptcount'],4)*100;
+            $newArr['days'][$v['daytime']]['conversionratio'] = round($newArr['days'][$v['daytime']]['ordercount']/$newArr['days'][$v['daytime']]['visitcount'],4)*100;
+            $newArr['days'][$v['daytime']]['chargebackratio'] = round($newArr['days'][$v['daytime']]['refundcount']/$newArr['days'][$v['daytime']]['ordercount'],4)*100;
+            $newArr['days'][$v['daytime']]['totalratio'] = round(($newArr['days'][$v['daytime']]['ordercount']-$newArr['days'][$v['daytime']]['refundcount'])/$newArr['days'][$v['daytime']]['acceptcount'],4)*100;
+
             //员工
             if(empty($newArr['systemuser'][$v['system_user_id']]['system_user_id'])){
                 $where['system_user_id'] = $v['system_user_id'];
@@ -167,6 +191,11 @@ class DataService extends BaseService
             $newArr['systemuser'][$v['system_user_id']]['visitcount'] = $newArr['systemuser'][$v['system_user_id']]['visitcount']+$v['visitnum'];
             $newArr['systemuser'][$v['system_user_id']]['ordercount'] = $newArr['systemuser'][$v['system_user_id']]['ordercount']+$v['ordernum'];
             $newArr['systemuser'][$v['system_user_id']]['refundcount'] = $newArr['systemuser'][$v['system_user_id']]['refundcount']+$v['refundnum'];
+            //-率
+            $newArr['systemuser'][$v['system_user_id']]['visitratio'] = round($newArr['systemuser'][$v['system_user_id']]['visitcount']/$newArr['systemuser'][$v['system_user_id']]['acceptcount'],4)*100;
+            $newArr['systemuser'][$v['system_user_id']]['conversionratio'] = round($newArr['systemuser'][$v['system_user_id']]['ordercount']/$newArr['systemuser'][$v['system_user_id']]['visitcount'],4)*100;
+            $newArr['systemuser'][$v['system_user_id']]['chargebackratio'] = round($newArr['systemuser'][$v['system_user_id']]['refundcount']/$newArr['systemuser'][$v['system_user_id']]['ordercount'],4)*100;
+            $newArr['systemuser'][$v['system_user_id']]['totalratio'] = round(($newArr['systemuser'][$v['system_user_id']]['ordercount']-$newArr['systemuser'][$v['system_user_id']]['refundcount'])/$newArr['systemuser'][$v['system_user_id']]['acceptcount'],4)*100;
         }
         return array('code'=>0,'data'=>$newArr);
     }
@@ -209,6 +238,7 @@ class DataService extends BaseService
         if(empty($where['system_user_id'])) return array('code'=>2,'msg'=>'参数异常');
         //$where['num'] =  +1/-1
         $data_where['daytime'] = date('Ymd');
+        $data_where['zone_id'] = $where['zone_id'];
         $data_where['system_user_id'] = $where['system_user_id'];
         $systemdata = D('DataMarket')->where($data_where)->find();
         if(empty($systemdata)){
@@ -216,7 +246,7 @@ class DataService extends BaseService
         }
         //添加跟进记录？
         if($where['name']=='attitudenum'){
-            $dayCallback = D('DataLogs')->where(array('system_user_id'=>$where['system_user_id'],'user_id'=>array('IN',$where['user_id']),'logtime'=>array('GT',$data_where['daytime'])))->count();
+            $dayCallback = D('DataLogs')->where(array('system_user_id'=>$where['system_user_id'],'zone_id'=>$data_where['zone_id'],'user_id'=>array('IN',$where['user_id']),'logtime'=>array('GT',$data_where['daytime'])))->count();
             if($dayCallback==0){
                 $save_callback['callbacknum'] = array('exp','callbacknum+1');
                 D('DataMarket')->where($data_where)->save($save_callback);
@@ -231,5 +261,37 @@ class DataService extends BaseService
             return array('code'=>0,'msg'=>'数据添加成功');
         }
         return array('code'=>1,'msg'=>'数据添加失败');
+    }
+
+    /**
+     * 区域ID 获取子集包括自己的集合
+     * @author zgt
+     */
+    protected function getZoneIds($zone_id)
+    {
+        $zoneIds = D('Zone')->getZoneIds($zone_id);
+        $zoneIdArr = array();
+        foreach($zoneIds as $k=>$v){
+            $zoneIdArr[] = $v['zone_id'];
+        }
+        return $zoneIdArr;
+    }
+
+    /**
+     * 职位ID  获取对应人员ID
+     * @author zgt
+     */
+    protected function getRoleIds($role_id)
+    {
+        $reList = D('RoleUser')
+            ->field('user_id')
+            ->group("user_id")->Distinct(true)
+            ->where(array('role_id'=>$role_id))
+            ->select();
+        $systemUserArr = array();
+        foreach($reList as $v){
+            $systemUserArr[] = $v['user_id'];
+        }
+        return $systemUserArr;
     }
 }
