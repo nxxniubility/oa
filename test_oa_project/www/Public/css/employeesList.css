@@ -14,7 +14,7 @@
 
 .feMiddle { margin: 20px auto 40px; font-size: 12px;}
 .feMiddleTop, .feMiddleList { float: left; width: 100%;}
-.feMiddleTop { margin-bottom: 20px;}
+.feMiddleTop {margin-bottom:20px;}
 .selectbox2 dl{color:#a6a7a7;border-color:#ccc;}
 .selectbox2 dl dt{border-bottom:none;background:#fff;}
 .selectbox2 dl dd{font-size:12px;}
@@ -152,6 +152,11 @@
 #feCheckBox1 {margin-top:-2px;vertical-align:middle;}
 .leftChoose span {margin:0 16px 0 0;}
 
+/*0920*/
+.wrapBox#sUserWrap .feMiddleTop {margin-bottom:0;}
+.wrapBox#sUserWrap .feMiddleTop .selectbox2, .wrapBox#sUserWrap .feMiddleTop .selectbox, .wrapBox#sUserWrap.feMiddleTop .feSearchBox {margin-bottom:20px;}
+.wrapBox#sUserWrap .searchInp {width:135px;}
+.wrapBox#sUserWrap .feInp {width:148px;}
 
 /*员工、离职员工列表*/
 #sUserListTable, #lUserTable {width:100%;margin:20px auto;border:1px solid #ebeaea;border-bottom:none;background:#f5f6fa;}
