@@ -37,7 +37,7 @@
 					<div class="imRight l">
 						<select class="imSelect" name="channel_id">
 							<foreach name = "channelList['data']" item = "channel">
-								<option value="{$channel['channel_id']}" {:$channel['channel_id']==$pagesInfo[0]['channel_id']?'selected="true"':''}>{$channel['channelname']}</option>
+								<optgroup label="{$channel['channelname']}"></optgroup>
 								<if condition="!empty($channel['children'])">
 									<foreach name = "channel['children']" item = "channel2">
 										<option value="{$channel2['channel_id']}" {:$channel2['channel_id']==$pagesInfo[0]['channel_id']?'selected="true"':''}>&nbsp;&nbsp;├─ {$channel2['channelname']}</option>

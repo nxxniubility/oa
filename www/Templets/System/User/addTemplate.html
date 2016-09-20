@@ -38,7 +38,7 @@
 						<select class="imSelect" name="channel_id" autocomplete="off">
 							<option selected="selected" value="">选择渠道</option>
 							<foreach name = "channelList['data']" item = "channel">
-								<option value="{$channel['channel_id']}">{$channel['channelname']}</option>
+								<optgroup label="{$channel['channelname']}"></optgroup>
 								<if condition="!empty($channel['children'])">
 									<foreach name = "channel['children']" item = "channel2">
 										<option value="{$channel2['channel_id']}">&nbsp;&nbsp;├─ {$channel2['channelname']}</option>
