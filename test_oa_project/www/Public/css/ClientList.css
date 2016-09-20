@@ -432,8 +432,8 @@ textarea{resize:none;}
 #table1, #table2, #table3 { float: left;}
 #table1 tr,  #table1 th, #table1 td,
 #table2 tr,  #table2 th, #table2 td,
-#table3 tr,  #table3 th, #table3 td { height: 40px; font-size: 12px;border-bottom: 1px solid #ddd;}
-/*#table1 tr, #table2 tr, #table3 tr { cursor: pointer;}*/
+#table3 tr,  #table3 th, #table3 td {height: 40px; font-size: 12px;}
+#table1 th, #table2 th, #table3 th, #table1 td, #table2 td, #table3 td {border-bottom: 1px solid #ddd;}
 #table2 td, #table3 td {cursor:pointer;}
 
 #table1 th { color: #999; border-bottom: 1px solid #ddd;}
@@ -450,7 +450,7 @@ textarea{resize:none;}
 .iconBox {width: 100%;height: 40px;line-height: 40px;}
 .iconBox .emphasis, .iconBox .introduce, .iconBox .new { float: left; width: 20px; height: 20px; margin-top: 10px; margin-left: 5px;}
 .iconBox .emphasis img, .iconBox .introduce img, .iconBox .new img { display: block; vertical-align: middle;}
-.proContMiddle .proSelect i { margin-right: 0; margin: 14px;}
+.proContMiddle .proSelect i { margin-right: 0; margin: 14px 14px 0;}
 .otherIcon { top: -15px;}
 
 /*======================================== 黄金分割线: 确认客户到访 ========================================*/
