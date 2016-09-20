@@ -68,7 +68,17 @@ class ProductController extends SystemController
     {
         //获取数据
         $data = I("post.");
-        if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(21,'请选择产品类型');
+        if (!$data['productname']) {
+            $this->ajaxReturn(1,'产品名称不为空');
+        }
+        $data['price'] = round($data['price'], 2);
+        if(preg_match("/.??/",$data['price']) || preg_match("/[^\d]/",$data['price'])){
+            $this->ajaxReturn(3,"优惠金额不能包含其他字符或者'.'出现多次");
+        }
+        if ($data['price'] == 0) {
+            $this->ajaxReturn(4,'产品价格不能过低');
+        }
+        if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(5,'请选择产品类型');
         //执行操作
         $courseProductController = new CourseProductController();
         $reflag = $courseProductController->edit_courseProduct($data);
