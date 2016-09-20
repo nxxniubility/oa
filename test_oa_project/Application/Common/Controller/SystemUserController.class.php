@@ -542,15 +542,19 @@ class SystemUserController extends BaseController
     | @author zgt
     */
     public function editInfo($data)
-    {
+    {    
         if(!empty($sex)) $system_user['sex'] = isset($data['sex'])?$data['sex']:1;
         if(!empty($check_id)) $system_user['check_id'] = isset($data['check_id'])?$data['check_id']:null;
         if(!empty($usertype)) $system_user['usertype'] = isset($data['usertype'])?$data['usertype']:null;
         unset($data['sex']);unset($data['check_id']);unset($data['usertype']);
         //启动事务
         D()->startTrans();
-        //修改SystemUser
-        $flag_save = D('SystemUser')->where('system_user_id='.$data['system_user_id'])->save($system_user);
+        if ($system_user) {
+            //修改SystemUser
+            $flag_save = D('SystemUser')->where("system_user_id=$data[system_user_id]")->save($system_user);
+        }else{
+            $flag_save = true;
+        }
         //修改SystemUserInfo
         $flag_saveInfo = D('SystemUserInfo')->where('system_user_id='.$data['system_user_id'])->save($data);
         if($flag_save!==false && $flag_saveInfo!==false){
