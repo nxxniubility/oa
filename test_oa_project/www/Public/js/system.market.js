@@ -117,54 +117,147 @@ $('.chart_topright select').change(function(){
 	var _curVal = $(this).children('option:selected').val(),
 		_p = $('.please_select'),
 		_chartnav=$('.chart_tab .cur').attr('data-value'),
+		_chartname=$('.chart_tab .cur').text(),
 		_daily_stats = $('#'+_chartnav).find('.daily_stats'),
 		_channel = $('#'+_chartnav).find('.daily_channel'),
 		_channel_bar = $('#'+_chartnav).find('.channel_bar'),
 		_channel_pie = $('#'+_chartnav).find('.channel_pie'),
 		_quality = $('#quality'),
 		_course = $('#course');
-	if(_curVal == '0'){
-		_p.show();
-		//_daily_stats.hide();
-		//_channel.hide();
-		_daily_stats.empty();
-		_channel_bar.empty();
-		_channel_pie.empty();
-		_quality.hide();
-		_course.hide();
-	}else if(_curVal == '1'){
-		dailyStats();
-		_daily_stats.show();
-		_p.hide();
-		//_channel.hide();
-		_channel_bar.empty();
-		_channel_pie.empty();
-		_quality.hide();
-		_course.hide();
-	}else if(_curVal == '2'){
-		channelPie();
-		channelBar();
-		_channel.show();
-		_p.hide();
-		_daily_stats.empty();
-		_quality.hide();
-		_course.hide();
-		
-	}/*else if(curVal == '3'){
-		$('#daily_stats2').show();
-		$('#daily_stats2').siblings().hide();
-	}else if(curVal == '4'){
-		$('#daily_stats3').show();
-		$('#daily_stats3').siblings().hide();
-	}*/
+	//获取接口
+	var data = {
+		daytime:market_daytime,
+		type:_chartnav
+	};
+	common_ajax2(data,get_info_url,'no',getHighcharts);
+	function getHighcharts(redata){
+		if(redata.code==0){
+			if(_curVal == '1'){
+				//每日统计
+				var _days = [];
+				var _dayVal = [];
+				$.each(redata.data.days,function(k,v){
+					_days.push(k);
+					_dayVal.push(v);
+				});
+				dailyStats(_days,_dayVal,_chartname);
+				_daily_stats.show();
+				_p.hide();
+				//_channel.hide();
+				_channel_bar.empty();
+				_channel_pie.empty();
+				_quality.hide();
+				_course.hide();
+			}else if(_curVal == '2'){
+				var _navName = [];
+				var _values = [];
+				var _data = '';
+				var _data_pie = [];
+				$.each(redata.data.channel,function(k,v){
+					$.each(v,function(k2,v2){
+						var _val_num = _values.length;
+						var _val_data = [];
+						if(_val_num>0){
+							for(var i=0;i<_val_num;i++){
+								_val_data.push(0);
+							}
+						}
+						_val_data.push(v2.count);
+						_data = {
+							name: v2.name,
+							data: _val_data,
+							stack: k
+						};
+						_navName.push(k);
+						_values.push(_data);
+						_data_pie.push([v2.name, v2.count]);
+					});
+				});
+				channelBar(_navName,_values)
+				channelPie(_data_pie);
+				_channel.show();
+				_p.hide();
+				_daily_stats.empty();
+				_quality.hide();
+				_course.hide();
+			}else if(_curVal == '2'){
+				var _navName = [];
+				var _values = [];
+				var _data = '';
+				var _data_pie = [];
+				$.each(redata.data.channel,function(k,v){
+					$.each(v,function(k2,v2){
+						var _val_num = _values.length;
+						var _val_data = [];
+						if(_val_num>0){
+							for(var i=0;i<_val_num;i++){
+								_val_data.push(0);
+							}
+						}
+						_val_data.push(v2.count);
+						_data = {
+							name: v2.name,
+							data: _val_data,
+							stack: k
+						};
+						_navName.push(k);
+						_values.push(_data);
+						_data_pie.push([v2.name, v2.count]);
+					});
+				});
+				channelBar(_navName,_values)
+				channelPie(_data_pie);
+				_channel.show();
+				_p.hide();
+				_daily_stats.empty();
+				_quality.hide();
+				_course.hide();
+			}
+		}
+		//if(_curVal == '0'){
+		//	_p.show();
+		//	//_daily_stats.hide();
+		//	//_channel.hide();
+		//	_daily_stats.empty();
+		//	_channel_bar.empty();
+		//	_channel_pie.empty();
+		//	_quality.hide();
+		//	_course.hide();
+		//}else if(_curVal == '1'){
+		//	dailyStats();
+		//	_daily_stats.show();
+		//	_p.hide();
+		//	//_channel.hide();
+		//	_channel_bar.empty();
+		//	_channel_pie.empty();
+		//	_quality.hide();
+		//	_course.hide();
+		//}else if(_curVal == '2'){
+		//	channelPie();
+		//	channelBar();
+		//	_channel.show();
+		//	_p.hide();
+		//	_daily_stats.empty();
+		//	_quality.hide();
+		//	_course.hide();
+        //
+		//}
+		/*else if(curVal == '3'){
+		 $('#daily_stats2').show();
+		 $('#daily_stats2').siblings().hide();
+		 }else if(curVal == '4'){
+		 $('#daily_stats3').show();
+		 $('#daily_stats3').siblings().hide();
+		 }*/
+	}
 });
 
 //  各图标初始化
 dailyStats();	//  新增量每日统计线型
 
 //  新增量
-function dailyStats(days,values){
-	_chartnav=$('.chart_tab .cur').attr('data-value');
+function dailyStats(days,values,name){
+	var _chartnav=$('.chart_tab .cur').attr('data-value');
 	$('#'+_chartnav).find('.daily_stats').highcharts({
 		chart: {
 			type: 'line'
@@ -178,7 +271,7 @@ function dailyStats(days,values){
 		credits: { enabled:false},
         exporting: { enabled:false},	//  去打印
 		xAxis: {
-			categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+			categories: days
 		},
 		yAxis: {
 			title: {
@@ -194,8 +287,8 @@ function dailyStats(days,values){
 			}
 		},
 		series: [{
-			name: '新增量',
-			data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+			name: name,
+			data: values
 		}]
 	});
 }
@@ -203,8 +296,8 @@ function dailyStats(days,values){
 
 
 //  来源渠道-柱状图
-function channelBar(){
-	_chartnav=$('.chart_tab .cur').attr('data-value');
+function channelBar(navName,values){
+	var _chartnav=$('.chart_tab .cur').attr('data-value');
 	$('#'+_chartnav).find('.channel_bar').highcharts({
 		chart:{
 			className:'channel_bar',
@@ -215,7 +308,7 @@ function channelBar(){
         credits: { enabled:false},
         exporting: { enabled:false},
         xAxis: {
-            categories: ['线下院校', '在线简历', '招聘网站', '线上推广', '自然网络','朋友/亲戚']
+            categories: navName
         },
         yAxis: {
             allowDecimals: false,
@@ -235,37 +328,62 @@ function channelBar(){
                 stacking: 'normal'
             }
         },
-        series: [{
-            name: '360',
-            data: [5, 3, 4, 7, 2, 12],
-            stack: 'male'			//  分组
-        }, {
-            name: '智联',
-            data: [3, 4, 4, 2, 5, 9],
-            stack: 'male'
-        }, {
-            name: '58同城',
-            data: [2, 5, 6, 2, 1, 2],
-            stack: 'male'
-        }, {
-            name: '赶集',
-            data: [3, 1, 4, 4, 3, 6],
-            stack: 'male'
-        },{
-        	name:'百度',
-        	data: [9, 5, 3, 6, 7, 2],
-        	stack: 'male'
-        },{
-        	name:'千度',
-        	data: [2, 6, 2, 7, 3, 8],
-        	stack: 'male'
-        }]
+        series:values
+			//[{
+			//	name: '360',
+			//	data: [5],
+			//	stack: '线下院校'			//  分组
+			//}, {
+			//	name: '智联',
+			//	data: [3],
+			//	stack: '线下院校'
+			//}, {
+			//	name: '58同城',
+			//	data: [2],
+			//	stack: '线下院校'
+			//}, {
+			//	name: '赶集',
+			//	data: [3],
+			//	stack: '线下院校'
+			//},{
+			//	name:'百度',
+			//	data: [9],
+			//	stack: '线下院校'
+			//},{
+			//	name:'千度',
+			//	data: [0,2],
+			//	stack: '在线简历'
+			//},{
+			//	name:'千度',
+			//	data: [0,2],
+			//	stack: '在线简历'
+			//},{
+			//	name:'千度',
+			//	data: [0,2],
+			//	stack: '在线简历'
+			//},{
+			//	name:'千度',
+			//	data: [0,2],
+			//	stack: '在线简历'
+			//},{
+			//	name:'千度',
+			//	data: [0,2],
+			//	stack: '在线简历'
+			//},{
+			//	name:'千度',
+			//	data: [0,2],
+			//	stack: '在线简历'
+			//},{
+			//	name:'千度',
+			//	data: [2],
+			//	stack: '在线简历2'
+			////}]
 	});
 }
 
 // 来源渠道-圆饼图
-function channelPie(){
-	_chartnav=$('.chart_tab .cur').attr('data-value');
+function channelPie(values){
+	var _chartnav=$('.chart_tab .cur').attr('data-value');
 	$('#'+_chartnav).find('.channel_pie').highcharts({
 		chart: {
 			className:'channel_pie',
@@ -295,14 +413,8 @@ function channelPie(){
 	    series: [{
 	        type: 'pie',
 	        name: '所占百分比为：',
-	        data: [
-	            ['360', 45.0],
-	            ['智联', 26.8],
-	            ['58同城', 12.8],
-	            ['赶集', 8.5],
-	            ['百度', 6.2],
-	            ['千度', 0.7]
-	        ]
+	        data: values
+
 	    }]
 	});
 }

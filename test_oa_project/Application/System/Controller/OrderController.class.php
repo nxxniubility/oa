@@ -172,9 +172,9 @@ class OrderController extends SystemController
         if(empty($request['cost']) || !$checkform->checkInt($request['cost'])) $this->ajaxReturn(1, '请输入收款金额', '', 'receivables_cost');
         if(empty($request['payway'])) $this->ajaxReturn(1, '请输入收款方式！');
         if(empty($request['practicaltime'])) $this->ajaxReturn(1, '请输入收款日期！', '', 'receivables_practicaltime');
-        if (empty($request['zone_id'])) {
-            $this->ajaxReturn(1, '请选择中心！', '', 'receivables_practicaltime');
-        }
+//        if (empty($request['zone_id'])) {
+//            $this->ajaxReturn(1, '请选择中心！', '', 'receivables_practicaltime');
+//        }
         //添加参数
         $request['practicaltime'] = strtotime($request['practicaltime']);
         $request['system_user_id'] = $this->system_user_id;

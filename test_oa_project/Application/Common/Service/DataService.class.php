@@ -54,7 +54,7 @@ class DataService extends BaseService
     public function addDataLogs($data,$dataList=null,$dataType=null)
     {
         if(empty($data['logtime']))  $data['logtime'] = time();
-        $userList = D('User')->field('user_id,status,createuser_id,updateuser_id,system_user_id,zone_id,attitude_id,channel_id,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->select();
+        $userList = D('User')->field('user_id,status,createuser_id,updateuser_id,system_user_id,zone_id,course_id,attitude_id,channel_id,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->select();
         if(!empty($userList)){
             //获取记录数据集合 -> 批量添加
             $add_arr = array();
@@ -62,6 +62,7 @@ class DataService extends BaseService
             foreach($userList as $k=>$v){
                 $add_arr[] = array(
                     'zone_id'=>$v['zone_id'],
+                    'course_id'=>$v['course_id'],
                     'attitude_id'=>$v['attitude_id'],
                     'channel_id'=>$v['channel_id'],
                     'infoquality'=>$v['infoquality'],
@@ -97,36 +98,47 @@ class DataService extends BaseService
     |--------------------------------------------------------------------------
     | 获取营销数据
     |--------------------------------------------------------------------------
+    |  //新增量 addnum
+    |  //出库量 addnum + acceptnum + directoroutnum + applynum
+    |  //转出量 switchnum + switchmanagenum
+    |  //放弃量 restartnum
+    |  //系统回收量 recyclenum
+    |  //赎回量 redeemnum
+    |  //已回访量 callbacknum
+    |  //跟进次数 attitudenum
+    |  //分配量 出库量 - 转出量
+    |  //到访量 visitnum
+    |  //订单量 ordernum
+    |  //退款量 refundnum
+    |  //到访率  到访量/出库量
+    |  //面转率 ordernum/visitnum
+    |  //退单率 refundnum/ordernum
+    |  //总转率 （ordernum-refundnum）/出库量
     | @author zgt
     */
     public function getDataMarket($where)
     {
+        //时间格式转换
+        if(!empty($where['daytime'])){
+            $daytime = explode('-', $where['daytime']);
+            if(count($daytime)>1){
+                $where['daytime'] = array(array('EGT',$daytime[0]),array('ELT',$daytime[1]));
+            }else{
+                $where['daytime'] = $daytime[0];
+            }
+        }
+        //获取区域子集
         if(!empty($where['zone_id'])){
             $zoneIds = $this->getZoneIds($where['zone_id']);
             $_where['zone_id'] = array('IN',$zoneIds);
         }
+        //获取区域子集
         if(!empty($where['role_id'])){
             $systemIds = $this->getRoleIds($where['role_id']);
             $_where['system_user_id'] = array('IN',$systemIds);
         }
         $_where['daytime'] = $where['daytime'];
         $result = D('DataMarket')->where($_where)->select();
-        //新增量 addnum
-        //出库量 addnum + acceptnum + directoroutnum + applynum
-        //转出量 switchnum + switchmanagenum
-        //放弃量 restartnum
-        //系统回收量 recyclenum
-        //赎回量 redeemnum
-        //已回访量 callbacknum
-        //跟进次数 attitudenum
-        //分配量 出库量 - 转出量
-        //到访量 visitnum
-        //订单量 ordernum
-        //退款量 refundnum
-        //到访率  到访量/出库量
-        //面转率 ordernum/visitnum
-        //退单率 refundnum/ordernum
-        //总转率 （ordernum-refundnum）/出库量
         $newArr = array();
         $SystemUserService = new SystemUserService();
         foreach($result as $k=>$v){
@@ -220,10 +232,49 @@ class DataService extends BaseService
             'ordercount'=>'13',
             'refundcount'=>'14',
         );
-        $new_where['operattype'] = array('IN',$arr[$where['type']]);
-        $new_where['logtime'] = $where['daytime'];
-        $redata = D('DataLogs')->where($new_where)->select();
-        return array('code'=>0,'data'=>$redata);
+        //时间格式转换
+        if(!empty($where['daytime'])){
+            $daytime = explode('-', $where['daytime']);
+            if(count($daytime)>1){
+                $where['daytime'] = array(array('EGT',strtotime($daytime[0])),array('ELT',strtotime($daytime[1].'2359')));
+            }else{
+                $where['daytime'] = $daytime[0];
+            }
+        }
+        //获取区域子集
+        if(!empty($where['zone_id'])){
+            $zoneIds = $this->getZoneIds($where['zone_id']);
+            $_where['zone_id'] = array('IN',$zoneIds);
+        }
+        //获取职位员工
+        if(!empty($where['role_id'])){
+            $systemIds = $this->getRoleIds($where['role_id']);
+            $_where['system_user_id'] = array('IN',$systemIds);
+        }
+        $_where['operattype'] = array('IN',$arr[$where['type']]);
+        $_where['logtime'] = $where['daytime'];
+        $redata = D('DataLogs')->where($_where)->order('logtime asc')->select();
+        $ChannelService = new ChannelService();
+        $channel_list = $ChannelService->getAllChannel();
+        $channel_list = $channel_list['data']['data'];
+        $newArr = array();
+        $channelArr = array();
+        foreach($redata as $k=>$v){
+            $channelArr[$v['channel_id']] = $channelArr[$v['channel_id']]+1;
+            $newArr['days'][date('m-d',$v['logtime'])] = $newArr['days'][date('m-d',$v['logtime'])]+1;
+            $newArr['infoquality'][$v['infoquality']] = $newArr['infoquality'][$v['infoquality']]+1;
+            $newArr['course_id'][$v['course_id']] = $newArr['course_id'][$v['course_id']]+1;
+        }
+        foreach($channel_list as $v){
+            $_temp_channel = array();
+            foreach($v['children'] as $v2){
+                if( !empty($channelArr[$v2['channel_id']]) ){
+                    $_temp_channel[] = array('count'=>$channelArr[$v2['channel_id']],'name'=>$v2['channelname']);
+                }
+            }
+            $newArr['channel'][$v['channelname']] = $_temp_channel;
+        }
+        return array('code'=>0,'data'=>$newArr);
     }
 
     /*
