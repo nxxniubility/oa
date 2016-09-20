@@ -161,8 +161,6 @@ $('.chart_topright select').change(function(){
 
 //  各图标初始化
 dailyStats();	//  新增量每日统计线型
-//channelBar();	//  新增量来源渠道柱状
-//channelPie();	//  新增量来源渠道饼状
 
 //  新增量
 function dailyStats(days,values){
@@ -177,6 +175,8 @@ function dailyStats(days,values){
 		subtitle: {
 			text: null
 		},
+		credits: { enabled:false},
+        exporting: { enabled:false},	//  去打印
 		xAxis: {
 			categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 		},
@@ -210,9 +210,10 @@ function channelBar(){
 			className:'channel_bar',
 			type:'bar'
 		},
-		chart: {type: 'column'},
+		chart: { type: 'column'},
         title: null,
-        credits: {enabled:false},
+        credits: { enabled:false},
+        exporting: { enabled:false},
         xAxis: {
             categories: ['线下院校', '在线简历', '招聘网站', '线上推广', '自然网络','朋友/亲戚']
         },
@@ -280,6 +281,7 @@ function channelPie(){
 	        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
 	    },
 	    credits: {enabled:false},
+	    exporting: { enabled:false},
 	    plotOptions: {
 	        pie: {
 	            allowPointSelect: true,
