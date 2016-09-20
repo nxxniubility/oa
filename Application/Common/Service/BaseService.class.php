@@ -82,4 +82,19 @@ class BaseService extends Model {
 
         return $array;
     }
+    //对缓存条件筛选
+    public function disposeArray_where($array, $key, $value){
+        $value_link = null;
+        if(strpos($value,'%%')!==false) {
+            $value_link = explode('%%', $value);
+        }
+        foreach($array as $k=>$v){
+            if(!empty($value_link[1])){
+                if(strpos($v[$key], $value_link[1])!==false) $department_new[] = $v;
+            }else{
+                if($v[$key]==$value) $department_new[] = $v;
+            }
+        }
+        return $department_new;
+    }
 }

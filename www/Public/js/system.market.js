@@ -11,8 +11,17 @@ $(document).on('click', '.city_title', function(){
 $(document).on('click', '.position_name', function(){
 	mask.show();
 	$(this).parent().find('.search_position_show').removeClass('dn');
+	var role_ids = $(':input[name="role_id"]').val();
+	if(role_ids!=''){
+		role_ids = role_ids.split(',');
+		$(':input[name="sale_inp"]').prop('checked',false);
+		$.each(role_ids,function(k,v){
+			$(':input[name="sale_inp"][value="'+v+'"]').prop('checked',true);
+		});
+	}
 	openPosition();
 	close_layer();
+	positionChoose();
 });
 
 //  关闭职位弹层
@@ -56,25 +65,49 @@ function openPosition(){
 }
 
 //  职位赋值
-/*function positionChoose(){
-	
-}*/
+function positionChoose(){
+	$(document).on('click', '.confirm', function(){
+		var _this = $('.position_list'),
+			_checkbox = $(':input[name="sale_inp"]:checked'),
+			$close = $('.cancel'),
+			role_ids = '';
+		_checkbox.each(function(){
+			if(role_ids==''){
+				role_ids =  $(this).val();
+			}else{
+				role_ids +=  ','+$(this).val();
+			};
+		});
+		$(this).next('input').val(role_ids);
+		$close.closest('.search_position_show').addClass('dn');
+		mask.hide();
+	});
+
+	$(document).on('click', '#all_select', function(){
+		if($(this).is(':checked')){
+			$(':input[name="sale_inp"]').prop('checked',true);
+		}else{
+			$(':input[name="sale_inp"]').prop('checked',false);
+		};
+	});
+};
 
 
 // 开始时间
 $(document).ready(function(){
+	market_daytime = market_daytime.split('-');
 	setTimeout(function(){
-        var myDate = new Date();
-        ymd = myDate.getFullYear()+'/'+(myDate.getMonth()+1)+'/'+myDate.getDate();
-		$(".startime").val(ymd).glDatePicker({});
+        //var myDate = new Date();
+        //ymd = myDate.getFullYear()+'/'+(myDate.getMonth()+1)+'/'+myDate.getDate();
+		$(".startime").val(market_daytime[0]).glDatePicker({});
     },500)
 });
 // 结束时间
 $(document).ready(function(){
 	setTimeout(function(){
-        var myDate = new Date();
-        ymd = myDate.getFullYear()+'/'+(myDate.getMonth()+1)+'/'+myDate.getDate();
-		$(".endtime").val(ymd).glDatePicker({});
+        //var myDate = new Date();
+        //ymd = myDate.getFullYear()+'/'+(myDate.getMonth()+1)+'/'+myDate.getDate();
+		$(".endtime").val(market_daytime[1]).glDatePicker({});
     },500)
 });
 
