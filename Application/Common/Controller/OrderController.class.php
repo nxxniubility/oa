@@ -330,6 +330,7 @@ class OrderController extends BaseController
         $save['status'] = 40;
         $save['course_id'] = $data['course_id'];
         $save['discount_id'] = $data['discount_id'];
+        $save['studytype'] = $data['studytype'];
         //学费总额
         $coursecost = D('Course')->getCourseInfo($data['course_id']);
         $save['coursecost'] = (int)$coursecost['price'];

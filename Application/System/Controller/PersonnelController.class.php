@@ -707,6 +707,9 @@ class PersonnelController extends SystemController {
             $request['birthday'] = strtotime($request['birthday']);
             $request['entrytime'] = strtotime($request['entrytime']);
             $request['straightime'] = strtotime($request['straightime']);
+            if ($request['entrytime'] > $request['straightime']) {
+                $this->ajaxReturn(2, '还没入职就想转正？？？？？', '', '');
+            }
             //数据操作
             $systemMain = new SystemMain();
             $flag = $systemMain->editInfo($request);
@@ -738,7 +741,8 @@ class PersonnelController extends SystemController {
                 }
             }
             //获取学历表
-            $data['educationAll'] = $educationMain->getlist();
+            $res = $educationMain->getlist();
+            $data['educationAll'] = $res['data'];
             $data['url_systemUser'] = U('System/Personnel/systemUserList');
             $this->assign('data', $data);
             $this->display();
