@@ -1,17 +1,20 @@
 //  遮罩层-全局
 var mask = $('#mask');
+
 //  显示地区选择弹层
 $(document).on('click', '.city_title', function(){
 	mask.show();
 	$(this).parent().find('.seach_city_show').removeClass('dn');
+	areaChoose();
 });
-
+//  显示职位选择弹层
 $(document).on('click', '.position_name', function(){
 	mask.show();
 	$(this).parent().find('.search_position_show').removeClass('dn');
 	openPosition();
 	close_layer();
 });
+
 //  关闭职位弹层
 function close_layer(){
 	var $close = $('.cancel');
@@ -21,6 +24,17 @@ function close_layer(){
 	});
 }
 
+//  地区赋值
+function areaChoose(){
+	$(document).on('click', '.city_partition a', function(){
+		var txt = $.trim($(this).text()),
+			cityShow = $(this).closest('.seach_city_show'),
+			finalZone = $(this).closest('.search_region');
+		finalZone.find('.city_title em').text(txt);
+		cityShow.addClass('dn');
+		mask.hide();
+	});
+}
 //  展开部门职位
 function openPosition(){
 	var _this = $('.position_department'),
@@ -40,6 +54,12 @@ function openPosition(){
 		}
 	});
 }
+
+//  职位赋值
+/*function positionChoose(){
+	
+}*/
+
 
 // 开始时间
 $(document).ready(function(){
