@@ -24,7 +24,7 @@
 	        </div>
 	        <div class="main">
 	        	<div class="search clearfix">
-	        		<form method="post" name="" action="#">
+	        		<form method="get" name="" action="{:U('System/Statistics/market')}">
 	        			<!-- 地区选择 -->
 		        		<div class="search_region fl clearfix">
 	        				<span class="city_title"><em>深圳市</em><i></i></span>
@@ -61,110 +61,46 @@
 		        				<div class="position_content">
 		        					<div class="position_allselect">
 		        						<label for="all_select">
-		        							<input type="checkbox" class="ckeck_all" id="all_select">
+		        							<input type="checkbox" class="ckeck_all" id="all_select" value="1">
 		        							<span>全部</span>
 		        						</label>
 		        					</div>
 		        					<ul class="position_list">
-		        						<li>
-		        							<div class="position_department clearfix">
-		        								<span>销售部</span>
-		        								<a href="javascript:;"><i></i></a>
-		        							</div>
-		        							<div class="position_destail clearfix">
-		        								<label for="sale1">
-		        									<input type="checkbox" name="sale_inp" class="sale" id="sale1">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label for="sale2">
-		        									<input type="checkbox" name="sale_inp" class="sale" id="sale2">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label for="sale3">
-		        									<input type="checkbox" name="sale_inp" class="sale" id="sale3">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label for="sale4">
-		        									<input type="checkbox" name="sale_inp" class="sale" id="sale4">
-		        									<span>销售职位</span>
-		        								</label>
-		        							</div>
-		        						</li>
-		        						<li>
-		        							<div class="position_department clearfix">
-		        								<span>客服部</span>
-		        								<a href="javascript:;"><i></i></a>
-		        							</div>
-		        							<div class="position_destail clearfix">
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        							</div>
-		        						</li>
-		        						<li>
-		        							<div class="position_department clearfix">
-		        								<span>教务部</span>
-		        								<a href="javascript:;"><i></i></a>
-		        							</div>
-		        							<div class="position_destail clearfix">
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale" >
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        							</div>
-		        						</li>
-		        						<li>
-		        							<div class="position_department clearfix">
-		        								<span>就业部</span>
-		        								<a href="javascript:;"><i></i></a>
-		        							</div>
-		        							<div class="position_destail clearfix">
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        								<label>
-		        									<input type="checkbox" name="sale_inp" class="sale">
-		        									<span>销售职位</span>
-		        								</label>
-		        							</div>
-		        						</li>
+										<foreach name="data['departmentList']['data']" item="v" key="k">
+											<li>
+												<div class="position_department clearfix">
+													<span>{$v.departmentname}</span>
+													<a href="javascript:;"><i></i></a>
+												</div>
+												<div class="position_destail clearfix">
+													<foreach name="data['roleList']['data']" item="v2" key="k2">
+														<if condition="$v['department_id'] eq $v2['department_id']">
+															<label for="sale{$v2.id}">
+																<input type="checkbox" name="sale_inp" value="{$v2.id}" class="sale"  id="sale{$v2.id}">
+																<span>{$v2.name}</span>
+															</label>
+														</if>
+													</foreach>
+
+													<!--<label for="sale2">-->
+														<!--<input type="checkbox" name="sale_inp" class="sale" id="sale2">-->
+														<!--<span>销售职位</span>-->
+													<!--</label>-->
+													<!--<label for="sale3">-->
+														<!--<input type="checkbox" name="sale_inp" class="sale" id="sale3">-->
+														<!--<span>销售职位</span>-->
+													<!--</label>-->
+													<!--<label for="sale4">-->
+														<!--<input type="checkbox" name="sale_inp" class="sale" id="sale4">-->
+														<!--<span>销售职位</span>-->
+													<!--</label>-->
+												</div>
+											</li>
+										</foreach>
 		        					</ul>
 		        					<div class="position_btnbox">
 		        						<input type="button" class="confirm" value="确定">
+										<input type="hidden" name="role_id" value="{$data.request.role_id}" autocomplete="off">
 		        						<input type="button" class="cancel" value="取消">
 		        					</div>
 		        				</div>
@@ -175,15 +111,15 @@
 		        		<div class="search_day fl clearfix">
 		        			<div class="startime_box fl">
 								<span>日期</span>		        				
-			        			<input type="text" class="afTime startime" value="" placeholder="开始时间">
+			        			<input type="text" class="afTime startime" name="startime" value="" placeholder="开始时间">
 		        			</div>
 		        			<p>至</p>
 		        			<div class="endtime_box fl">
-			        			<input type="text" class="afTime endtime" value="" placeholder="结束时间">
+			        			<input type="text" class="afTime endtime" name="endtime" value="" placeholder="结束时间">
 		        			</div>
 		        		</div>
 		        		
-		        		<input type="button" class="search_btn fl" value="搜索">
+		        		<input type="submit" class="search_btn fl" value="搜索">
 	        		</form>
 	        	</div>
 	        	
@@ -503,7 +439,8 @@
 	        		
 	        		<!-- 每日数据 -->
 	        		<div class="sr_table active">
-		        		<div class="sr_time">统计时间：2016-08-10至2016-08-31</div>
+						<?php $temp_daytime = explode('-', $data['request']['daytime']); ?>
+		        		<div class="sr_time">统计时间：{$temp_daytime[0]}至{$temp_daytime[1]}</div>
 		        		<table cellpadding="0" cellspacing="0"  id="sr_everyday">
 		        			<tr>
 		        				<th>
@@ -572,7 +509,7 @@
 	        		
 	        		<!--员工数据-->
 	        		<div class="sr_table">
-		        		<div class="sr_time">统计员工：29 人</div>
+		        		<div class="sr_time">统计员工：{:count($data['dataMarket']['systemuser'])} 人</div>
 		        		<table cellpadding="0" cellspacing="0" id="sr_staff">
 		        			<tr>
 		        				<th><div class="container"><span>员工姓名</span></div></th>

@@ -122,9 +122,9 @@ class DataService extends BaseService
         if(!empty($where['daytime'])){
             $daytime = explode('-', $where['daytime']);
             if(count($daytime)>1){
-                $where['daytime'] = array(array('EGT',$daytime[0]),array('ELT',$daytime[1]));
+                $where['daytime'] = array(array('EGT',date('Ymd', strtotime($daytime[0]))),array('ELT',date('Ymd', strtotime($daytime[1]))));
             }else{
-                $where['daytime'] = $daytime[0];
+                $where['daytime'] = date('Ymd', strtotime($daytime[0]));
             }
         }
         //获取区域子集
