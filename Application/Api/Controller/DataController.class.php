@@ -106,8 +106,9 @@ class DataController extends ApiBaseController
 
     /*
     |--------------------------------------------------------------------------
-    | 获取营销数据详情
+    | 获取营销数据
     |--------------------------------------------------------------------------
+    | @ role_id (可多选 ‘,’隔开)
     | @author zgt
     */
     public function getDataMarket($requesr=null)
@@ -115,7 +116,8 @@ class DataController extends ApiBaseController
         //外部调用？
         if($requesr===null){
             $where['daytime'] = I('param.daytime',null);
-            $where['system_user_id'] = I('param.system_user_id',null);
+            $where['role_id'] = I('param.role_id',null);
+            $where['zone_id'] = I('param.zone_id',null);
         }else{
             $where = $requesr;
         }
@@ -160,7 +162,8 @@ class DataController extends ApiBaseController
         if($requesr===null){
             $where['type'] = I('param.type',null);
             $where['daytime'] = I('param.daytime',null);
-            $where['system_user_id'] = I('param.system_user_id',null);
+            $where['role_id'] = I('param.role_id',null);
+            $where['zone_id'] = I('param.zone_id',null);
         }else{
             $where = $requesr;
         }
