@@ -541,7 +541,7 @@ textarea{resize:none;}
 #table2 td.content_allocationtime, 
 #table2 td.content_lastvisit, 
 #table2 td.content_nextvisit,
-#table2 td.content_course_id { text-indent: 5px;}
+#table2 td.content_course_id { text-indent: 0;}
 
 /*标记普重*/
 .keyPop { width: 420px; height: 240px;}

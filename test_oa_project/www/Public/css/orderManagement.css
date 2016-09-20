@@ -114,7 +114,7 @@
 .receivablesBox .reRow em, .returnBox .raRow em, .refundBox .raRow em { width: 218px; height: 30px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 
 /*======================================== 黄金分割线:退款/收款/审核 ========================================*/
-.returnBox, .receivablesBox, .auditOrderBox, .depositBox { position: relative; width: 342px;padding: 34px 31px 40px; background: #fff;}
+.returnBox, .receivablesBox, .auditOrderBox, .depositBox { position: relative; width: 342px;padding: 20px 31px 40px; background: #fff;}
 /*.returnBox, .depositBox {height:325px;}
 .receivablesBox {height:295px;}
 .auditOrderBox {height:270px;}*/
@@ -163,3 +163,4 @@
 .Filter .frame .details.h70 {height:70px;}
 .Filter .frame .details.h70 p {margin-top:10px;font-size: 20px;text-align: center;color: #333;}
 .outPutUserBtn.orSubmitBtn {display:block;margin:0 auto;}
+#audit_hint {margin-left:30px;color:#53b567;}

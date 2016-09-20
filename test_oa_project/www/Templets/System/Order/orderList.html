@@ -55,29 +55,20 @@
                         </foreach>
                     </ul>
                 </div>
-                <!--<div class="details clearfix">-->
-                    <!--<span>收款方式：</span>-->
-                    <!--<ul>-->
-                        <!--<li><a href="javascript:;" class="on_hover">全部</a></li>-->
-                        <!--<li><a href="javascript:;">现金</a></li>-->
-                        <!--<li><a href="javascript:;">刷卡</a></li>-->
-                        <!--<li><a href="jabascript:;">转账</a></li>-->
-                    <!--</ul>-->
-                <!--</div>-->
                 <div class="details  clearfix">
                     <span>创建时间：</span>
                     <div class="createdTimeBox clearfix">
-                        <input type="text" class="createdTime" name="order_createtimeS" value="" placeholder="选择日期">
+                        <input type="text" class="createdTime" name="order_createtimeS" value="" readonly="readonly" placeholder="选择日期">
                         <em>至</em>
-                        <input type="text" class="createdTime" name="order_createtimeE" value="" placeholder="选择日期">
+                        <input type="text" class="createdTime" name="order_createtimeE" value="" readonly="readonly" placeholder="选择日期">
                     </div>
                 </div>
                 <div class="details clearfix">
                     <span>完成时间：</span>
                     <div class="completeTimeBox clearfix">
-                        <input type="text" class="completeTime" name="order_finishtimeS" value="" placeholder="选择日期">
+                        <input type="text" class="completeTime" name="order_finishtimeS" value="" readonly="readonly" placeholder="选择日期">
                         <em>至</em>
-                        <input type="text" class="completeTime" name="order_finishtimeE" value="" placeholder="选择日期">
+                        <input type="text" class="completeTime" name="order_finishtimeE" value="" readonly="readonly" placeholder="选择日期">
                     </div>
                 </div>
                 <if condition="$data['zoneAll']['children']['centersign'] NEQ 10">
@@ -350,7 +341,7 @@
 
 <div class="dn">
     <!-- 收款 s -->
-    <div class="receivablesBox popup" style="padding-top: 20px;padding-bottom: 20px;height: 336px;">
+    <div class="receivablesBox popup">
         <div class="reRow clearfix add">
             <span>真实姓名：</span>
             <em>--</em>
@@ -416,7 +407,7 @@
         </div>
         <div class="reRow clearfix">
             <span><i>&#42</i>收款日期：</span>
-            <input type="text" class="receivablesTime" name="receivables_practicaltime" value="" placeholder="选择日期">
+            <input type="text" class="receivablesTime" name="receivables_practicaltime" value="" readonly="readonly" readonly="readonly" placeholder="选择日期">
         </div>
         <div class="reRow clearfix">
             <span>&nbsp;</span>
@@ -426,7 +417,7 @@
     <!-- 收款 e -->
 
     <!-- 退款 s -->
-    <div class="returnBox popup" style="padding-top: 20px;padding-bottom: 20px;height: 350px;">
+    <div class="returnBox popup">
         <div class="raRow clearfix add">
             <span>真实姓名：</span>
             <em>--</em>
@@ -506,7 +497,7 @@
         </div>
         <div class="raRow clearfix">
             <span><i>&#42</i>退款日期：</span>
-            <input type="text" class="refundTime" name="return_practicaltime" value="" placeholder="选择日期">
+            <input type="text" class="refundTime" name="return_practicaltime" value="" readonly="readonly" placeholder="选择日期">
         </div>
         <div class="raRow clearfix">
             <span>&nbsp;</span>
@@ -516,10 +507,10 @@
     <!-- 退款 e -->
 
     <!-- 审核 s -->
-    <div class="auditOrderBox popup" style="padding-top: 15px;">
+    <div class="auditOrderBox popup">
         <div class="aoRow clearfix ">
             <span></span>
-            <em id="audit_hint" style=" margin-left: 30px"></em>
+            <em id="audit_hint"></em>
         </div>
         <div class="aoRow clearfix add">
             <span>真实姓名：</span>
@@ -535,7 +526,7 @@
         </div>
         <div class="aoRow clearfix">
             <span><i>&#42</i>收款日期：</span>
-            <input type="text" class="auditOrderTime" name="audit_practicaltime" value="" placeholder="选择日期">
+            <input type="text" class="auditOrderTime" name="audit_practicaltime" value="" readonly="readonly" placeholder="选择日期">
         </div>
         <div class="aoRow clearfix add" style="display: none">
             <span><i>&#42</i>收款方式：</span>
@@ -571,7 +562,7 @@
     <!-- 审核 e -->
 
     <!-- 退订金 s -->
-    <div class="depositBox popup" style="padding-top: 20px;padding-bottom: 20px;height: 350px;">
+    <div class="depositBox popup">
         <div class="raRow clearfix add">
             <span>真实姓名：</span>
             <em>--</em>
@@ -642,7 +633,7 @@
         </div>
         <div class="raRow clearfix">
             <span><i>&#42</i>退款日期：</span>
-            <input type="text" class="depositBoxTime" name="deposit_practicaltime" value="" placeholder="选择日期">
+            <input type="text" class="depositBoxTime" name="deposit_practicaltime" value="" readonly="readonly" placeholder="选择日期">
         </div>
         <div class="raRow clearfix">
             <span>&nbsp;</span>
