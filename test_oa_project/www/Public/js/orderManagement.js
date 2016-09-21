@@ -343,11 +343,25 @@ $(document).on('click','.receivablesBtn', function(){
         title: "确认收款",
         onCleanup:function(){ 
         	var _this = $('#cboxLoadedContent').find($('input[name="receivables_cost"]')), 
+        		_select = $('#cboxLoadedContent').find('.payment_method'),
+        		_dl = _select.find('dl'),
+        		_dt = _select.find('dt'),
+        		_dtTxt = _dt.find('.select_title'),
+        		_dtArrow = _dt.find('.arrow'),
+        		_dd = _select.find('dd'),
         		_val  = _this.val();
+        	if(_dtTxt.text() != '选择方式'){
+        		_dtTxt.text('选择方式');
+        		_select.removeClass('on zindex4');
+        		_dt.removeClass('on');
+        		_dtArrow.removeClass('arrow_on');
+        		_dd.hide();
+        	}
         	if(_val > 0){
         		_val = '';
         		_this.val('') ; 
         	}
+        	
         }
     });
     
@@ -365,7 +379,6 @@ $(document).on('click','.receivablesBtn', function(){
         });
     },1000)
 });
-
 ////  关闭colorbox弹窗
 //$('.receivablesConfirm').on('click',function(){
 //	$('.receivablesBox').colorbox.close();
