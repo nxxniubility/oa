@@ -345,7 +345,7 @@ class OrderController extends SystemController
                 $this->ajaxReturn(2,'不能包含特殊字符');
             }
             if (strlen($request['dname'])>=40) {
-                $this->ajaxReturn(2,'优惠名称过长');
+                $this->ajaxReturn(2,'优惠名称不得超过40个字符');
             }
             if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['price'])){
                 $this->ajaxReturn(3,"优惠金额最多只能输入2位小数,且必须为数字");
@@ -390,7 +390,7 @@ class OrderController extends SystemController
                 $this->ajaxReturn(2,'不能包含特殊字符');
             }
             if (strlen($request['dname'])>=40) {
-                $this->ajaxReturn(3,'优惠分类名称过长');
+                $this->ajaxReturn(3,'优惠分类名称不得超过40个字符');
             }
             if (!$request['remark']) {
                 $this->ajaxReturn(4,'请填写优惠详情');
@@ -426,7 +426,7 @@ class OrderController extends SystemController
                     $this->ajaxReturn(2,'不能包含特殊字符');
                 }
                 if (strlen($save['dname'])>=40) {
-                    $this->ajaxReturn(3,'优惠名称过长');
+                    $this->ajaxReturn(3,'优惠名称不得超过40个字符');
                 }
                 $update = D("DiscountParent")->where("discount_parent_id = $discount_parent_id")->save($save);
                 if ($update === false || $update<0) {
@@ -443,7 +443,7 @@ class OrderController extends SystemController
                     $this->ajaxReturn(2,'不能包含特殊字符');
                 }
                 if (strlen($request['dname'])>=40) {
-                    $this->ajaxReturn(3,'优惠名称过长');
+                    $this->ajaxReturn(3,'优惠名称不得超过40个字符');
                 }
                 if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['price'])){
                     $this->ajaxReturn(3,"优惠金额最多只能输入2位小数,且必须为数字");
