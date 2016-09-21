@@ -71,7 +71,7 @@ function areaChoose(){
 //  展开部门职位
 function openPosition(){
 	var _this = $('.position_department'),
-		_arrow = _this.find('i'), 
+		_arrow = _this.find('i'),
 		_other = $('.position_destail');
 	_this.click(function(){
 		var maxLength = $(this).parent().parent().find('li').length,
@@ -119,15 +119,16 @@ function positionChoose(){
 
 // 开始时间
 $(document).ready(function(){
-	market_daytime = market_daytime.split('-');
+	var _daytime = market_daytime.split('-');
 	setTimeout(function(){
-		$(".startime").val(market_daytime[0]).glDatePicker({});
+		$(".startime").val(_daytime[0]).glDatePicker({});
     },500)
 });
 // 结束时间
 $(document).ready(function(){
+	var _daytime = market_daytime.split('-');
 	setTimeout(function(){
-		$(".endtime").val(market_daytime[1]).glDatePicker({});
+		$(".endtime").val(_daytime[1]).glDatePicker({});
     },500)
 });
 
