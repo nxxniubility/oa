@@ -411,8 +411,9 @@ class UserController extends SystemController
         }
         if (empty($request['realname'])) $this->ajaxReturn(1, '真实姓名不能为空', '', 'reserve_realname');
         if (empty($request['username'])) $this->ajaxReturn(1, '手机号码不能为空', '', 'reserve_username');
-//        if (empty($request['payway'])) $this->ajaxReturn(1, '收款方式不能为空', '', 'reserve_receivetype');
-        if (empty($request['subscription']) && $request['subscription']!=0) $this->ajaxReturn(1, '收款金额不能为空', '', 'reserve_subscription');
+        if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['subscription'])){
+            $this->ajaxReturn(3,"优惠金额最多只能输入2位小数");
+        }
         //添加参数
         $request['system_user_id'] = $this->system_user_id;
         $request['zone_id'] = $this->system_user['zone_id'];

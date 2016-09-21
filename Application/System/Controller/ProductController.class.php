@@ -40,13 +40,19 @@ class ProductController extends SystemController
     {
         //获取数据
         $data = I("post.");
-        if (!$data['productname']) {
-            $this->ajaxReturn(1,'产品名称不为空');
+        if (empty(trim($data['productname']))) {
+            $this->ajaxReturn(1,'产品名称不能为空?');
         }
         if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$data['price'])){
-            $this->ajaxReturn(3,"优惠金额最多只能输入2位小数且不能有其他字符");
+            $this->ajaxReturn(2,"优惠金额最多只能输入2位小数且不能有其他字符");
+        }
+        if($data['price'] == 0){
+            $this->ajaxReturn(3,"金额不能为零,你这样做我们会血亏的");
         }
         if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(4,'请选择产品类型');
+        // if (empty(trim($data['description']))) {
+        //     $this->ajaxReturn(2,'产品描述不能为空格?');
+        // }
         //执行操作
         $courseProductController = new CourseProductController();
         $reflag = $courseProductController->cerate_courseProduct($data);
