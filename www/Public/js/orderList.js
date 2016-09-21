@@ -65,12 +65,8 @@ $(function(){
         //赋值
         $(':input[name="status"]').val(order_status);
         $(':input[name="loan_institutions_id"]').val(order_loan_institutions_id);
-        if(order_createtimeS!='' && order_createtimeE!=''){
-            $(':input[name="createtime"]').val(order_createtimeS+'--'+order_createtimeE);
-        }
-        if(order_finishtimeS!='' && order_finishtimeE!=''){
-            $(':input[name="finishtime"]').val(order_finishtimeS+'--'+order_finishtimeE);
-        }
+        $(':input[name="createtime"]').val(order_createtimeS+'--'+order_createtimeE);
+        $(':input[name="finishtime"]').val(order_finishtimeS+'--'+order_finishtimeE);
         $(':input[name="zone_id"]').val(order_zone_id);
         $(':input[name="role_id"]').val(order_role_id);
         $(':input[name="system_user_id"]').val(order_system_user_id);
@@ -97,12 +93,8 @@ $(function(){
         //赋值
         $(':input[name="status"]').val(order_status);
         $(':input[name="loan_institutions_id"]').val(order_loan_institutions_id);
-        if(order_createtimeS!='' && order_createtimeE!=''){
-            $(':input[name="createtime"]').val(order_createtimeS+'--'+order_createtimeE);
-        }
-        if(order_finishtimeS!='' && order_finishtimeE!=''){
-            $(':input[name="finishtime"]').val(order_finishtimeS+'--'+order_finishtimeE);
-        }
+        $(':input[name="createtime"]').val(order_createtimeS+'--'+order_createtimeE);
+        $(':input[name="finishtime"]').val(order_finishtimeS+'--'+order_finishtimeE);
         $(':input[name="zone_id"]').val(order_zone_id);
         $(':input[name="role_id"]').val(order_role_id);
         $(':input[name="system_user_id"]').val(order_system_user_id);

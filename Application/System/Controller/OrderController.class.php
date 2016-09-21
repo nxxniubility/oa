@@ -27,17 +27,29 @@ class OrderController extends SystemController
         $where['zone_id'] = !empty($where['zone_id'])?$where['zone_id']:$this->system_user['zone_id'];
         unset($where['page']);
         unset($where['_pjax']);
+        $where=array_filter($where);
+
         //日期转换时间戳
         foreach ($where as $k => $v) {
             if ($k == 'finishtime') {
                 $_time = explode('--', str_replace('/', '-', $where[$k]));
-                $where['finishtime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
-            }elseif ($k == 'createtime') {
+                if($_time[1]=='') $_time[1] = 'time';
+                if($_time[0]==''){
+                    $where['finishtime'] = array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59')));
+                }else{
+                    $where['finishtime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
+                }
+            }elseif ($k == 'createtime') {            
                 $_time = explode('--', str_replace('/', '-', $where[$k]));
-                $where['createtime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
+                if($_time[1]=='') $_time[1] = 'time';
+                if($_time[0]==''){
+                    $where['createtime'] = array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59')));
+                }else{
+                    $where['createtime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
+                }
             }
         }
-// dump($where);
+
         if(IS_POST){
             $requestP = I('post.');
             if($requestP['type']=='getPaging') {
@@ -46,7 +58,7 @@ class OrderController extends SystemController
                 $orderMainController = new OrderMainController();
                 $result = $orderMainController->getCount($where);
                 //加载分页类
-                $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $result['data'], $where, __ACTION__, null, 'system');
+                $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $result['data'], $requestG, __ACTION__, null, 'system');
                 $this->ajaxReturn(0, '', $paging_data);
             }else if($requestP['type']=='getSysUser'){
                 //异步获取员工列表
@@ -253,9 +265,22 @@ class OrderController extends SystemController
                 else $this->ajaxReturn(1, '');
             }else{
                 foreach ($requestP as $k => $v) {
-                    if ($k == 'finishtime' || $k == 'createtime') {
+                    if ($k == 'finishtime') {
                         $_time = explode('--', str_replace('/', '-', $requestP[$k]));
-                        $requestP[$k] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
+                        if($_time[1]=='') $_time[1] = 'time';
+                        if($_time[0]==''){
+                            $requestP['finishtime'] = array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59')));
+                        }else{
+                            $requestP['finishtime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
+                        }
+                    }elseif ($k == 'createtime') {            
+                        $_time = explode('--', str_replace('/', '-', $requestP[$k]));
+                        if($_time[1]=='') $_time[1] = 'time';
+                        if($_time[0]==''){
+                            $requestP['createtime'] = array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59')));
+                        }else{
+                            $requestP['createtime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
+                        }
                     }
                 }
                 $requestP['system_user_id'] = $system_user_id;
