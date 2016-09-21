@@ -261,10 +261,11 @@ class DataService extends BaseService
         $channel_list = $channel_list['data']['data'];
         $newArr = array();
         $channelArr = array();
+        $eArr = array('1'=>'A','2'=>'B','3'=>'C','4'=>'D');
         foreach($redata as $k=>$v){
             $channelArr[$v['channel_id']] = $channelArr[$v['channel_id']]+1;
             $newArr['days'][date('m-d',$v['logtime'])] = $newArr['days'][date('m-d',$v['logtime'])]+1;
-            $newArr['infoquality'][$v['infoquality']] = $newArr['infoquality'][$v['infoquality']]+1;
+            $newArr['infoquality'][$eArr[$v['infoquality']]] = $newArr['infoquality'][$eArr[$v['infoquality']]]+1;
             $newArr['course_id'][$v['course_id']] = $newArr['course_id'][$v['course_id']]+1;
         }
         foreach($channel_list as $v){

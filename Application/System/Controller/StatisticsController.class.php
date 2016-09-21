@@ -22,6 +22,7 @@ class StatisticsController extends SystemController
         //实例化
         $DataService = new DataService();
         $request = I('get.');
+        //默认时间
         if(empty($request['startime'])){
             $request['startime'] = date('Y/m/d', strtotime('-7 day'));
         }
