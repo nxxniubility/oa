@@ -296,8 +296,8 @@ $('.chart_topright select').change(function(){
 				_channel3.show();
 				_quality.hide();
 				_course.hide();
-				_channel.hide();
 				_daily_stats.empty();
+				_channel.hide();
 				_channel_bar.empty();
 				_channel_pie.empty();
 				_channel4.hide();
@@ -331,8 +331,8 @@ $('.chart_topright select').change(function(){
 				_channel4.show();
 				_quality.hide();
 				_course.hide();
-				_channel.hide();
 				_daily_stats.empty();
+				_channel.hide();
 				_channel_bar.empty();
 				_channel_pie.empty();
 				_channel3.hide();
