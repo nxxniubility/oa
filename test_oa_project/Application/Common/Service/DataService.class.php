@@ -337,7 +337,7 @@ class DataService extends BaseService
         $reList = D('RoleUser')
             ->field('user_id')
             ->group("user_id")->Distinct(true)
-            ->where(array('role_id'=>$role_id))
+            ->where(array('role_id'=>array('IN',$role_id)))
             ->select();
         $systemUserArr = array();
         foreach($reList as $v){
