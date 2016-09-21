@@ -268,15 +268,28 @@ class DataService extends BaseService
             $newArr['infoquality'][$eArr[$v['infoquality']]] = $newArr['infoquality'][$eArr[$v['infoquality']]]+1;
             $newArr['course_id'][$v['course_id']] = $newArr['course_id'][$v['course_id']]+1;
         }
-        foreach($channel_list as $v){
-            $_temp_channel = array();
-            foreach($v['children'] as $v2){
-                if( !empty($channelArr[$v2['channel_id']]) ){
-                    $_temp_channel[] = array('count'=>$channelArr[$v2['channel_id']],'name'=>$v2['channelname']);
+        $CourseService = new CourseService();
+        $course_list = $CourseService->getList();
+        foreach($newArr['course_id'] as $k=>$v){
+            foreach($course_list['data'] as $v2){
+                if($v2['course_id'] == $k){
+                    $newArr['course_id'][$v2['coursename']] = $v;
+                    unset($newArr['course_id'][$k]);
+                }elseif($k==0){
+                    $newArr['course_id']['无'] = $v;
+                    unset($newArr['course_id'][$k]);
                 }
             }
-            $newArr['channel'][$v['channelname']] = $_temp_channel;
         }
+        $_temp_channel = array();
+        foreach($channel_list as $v){
+            foreach($v['children'] as $v2){
+                if( !empty($channelArr[$v2['channel_id']]) ){
+                    $_temp_channel[$v2['channelname']] = array('count'=>$channelArr[$v2['channel_id']],'name'=>$v2['channelname'],'pname'=>$v['channelname']);
+                }
+            }
+        }
+        $newArr['channel'] = $_temp_channel;
         return array('code'=>0,'data'=>$newArr);
     }
 
