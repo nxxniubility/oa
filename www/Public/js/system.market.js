@@ -1,3 +1,23 @@
+//初始化
+if(market_zone_id!=''){
+	$('.city_title').text($('#zone_'+market_zone_id).text());
+}
+if(market_role_id!=''){
+	var temp_role_id = market_role_id.split(',');
+	var temp_role_names = '';
+	$.each(temp_role_id, function(k, v){
+		if(temp_role_names==''){
+			temp_role_names += $('#sale'+v).attr('data-name');
+		}else{
+			temp_role_names += ','+$('#sale'+v).attr('data-name');
+		}
+	});
+	if(temp_role_names.length>13){
+		temp_role_names = temp_role_names.substring(0,13)+'...';
+	}
+	$('.position_name').text(temp_role_names);
+}
+
 //  遮罩层-全局
 var mask = $('#mask');
 
@@ -18,6 +38,9 @@ $(document).on('click', '.position_name', function(){
 		$.each(role_ids,function(k,v){
 			$(':input[name="sale_inp"][value="'+v+'"]').prop('checked',true);
 		});
+	}
+	if($(':input[name="sale_inp"]:checked').length==$(':input[name="sale_inp"]').length){
+		$('#all_select').prop('checked',true);
 	}
 	openPosition();
 	close_layer();
@@ -40,6 +63,7 @@ function areaChoose(){
 			cityShow = $(this).closest('.seach_city_show'),
 			finalZone = $(this).closest('.search_region');
 		finalZone.find('.city_title em').text(txt);
+		finalZone.find(':input[name="zone_id"]').val($(this).attr('data-value'));
 		cityShow.addClass('dn');
 		mask.hide();
 	});

@@ -130,19 +130,19 @@ class SystemUserService extends BaseService
         if(!empty($where['zone_id'])){
             $zoneIdArr = array();
             $zoneIdArr = $this->getZoneIds($where['zone_id']);
-        }
-        foreach($systemUserAll['data'] as $k=>$v){
-            if(!empty($where['zone_id']) && !in_array($v['zone_id'],$zoneIdArr)){
-                unset($systemUserAll['data'][$k]);
-            }
-            if(!empty($where['role_id'])){
-                $in_flag = false;
-                foreach($v['roles'] as $k2=>$v2){
-                    if($v2['role_id']==$where['role_id'] ){
-                        $in_flag = true;
-                    }
+            foreach($systemUserAll['data'] as $k=>$v){
+                if(!empty($where['zone_id']) && !in_array($v['zone_id'],$zoneIdArr)){
+                    unset($systemUserAll['data'][$k]);
                 }
-                if($in_flag===false) unset($systemUserAll['data'][$k]);
+                if(!empty($where['role_id'])){
+                    $in_flag = false;
+                    foreach($v['roles'] as $k2=>$v2){
+                        if($v2['role_id']==$where['role_id'] ){
+                            $in_flag = true;
+                        }
+                    }
+                    if($in_flag===false) unset($systemUserAll['data'][$k]);
+                }
             }
         }
         if($limit!==null){

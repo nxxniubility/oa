@@ -29,6 +29,8 @@ class StatisticsController extends SystemController
             $request['endtime'] = date('Y/m/d');
         }
         $where['daytime'] = $request['startime'].'-'.$request['endtime'];
+        $where['zone_id'] = $request['zone_id'];
+        $where['role_id'] = $request['role_id'];
         $data['request'] = $where;
         //获取接口数据
         $data_market = $DataService->getDataMarket($where);
@@ -40,9 +42,9 @@ class StatisticsController extends SystemController
         $RoleService = new RoleService();
         $role_list = $RoleService->getAllRole();
         $data['roleList'] = $role_list['data'];
-//        $ZoneService = new ZoneService();
-//        $zone_list = $ZoneService->getZoneList(1);
-//        $data['zoneList'] = $zone_list['data'];
+        $ZoneService = new ZoneService();
+        $zone_list = $ZoneService->getZoneList(1);
+        $data['zoneList'] = $zone_list['data'];
         $this->assign('data', $data);
         $this->display();
     }

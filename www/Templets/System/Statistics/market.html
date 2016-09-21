@@ -26,7 +26,7 @@
 	        		<form method="get" name="" action="{:U('System/Statistics/market')}">
 	        			<!-- 地区选择 -->
 		        		<div class="search_region fl clearfix">
-	        				<span class="city_title"><em>深圳市</em><i></i></span>
+	        				<span class="city_title"><em>请选择区域</em><i></i></span>
 		        			<div class="seach_city_show dn">
 		        				<div class="show_title">请选择区域</div>
 		        				<div class="show_content">
@@ -35,19 +35,21 @@
 											<li class="cur"><a href="javascript:;">{$v.name}</a></li>
 										</foreach>
 		        					</ul>
-									<foreach name="data['zoneList']['children']['children']" item="v" key="k">
-										<div class="show_city_cont active">
-											<div class="section">
-												<span>{$v.name}</span>
-												<ul class="city_partition clearfix">
-													<foreach name="v.children" item="v2" key="k2">
-														<li><a href="javascript:;" data-value="{$v2.zone_id}">{$v2.name}</a></li>
-													</foreach>
-												</ul>
+									<foreach name="data['zoneList']['children']" item="v" key="k">
+										<foreach name="v['children']" item="v2" key="k2">
+											<div class="show_city_cont active">
+												<div class="section">
+													<span>{$v2.name}</span>
+													<ul class="city_partition clearfix">
+														<foreach name="v2.children" item="v3" key="k3">
+															<li><a href="javascript:;" id="zone_{$v3.zone_id}" data-value="{$v3.zone_id}">{$v3.name}</a></li>
+														</foreach>
+													</ul>
+												</div>
 											</div>
-										</div>
+										</foreach>
 									</foreach>
-
+									<input type="hidden" name="zone_id" autocomplete="off">
 		        				</div>
 		        			</div>
 		        		</div>
@@ -75,7 +77,7 @@
 													<foreach name="data['roleList']['data']" item="v2" key="k2">
 														<if condition="$v['department_id'] eq $v2['department_id']">
 															<label for="sale{$v2.id}">
-																<input type="checkbox" name="sale_inp" value="{$v2.id}" class="sale"  id="sale{$v2.id}">
+																<input type="checkbox" name="sale_inp" data-name="{$v2.name}" value="{$v2.id}" class="sale"  id="sale{$v2.id}">
 																<span>{$v2.name}</span>
 															</label>
 														</if>
