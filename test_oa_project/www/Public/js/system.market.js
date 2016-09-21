@@ -18,8 +18,7 @@ if(market_role_id!=''){
 	$('.position_name').text(temp_role_names);
 };
 $(function(){
-
-	$('.chart_tab').find('.cur').trigger('click');
+	$('.chart_tab').children('li').eq(0).trigger('click');
 })
 //  遮罩层-全局
 var mask = $('#mask');
@@ -170,7 +169,7 @@ $(document).on('click', '.sr_tab span', function(){
 $(document).on('click', '.chart_tab li', function(){
 	var index = $(this).index();
 	var chart_main = $('.chart_main');
-	if(index!=curIndex){
+	//if(index!=curIndex && curIndex!=0){
 		$(".chart_tab li").siblings().removeClass("cur").eq(index).addClass("cur");
 		$(".chart_main").removeClass("active").eq(index).addClass("active");
 	    curIndex=index; //  当前下标赋予变量
@@ -178,7 +177,7 @@ $(document).on('click', '.chart_tab li', function(){
 			chart_main.eq(index).find('.chart_topright').children('select').trigger('change');
 			$(this).attr('flag','true');
 		}
-	}
+	//}
 });
 
 //  选择指标select切换
@@ -188,9 +187,12 @@ $('.chart_topright select').change(function(){
 		_chartnav=$('.chart_tab .cur').attr('data-value'),
 		_chartname=$('.chart_tab .cur').text(),
 		_daily_stats = $('#'+_chartnav).find('.daily_stats'),
-		_channel = $('#'+_chartnav).find('.daily_channel'),
-		_channel_bar = $('#'+_chartnav).find('.channel_bar'),
-		_channel_pie = $('#'+_chartnav).find('.channel_pie'),
+		_channel = $('#'+_chartnav).find('.daily_channel2'),
+		_channel_bar = $('#'+_chartnav).find('.channel_bar2'),
+		_channel_pie = $('#'+_chartnav).find('.channel_pie2'),
+		_channel3 = $('#'+_chartnav).find('.daily_channel3'),
+		_channel_bar3 = $('#'+_chartnav).find('.channel_bar3'),
+		_channel_pie3 = $('#'+_chartnav).find('.channel_pie3'),
 		_quality = $('#quality'),
 		_course = $('#course');
 	//获取接口
@@ -205,81 +207,95 @@ $('.chart_topright select').change(function(){
 				//每日统计
 				var _days = [];
 				var _dayVal = [];
-				$.each(redata.data.days,function(k,v){
-					_days.push(k);
-					_dayVal.push(v);
-				});
-				dailyStats(_days,_dayVal,_chartname);
-				_daily_stats.show();
+				if(!redata.data.days){
+					layer.msg('暂无该项数据',{icon:5});
+				}else{
+					$.each(redata.data.days,function(k,v){
+						_days.push(k);
+						_dayVal.push(v);
+					});
+					dailyStats(_days,_dayVal,_chartname);
+				}
 				_p.hide();
+				_quality.hide();
+				_course.hide();
+				_channel.hide();
 				_channel_bar.empty();
 				_channel_pie.empty();
-				_quality.hide();
-				_course.hide();
+				_channel3.hide();
+				_channel_bar3.empty();
+				_channel_pie3.empty();
 			}else if(_curVal == '2'){
 				var _navName = [];
 				var _values = [];
-				var _data = '';
-				var _data_pie = [];
-				$.each(redata.data.channel,function(k,v){
-					$.each(v,function(k2,v2){
-						var _val_num = _values.length;
-						var _val_data = [];
-						if(_val_num>0){
-							for(var i=0;i<_val_num;i++){
-								_val_data.push(0);
+				var _data_pie = [];console.log(redata.data.channel);
+				if(!redata.data.channel){
+					layer.msg('暂无该项数据',{icon:5});
+				}else{
+					$.each(redata.data.channel,function(k,v){
+						$.each(v,function(k2,v2){
+							var _val_num = _values.length;
+							var _val_data = [];
+							if(_val_num>0){
+								for(var i=0;i<_val_num;i++){
+									_val_data.push(0);
+								}
 							}
-						}
-						_val_data.push(v2.count);
-						_data = {
-							name: v2.name,
-							data: _val_data,
-							stack: k
-						};
-						_navName.push(k);
-						_values.push(_data);
-						_data_pie.push([v2.name, v2.count]);
+							var _data = [];
+							$.each(_navName,function(){
+								_data.push(0);
+							});
+							_val_data.push(v2.count);
+							_data = {
+								name: v2.name,
+								data: _val_data,
+								stack: k
+							};
+							_navName.push(k);
+							_values.push(_data);
+							_data_pie.push([v2.name, v2.count]);
+						});
 					});
-				});
-				channelBar(_navName,_values)
-				channelPie(_data_pie);
+					channelBar(_navName,_values,_curVal);
+					channelPie(_data_pie,_curVal);
+				}
 				_channel.show();
-				_p.hide();
-				_daily_stats.empty();
 				_quality.hide();
 				_course.hide();
-			}else if(_curVal == '2'){
+				_p.hide();
+				_channel3.hide();
+				_daily_stats.empty();
+				_channel_bar3.empty();
+				_channel_pie3.empty();
+			}else if(_curVal == '3'){
 				var _navName = [];
 				var _values = [];
-				var _data = '';
 				var _data_pie = [];
-				$.each(redata.data.channel,function(k,v){
-					$.each(v,function(k2,v2){
-						var _val_num = _values.length;
-						var _val_data = [];
-						if(_val_num>0){
-							for(var i=0;i<_val_num;i++){
-								_val_data.push(0);
-							}
-						}
-						_val_data.push(v2.count);
-						_data = {
-							name: v2.name,
-							data: _val_data,
-							stack: k
-						};
-						_navName.push(k);
-						_values.push(_data);
-						_data_pie.push([v2.name, v2.count]);
+				$.each(redata.data.infoquality,function(k,v){
+					var _data = [];
+					$.each(_navName,function(k2,v2){
+						_data.push(0);
 					});
+					_data.push(v);
+					_data = {
+						name: k,
+						data: _data,
+						stack: k
+					};
+					_navName.push(k);
+					_values.push(_data);
+					_data_pie.push([k, v]);
 				});
-				channelBar(_navName,_values)
-				channelPie(_data_pie);
-				_channel.show();
-				_p.hide();
-				_daily_stats.empty();
+				channelBar(_navName,_values,_curVal);
+				channelPie(_data_pie,_curVal);
+				_channel3.show();
 				_quality.hide();
 				_course.hide();
+				_p.hide();
+				_channel.hide();
+				_daily_stats.empty();
+				_channel_bar.empty();
+				_channel_pie.empty();
 			}
 		}
 	}
@@ -329,9 +345,9 @@ function dailyStats(days,values,name){
 
 
 //  来源渠道-柱状图
-function channelBar(navName,values){
+function channelBar(navName,values,num){
 	var _chartnav=$('.chart_tab .cur').attr('data-value');
-	$('#'+_chartnav).find('.channel_bar').highcharts({
+	$('#'+_chartnav).find('.channel_bar'+num).highcharts({
 		chart:{
 			className:'channel_bar',
 			type:'bar'
@@ -366,9 +382,9 @@ function channelBar(navName,values){
 }
 
 // 来源渠道-圆饼图
-function channelPie(values){
+function channelPie(values,num){
 	var _chartnav=$('.chart_tab .cur').attr('data-value');
-	$('#'+_chartnav).find('.channel_pie').highcharts({
+	$('#'+_chartnav).find('.channel_pie'+num).highcharts({
 		chart: {
 			className:'channel_pie',
 	        plotBackgroundColor: null,
