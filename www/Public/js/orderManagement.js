@@ -340,7 +340,15 @@ $(document).on('click','.receivablesBtn', function(){
         inline: true,
         href: $(".receivablesBox"),
         overlayClose: false,
-        title: "确认收款"
+        title: "确认收款",
+        onCleanup:function(){ 
+        	var _this = $('#cboxLoadedContent').find($('input[name="receivables_cost"]')), 
+        		_val  = _this.val();
+        	if(_val > 0){
+        		_val = '';
+        		_this.val('') ; 
+        	}
+        }
     });
     
     //  收款日期选择
@@ -357,6 +365,7 @@ $(document).on('click','.receivablesBtn', function(){
         });
     },1000)
 });
+
 ////  关闭colorbox弹窗
 //$('.receivablesConfirm').on('click',function(){
 //	$('.receivablesBox').colorbox.close();
