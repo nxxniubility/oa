@@ -97,16 +97,12 @@ function positionChoose(){
 $(document).ready(function(){
 	market_daytime = market_daytime.split('-');
 	setTimeout(function(){
-        //var myDate = new Date();
-        //ymd = myDate.getFullYear()+'/'+(myDate.getMonth()+1)+'/'+myDate.getDate();
 		$(".startime").val(market_daytime[0]).glDatePicker({});
     },500)
 });
 // 结束时间
 $(document).ready(function(){
 	setTimeout(function(){
-        //var myDate = new Date();
-        //ymd = myDate.getFullYear()+'/'+(myDate.getMonth()+1)+'/'+myDate.getDate();
 		$(".endtime").val(market_daytime[1]).glDatePicker({});
     },500)
 });
@@ -176,7 +172,6 @@ $('.chart_topright select').change(function(){
 				dailyStats(_days,_dayVal,_chartname);
 				_daily_stats.show();
 				_p.hide();
-				//_channel.hide();
 				_channel_bar.empty();
 				_channel_pie.empty();
 				_quality.hide();
@@ -247,41 +242,6 @@ $('.chart_topright select').change(function(){
 				_course.hide();
 			}
 		}
-		//if(_curVal == '0'){
-		//	_p.show();
-		//	//_daily_stats.hide();
-		//	//_channel.hide();
-		//	_daily_stats.empty();
-		//	_channel_bar.empty();
-		//	_channel_pie.empty();
-		//	_quality.hide();
-		//	_course.hide();
-		//}else if(_curVal == '1'){
-		//	dailyStats();
-		//	_daily_stats.show();
-		//	_p.hide();
-		//	//_channel.hide();
-		//	_channel_bar.empty();
-		//	_channel_pie.empty();
-		//	_quality.hide();
-		//	_course.hide();
-		//}else if(_curVal == '2'){
-		//	channelPie();
-		//	channelBar();
-		//	_channel.show();
-		//	_p.hide();
-		//	_daily_stats.empty();
-		//	_quality.hide();
-		//	_course.hide();
-        //
-		//}
-		/*else if(curVal == '3'){
-		 $('#daily_stats2').show();
-		 $('#daily_stats2').siblings().hide();
-		 }else if(curVal == '4'){
-		 $('#daily_stats3').show();
-		 $('#daily_stats3').siblings().hide();
-		 }*/
 	}
 });
 
@@ -362,55 +322,6 @@ function channelBar(navName,values){
             }
         },
         series:values
-			//[{
-			//	name: '360',
-			//	data: [5],
-			//	stack: '线下院校'			//  分组
-			//}, {
-			//	name: '智联',
-			//	data: [3],
-			//	stack: '线下院校'
-			//}, {
-			//	name: '58同城',
-			//	data: [2],
-			//	stack: '线下院校'
-			//}, {
-			//	name: '赶集',
-			//	data: [3],
-			//	stack: '线下院校'
-			//},{
-			//	name:'百度',
-			//	data: [9],
-			//	stack: '线下院校'
-			//},{
-			//	name:'千度',
-			//	data: [0,2],
-			//	stack: '在线简历'
-			//},{
-			//	name:'千度',
-			//	data: [0,2],
-			//	stack: '在线简历'
-			//},{
-			//	name:'千度',
-			//	data: [0,2],
-			//	stack: '在线简历'
-			//},{
-			//	name:'千度',
-			//	data: [0,2],
-			//	stack: '在线简历'
-			//},{
-			//	name:'千度',
-			//	data: [0,2],
-			//	stack: '在线简历'
-			//},{
-			//	name:'千度',
-			//	data: [0,2],
-			//	stack: '在线简历'
-			//},{
-			//	name:'千度',
-			//	data: [2],
-			//	stack: '在线简历2'
-			////}]
 	});
 }
 
