@@ -50,7 +50,7 @@
 .search .search_position .search_position_show .position_content .position_allselect .ckeck_all {margin-left:12px;}
 .search .search_position .search_position_show .position_content .position_allselect span {margin-left:11px;}
 /*部门职位选择*/
-.search .search_position .search_position_show .position_content .position_list {padding-left:43px;border-bottom:1px solid #dedfdf;}
+.search .search_position .search_position_show .position_content .position_list {height:200px;padding-left:43px;border-bottom:1px solid #dedfdf;overflow-y:scroll;}
 .search .search_position .search_position_show .position_content .position_list li {width:100%;height:auto;line-height:39px;}
 .search .search_position .search_position_show .position_content .position_list li .position_department {padding-right:12px;border-bottom:1px solid #dedfdf;cursor:pointer;}
 .search .search_position .search_position_show .position_content .position_list li:last-child .position_department {border:none;}
