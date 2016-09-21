@@ -136,6 +136,8 @@ class DataService extends BaseService
         if(!empty($where['role_id'])){
             $systemIds = $this->getRoleIds($where['role_id']);
             $_where['system_user_id'] = array('IN',$systemIds);
+        }elseif(!empty($where['system_user_id'])){
+            $_where['system_user_id'] = $where['system_user_id'];
         }
         $_where['daytime'] = $where['daytime'];
         $result = D('DataMarket')->where($_where)->select();

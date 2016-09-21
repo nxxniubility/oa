@@ -1,7 +1,7 @@
 //初始化
 if(market_zone_id!=''){
 	$('.city_title').text($('#zone_'+market_zone_id).text());
-}
+};
 if(market_role_id!=''){
 	var temp_role_id = market_role_id.split(',');
 	var temp_role_names = '';
@@ -16,8 +16,11 @@ if(market_role_id!=''){
 		temp_role_names = temp_role_names.substring(0,13)+'...';
 	}
 	$('.position_name').text(temp_role_names);
-}
+};
+$(function(){
 
+	$('.chart_tab').find('.cur').trigger('click');
+})
 //  遮罩层-全局
 var mask = $('#mask');
 
@@ -94,15 +97,22 @@ function positionChoose(){
 		var _this = $('.position_list'),
 			_checkbox = $(':input[name="sale_inp"]:checked'),
 			$close = $('.cancel'),
-			role_ids = '';
+			_role_ids = '',
+			_role_names = '';
 		_checkbox.each(function(){
-			if(role_ids==''){
-				role_ids =  $(this).val();
+			if(_role_ids==''){
+				_role_ids =  $(this).val();
+				_role_names = $(this).attr('data-name');
 			}else{
-				role_ids +=  ','+$(this).val();
+				_role_ids +=  ','+$(this).val();
+				_role_names += ','+$(this).attr('data-name');
 			};
 		});
-		$(this).next('input').val(role_ids);
+		$(this).next('input').val(_role_ids);
+		if(_role_names.length>13){
+			_role_names = _role_names.substring(0,13)+'...';
+		}
+		$('.position_name').text(_role_names);
 		$close.closest('.search_position_show').addClass('dn');
 		mask.hide();
 	});
@@ -158,11 +168,16 @@ $(document).on('click', '.sr_tab span', function(){
 //  图表部分
 //  单项数据切换
 $(document).on('click', '.chart_tab li', function(){
-	var index=$(this).index();
+	var index = $(this).index();
+	var chart_main = $('.chart_main');
 	if(index!=curIndex){
 		$(".chart_tab li").siblings().removeClass("cur").eq(index).addClass("cur");
 		$(".chart_main").removeClass("active").eq(index).addClass("active");
 	    curIndex=index; //  当前下标赋予变量
+		if($(this).attr('flag')!='true'){
+			chart_main.eq(index).find('.chart_topright').children('select').trigger('change');
+			$(this).attr('flag','true');
+		}
 	}
 });
 
@@ -271,7 +286,7 @@ $('.chart_topright select').change(function(){
 });
 
 //  各图标初始化
-dailyStats();	//  新增量每日统计线型
+//dailyStats();	//  新增量每日统计线型
 
 //  新增量
 function dailyStats(days,values,name){
