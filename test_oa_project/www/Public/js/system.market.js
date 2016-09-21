@@ -183,9 +183,9 @@ $(document).on('click', '.chart_tab li', function(){
 //  选择指标select切换
 $('.chart_topright select').change(function(){
 	var _curVal = $(this).children('option:selected').val(),
-		_p = $('.please_select'),
 		_chartnav=$('.chart_tab .cur').attr('data-value'),
 		_chartname=$('.chart_tab .cur').text(),
+		_please_select = $('#'+_chartnav).find('.please_select'),
 		_daily_stats = $('#'+_chartnav).find('.daily_stats'),
 		_channel = $('#'+_chartnav).find('.daily_channel2'),
 		_channel_bar = $('#'+_chartnav).find('.channel_bar2'),
@@ -193,8 +193,12 @@ $('.chart_topright select').change(function(){
 		_channel3 = $('#'+_chartnav).find('.daily_channel3'),
 		_channel_bar3 = $('#'+_chartnav).find('.channel_bar3'),
 		_channel_pie3 = $('#'+_chartnav).find('.channel_pie3'),
+		_channel4 = $('#'+_chartnav).find('.daily_channel4'),
+		_channel_bar4 = $('#'+_chartnav).find('.channel_bar4'),
+		_channel_pie4 = $('#'+_chartnav).find('.channel_pie4'),
 		_quality = $('#quality'),
 		_course = $('#course');
+	_please_select.hide();
 	//获取接口
 	var data = {
 		daytime:market_daytime,
@@ -208,15 +212,14 @@ $('.chart_topright select').change(function(){
 				var _days = [];
 				var _dayVal = [];
 				if(!redata.data.days){
-					layer.msg('暂无该项数据',{icon:5});
+					_please_select.show();
 				}else{
 					$.each(redata.data.days,function(k,v){
 						_days.push(k);
 						_dayVal.push(v);
 					});
 					dailyStats(_days,_dayVal,_chartname);
-				}
-				_p.hide();
+				};
 				_quality.hide();
 				_course.hide();
 				_channel.hide();
@@ -225,80 +228,119 @@ $('.chart_topright select').change(function(){
 				_channel3.hide();
 				_channel_bar3.empty();
 				_channel_pie3.empty();
+				_channel4.hide();
+				_channel_bar4.empty();
+				_channel_pie4.empty();
 			}else if(_curVal == '2'){
 				var _navName = [];
 				var _values = [];
-				var _data_pie = [];console.log(redata.data.channel);
-				if(!redata.data.channel){
-					layer.msg('暂无该项数据',{icon:5});
+				var _data_pie = [];
+				if(redata.data.channel.length<1){
+					//layer.msg('暂无该项数据',{icon:5});
+					_please_select.show();
 				}else{
 					$.each(redata.data.channel,function(k,v){
-						$.each(v,function(k2,v2){
-							var _val_num = _values.length;
-							var _val_data = [];
-							if(_val_num>0){
-								for(var i=0;i<_val_num;i++){
-									_val_data.push(0);
-								}
-							}
-							var _data = [];
-							$.each(_navName,function(){
-								_data.push(0);
-							});
-							_val_data.push(v2.count);
-							_data = {
-								name: v2.name,
-								data: _val_data,
-								stack: k
-							};
-							_navName.push(k);
-							_values.push(_data);
-							_data_pie.push([v2.name, v2.count]);
-						});
+						var _data = [];
+						if(_navName.indexOf(v.pname)<0){
+							_navName.push(v.pname);
+						};
+						for(var i=1;i<_navName.length;i++){
+							_data.push(null);
+						}
+						_data.push(v.count);
+						_data = {
+							name: k,
+							data: _data
+						};
+						_values.push(_data);
+						_data_pie.push([k, v]);
 					});
 					channelBar(_navName,_values,_curVal);
 					channelPie(_data_pie,_curVal);
-				}
+				};
 				_channel.show();
 				_quality.hide();
 				_course.hide();
-				_p.hide();
-				_channel3.hide();
 				_daily_stats.empty();
+				_channel3.hide();
 				_channel_bar3.empty();
 				_channel_pie3.empty();
+				_channel4.hide();
+				_channel_bar4.empty();
+				_channel_pie4.empty();
 			}else if(_curVal == '3'){
 				var _navName = [];
 				var _values = [];
 				var _data_pie = [];
-				$.each(redata.data.infoquality,function(k,v){
-					var _data = [];
-					$.each(_navName,function(k2,v2){
-						_data.push(0);
+				if(!redata.data.infoquality){
+					//layer.msg('暂无该项数据',{icon:5});
+					_please_select.show();
+				}else{
+					$.each(redata.data.infoquality,function(k,v){
+						var _data = [];
+						$.each(_navName,function(k2,v2){
+							_data.push(null);
+						});
+						_data.push(v);
+						_data = {
+							name: k,
+							data: _data
+						};
+						_navName.push(k);
+						_values.push(_data);
+						_data_pie.push([k, v]);
 					});
-					_data.push(v);
-					_data = {
-						name: k,
-						data: _data,
-						stack: k
-					};
-					_navName.push(k);
-					_values.push(_data);
-					_data_pie.push([k, v]);
-				});
-				channelBar(_navName,_values,_curVal);
-				channelPie(_data_pie,_curVal);
+					channelBar(_navName,_values,_curVal);
+					channelPie(_data_pie,_curVal);
+				};
 				_channel3.show();
 				_quality.hide();
 				_course.hide();
-				_p.hide();
 				_channel.hide();
 				_daily_stats.empty();
 				_channel_bar.empty();
 				_channel_pie.empty();
-			}
-		}
-	}
+				_channel4.hide();
+				_channel_bar4.empty();
+				_channel_pie4.empty();
+			}else if(_curVal == '4'){
+				var _navName = [];
+				var _values = [];
+				var _data_pie = [];
+				if(!redata.data.course_id){
+					//layer.msg('暂无该项数据',{icon:5});
+					_please_select.show();
+				}else{
+					$.each(redata.data.course_id,function(k,v){
+						var _data = [];
+						$.each(_navName,function(k2,v2){
+							_data.push(null);
+						});
+						_data.push(v);
+						_data = {
+							name: k,
+							data: _data
+						};
+						_navName.push(k);
+						_values.push(_data);
+						_data_pie.push([k, v]);
+					});
+					channelBar(_navName,_values,_curVal);
+					channelPie(_data_pie,_curVal);
+				};
+				_channel4.show();
+				_quality.hide();
+				_course.hide();
+				_channel.hide();
+				_daily_stats.empty();
+				_channel_bar.empty();
+				_channel_pie.empty();
+				_channel3.hide();
+				_channel_bar3.empty();
+				_channel_pie3.empty();
+			};
+		};
+	};
 });
 
 //  各图标初始化
@@ -359,24 +401,36 @@ function channelBar(navName,values,num){
         xAxis: {
             categories: navName
         },
-        yAxis: {
-            allowDecimals: false,
-            title: {
-                text: null
-            }
-        },
+		yAxis: {
+			min: 0,
+			title: {
+				text: null
+			},stackLabels: {
+				enabled: true,
+				style: {
+					fontWeight: 'bold',
+					color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+				}
+			}
+		},
         tooltip: {
             formatter: function () {
-                return '<b>' + this.x + '</b><br/>' +
-                    this.series.name + ': ' + this.y + '<br/>' +
-                    '总量: ' + this.point.stackTotal;
+                return '<b>' + this.x + ':'+this.point.stackTotal+' </b><br/>' +
+                   '<span style="color:'+this.series.color+'">'+this.series.name+': ' + this.y + '</span>';
             }
         },
-         plotOptions: {
-            series: {
-                stacking: 'normal'
-            }
-        },
+		plotOptions: {
+			column: {
+				stacking: 'normal',
+				dataLabels: {
+					enabled: true,
+					color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+					style: {
+						textShadow: '0 0 3px black'
+					}
+				}
+			}
+		},
         series:values
 	});
 }
