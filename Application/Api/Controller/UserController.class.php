@@ -150,6 +150,9 @@ class UserController extends ApiBaseController
         }else{
             $data_add = $request;
         }
+        if (strlen($data_add['realname'])>12) {
+            return array('code'=>1,'msg'=>'客户姓名不得超过4个汉字');
+        }
         $getService = function($data_add) {
             //去除数组空值
             $data_add = array_filter($data_add);
