@@ -412,7 +412,7 @@ class UserController extends SystemController
         if (empty($request['realname'])) $this->ajaxReturn(1, '真实姓名不能为空', '', 'reserve_realname');
         if (empty($request['username'])) $this->ajaxReturn(1, '手机号码不能为空', '', 'reserve_username');
         if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['subscription'])){
-            $this->ajaxReturn(3,"定金最多只能输入2位小数");
+            $this->ajaxReturn(3,"请输入正确的订金金额");
         }
         //添加参数
         $request['system_user_id'] = $this->system_user_id;
