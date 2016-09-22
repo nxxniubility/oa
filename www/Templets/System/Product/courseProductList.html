@@ -159,11 +159,13 @@
 		    });
 		    //添加提交
 		    $('.create_subtn').click(function(){
+		    	var price = $(':input[name="create_price"]').val();
+		    	var createprice = price.split('.');
 				if($(':input[name="create_name"]').val().length>20){
 					layer.msg('产品名称不能大于20位字符', {icon:2});
 					return false;
-				}else if($(':input[name="create_price"]').val().length>8){
-					layer.msg('产品价格和长度不能大于8位数', {icon:2});
+				}else if(createprice[0].length>8){
+					layer.msg('产品价格整数位不能大于8位数', {icon:2});
 					return false;
 				}else if(!chkInt($(':input[name="create_price"]').val())){
 					layer.msg('请输入正确的价格', {icon:2});
@@ -215,11 +217,13 @@
 		    });
 		    //修改提交
 		    $('.edit_subtn').click(function(){
+		    	var editprice = $(':input[name="edit_price"]').val();
+		    	var editprice = editprice.split('.');
 				if($(':input[name="edit_name"]').val().length>20){
 					layer.msg('产品名称不能大于20位字符', {icon:2});
 					return false;
-				}else if($(':input[name="edit_price"]').val().length>8){
-					layer.msg('产品价格和长度不能大于8位数', {icon:2});
+				}else if(editprice[0].length>8){
+					layer.msg('产品价格整数位不能大于8位数', {icon:2});
 					return false;
 				}else if(!chkInt($(':input[name="edit_price"]').val())){
 					layer.msg('请输入正确的价格', {icon:2});
