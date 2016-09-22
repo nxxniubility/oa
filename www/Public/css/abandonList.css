@@ -32,9 +32,10 @@
 .setContList .wTwo { width: 15%;}
 .setContList .wThr { width: 13%;}
 .setContList .wFou { width: 15%;}
-.setContList .wFiv { width: 20%;}
-.setContList .wSix { width: 20%;}
+.setContList .wFiv { width: 16%;}
+.setContList .wSix { width: 16%;}
 .setContList .wSev { width: 9%;}
+.setContList .wEig { width: 8%;}
 .setContList dl.on dd.wSix { color: #53b567;}
 .setContList .proSelect { display: inline-block; width: 40px; height: 40px;}
 .setContList .proSelect i { display: inline-block; width: 12px; height: 6px; margin-left: 6px; background: url(../images/newSys_icon-01.png) no-repeat; background-position: 0 -60px;}
