@@ -383,12 +383,12 @@ class OrderController extends SystemController
             if (!$request['remark']) {
                 $this->ajaxReturn(7,'请填写优惠详情');
             }
-            if(!$request['pid']){
-                $this->ajaxReturn(8,'请选择优惠所属分类');
-            }  
             if (strlen($request['remark'])>=100) {
-                $this->ajaxReturn(2,'优惠详情过长');
-            }       
+                $this->ajaxReturn(8,'优惠详情不得超过100个字符');
+            } 
+            if(!$request['pid']){
+                $this->ajaxReturn(9,'请选择优惠所属分类');
+            }
             $orderMain = new OrderMainController();
             $result = $orderMain->createDiscount($request);
             if ($result === false) {
@@ -399,7 +399,7 @@ class OrderController extends SystemController
     }
 
     /*
-    *添加优惠
+    *添加优惠分类
     *@author nxx
     */
     public function addParentDiscount()
@@ -421,7 +421,7 @@ class OrderController extends SystemController
                 $this->ajaxReturn(4,'请填写优惠详情');
             }
             if (strlen($request['remark'])>=100) {
-                $this->ajaxReturn(5,'优惠详情过长');
+                $this->ajaxReturn(5,'优惠详情不得超过100个字符');
             }
             $orderMain = new OrderMainController();
             $result = $orderMain->createParentDiscount($request);
@@ -433,13 +433,16 @@ class OrderController extends SystemController
     }
 
     /*
-    *修改优惠分类
+    *修改优惠
     *@author nxx
     */
     public function editDiscount()
     {
         if (IS_POST) {
             $request = I("post.");
+            if (strlen($request['remark'])>=100) {
+                $this->ajaxReturn(5,'优惠详情不得超过100个字符');
+            }
             if ($request['sign'] == 10) {
                 $discount_parent_id = $request['discount_parent_id'];
                 $save['dname'] = $request['dname'];
