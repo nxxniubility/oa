@@ -49,4 +49,38 @@ class StatisticsController extends SystemController
         $this->assign('data', $data);
         $this->display();
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 我的营销统计
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function mymarket()
+    {
+        $systemUserInfo = $this->system_user;
+        //实例化
+        $DataService = new DataService();
+        $request = I('get.');
+        if (!$request['system_user_id']) {
+            $where['system_user_id'] = $systemUserInfo['system_user_id'];
+        }
+        if(empty($request['startime'])){
+            $request['startime'] = date('Y/m/d');
+        }
+        if(empty($request['endtime'])){
+            $request['endtime'] = date('Y/m/d');
+        }   
+        $where['daytime'] = $request['startime'].'-'.$request['endtime'];
+
+        $result = $DataService->getDataMarket($where);
+        // if ($result['code'] != 0) {
+        //     $this->ajaxReturn();
+        // }
+        $dataMarket = $result['data'];
+        $dataMarket['daytime'] = $where['daytime'];
+        $this->assign('dataMarket', $dataMarket);
+        $this->assign('systemUserInfo', $systemUserInfo);
+        $this->display();
+    }
 }
