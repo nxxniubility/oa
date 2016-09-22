@@ -206,6 +206,40 @@ $('.chart_topright select').change(function(){
 		zone_id:market_zone_id,
 		type:_chartnav
 	};
+	if(_chartnav == 'totalratio' || _chartnav == 'chargebackratio' || _chartnav == 'conversionratio' || _chartnav == 'visitratio'){
+		var navnum = {
+			'totalratio':15,
+			'chargebackratio':14,
+			'conversionratio':13,
+			'visitratio':12,
+		};
+		if($('#sr_everyday').find('tr').length>2){
+			//每日统计
+			var _days = [];
+			var _dayVal = [];
+			$('#sr_everyday').find('tr').each(function(i){
+				if(i>1){
+					_days.push($(this).children('td').eq(0).text());
+					_dayVal.push(parseInt($(this).children('td').eq(navnum[_chartnav]).text()));
+				}
+			});
+			dailyStats(_days,_dayVal,_chartname);
+			_quality.hide();
+			_course.hide();
+			_box2.hide();
+			_bar2.empty();
+			_pie2.empty();
+			_box3.hide();
+			_bar3.empty();
+			_pie3.empty();
+			_box4.hide();
+			_bar4.empty();
+			_pie4.empty();
+		}else{
+			_please_select.show();
+		}
+		return false;
+	};
 	common_ajax2(data,get_info_url,'no',getHighcharts);
 	function getHighcharts(redata){
 		if(redata.code==0){
@@ -237,11 +271,11 @@ $('.chart_topright select').change(function(){
 				var _navName = [];
 				var _values = [];
 				var _data_pie = [];
-				if(redata.data.channel.length<1){
+				if(redata.data.channel.list.length<1){
 					//layer.msg('暂无该项数据',{icon:5});
 					_please_select.show();
 				}else{
-					$.each(redata.data.channel,function(k,v){
+					$.each(redata.data.channel.list,function(k,v){
 						var _data = [];
 						if(_navName.indexOf(v.pname)<0){
 							_navName.push(v.pname);
@@ -255,7 +289,9 @@ $('.chart_topright select').change(function(){
 							data: _data
 						};
 						_values.push(_data);
-						_data_pie.push([v.pname, v.count]);
+					});
+					$.each(redata.data.channel.broad,function(k,v){
+						_data_pie.push([k, v]);
 					});
 					channelBar(_navName,_values,_curVal);
 					channelPie(_data_pie,_curVal);
@@ -416,6 +452,9 @@ function channelBar(navName,values,num){
 					color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
 				}
 			}
+		},
+		legend: {
+			enabled: false
 		},
         tooltip: {
             formatter: function () {

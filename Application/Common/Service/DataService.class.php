@@ -281,15 +281,18 @@ class DataService extends BaseService
                 }
             }
         }
+        $_temp_pchannel = array();
         $_temp_channel = array();
         foreach($channel_list as $v){
             foreach($v['children'] as $v2){
                 if( !empty($channelArr[$v2['channel_id']]) ){
+                    $_temp_pchannel[$v['channelname']] = $_temp_pchannel[$v['channelname']]+$channelArr[$v2['channel_id']];
                     $_temp_channel[$v2['channelname']] = array('count'=>$channelArr[$v2['channel_id']],'name'=>$v2['channelname'],'pname'=>$v['channelname']);
                 }
             }
         }
-        $newArr['channel'] = $_temp_channel;
+        $newArr['channel']['broad'] = $_temp_pchannel;
+        $newArr['channel']['list'] = $_temp_channel;
         return array('code'=>0,'data'=>$newArr);
     }
 

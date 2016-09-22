@@ -6,9 +6,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
 		<title>系统首页-{$siteinfo.sitename}</title>
-		<link rel="stylesheet" href="../../../Public/css/common.css">
-		<link rel="stylesheet" href="../../../Public/js/glDatePicker/glDatePicker.default.css">
-		<link rel="stylesheet" href="../../../Public/css/system.market.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/system.market.css">
 	</head>
 	<body>
 		<div class="wrapper_box">
@@ -49,7 +49,7 @@
 											</div>
 										</foreach>
 									</foreach>
-									<input type="hidden" name="zone_id" autocomplete="off">
+									<input type="hidden" name="zone_id" value="{$data.request.zone_id}" autocomplete="off">
 		        				</div>
 		        			</div>
 		        		</div>
@@ -156,8 +156,8 @@
 	        				<li data-value="refundcount">退款量</li>
 	        				<li data-value="visitratio">到访率</li>
 							<li data-value="conversionratio">面转率</li>
-							<li data-value="addcount">退单率</li>
-	        				<li data-value="chargebackratio">总转率</li>
+							<li data-value="chargebackratio">退单率</li>
+	        				<li data-value="totalratio">总转率</li>
 	        			</ul>
 	        			<div class="chart_main active fl">
 	        				<div class="chart_top clearfix">
@@ -318,42 +318,6 @@
 								</div>
 							</div>
 							<div class="chart_content new_amount" id="recyclecount">
-								<div class="please_select">
-									<p style="margin-top: 150px;"><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">出库量:{$data.dataMarket.count.redeemcount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="redeemcount">
 								<div class="please_select">
 									<p style="margin-top: 150px;"><i></i>暂无该项数据.</p>
 								</div>
@@ -773,7 +737,7 @@
 									<td>{$v.conversionratio}%</td>
 									<td>{$v.chargebackratio}%</td>
 									<td>{$v.totalratio}%</td>
-									<td><a href="market.personnel.html">详情</a></td>
+									<td><a target="_blank" href="{:U('System/Statistics/mymarket',array('system_user_id'=>$v['system_user_id'],'startime'=>str_replace('/','',$data['request']['startime']),'endtime'=>str_replace('/','',$data['request']['endtime'])))}">详情</a></td>
 								</tr>
 							</foreach>
 
@@ -791,12 +755,12 @@
 			var market_zone_id = '{$data.request.zone_id}';
 			var market_role_id = '{$data.request.role_id}';
 		</script>
-		<script src="../../../Public/js/jquery-1.9.1.min.js"></script>
-		<script src="../../../Public/js/layer/layer.js"></script>
-		<script src="../../../Public/js/common_ajax.js"></script>
-		<script src="../../../Public/js/glDatePicker/glDatePicker.js"></script>
-		<script src="../../../Public/js/highcharts/highcharts.js"></script>
-		<script src="../../../Public/js/highcharts/modules/exporting.js"></script>
-		<script src="../../../Public/js/system.market.js"></script>
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+		<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
+		<script src="__PUBLIC__/js/highcharts/highcharts.js"></script>
+		<script src="__PUBLIC__/js/highcharts/modules/exporting.js"></script>
+		<script src="__PUBLIC__/js/system.market.js"></script>
 	</body>
 </html>
