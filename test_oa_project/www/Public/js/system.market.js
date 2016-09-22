@@ -346,8 +346,6 @@ $('.chart_topright select').change(function(){
 });
 
 //  各图标初始化
-//dailyStats();	//  新增量每日统计线型
-
 //  新增量
 function dailyStats(days,values,name){
 	var _chartnav=$('.chart_tab .cur').attr('data-value');
@@ -390,13 +388,17 @@ function dailyStats(days,values,name){
 
 //  来源渠道-柱状图
 function channelBar(navName,values,num){
-	var _chartnav=$('.chart_tab .cur').attr('data-value');
+	var _chartnav=$('.chart_tab .cur').attr('data-value'),
+		faWidth = $('.chart_main').width(),
+		columnWidth = faWidth*0.6;
+		
 	$('#'+_chartnav).find('.bar'+num).highcharts({
-		chart:{
+		chart: {
+			width:columnWidth,
+			height:450,
 			className:'channel_bar',
-			type:'bar'
-		},
-		chart: { type: 'column'},
+			type: 'column'
+			},
         title: null,
         credits: { enabled:false},
         exporting: { enabled:false},
@@ -439,9 +441,13 @@ function channelBar(navName,values,num){
 
 // 来源渠道-圆饼图
 function channelPie(values,num){
-	var _chartnav=$('.chart_tab .cur').attr('data-value');
+	var _chartnav=$('.chart_tab .cur').attr('data-value'),
+		faWidth = $('.chart_main').width(),
+		pieWidth = faWidth*0.4;	
 	$('#'+_chartnav).find('.pie'+num).highcharts({
 		chart: {
+			width:pieWidth,
+			height:300,
 			className:'channel_pie',
 	        plotBackgroundColor: null,
 	        plotBorderWidth: 0,
