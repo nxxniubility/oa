@@ -118,6 +118,7 @@ class DataController extends ApiBaseController
             $where['daytime'] = I('param.daytime',null);
             $where['role_id'] = I('param.role_id',null);
             $where['zone_id'] = I('param.zone_id',null);
+            $where['system_user_id'] = I('param.system_user_id',null);
         }else{
             $where = $requesr;
         }
@@ -156,6 +157,7 @@ class DataController extends ApiBaseController
             $where['daytime'] = I('param.daytime',null);
             $where['role_id'] = I('param.role_id',null);
             $where['zone_id'] = I('param.zone_id',null);
+            $where['system_user_id'] = I('param.system_user_id',null);
         }else{
             $where = $requesr;
         }

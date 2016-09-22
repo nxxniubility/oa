@@ -67,8 +67,9 @@ class StatisticsController extends SystemController
         if (empty($request['system_user_id'])) {
             $request['system_user_id'] = $this->system_user_id;
         }
+        //默认时间
         if(empty($request['startime'])){
-            $request['startime'] = date('Y/m/d');
+            $request['startime'] = date('Y/m/d', strtotime('-7 day'));
         }
         if(empty($request['endtime'])){
             $request['endtime'] = date('Y/m/d');
@@ -78,13 +79,13 @@ class StatisticsController extends SystemController
         $result = $SystemUser->getListCache(array('system_user_id'=>$where['system_user_id']));
         $systemUserInfo = $result['data'];
         $result = $DataService->getDataMarket($where);
-        // if ($result['code'] != 0) {
-        //     $this->ajaxReturn();
-        // }
         $dataMarket = $result['data'];
         $dataMarket['daytime'] = $where['daytime'];
         $this->assign('dataMarket', $dataMarket);
         $this->assign('systemUserInfo', $systemUserInfo);
+        $request['daytime'] = $request['startime'].'-'.$request['endtime'];
+        $data['request'] = $request;
+        $this->assign('data', $data);
         $this->display();
     }
 }

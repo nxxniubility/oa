@@ -204,6 +204,7 @@ $('.chart_topright select').change(function(){
 		daytime:market_daytime,
 		role_id:market_role_id,
 		zone_id:market_zone_id,
+		system_user_id:market_system_user_id,
 		type:_chartnav
 	};
 	if(_chartnav == 'totalratio' || _chartnav == 'chargebackratio' || _chartnav == 'conversionratio' || _chartnav == 'visitratio'){
@@ -285,7 +286,7 @@ $('.chart_topright select').change(function(){
 						}
 						_data.push(v.count);
 						_data = {
-							name: k,
+							name: v.name,
 							data: _data
 						};
 						_values.push(_data);
