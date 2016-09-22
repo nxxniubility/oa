@@ -127,15 +127,15 @@
 	        				<th>总转率</th>
 	        			</tr>
 	        			<tr>
-	        				<td class="firItem">{$data.dataMarket.count.addcount}</td>
-							<td>{$data.dataMarket.count.allocationcount}</td>
-							<td>{$data.dataMarket.count.visitcount}</td>
-	        				<td>{$data.dataMarket.count.ordercount}</td>
-	        				<td>{$data.dataMarket.count.refundcount}</td>
-	        				<td>{$data.dataMarket.count.visitratio}%</td>
-	        				<td>{$data.dataMarket.count.conversionratio}%</td>
-	        				<td>{$data.dataMarket.count.chargebackratio}%</td>
-	        				<td>{$data.dataMarket.count.totalratio}%</td>
+	        				<td class="firItem">{:!empty($data['dataMarket']['count']['addcount'])?$data['dataMarket']['count']['addcount']:'--'}</td>
+							<td>{:!empty($data['dataMarket']['count']['allocationcount'])?$data['dataMarket']['count']['allocationcount']:'--'}</td>
+							<td>{:!empty($data['dataMarket']['count']['visitcount'])?$data['dataMarket']['count']['visitcount']:'--'}</td>
+	        				<td>{:!empty($data['dataMarket']['count']['ordercount'])?$data['dataMarket']['count']['ordercount']:'--'}</td>
+	        				<td>{:!empty($data['dataMarket']['count']['refundcount'])?$data['dataMarket']['count']['refundcount']:'--'}</td>
+	        				<td>{:!empty($data['dataMarket']['count']['visitratio'])?$data['dataMarket']['count']['visitratio'].'%':'--'}</td>
+	        				<td>{:!empty($data['dataMarket']['count']['conversionratio'])?$data['dataMarket']['count']['conversionratio'].'%':'--'}</td>
+	        				<td>{:!empty($data['dataMarket']['count']['chargebackratio'])?$data['dataMarket']['count']['chargebackratio'].'%':'--'}</td>
+	        				<td>{:!empty($data['dataMarket']['count']['totalratio'])?$data['dataMarket']['count']['totalratio'].'%':'--'}</td>
 	        			</tr>
 	        		</table>
 	        	</div>
@@ -671,21 +671,21 @@
 							</tr>
 							<tr class="sr_total">
 								<td>合计</td>
-								<td>{$data.dataMarket.count.addcount}</td>
-								<td>{$data.dataMarket.count.acceptcount}</td>
-								<td>{$data.dataMarket.count.switchcount}</td>
-								<td>{$data.dataMarket.count.restartcount}</td>
-								<td>{$data.dataMarket.count.recyclecount}</td>
-								<td>{$data.dataMarket.count.redeemcount}</td>
-								<td class="red">{$data.dataMarket.count.callbackcount}</td>
-								<td>{$data.dataMarket.count.attitudecount}</td>
-								<td>{$data.dataMarket.count.visitcount}</td>
-								<td>{$data.dataMarket.count.ordercount}</td>
-								<td>{$data.dataMarket.count.refundcount}</td>
-								<td>{$data.dataMarket.count.visitratio}%</td>
-								<td>{$data.dataMarket.count.conversionratio}%</td>
-								<td>{$data.dataMarket.count.chargebackratio}%</td>
-								<td>{$data.dataMarket.count.totalratio}%</td>
+								<td>{:!empty($data['dataMarket']['count']['addcount'])?$data['dataMarket']['count']['addcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['acceptcount'])?$data['dataMarket']['count']['acceptcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['switchcount'])?$data['dataMarket']['count']['switchcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['restartcount'])?$data['dataMarket']['count']['restartcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['recyclecount'])?$data['dataMarket']['count']['recyclecount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['redeemcount'])?$data['dataMarket']['count']['redeemcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['callbackcount'])?$data['dataMarket']['count']['callbackcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['attitudecount'])?$data['dataMarket']['count']['attitudecount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['visitcount'])?$data['dataMarket']['count']['visitcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['ordercount'])?$data['dataMarket']['count']['ordercount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['refundcount'])?$data['dataMarket']['count']['refundcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['visitratio'])?$data['dataMarket']['count']['visitratio'].'%':'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['conversionratio'])?$data['dataMarket']['count']['conversionratio'].'%':'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['chargebackratio'])?$data['dataMarket']['count']['chargebackratio'].'%':'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['totalratio'])?$data['dataMarket']['count']['totalratio'].'%':'--'}</td>
 							</tr>
 							<foreach name="data['dataMarket']['days']" item="v" key="k">
 								<tr>
@@ -738,21 +738,21 @@
 							<tr class="sr_total">
 								<td>合计</td>
 								<td>&nbsp;</td>
-								<td>{$data.dataMarket.count.addcount}</td>
-								<td>{$data.dataMarket.count.acceptcount}</td>
-								<td>{$data.dataMarket.count.switchcount}</td>
-								<td>{$data.dataMarket.count.restartcount}</td>
-								<td>{$data.dataMarket.count.recyclecount}</td>
-								<td>{$data.dataMarket.count.redeemcount}</td>
-								<td>{$data.dataMarket.count.callbackcount}</td>
-								<td>{$data.dataMarket.count.attitudecount}</td>
-								<td>{$data.dataMarket.count.visitcount}</td>
-								<td>{$data.dataMarket.count.ordercount}</td>
-								<td>{$data.dataMarket.count.refundcount}</td>
-								<td>{$v.visitratio}%</td>
-								<td>{$v.conversionratio}%</td>
-								<td>{$v.chargebackratio}%</td>
-								<td>{$v.totalratio}%</td>
+								<td>{:!empty($data['dataMarket']['count']['addcount'])?$data['dataMarket']['count']['addcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['acceptcount'])?$data['dataMarket']['count']['acceptcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['switchcount'])?$data['dataMarket']['count']['switchcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['restartcount'])?$data['dataMarket']['count']['restartcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['recyclecount'])?$data['dataMarket']['count']['recyclecount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['redeemcount'])?$data['dataMarket']['count']['redeemcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['callbackcount'])?$data['dataMarket']['count']['callbackcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['attitudecount'])?$data['dataMarket']['count']['attitudecount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['visitcount'])?$data['dataMarket']['count']['visitcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['ordercount'])?$data['dataMarket']['count']['ordercount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['refundcount'])?$data['dataMarket']['count']['refundcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['visitratio'])?$data['dataMarket']['count']['visitratio'].'%':'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['conversionratio'])?$data['dataMarket']['count']['conversionratio'].'%':'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['chargebackratio'])?$data['dataMarket']['count']['chargebackratio'].'%':'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['totalratio'])?$data['dataMarket']['count']['totalratio'].'%':'--'}</td>
 								<td>&nbsp;</td>
 							</tr>
 							<foreach name="data['dataMarket']['systemuser']" item="v" key="k">
