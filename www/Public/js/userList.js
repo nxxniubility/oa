@@ -28,10 +28,10 @@ $(function(){
     //创建订单
     $(document).on('click', '#reserve_submit', function(){
         if($(':input[name="reserve_subscription"]').val().length>8){
-            layer.msg('定金不能大于8位数', {icon:2});
+            layer.msg('订金不能大于8位数', {icon:2});
             return false;
         }else if(!chkInt($(':input[name="reserve_subscription"]').val())){
-            layer.msg('定金不能输入数字以外的字符', {icon:2});
+            layer.msg('订金不能输入数字以外的字符', {icon:2});
             return false;
         }
         var data = {
