@@ -947,7 +947,7 @@ class UserController extends SystemController
         //详情
         $data['allocationAll'] = D('User')->allocationDetail($id);  
         $systemUserId = M("allocation_systemuser")->where("user_allocation_id = {$id}")->select();
-    
+        $systemUserIds = '';
         foreach ($systemUserId as $key => $value) {
             $systemuserInfo = M("system_user")->where("system_user_id = {$value['system_user_id']}")->find();
             if (!empty($realnames)) {

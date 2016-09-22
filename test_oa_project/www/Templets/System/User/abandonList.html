@@ -33,6 +33,7 @@
                     <dt class="wThr">所属区域</dt>
                     <dt class="wFou">渠道</dt>
                     <dt class="wFiv">分配职位</dt>
+                    <dt class="wSix">启用星期</dt>
                     <dt class="wSix">创建时间</dt>
                     <dt class="wSev">操作</dt>
                 </dl>
@@ -44,6 +45,7 @@
                         <dd class="wThr">{$v.zonename}</dd>
                         <dd class="wFou">{$v.channelnames}</dd>
                         <dd class="wFiv">{$v.rolenames}</dd>
+                        <dd class="wSev">{:($v['week_text']=='0')?'无':$v['week_text']}</dd>
                         <dd class="wSix">{:date('Y-m-d H:i:s',$v['createtime'])}</dd>
                         <dd class="wSev">
                             <a href="javascript:;" class="proSelect"><i></i></a>

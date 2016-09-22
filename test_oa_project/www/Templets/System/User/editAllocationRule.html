@@ -157,7 +157,7 @@
                 </div>
             </div>
             <div class="nsRow clearfix">
-                <div class="nsLeft">分配星期限制:</div>
+                <div class="nsLeft">允许启动星期:</div>
                 <div class="nsRight clearfix">
                 	<input type="text" class="nsInp nsDepartment l" disabled="disabled" name="week_text_name">
                     <input type="button" class="week-edit-btn l" value="选择星期">
@@ -271,22 +271,22 @@
     <div class="nsCont">
         <form method="post" action="#">
         	<div class="week_box">
-        		<table cellpadding="0" cellspacing="0" id="week_edit_table">
-        			<tr>
-        				<th>选中</th>
-        				<th>星期</th>
-        			</tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期一</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期二</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期三</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期四</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期五</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期六</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期日</td></tr>
-        		</table>
+                <table cellpadding="0" cellspacing="0" id="week_table">
+                    <tr>
+                        <th>选中</th>
+                        <th>星期</th>
+                    </tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="1" autocomplete="off"></td><td>星期一</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="2" autocomplete="off"></td><td>星期二</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="3" autocomplete="off"></td><td>星期三</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="4" autocomplete="off"></td><td>星期四</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="5" autocomplete="off"></td><td>星期五</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="6" autocomplete="off"></td><td>星期六</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="7" autocomplete="off"></td><td>星期日</td></tr>
+                </table>
         	</div>
         </form>
-        <input type="button" class="edit_confirm nsDetermineSystem" value="确定">
+        <input type="button" class="edit_confirm " value="确定">
     </div>
 </div>
 <!-- 选择星期限制 E -->
@@ -300,6 +300,33 @@
         <if condition="!empty($data['allocationAll']['zone_id'])">
             $('.zone_btn'+{$data['allocationAll']['zone_id']}).trigger('click');
         </if>
+        var week_text = "{$data['allocationAll']['week_text']}";
+        //选择启动星期
+        $('.edit_confirm').click(function(){
+            var _week_text = '';
+            var _week_name = '';
+            $(':input[name="week_chk"]:checked').each(function(){
+                if(_week_text==''){
+                    _week_text = $(this).val();
+                    _week_name = $(this).parent().next().text();
+                }else{
+                    _week_text += ','+$(this).val();
+                    _week_name += ','+$(this).parent().next().text();
+                };
+            });
+            if(_week_text!=''){
+                $(':input[name="week_text_name"]').val(_week_name);
+                $(':input[name="week_text"]').val(_week_text);
+            };
+        });
+        //初始化
+        if(week_text!=0 && week_text!=''){
+            week_text = week_text.split(',');
+            $.each(week_text, function(k,v){
+                $(':input[name="week_chk"][value="'+v+'"]').prop('checked', true);
+            });
+            $('.edit_confirm').trigger('click');
+        };
         $('.nsDetermine').click(function(){
             var role_id = '';
             var role_name = ''
@@ -372,7 +399,8 @@
                 channel_id:$(':input[name="channel_id"]').val(),
                 allocation_roles:$(':input[name="role_id"]').val(),
                 system_user_ids:$(':input[name="system_user_id"]').val(),
-                zone_id:$(':input[name="zone_id"]').val()
+                zone_id:$(':input[name="zone_id"]').val(),
+                week_text:$(':input[name="week_text"]').val()
             };
             common_ajax(data);
         });

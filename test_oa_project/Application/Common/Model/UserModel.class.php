@@ -732,6 +732,7 @@ class UserModel extends SystemModel
                 abandon_roles,
                 {$DB_PREFIX}user_abandon.channel_id,
                 channelname,
+                week_text,
                 {$DB_PREFIX}user_abandon.zone_id,
                 name as zonename"
             )
@@ -799,6 +800,7 @@ class UserModel extends SystemModel
                 allocation_roles,
                 startnum,
                 intervalnum,
+                week_text,
                 {$DB_PREFIX}user_allocation.sort,
                 {$DB_PREFIX}user_allocation.channel_id,
                 {$DB_PREFIX}user_allocation.zone_id,
