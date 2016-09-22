@@ -71,7 +71,7 @@
 		        <input type="text" class="z_inp"  name="create_name">
 		    </div>
 		    <div class="z_rows clearfix">
-		        <span><i>*</i>价格：</span>
+		        <span><i>*</i>价格(仅保留小数点后2位)：</span>
 		        <input type="text" class="z_inp" name="create_price" value="0.00" autocomplete="off">
 		    </div>
 		    <div class="z_rows clearfix">
@@ -100,7 +100,7 @@
 		        <input type="text" class="z_inp"  name="edit_name">
 		    </div>
 		    <div class="z_rows clearfix">
-		        <span><i>*</i>价格：</span>
+		        <span><i>*</i>价格(仅保留小数点后2位)：</span>
 		        <input type="text" class="z_inp" name="edit_price" value="0.00" autocomplete="off">
 		    </div>
 		    <div class="z_rows clearfix">
@@ -160,7 +160,7 @@
 					layer.msg('产品价格和长度不能大于8位数', {icon:2});
 					return false;
 				}else if(!chkInt($(':input[name="create_price"]').val())){
-					layer.msg('产品价格只能输入数字', {icon:2});
+					layer.msg('请输入正确的价格', {icon:2});
 					return false;
 				}else if($(':input[name="create_description"]').val().length>50){
 					layer.msg('产品描述不能大于50位字符', {icon:2});
@@ -178,7 +178,7 @@
 		        common_ajax2(data, create_courseProduct_href, 'reload');
 		    });
 			function chkInt(strForText){
-				var str = /^[0-9]+.?[0-9]*$/;
+				var str = /^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/;
 				var reg = new RegExp(str);
 				if(!reg.test(strForText)) {
 					return false;
@@ -216,7 +216,7 @@
 					layer.msg('产品价格和长度不能大于8位数', {icon:2});
 					return false;
 				}else if(!chkInt($(':input[name="edit_price"]').val())){
-					layer.msg('产品价格只能输入数字', {icon:2});
+					layer.msg('请输入正确的价格', {icon:2});
 					return false;
 				}else if($(':input[name="edit_description"]').val().length>50){
 					layer.msg('产品描述不能大于50位字符', {icon:2});
