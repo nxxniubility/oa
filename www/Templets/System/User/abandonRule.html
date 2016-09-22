@@ -200,21 +200,21 @@
         <form method="post" action="#">
         	<div class="week_box">
         		<table cellpadding="0" cellspacing="0" id="recover_table">
-        			<tr>
-        				<th>选中</th>
-        				<th>星期</th>
-        			</tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期一</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期二</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期三</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期四</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期五</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期六</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期日</td></tr>
-        		</table>
+                    <tr>
+                        <th>选中</th>
+                        <th>星期</th>
+                    </tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="1" autocomplete="off"></td><td>星期一</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="2" autocomplete="off"></td><td>星期二</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="3" autocomplete="off"></td><td>星期三</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="4" autocomplete="off"></td><td>星期四</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="5" autocomplete="off"></td><td>星期五</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="6" autocomplete="off"></td><td>星期六</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="7" autocomplete="off"></td><td>星期日</td></tr>
+                </table>
         	</div>
         </form>
-        <input type="button" class="recover_confirm nsDetermineSystem" value="确定">
+        <input type="button" class="recover_confirm" value="确定">
     </div>
 </div>
 <!-- 选择星期限制 E -->
@@ -226,6 +226,24 @@
 <script src="__PUBLIC__/js/common_ajax.js"></script>
 <script>
     $(function(){
+        //选择启动星期
+        $('.recover_confirm').click(function(){
+            var _week_text = '';
+            var _week_name = '';
+            $(':input[name="week_chk"]:checked').each(function(){
+                if(_week_text==''){
+                    _week_text = $(this).val();
+                    _week_name = $(this).parent().next().text();
+                }else{
+                    _week_text += ','+$(this).val();
+                    _week_name += ','+$(this).parent().next().text();
+                };
+            });
+            if(_week_text!=''){
+                $(':input[name="week_text_name"]').val(_week_name);
+                $(':input[name="week_text"]').val(_week_text);
+            };
+        });
         $('.nsDetermine').click(function(){
             var role_id = '';
             var role_name = ''
@@ -275,7 +293,8 @@
                 abandon_roles:$(':input[name="role_id"]').val(),
                 callbacknum:$(':input[name="callbacknum"]').val(),
                 attaindays:$(':input[name="attaindays"]').val(),
-                unsatisfieddays:$(':input[name="unsatisfieddays"]').val()
+                unsatisfieddays:$(':input[name="unsatisfieddays"]').val(),
+                week_text:$(':input[name="week_text"]').val()
             };
             common_ajax(data);
         });
