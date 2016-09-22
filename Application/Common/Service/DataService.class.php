@@ -126,7 +126,7 @@ class DataService extends BaseService
             }else{
                 $where['daytime'] = date('Ymd', strtotime($daytime[0]));
             }
-        }
+        }      
         //获取区域子集
         if(!empty($where['zone_id'])){
             $zoneIds = $this->getZoneIds($where['zone_id']);
@@ -154,7 +154,7 @@ class DataService extends BaseService
             $newArr['count']['redeemcount'] = $newArr['count']['redeemcount']+$v['redeemnum'];
             $newArr['count']['callbackcount'] = $newArr['count']['callbackcount']+$v['callbacknum'];
             $newArr['count']['attitudecount'] = $newArr['count']['attitudecount']+$v['attitudenum'];
-            $newArr['count']['allocationcount'] = $newArr['count']['acceptcount']-$newArr['count']['switchcount'];
+            $newArr['count']['allocationcount'] = $newArr['count']['acceptcount']-$newArr['count']['switchcount'];           
             $newArr['count']['visitcount'] = $newArr['count']['visitcount']+$v['visitnum'];
             $newArr['count']['ordercount'] = $newArr['count']['ordercount']+$v['ordernum'];
             $newArr['count']['refundcount'] = $newArr['count']['refundcount']+$v['refundnum'];
@@ -173,7 +173,7 @@ class DataService extends BaseService
             $newArr['days'][$v['daytime']]['recyclecount'] = $newArr['days'][$v['daytime']]['recyclecount'] + $v['recyclenum'];
             $newArr['days'][$v['daytime']]['redeemcount'] = $newArr['days'][$v['daytime']]['redeemcount'] + $v['redeemnum'];
             $newArr['days'][$v['daytime']]['callbackcount'] = $newArr['days'][$v['daytime']]['callbackcount'] + $v['callbacknum'];
-            $newArr['days'][$v['daytime']]['attitudecount'] = $newArr['days'][$v['daytime']]['attitudecount'] + $v['attitudenum'];
+            $newArr['days'][$v['daytime']]['attitudecount'] = $newArr['days'][$v['daytime']]['attitudecount'] + $v['attitudenum'];         
             $newArr['days'][$v['daytime']]['allocationcount'] = $newArr['days'][$v['daytime']]['acceptcount'] - $newArr['days'][$v['daytime']]['switchcount'];
             $newArr['days'][$v['daytime']]['visitcount'] = $newArr['days'][$v['daytime']]['visitcount'] + $v['visitnum'];
             $newArr['days'][$v['daytime']]['ordercount'] = $newArr['days'][$v['daytime']]['ordercount'] + $v['ordernum'];
