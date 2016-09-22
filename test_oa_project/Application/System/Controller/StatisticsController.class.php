@@ -20,7 +20,6 @@ class StatisticsController extends SystemController
     */
     public function market()
     {
-        echo date("N");echo date('w',strtotime('2016-09-25'));
         //实例化
         $DataService = new DataService();
         $request = I('get.');

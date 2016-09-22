@@ -42,7 +42,14 @@ class AllotController extends BaseController {
         }
         
         foreach($allots as $topkey => $allot){
-            
+            //是否有星期限制？
+            if(!empty($allot['week_text']) && $allot['week_text']!=0){
+                $week_text = explode(',', $allot['week_text']);
+                if(!in_array(date('N'), $week_text)){
+                    $this->success('今天不在允许星期内');exit();
+                }
+            }
+
             //查询分配人
             $join = "left join zl_allocation_systemuser on zl_system_user.system_user_id=zl_allocation_systemuser.system_user_id";
             $allotUser = D('SystemUser')->field('zl_system_user.system_user_id,realname,zone_id')->join($join)->where(array('user_allocation_id'=>$allot['user_allocation_id'],'zl_allocation_systemuser.status'=>1,'usertype'=>array('NEQ',10)))->select();

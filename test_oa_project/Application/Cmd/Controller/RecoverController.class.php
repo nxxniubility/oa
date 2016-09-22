@@ -41,6 +41,13 @@ class RecoverController extends BaseController {
         $zone = $zonedb->field('zone_id,parentid')->where(array('status'=>1))->select();
         
         foreach($abandons as $k => $abandon){
+            //是否有星期限制？
+            if(!empty($abandon['week_text']) && $abandon['week_text']!=0){
+                $week_text = explode(',', $abandon['week_text']);
+                if(!in_array(date('N'), $week_text)){
+                    $this->success('今天不在允许星期内');exit();
+                }
+            }
             //查找相应渠道
             $channelArr = $Arrayhelps->subFinds($channels,$abandon['channel_id'],"channel_id","pid");
             $abandonChannel = array();
