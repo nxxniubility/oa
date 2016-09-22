@@ -57,7 +57,7 @@
 .search .search_position .search_position_show .position_content .position_list li .position_department.bor_bottom {border-bottom:1px solid #dedfdf;}
 .position_department span {float:left;height:39px;line-height:39px;color:#333;text-align:left;}
 .position_department a {float:right;width:39px;height:39px;line-height:39px;text-align:center;}
-.position_department a i {display:inline-block;width:12px;height:6px;margin:0 auto;background:url(../images/market_search-02.png) no-repeat 0 0;}
+.position_department a i {display:inline-block;width:12px;height:6px;margin:16px auto;background:url(../images/market_search-02.png) no-repeat 0 0;}
 .position_department a i.up {background:url(../images/market_search-02.png) no-repeat 0 -6px;}
 .position_content .position_list li .position_destail {display:none;height:69px;line-height:69px;padding-left:3px;border-bottom:1px solid #dedfdf;}
 .position_content .position_list li:last-child .position_destail {border:none;}
@@ -74,7 +74,7 @@
 .search .search_day {width:auto;height:40px;margin-right:11px;}
 .search .search_day .startime_box, .search .search_day .endtime_box {width:auto;height:40px;line-height:40px;font-size:14px;background:#fff;}
 .search_day .startime_box span {float:left;width:64px;height:40px;line-height:40px;text-align:center;background:#c9c8c8;}
-.search_day .afTime {float:left;display:block;width:181px;height:38px;line-height:38px;color:#333;text-indent:13px;border:1px solid #dedfdf;background:#fff url(../images/market_search-03.png) no-repeat 145px center;}
+.search_day .afTime {float:left;display:block;width:181px;height:40px;line-height:40px;color:#333;text-indent:13px;border:1px solid #dedfdf;background:#fff url(../images/market_search-03.png) no-repeat 145px center;}
 .search_day .afTime:focus {border-color:#53b567;background:#fff url(../images/market_search-04.png) no-repeat 145px center;}
 .search_day p {float:left;padding:0 12px;color:#333;}
 /*搜索确定按钮*/
