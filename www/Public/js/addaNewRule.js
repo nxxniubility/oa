@@ -170,5 +170,22 @@ $('.nsSelectPostMan').on('click', function() {
         layer.closeAll();           // 关闭
     });
 });
+$('.week-body-btn').on('click', function() {
+    //getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
+    layer.open({
+        type: 1,                    //  页面层
+        title: false,               //  不显示标题栏
+        area: ['600px', '580px'],
+        shade: .6,                  //  遮罩
+        time: 0,                    //  关闭自动关闭
+        shadeClose: true,           //  遮罩控制关闭层
+        closeBtn: false,            //  不显示关闭按钮
+        shift: 1,                   //  出现动画
+        content: $(".week-body")    //  加载主体内容
+    });
+    $('.nsClose, .nsDetermine').on('click', function() {
+        layer.closeAll();           // 关闭
+    });
+});
 
 

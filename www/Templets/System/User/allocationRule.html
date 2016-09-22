@@ -145,6 +145,14 @@
                 </div>
             </div>
             <div class="nsRow clearfix">
+                <div class="nsLeft">分配星期限制:</div>
+                <div class="nsRight clearfix">
+                    <input type="text" class="nsInp nsDepartment l" disabled="disabled" name="week_text_name">
+                    <input type="button" class="week-body-btn l" value="选择星期">
+                    <input type="hidden" name="week_text" value="" autocomplete="off">
+                </div>
+            </div>
+            <div class="nsRow clearfix">
                 <div class="nsLeft">&nbsp;</div>
                 <div class="nsRight">
                     <input type="submit" class="nsSubmit" value="提交">
@@ -235,14 +243,36 @@
                 <dt class="wNsTwo">所属职位</dt>
                 <dt class="wNsThr">姓名</dt>
             </dl>
-
-            
-
         </div>
         <input type="button" class="nsDetermine nsDetermineSystem" value="确定">
     </div>
 </div>
 <!-- 选择人员E -->
+
+<!-- 选择星期限制 S -->
+<div class="week-body">
+    <div class="nsTop clearfix">
+        <span>选择人员名单</span>
+        <div class="nsClose"></div>
+    </div>
+    <div class="nsCont">
+        <form method="post" action="#">
+            <div class="nsSelectTop clearfix">
+                <input type="text" class="nsSelectSearch l" placeholder="请输入人员姓名">
+                <input type="submit" class="nsSearchSubmit nsSearchSubmitSystem l" value="搜索">
+            </div>
+        </form>
+        <div class="nsDeparMiddle system_body">
+            <dl class="nsTit clearfix">
+                <dt class="wNsOne">选中</dt>
+                <dt class="wNsTwo">所属职位</dt>
+                <dt class="wNsThr">姓名</dt>
+            </dl>
+        </div>
+        <input type="button" class="nsDetermine nsDetermineSystem" value="确定">
+    </div>
+</div>
+<!-- 选择星期限制 E -->
 
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
