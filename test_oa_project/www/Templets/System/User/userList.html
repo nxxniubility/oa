@@ -670,7 +670,7 @@
 
 <!-- 创建订单 S -->
 <div class="reApplyBox popup dn" id="panel2">
-    <div class="alBoxCont" style="padding-top: 18px;">
+    <div class="alBoxCont">
         <div class="alRow clearfix">
             <div class="alRowLeft"></div>
             <div class="alRowRight" id="reserve_hint">
@@ -689,22 +689,11 @@
                 <input type="text" class="alInp" name="reserve_username">
             </div>
         </div>
-        <!--<div class="alRow clearfix">-->
-            <!--<div class="alRowLeft"><i>&#42</i>收款方式:</div>-->
-            <!--<div class="alRowRight">-->
-                <!--<select name="reserve_receivetype" autocomplete="off">-->
-                    <!--<option value="0" selected="selected">选择方式</option>-->
-                    <!--<foreach name="data['receivetype']" item="v">-->
-                        <!--<option value="{$v.num}">{$v.text}</option>-->
-                    <!--</foreach>-->
-                <!--</select>-->
-            <!--</div>-->
-        <!--</div>-->
         <div class="alRow clearfix">
             <div class="alRowLeft"><i>&#42</i>订金:</div>
             <div class="alRowRight forecastingTips">
-                <input type="text" class="alInp" name="reserve_subscription">
-                <!--<span>不得少于100元</span>-->
+                <input type="text" class="alInp" name="reserve_subscription" maxlength="6">
+                <p>仅保留小数点后两位</p>
             </div>
         </div>
         <div class="alRow clearfix">
