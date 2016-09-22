@@ -202,6 +202,8 @@ $('.chart_topright select').change(function(){
 	//获取接口
 	var data = {
 		daytime:market_daytime,
+		role_id:market_role_id,
+		zone_id:market_zone_id,
 		type:_chartnav
 	};
 	common_ajax2(data,get_info_url,'no',getHighcharts);
