@@ -211,7 +211,7 @@ class OrderController extends SystemController
         $orderLog = D("OrderLogs")->where("order_id = $request[order_id]")->field("practicaltime")->order("practicaltime desc")->find();
         $request['practicaltime'] = strtotime($request['practicaltime']);
         if ($request['practicaltime'] < $orderLog['practicaltime']) {
-            $this->ajaxReturn(1,"退款日期有误");
+            $this->ajaxReturn(1,"退款日期不得早于上次缴费时间");
         }       
         if(empty($request['payway'])) $this->ajaxReturn(1, '退款方式！');
         if(empty($request['type']) || $request['type']!='deposit'){
@@ -373,7 +373,7 @@ class OrderController extends SystemController
                 $this->ajaxReturn(2,'优惠名称不得超过40个字符');
             }
             if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
-                $this->ajaxReturn(3,"优惠金额最多只能输入2位小数");
+                $this->ajaxReturn(3,"请输入正确的优惠金额");
             }
             if (!$request['dmoney']) {
                 $this->ajaxReturn(4,'请填写优惠金额');
@@ -471,7 +471,7 @@ class OrderController extends SystemController
                     $this->ajaxReturn(3,'优惠名称不得超过40个字符');
                 }
                 if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
-                    $this->ajaxReturn(3,"优惠金额最多只能输入2位小数");
+                    $this->ajaxReturn(3,"请输入正确的优惠金额");
                 }
                 if (!$request['dmoney']) {
                     $this->ajaxReturn(4,'请填写优惠金额');
