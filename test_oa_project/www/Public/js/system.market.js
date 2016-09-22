@@ -187,15 +187,15 @@ $('.chart_topright select').change(function(){
 		_chartname=$('.chart_tab .cur').text(),
 		_please_select = $('#'+_chartnav).find('.please_select'),
 		_daily_stats = $('#'+_chartnav).find('.daily_stats'),
-		_channel = $('#'+_chartnav).find('.daily_channel2'),
-		_channel_bar = $('#'+_chartnav).find('.channel_bar2'),
-		_channel_pie = $('#'+_chartnav).find('.channel_pie2'),
-		_channel3 = $('#'+_chartnav).find('.daily_channel3'),
-		_channel_bar3 = $('#'+_chartnav).find('.channel_bar3'),
-		_channel_pie3 = $('#'+_chartnav).find('.channel_pie3'),
-		_channel4 = $('#'+_chartnav).find('.daily_channel4'),
-		_channel_bar4 = $('#'+_chartnav).find('.channel_bar4'),
-		_channel_pie4 = $('#'+_chartnav).find('.channel_pie4'),
+		_box2 = $('#'+_chartnav).find('.box2'),
+		_bar2 = $('#'+_chartnav).find('.bar2'),
+		_pie2 = $('#'+_chartnav).find('.pie2'),
+		_box3 = $('#'+_chartnav).find('.box3'),
+		_bar3 = $('#'+_chartnav).find('.bar3'),
+		_pie3 = $('#'+_chartnav).find('.pie3'),
+		_box4 = $('#'+_chartnav).find('.box4'),
+		_bar4 = $('#'+_chartnav).find('.bar4'),
+		_pie4 = $('#'+_chartnav).find('.pie4'),
 		_quality = $('#quality'),
 		_course = $('#course');
 	_please_select.hide();
@@ -222,15 +222,15 @@ $('.chart_topright select').change(function(){
 				};
 				_quality.hide();
 				_course.hide();
-				_channel.hide();
-				_channel_bar.empty();
-				_channel_pie.empty();
-				_channel3.hide();
-				_channel_bar3.empty();
-				_channel_pie3.empty();
-				_channel4.hide();
-				_channel_bar4.empty();
-				_channel_pie4.empty();
+				_box2.hide();
+				_bar2.empty();
+				_pie2.empty();
+				_box3.hide();
+				_bar3.empty();
+				_pie3.empty();
+				_box4.hide();
+				_bar4.empty();
+				_pie4.empty();
 			}else if(_curVal == '2'){
 				var _navName = [];
 				var _values = [];
@@ -253,21 +253,21 @@ $('.chart_topright select').change(function(){
 							data: _data
 						};
 						_values.push(_data);
-						_data_pie.push([k, v]);
+						_data_pie.push([v.pname, v.count]);
 					});
 					channelBar(_navName,_values,_curVal);
 					channelPie(_data_pie,_curVal);
 				};
-				_channel.show();
+				_box2.show();
 				_quality.hide();
 				_course.hide();
 				_daily_stats.empty();
-				_channel3.hide();
-				_channel_bar3.empty();
-				_channel_pie3.empty();
-				_channel4.hide();
-				_channel_bar4.empty();
-				_channel_pie4.empty();
+				_box3.hide();
+				_bar3.empty();
+				_pie3.empty();
+				_box4.hide();
+				_bar4.empty();
+				_pie4.empty();
 			}else if(_curVal == '3'){
 				var _navName = [];
 				var _values = [];
@@ -293,16 +293,16 @@ $('.chart_topright select').change(function(){
 					channelBar(_navName,_values,_curVal);
 					channelPie(_data_pie,_curVal);
 				};
-				_channel3.show();
+				_box3.show();
 				_quality.hide();
 				_course.hide();
 				_daily_stats.empty();
-				_channel.hide();
-				_channel_bar.empty();
-				_channel_pie.empty();
-				_channel4.hide();
-				_channel_bar4.empty();
-				_channel_pie4.empty();
+				_box2.hide();
+				_bar2.empty();
+				_pie2.empty();
+				_box4.hide();
+				_bar4.empty();
+				_pie4.empty();
 			}else if(_curVal == '4'){
 				var _navName = [];
 				var _values = [];
@@ -328,16 +328,16 @@ $('.chart_topright select').change(function(){
 					channelBar(_navName,_values,_curVal);
 					channelPie(_data_pie,_curVal);
 				};
-				_channel4.show();
+				_box4.show();
 				_quality.hide();
 				_course.hide();
 				_daily_stats.empty();
-				_channel.hide();
-				_channel_bar.empty();
-				_channel_pie.empty();
-				_channel3.hide();
-				_channel_bar3.empty();
-				_channel_pie3.empty();
+				_box2.hide();
+				_bar2.empty();
+				_pie2.empty();
+				_box3.hide();
+				_bar3.empty();
+				_pie3.empty();
 			};
 		};
 	};
@@ -389,7 +389,7 @@ function dailyStats(days,values,name){
 //  来源渠道-柱状图
 function channelBar(navName,values,num){
 	var _chartnav=$('.chart_tab .cur').attr('data-value');
-	$('#'+_chartnav).find('.channel_bar'+num).highcharts({
+	$('#'+_chartnav).find('.bar'+num).highcharts({
 		chart:{
 			className:'channel_bar',
 			type:'bar'
@@ -438,7 +438,7 @@ function channelBar(navName,values,num){
 // 来源渠道-圆饼图
 function channelPie(values,num){
 	var _chartnav=$('.chart_tab .cur').attr('data-value');
-	$('#'+_chartnav).find('.channel_pie'+num).highcharts({
+	$('#'+_chartnav).find('.pie'+num).highcharts({
 		chart: {
 			className:'channel_pie',
 	        plotBackgroundColor: null,
