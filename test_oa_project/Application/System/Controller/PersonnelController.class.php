@@ -529,6 +529,9 @@ class PersonnelController extends SystemController {
             //获取参数 验证
             $request = I('post.');
             if(empty($request['realname'])) $this->ajaxReturn(1, '真实姓名不能为空', '', 'realname');
+            if (strlen($request['realname'])>12) {
+                $this->ajaxReturn(1,'优惠详情不得超过12个字符');
+            }
             if(empty($request['username'])) $this->ajaxReturn(1, '手机号码不能为空', '', 'username');
             if(!$checkform->checkMobile($request['username'])) $this->ajaxReturn(1, '手机号码格式有误', '', 'username');
             if(!$checkform->isCompanyEmail($request['email'])) $this->ajaxReturn(1, '邮箱地址输入有误', '', 'email');
@@ -588,6 +591,9 @@ class PersonnelController extends SystemController {
             }else{
                 $checkform = new \Org\Form\Checkform();
                 if(empty($request['realname'])) $this->ajaxReturn(1, '真实姓名不能为空', '', 'realname');
+                if (strlen($request['realname'])>12) {
+                    $this->ajaxReturn(1,'优惠详情不得超过12个字符');
+                }
                 if(empty($request['username'])) $this->ajaxReturn(1, '手机号码不能为空', '', 'username');
                 if(!$checkform->checkMobile($request['username'])) $this->ajaxReturn(1, '手机号码格式有误', '', 'username');
                 if(!$checkform->isCompanyEmail($request['email'])) $this->ajaxReturn(1, '邮箱地址输入有误', '', 'email');
