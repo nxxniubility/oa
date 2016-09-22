@@ -49,7 +49,7 @@
                     <dd class="wFiv">{$v.name}</dd>
                     <dd class="wSix">{$v.channelnames}</dd>
                     <dd class="wSev">{$v.rolenames}</dd>
-                    <dd class="wEve">{:($v['week_text']=='0')?'无':$v['week_text']}</dd>
+                    <dd class="wEve">{:empty($v['week_text'])?'无':$v['week_text']}</dd>
                     <dd class="wEig">{$v.sort}</dd>
                     <dd class="wNin">{:date('Y-m-d H:i:s',$v['createtime'])}</dd>
                     <dd class="wTen">

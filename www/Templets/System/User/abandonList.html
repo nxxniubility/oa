@@ -45,7 +45,7 @@
                         <dd class="wThr">{$v.zonename}</dd>
                         <dd class="wFou">{$v.channelnames}</dd>
                         <dd class="wFiv">{$v.rolenames}</dd>
-                        <dd class="wEig">{:($v['week_text']=='0')?'无':$v['week_text']}</dd>
+                        <dd class="wEig">{:empty($v['week_text'])?'无':$v['week_text']}</dd>
                         <dd class="wSix">{:date('Y-m-d H:i:s',$v['createtime'])}</dd>
                         <dd class="wSev">
                             <a href="javascript:;" class="proSelect"><i></i></a>
