@@ -85,7 +85,7 @@ $('.payPreferentialWay').on('click', function(){
         	$('#cboxClose').remove();
         }
     });
-});
+});$(':input[name="discount_id"]')
 //  关闭colorbox弹窗
 $('.pwConfirm, .notpreferential').on('click',function(){
 	//  关闭colorbox弹窗
@@ -93,12 +93,7 @@ $('.pwConfirm, .notpreferential').on('click',function(){
 	var father = $('.notpreferential').closest('.preferentialWayBox'),
 		radioInp = father.find('input[type="radio"]'),
 		chkInp = father.find('input[type="checkbox"]');
-	//if( radioInp.is(':checked')){
-	//	radioInp.prop('checked',false);
-	//	chkInp.prop('checked',false);
-	//}else {
-	//	return false;
-	//}
+	
 });
 
 
@@ -169,6 +164,9 @@ $('.discountSub').on('click',function(){
         }
         $('#discount_body').removeClass('dn').empty().html(show_html);
         $(':input[name="discount_id"]').val(ids);
+        if (!ids) {
+            $('#discount_body').addClass('dn').empty();
+        }
     }else{
         $('#discount_body').addClass('dn').empty();
         $('.pwChk').attr('checked',false);
