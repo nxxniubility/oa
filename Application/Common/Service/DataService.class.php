@@ -252,6 +252,8 @@ class DataService extends BaseService
         if(!empty($where['role_id'])){
             $systemIds = $this->getRoleIds($where['role_id']);
             $_where['system_user_id'] = array('IN',$systemIds);
+        }elseif(!empty($where['system_user_id'])){
+            $_where['system_user_id'] = $where['system_user_id'];
         }
         $_where['operattype'] = array('IN',$arr[$where['type']]);
         $_where['logtime'] = $where['daytime'];
@@ -287,7 +289,7 @@ class DataService extends BaseService
             foreach($v['children'] as $v2){
                 if( !empty($channelArr[$v2['channel_id']]) ){
                     $_temp_pchannel[$v['channelname']] = $_temp_pchannel[$v['channelname']]+$channelArr[$v2['channel_id']];
-                    $_temp_channel[$v2['channelname']] = array('count'=>$channelArr[$v2['channel_id']],'name'=>$v2['channelname'],'pname'=>$v['channelname']);
+                    $_temp_channel[$v2['channelname'].'('.$v2['channel_id'].')'] = array('count'=>$channelArr[$v2['channel_id']],'name'=>$v2['channelname'],'pname'=>$v['channelname']);
                 }
             }
         }

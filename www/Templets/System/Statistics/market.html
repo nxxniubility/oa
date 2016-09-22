@@ -639,7 +639,7 @@
 								<td>{:!empty($data['dataMarket']['count']['switchcount'])?$data['dataMarket']['count']['switchcount']:'--'}</td>
 								<td>{:!empty($data['dataMarket']['count']['restartcount'])?$data['dataMarket']['count']['restartcount']:'--'}</td>
 								<td>{:!empty($data['dataMarket']['count']['recyclecount'])?$data['dataMarket']['count']['recyclecount']:'--'}</td>
-								<td>{:!empty($data['dataMarket']['count']['redeemcount'])?$data['dataMarket']['count']['redeemcount']:'--'}</td>
+								<td>{:!empty($data['dataMarket']['count']['startime'])?$data['dataMarket']['count']['redeemcount']:'--'}</td>
 								<td>{:!empty($data['dataMarket']['count']['callbackcount'])?$data['dataMarket']['count']['callbackcount']:'--'}</td>
 								<td>{:!empty($data['dataMarket']['count']['attitudecount'])?$data['dataMarket']['count']['attitudecount']:'--'}</td>
 								<td>{:!empty($data['dataMarket']['count']['visitcount'])?$data['dataMarket']['count']['visitcount']:'--'}</td>
@@ -737,7 +737,7 @@
 									<td>{$v.conversionratio}%</td>
 									<td>{$v.chargebackratio}%</td>
 									<td>{$v.totalratio}%</td>
-									<td><a target="_blank" href="{:U('System/Statistics/mymarket',array('system_user_id'=>$v['system_user_id'],'startime'=>str_replace('/','',$data['request']['startime']),'endtime'=>str_replace('/','',$data['request']['endtime'])))}">详情</a></td>
+									<td><a target="_blank" href="{:U('System/Statistics/mymarket')}?{:'system_user_id='.$v['system_user_id'].'&startime='.urlencode($data['request']['startime']).'&endtime='.urlencode($data['request']['endtime'])}">详情</a></td>
 								</tr>
 							</foreach>
 
@@ -754,6 +754,7 @@
 			var market_daytime = '{$data.request.daytime}';
 			var market_zone_id = '{$data.request.zone_id}';
 			var market_role_id = '{$data.request.role_id}';
+			var market_system_user_id = '';
 		</script>
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
