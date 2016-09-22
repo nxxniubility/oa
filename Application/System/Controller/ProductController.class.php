@@ -41,7 +41,7 @@ class ProductController extends SystemController
         //获取数据
         $data = I("post.");
         $data['productname'] = str_replace(' ','',$data['productname']);
-        if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['productname'])){
+        if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$data['productname'])){
             $this->ajaxReturn(1,'不能包含特殊字符');
         }
         if (empty($data['productname'])) {
@@ -75,7 +75,7 @@ class ProductController extends SystemController
         if (!$data['productname']) {
             $this->ajaxReturn(1,'产品名称不为空');
         }
-        if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['productname'])){
+        if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$data['productname'])){
             $this->ajaxReturn(2,'不能包含特殊字符');
         }
         if($data['price'] == 0){
