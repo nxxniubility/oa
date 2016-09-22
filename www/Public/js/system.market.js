@@ -74,16 +74,17 @@ function areaChoose(){
 function openPosition(){
 	var _this = $('.position_department'),
 		_arrow = _this.find('i'),
-		_other = $('.position_destail');
+		_other = _this.parent().find($('.position_destail'));
 	_this.click(function(){
 		var maxLength = $(this).parent().parent().find('li').length,
 			_index = $(this).parents('li').index();
 		if( _index + 1 == maxLength){
-			$(this).parent().find(_other).slideDown(500).parent().find(_arrow).addClass('up');
+			//  同父级下显示/隐藏部门职位
+			$(this).parent().find(_other).slideToggle(500).parent().find(_arrow).toggleClass('up');
 			$(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
-			$(this).addClass('bor_bottom');
+			$(this).toggleClass('bor_bottom');
 		}else {
-			$(this).parent().find(_other).slideDown(500).parent().find(_arrow).addClass('up');
+			$(this).parent().find(_other).slideToggle(500).parent().find(_arrow).toggleClass('up');
 			$(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
 			$(this).parents('.position_list').find('li').eq(maxLength-1).find(_this).removeClass('bor_bottom');
 		}
