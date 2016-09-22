@@ -599,6 +599,9 @@ class PersonnelController extends SystemController {
                 if(empty($request['straightime'])) $this->ajaxReturn(1, '转正时间不能为空' );
                 $request['entrytime'] = strtotime($request['entrytime']);
                 $request['straightime'] = strtotime($request['straightime']);
+                if ($request['entrytime'] > $request['straightime']) {
+                    $this->ajaxReturn(1, '转正时间不能早于入职时间' );
+                }
                 //获取 数据判断
                 $request['system_user_id'] = $system_user_id;
                 $systemMain = new SystemMain();
