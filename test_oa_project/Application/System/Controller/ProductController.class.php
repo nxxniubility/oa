@@ -41,7 +41,7 @@ class ProductController extends SystemController
         //获取数据
         $data = I("post.");
         if (empty(trim($data['productname']))) {
-            $this->ajaxReturn(1,'产品名称不能为空?');
+            $this->ajaxReturn(1,'产品名称不能为空');
         }
         if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$data['price'])){
             $this->ajaxReturn(2,"优惠金额最多只能输入2位小数且不能有其他字符");
