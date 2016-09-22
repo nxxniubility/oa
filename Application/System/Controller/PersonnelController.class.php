@@ -708,7 +708,7 @@ class PersonnelController extends SystemController {
             $request['entrytime'] = strtotime($request['entrytime']);
             $request['straightime'] = strtotime($request['straightime']);
             if ($request['entrytime'] > $request['straightime']) {
-                $this->ajaxReturn(2, '还没入职就想转正？？？？？', '', '');
+                $this->ajaxReturn(2, '转正时间不能早于入职时间', '', '');
             }
             //数据操作
             $systemMain = new SystemMain();

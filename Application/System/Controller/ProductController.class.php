@@ -71,6 +71,7 @@ class ProductController extends SystemController
     {
         //获取数据
         $data = I("post.");
+        $data['productname'] = trim($data['productname']);
         if (!$data['productname']) {
             $this->ajaxReturn(1,'产品名称不为空');
         }
