@@ -361,7 +361,7 @@ textarea{resize:none;}
 /*=================================== 黄金分割线 ===================================*/
 .dn { display: none;}
 .reApplyBox { position: relative; width: 465px; height: auto; background: #fff;}
-.alBoxCont { width: 490px; margin: 0 auto; padding-top: 35px;}
+.alBoxCont { width: 490px; margin: 0 auto; padding-top: 18px;}
 .alBoxCont .alRow { margin-bottom: 20px;}
 .alRow .alRowLeft, .alRow .alRowRight { float: left; line-height: 30px;}
 .alRow .alRowLeft { width: 103px; margin-right: 18px; text-align: right; color: #333;}
@@ -675,3 +675,5 @@ textarea{resize:none;}
 .Filter .frame .details .screenReset:hover {color: #333;background: #c8c8c8;}
 #pullDownSet select#pPosition {width:120px;}
 .topRight .return.refresh {margin-right:15px;}
+/*0922*/
+.alRow .alRowRight p {line-height:20px;margin-left:16px;font-size:12px;color:#ff0000;}
