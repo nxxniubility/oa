@@ -154,7 +154,7 @@ class DataService extends BaseService
             $newArr['count']['redeemcount'] = $newArr['count']['redeemcount']+$v['redeemnum'];
             $newArr['count']['callbackcount'] = $newArr['count']['callbackcount']+$v['callbacknum'];
             $newArr['count']['attitudecount'] = $newArr['count']['attitudecount']+$v['attitudenum'];
-            $newArr['count']['allocationcount'] = $newArr['count']['allocationcount']+$newArr['count']['acceptcount']-$newArr['count']['switchcount'];
+            $newArr['count']['allocationcount'] = $newArr['count']['acceptcount']-$newArr['count']['switchcount'];
             $newArr['count']['visitcount'] = $newArr['count']['visitcount']+$v['visitnum'];
             $newArr['count']['ordercount'] = $newArr['count']['ordercount']+$v['ordernum'];
             $newArr['count']['refundcount'] = $newArr['count']['refundcount']+$v['refundnum'];
@@ -174,7 +174,7 @@ class DataService extends BaseService
             $newArr['days'][$v['daytime']]['redeemcount'] = $newArr['days'][$v['daytime']]['redeemcount'] + $v['redeemnum'];
             $newArr['days'][$v['daytime']]['callbackcount'] = $newArr['days'][$v['daytime']]['callbackcount'] + $v['callbacknum'];
             $newArr['days'][$v['daytime']]['attitudecount'] = $newArr['days'][$v['daytime']]['attitudecount'] + $v['attitudenum'];
-            $newArr['days'][$v['daytime']]['allocationcount'] = $newArr['days'][$v['daytime']]['allocationcount'] + $v['acceptcount']-$v['switchcount'];
+            $newArr['days'][$v['daytime']]['allocationcount'] = $newArr['days'][$v['daytime']]['acceptcount'] - $newArr['days'][$v['daytime']]['switchcount'];
             $newArr['days'][$v['daytime']]['visitcount'] = $newArr['days'][$v['daytime']]['visitcount'] + $v['visitnum'];
             $newArr['days'][$v['daytime']]['ordercount'] = $newArr['days'][$v['daytime']]['ordercount'] + $v['ordernum'];
             $newArr['days'][$v['daytime']]['refundcount'] = $newArr['days'][$v['daytime']]['refundcount'] + $v['refundnum'];
@@ -201,7 +201,7 @@ class DataService extends BaseService
             $newArr['systemuser'][$v['system_user_id']]['redeemcount'] = $newArr['systemuser'][$v['system_user_id']]['redeemcount']+$v['redeemnum'];
             $newArr['systemuser'][$v['system_user_id']]['callbackcount'] = $newArr['systemuser'][$v['system_user_id']]['callbackcount']+$v['callbacknum'];
             $newArr['systemuser'][$v['system_user_id']]['attitudecount'] = $newArr['systemuser'][$v['system_user_id']]['attitudecount']+$v['attitudenum'];
-            $newArr['systemuser'][$v['system_user_id']]['allocationcount'] = $newArr['systemuser'][$v['system_user_id']]['allocationcount']+$newArr['systemuser'][$v['system_user_id']]['acceptcount']-$newArr['systemuser'][$v['system_user_id']]['switchcount'];
+            $newArr['systemuser'][$v['system_user_id']]['allocationcount'] = $newArr['systemuser'][$v['system_user_id']]['acceptcount']-$newArr['systemuser'][$v['system_user_id']]['switchcount'];
             $newArr['systemuser'][$v['system_user_id']]['visitcount'] = $newArr['systemuser'][$v['system_user_id']]['visitcount']+$v['visitnum'];
             $newArr['systemuser'][$v['system_user_id']]['ordercount'] = $newArr['systemuser'][$v['system_user_id']]['ordercount']+$v['ordernum'];
             $newArr['systemuser'][$v['system_user_id']]['refundcount'] = $newArr['systemuser'][$v['system_user_id']]['refundcount']+$v['refundnum'];
