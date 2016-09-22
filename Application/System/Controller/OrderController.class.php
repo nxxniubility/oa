@@ -369,7 +369,7 @@ class OrderController extends SystemController
             }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
                 $this->ajaxReturn(2,'不能包含特殊字符');
             }
-            if (strlen($request['dname'])>=40) {
+            if (strlen($request['dname'])>40) {
                 $this->ajaxReturn(2,'优惠名称不得超过40个字符');
             }
             if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
@@ -383,7 +383,7 @@ class OrderController extends SystemController
             if (!$request['remark']) {
                 $this->ajaxReturn(7,'请填写优惠详情');
             }
-            if (strlen($request['remark'])>=100) {
+            if (strlen($request['remark'])>100) {
                 $this->ajaxReturn(8,'优惠详情不得超过100个字符');
             } 
             if(!$request['pid']){
@@ -414,13 +414,13 @@ class OrderController extends SystemController
             }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
                 $this->ajaxReturn(2,'不能包含特殊字符');
             }
-            if (strlen($request['dname'])>=40) {
+            if (strlen($request['dname'])>40) {
                 $this->ajaxReturn(3,'优惠分类名称不得超过40个字符');
             }
             if (!$request['remark']) {
                 $this->ajaxReturn(4,'请填写优惠详情');
             }
-            if (strlen($request['remark'])>=100) {
+            if (strlen($request['remark'])>100) {
                 $this->ajaxReturn(5,'优惠详情不得超过100个字符');
             }
             $orderMain = new OrderMainController();
@@ -440,7 +440,7 @@ class OrderController extends SystemController
     {
         if (IS_POST) {
             $request = I("post.");
-            if (strlen($request['remark'])>=100) {
+            if (strlen($request['remark'])>100) {
                 $this->ajaxReturn(5,'优惠详情不得超过100个字符');
             }
             if ($request['sign'] == 10) {
@@ -453,7 +453,7 @@ class OrderController extends SystemController
                 }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$save['dname'])){
                     $this->ajaxReturn(2,'不能包含特殊字符');
                 }
-                if (strlen($save['dname'])>=40) {
+                if (strlen($save['dname'])>40) {
                     $this->ajaxReturn(3,'优惠名称不得超过40个字符');
                 }
                 $update = D("DiscountParent")->where("discount_parent_id = $discount_parent_id")->save($save);
@@ -470,7 +470,7 @@ class OrderController extends SystemController
                 }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
                     $this->ajaxReturn(2,'不能包含特殊字符');
                 }
-                if (strlen($request['dname'])>=40) {
+                if (strlen($request['dname'])>40) {
                     $this->ajaxReturn(3,'优惠名称不得超过40个字符');
                 }
                 if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
