@@ -247,6 +247,7 @@
             if($(':input[name="nsSex"]:checked').val()==1){
                 if($(':input[name="introducermobile"]').val().length==0){
                     layer.msg('转介绍必须填写转介绍人手机号码', {icon:2});
+                    return false;
                 }
             }
             var data = {

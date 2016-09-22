@@ -27,14 +27,14 @@
                 </div>
             </div>
             <!--<div class="nsRow clearfix">-->
-                <!--<div class="nsLeft l"><i>*</i>分配类型：</div>-->
-                <!--<div class="nsRight l">-->
-                    <!--<select class="newSelect" name="weighttype">-->
-                        <!--<option value="10">全部分配</option>-->
-                        <!--<option value="20">新量分配</option>-->
-                        <!--<option value="30">旧量分配</option>-->
-                    <!--</select>-->
-                <!--</div>-->
+            <!--<div class="nsLeft l"><i>*</i>分配类型：</div>-->
+            <!--<div class="nsRight l">-->
+            <!--<select class="newSelect" name="weighttype">-->
+            <!--<option value="10">全部分配</option>-->
+            <!--<option value="20">新量分配</option>-->
+            <!--<option value="30">旧量分配</option>-->
+            <!--</select>-->
+            <!--</div>-->
             <!--</div>-->
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>开始天数:</div>
@@ -65,9 +65,9 @@
                 <div class="nsRight">
                     <div class="selectbox2 l">
                         <dl class="select">
-                             <dt>
-                                <div class="select_title l" >请选择所属区域</div>
-                                <div class="arrow r" ></div>
+                            <dt>
+                            <div class="select_title l" >请选择所属区域</div>
+                            <div class="arrow r" ></div>
                             </dt>
                             <foreach name = "data['zoneAll']" item = "v1">
                                 <dd class="fxDone zonesele" data-value="{$v1['zone_id']}">{$v1['name']}</dd>
@@ -117,9 +117,9 @@
                             <foreach name="data['channel']['data']" item="v" key="k">
                                 <dd class="fxDone" data-value="{$v.channel_id}">{$v.channelname}</dd>
                                 <!--<if condition="!empty($v['children'])">-->
-                                    <!--<foreach name = "v['children']" item = "v2">-->
-                                        <!--<dd class="fxDone" data-value="{$v2.channel_id}">&nbsp;&nbsp;├─ {$v2.channelname}</dd>-->
-                                    <!--</foreach>-->
+                                <!--<foreach name = "v['children']" item = "v2">-->
+                                <!--<dd class="fxDone" data-value="{$v2.channel_id}">&nbsp;&nbsp;├─ {$v2.channelname}</dd>-->
+                                <!--</foreach>-->
                                 <!--</if>-->
                             </foreach>
                         </dl>
@@ -127,7 +127,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>分配对应职位:</div>
                 <div class="nsRight clearfix" id="role_name">
@@ -257,21 +257,21 @@
     </div>
     <div class="nsCont">
         <form method="post" action="#">
-        	<div class="week_box">
-        		<table cellpadding="0" cellspacing="0" id="week_table">
-        			<tr>
-        				<th>选中</th>
-        				<th>星期</th>
-        			</tr>
-        			<tr><td><input type="checkbox" name="week_chk" value="1" autocomplete="off"></td><td>星期一</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk" value="2" autocomplete="off"></td><td>星期二</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk" value="3" autocomplete="off"></td><td>星期三</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk" value="4" autocomplete="off"></td><td>星期四</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk" value="5" autocomplete="off"></td><td>星期五</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk" value="6" autocomplete="off"></td><td>星期六</td></tr>
-        			<tr><td><input type="checkbox" name="week_chk" value="7" autocomplete="off"></td><td>星期日</td></tr>
-        		</table>
-        	</div>
+            <div class="week_box">
+                <table cellpadding="0" cellspacing="0" id="week_table">
+                    <tr>
+                        <th>选中</th>
+                        <th>星期</th>
+                    </tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="1" autocomplete="off"></td><td>星期一</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="2" autocomplete="off"></td><td>星期二</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="3" autocomplete="off"></td><td>星期三</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="4" autocomplete="off"></td><td>星期四</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="5" autocomplete="off"></td><td>星期五</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="6" autocomplete="off"></td><td>星期六</td></tr>
+                    <tr><td><input type="checkbox" name="week_chk" value="7" autocomplete="off"></td><td>星期日</td></tr>
+                </table>
+            </div>
         </form>
         <input type="button" class="add_confirm" value="确定">
     </div>
@@ -379,9 +379,9 @@
             };
             common_ajax(data);
         });
-        
+
     });
-     function getSystem (role_ids,zone_id){
+    function getSystem (role_ids,zone_id){
         $.ajax({
             url:"{:U('System/User/allocationRule')}",
             dataType:'json',
