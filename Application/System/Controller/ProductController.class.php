@@ -40,7 +40,7 @@ class ProductController extends SystemController
     {
         //获取数据
         $data = I("post.");
-        $data['productname'] = trim($data['productname']);
+        $data['productname'] = str_replace(' ','',$data['productname']);
         if (empty($data['productname'])) {
             $this->ajaxReturn(1,'产品名称不能为空');
         }
@@ -68,7 +68,7 @@ class ProductController extends SystemController
     {
         //获取数据
         $data = I("post.");
-        $data['productname'] = trim($data['productname']);
+        $data['productname'] = str_replace(' ','',$data['productname']);
         if (!$data['productname']) {
             $this->ajaxReturn(1,'产品名称不为空');
         }
