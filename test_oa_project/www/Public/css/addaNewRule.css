@@ -110,3 +110,18 @@
 .nsDetermine { display: block; width: 65px; height: 30px; line-height: 30px; margin-bottom: 32px; font-size: 12px; color: #fff; border: none; background: #53b567; cursor: pointer;}
 
 .newSelect { width: 470px; height: 30px; border: 1px solid #ccc; color: #555;}
+
+/*0922*/
+.week-body-btn, .week-edit-btn, .week-recover-btn, .edit-recover-btn {display:block;width:100px;height:30px;line-height:30px;font-size:12px;color:#555;text-align:center;border:1px solid #ccc;background:#f7f7f7;cursor:pointer;}
+.week-body, .week-edit-body, .week-recover, .week-edit-recover {position:relative;display:none;border:8px solid #7a7a7a;background: #fff;}
+.edit_confirm, .add_confirm, .recover_confirm, .edit_recover_confirm {display:block;width:65px;height:30px;line-height:30px;margin-bottom:32px;font-size:12px;color:#fff;border:none;background:#53b567;cursor:pointer;}
+
+#week_table, #week_edit_table, #recover_table, #edit_recover_table {width:100%;margin-bottom:20px;border:1px solid #e1e6eb;border-right:none;border-bottom:none;background:#fff;} 
+#week_table tr, #week_edit_table tr, #recover_table tr, #edit_recover_table tr {height:38px;line-height:38px;}
+#week_table th, #week_table td, 
+#week_edit_table th, #week_edit_table td, 
+#recover_table th, #recover_table td,
+#edit_recover_table th, #edit_recover_table td {font-size:12px;border-right:1px solid #e1e6eb;border-bottom:1px solid #e1e6eb;}
+#week_table th, #week_edit_table th, #recover_table th, #edit_recover_table th {color:#999;background:#f5f6fa;}
+#week_table td, #week_edit_table td, #recover_table td, #edit_recover_table td {color:#696969;text-align:center;} 
+

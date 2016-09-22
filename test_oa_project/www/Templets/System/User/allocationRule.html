@@ -252,24 +252,28 @@
 <!-- 选择星期限制 S -->
 <div class="week-body">
     <div class="nsTop clearfix">
-        <span>选择人员名单</span>
+        <span>选择星期</span>
         <div class="nsClose"></div>
     </div>
     <div class="nsCont">
         <form method="post" action="#">
-            <div class="nsSelectTop clearfix">
-                <input type="text" class="nsSelectSearch l" placeholder="请输入人员姓名">
-                <input type="submit" class="nsSearchSubmit nsSearchSubmitSystem l" value="搜索">
-            </div>
+        	<div class="week_box">
+        		<table cellpadding="0" cellspacing="0" id="week_table">
+        			<tr>
+        				<th>选中</th>
+        				<th>星期</th>
+        			</tr>
+        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期一</td></tr>
+        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期二</td></tr>
+        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期三</td></tr>
+        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期四</td></tr>
+        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期五</td></tr>
+        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期六</td></tr>
+        			<tr><td><input type="checkbox" name="week_chk"></td><td>星期日</td></tr>
+        		</table>
+        	</div>
         </form>
-        <div class="nsDeparMiddle system_body">
-            <dl class="nsTit clearfix">
-                <dt class="wNsOne">选中</dt>
-                <dt class="wNsTwo">所属职位</dt>
-                <dt class="wNsThr">姓名</dt>
-            </dl>
-        </div>
-        <input type="button" class="nsDetermine nsDetermineSystem" value="确定">
+        <input type="button" class="add_confirm nsDetermineSystem" value="确定">
     </div>
 </div>
 <!-- 选择星期限制 E -->

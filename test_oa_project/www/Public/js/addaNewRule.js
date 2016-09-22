@@ -170,12 +170,14 @@ $('.nsSelectPostMan').on('click', function() {
         layer.closeAll();           // 关闭
     });
 });
+
+//  添加分配新规则弹窗
 $('.week-body-btn').on('click', function() {
     //getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
     layer.open({
         type: 1,                    //  页面层
         title: false,               //  不显示标题栏
-        area: ['600px', '580px'],
+        area: ['400px', 'auto'],
         shade: .6,                  //  遮罩
         time: 0,                    //  关闭自动关闭
         shadeClose: true,           //  遮罩控制关闭层
@@ -183,9 +185,64 @@ $('.week-body-btn').on('click', function() {
         shift: 1,                   //  出现动画
         content: $(".week-body")    //  加载主体内容
     });
-    $('.nsClose, .nsDetermine').on('click', function() {
+    $('.nsClose, .add_confirm').on('click', function() {
         layer.closeAll();           // 关闭
     });
 });
 
+//  修改分配规则弹窗
+$('.week-edit-btn').on('click', function() {
+    //getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
+    layer.open({
+        type: 1,                    //  页面层
+        title: false,               //  不显示标题栏
+        area: ['400px', 'auto'],
+        shade: .6,                  //  遮罩
+        time: 0,                    //  关闭自动关闭
+        shadeClose: true,           //  遮罩控制关闭层
+        closeBtn: false,            //  不显示关闭按钮
+        shift: 1,                   //  出现动画
+        content: $(".week-edit-body")    //  加载主体内容
+    });
+    $('.nsClose, .edit_confirm').on('click', function() {
+        layer.closeAll();           // 关闭
+    });
+});
 
+//  添加回收新规则弹窗
+$('.week-recover-btn').on('click', function() {
+    //getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
+    layer.open({
+        type: 1,                    //  页面层
+        title: false,               //  不显示标题栏
+        area: ['400px', 'auto'],
+        shade: .6,                  //  遮罩
+        time: 0,                    //  关闭自动关闭
+        shadeClose: true,           //  遮罩控制关闭层
+        closeBtn: false,            //  不显示关闭按钮
+        shift: 1,                   //  出现动画
+        content: $(".week-recover")    //  加载主体内容
+    });
+    $('.nsClose, .recover_confirm').on('click', function() {
+        layer.closeAll();           // 关闭
+    });
+});
+
+//  修改回收规则弹窗
+$('.edit-recover-btn').on('click', function() {
+    //getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
+    layer.open({
+        type: 1,                    //  页面层
+        title: false,               //  不显示标题栏
+        area: ['400px', 'auto'],
+        shade: .6,                  //  遮罩
+        time: 0,                    //  关闭自动关闭
+        shadeClose: true,           //  遮罩控制关闭层
+        closeBtn: false,            //  不显示关闭按钮
+        shift: 1,                   //  出现动画
+        content: $(".week-edit-recover")    //  加载主体内容
+    });
+    $('.nsClose, .edit_recover_confirm').on('click', function() {
+        layer.closeAll();           // 关闭
+    });
+});
