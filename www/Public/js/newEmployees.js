@@ -180,7 +180,7 @@ $('.nsSelectPost').on('click', function() {
         shift: 1, 					//	出现动画
         content: $(".department")	//  加载主体内容
     });
-    $('.nsClose, .nsDetermine').on('click', function() {
+    $('.nsClose').on('click', function() {
         layer.closeAll(); 			// 关闭
     });
 });

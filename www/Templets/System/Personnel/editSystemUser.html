@@ -204,6 +204,11 @@
         $('.nsDetermine').click(function(){
             var role_id = '';
             var role_name = ''
+            var chenum = $(':input[name="nsChk"]:checked').length;
+            if(chenum>3){
+                layer.msg('职位多选不能多于3个', {icon:2});
+                return false;
+            }
             for(var i=0;i<$(':input[name="nsChk"]:checked').length;i++){
                 if(i==0){
                     role_id += $(':input[name="nsChk"]:checked').eq(i).val();
@@ -215,6 +220,7 @@
             }
             $(':input[name="role_id"]').val(role_id);
             $(':input[name="role_name"]').val(role_name);
+            layer.closeAll();
         });
         //搜索职位相关-检索
         $('.nsSearchSubmit').click(function(){
