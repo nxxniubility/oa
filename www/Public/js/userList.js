@@ -444,20 +444,3 @@ function getSystemUser(page,type){
     };
 };
 
-
-function SetSameHeight(obj1,obj2,obj3) { 
-     var h1 = $(obj1).outerHeight();	//获取对象1的高度
-     var h2 = $(obj2).outerHeight();  
-     var h3 = $(obj3).outerHeight();  
-     var mh = Math.max( h1, h2, h3); 		//比较一下
-     $(obj1).height(mh); 
-     $(obj2).height(mh); 
-     $(obj3).height(mh);
-}
-$(function(){
-	var tdHeight1 = $('#table1').find('td'),
-		tdHeight2 = $('#table2_div').find('td'),
-		tdHeight3 = $('#table3').find('td');
-	SetSameHeight(tdHeight1,tdHeight2);
-	SetSameHeight(tdHeight2,tdHeight3);	
-});
