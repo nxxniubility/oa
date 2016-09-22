@@ -34,7 +34,7 @@
                     <dt class="wFiv">所属区域</dt>
                     <dt class="wSix">渠道</dt>
                     <dt class="wSev">分配职位</dt>
-                    <dt class="wSev">启用星期</dt>
+                    <dt class="wEve">启用星期</dt>
                     <dt class="wEig">分配排序</dt>
                     <dt class="wNin">创建时间</dt>
                     <dt class="wTen">操作</dt>
@@ -49,7 +49,7 @@
                     <dd class="wFiv">{$v.name}</dd>
                     <dd class="wSix">{$v.channelnames}</dd>
                     <dd class="wSev">{$v.rolenames}</dd>
-                    <dd class="wSev">{:($v['week_text']=='0')?'无':$v['week_text']}</dd>
+                    <dd class="wEve">{:($v['week_text']=='0')?'无':$v['week_text']}</dd>
                     <dd class="wEig">{$v.sort}</dd>
                     <dd class="wNin">{:date('Y-m-d H:i:s',$v['createtime'])}</dd>
                     <dd class="wTen">

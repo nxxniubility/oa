@@ -33,10 +33,11 @@
 .setContList .wFou { width: 6%;}
 .setContList .wFiv { width: 10%;text-indent: 10px;}
 .setContList .wSix { width: 8%;}
-.setContList .wSev { width: 22%;}
+.setContList .wSev { width: 14%;}
 .setContList .wEig { width: 5%;}
 .setContList .wNin { width: 15%; text-indent: 20px;}
 .setContList .wTen { width: 5.6%;}
+.setContList .wEve { width: 8%;}
 .setContList dl.on dd.wNin { color: #53b567;}
 .setContList .proSelect { display: inline-block; width: 40px; height: 40px;}
 .setContList .proSelect i { display: inline-block; width: 12px; height: 6px; margin-left: 6px; background: url(../images/newSys_icon-01.png) no-repeat; background-position: 0 -60px;}

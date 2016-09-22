@@ -92,3 +92,6 @@
 
 .wrTopInfo .zixun td span { margin-left: 5px;}
 .reasonTxt { width: 335px; height: 142px; padding: 10px; border: 1px solid #ccc; resize: none;}
+
+/*0922*/
+.wrListBox .listRight .wrBox2Cont .wrReason p img {float:none;width:80px;height:auto;margin:0 4px 0 0;border-radius:initial;}
