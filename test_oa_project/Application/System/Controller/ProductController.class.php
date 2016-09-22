@@ -40,7 +40,8 @@ class ProductController extends SystemController
     {
         //获取数据
         $data = I("post.");
-        if (empty(trim($data['productname']))) {
+        $data['productname'] = trim($data['productname']);
+        if (empty($data['productname'])) {
             $this->ajaxReturn(1,'产品名称不能为空');
         }
         if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$data['price'])){
