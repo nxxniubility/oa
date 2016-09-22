@@ -45,7 +45,7 @@ class ProductController extends SystemController
             $this->ajaxReturn(1,'产品名称不能为空');
         }
         if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$data['price'])){
-            $this->ajaxReturn(2,"优惠金额最多只能输入2位小数且不能有其他字符");
+            $this->ajaxReturn(2,"优惠金额最多只能输入2位小数");
         }
         if($data['price'] == 0){
             $this->ajaxReturn(3,"金额不能为零,你这样做我们会血亏的");
@@ -75,7 +75,10 @@ class ProductController extends SystemController
             $this->ajaxReturn(1,'产品名称不为空');
         }
         if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$data['price'])){
-            $this->ajaxReturn(3,"优惠金额最多只能输入2位小数且不能有其他字符");
+            $this->ajaxReturn(2,"优惠金额最多只能输入2位小数");
+        }
+        if($data['price'] == 0){
+            $this->ajaxReturn(3,"金额不能为零,你这样做我们会血亏的");
         }
         if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(5,'请选择产品类型');
         //执行操作
