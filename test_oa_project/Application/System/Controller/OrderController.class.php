@@ -372,8 +372,8 @@ class OrderController extends SystemController
             if (strlen($request['dname'])>=40) {
                 $this->ajaxReturn(2,'优惠名称不得超过40个字符');
             }
-            if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['price'])){
-                $this->ajaxReturn(3,"优惠金额最多只能输入2位小数,且必须为数字");
+            if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
+                $this->ajaxReturn(3,"优惠金额最多只能输入2位小数");
             }
             if (!$request['dmoney']) {
                 $this->ajaxReturn(4,'请填写优惠金额');
@@ -470,8 +470,8 @@ class OrderController extends SystemController
                 if (strlen($request['dname'])>=40) {
                     $this->ajaxReturn(3,'优惠名称不得超过40个字符');
                 }
-                if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['price'])){
-                    $this->ajaxReturn(3,"优惠金额最多只能输入2位小数,且必须为数字");
+                if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
+                    $this->ajaxReturn(3,"优惠金额最多只能输入2位小数");
                 }
                 if (!$request['dmoney']) {
                     $this->ajaxReturn(4,'请填写优惠金额');
