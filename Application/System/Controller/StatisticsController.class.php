@@ -4,6 +4,7 @@ namespace System\Controller;
 use Api\Controller\DataController;
 use Common\Controller\SystemController;
 use Common\Service\DataService;
+use Common\Service\SystemUserService;
 use Common\Service\DepartmentService;
 use Common\Service\RoleService;
 use Common\Service\ZoneService;
@@ -59,12 +60,12 @@ class StatisticsController extends SystemController
     */
     public function mymarket()
     {
-        $systemUserInfo = $this->system_user;
         //实例化
         $DataService = new DataService();
+        $SystemUser = new SystemUserService();
         $request = I('get.');
         if (empty($request['system_user_id'])) {
-            $request['system_user_id'] = $systemUserInfo['system_user_id'];
+            $request['system_user_id'] = $this->system_user_id;
         }
         if(empty($request['startime'])){
             $request['startime'] = date('Y/m/d');
@@ -74,7 +75,8 @@ class StatisticsController extends SystemController
         }
         $where['system_user_id'] = $request['system_user_id'];
         $where['daytime'] = $request['startime'].'-'.$request['endtime'];
-dump($where);
+        $result = $SystemUser->getListCache(array('system_user_id'=>$where['system_user_id']));
+        $systemUserInfo = $result['data'];
         $result = $DataService->getDataMarket($where);
         // if ($result['code'] != 0) {
         //     $this->ajaxReturn();
