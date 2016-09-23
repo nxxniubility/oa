@@ -149,42 +149,6 @@ $('.refundCencel').on('click',function(){
     $("#refund").colorbox.close();
 });*/
 
-//  每行显示“详情”
-$('#forTable tbody  tr').each(function(index, e) {			
-    $(e).hover(function(e){
-		var e = e || window.event;
-		var _x=(e.pageX?e.pageX:e.clientX)+9;
-		var _y=parseInt($(this).offset().top)+9;
-	   $(this).find('.detailLink').css({"left":_x,"top":_y});
-	   $(this).find('.detailLink').show();
-	},function(e){
-	  	$(this).find('.detailLink').hide();
-	});
-});
-$('.detailLink').on("mouseover",function(e){
-	 var e = e || window.event;	
-	 e.stopPropagation();
-	 e.preventDefault(); 
-	 return false;
-});
-$('.detailLink').on("mouseenter",function(e){
-	 var e = e || window.event;	
-	 e.stopPropagation();
-	 e.preventDefault(); 
-	 return false;
-});
-$('.detailLink').on("mouseleave",function(e){
-	 var e = e || window.event;	
-	 e.stopPropagation();
-	 e.preventDefault(); 
-	 return false;
-});
-$('.detailLink').on("mouseout",function(e){
-	 var e = e || window.event;	
-	 e.stopPropagation();
-	 e.preventDefault(); 
-	 return false;
-});
 
 selectbox();
 //下拉框
@@ -325,7 +289,6 @@ $(document).on('click','.depositBtn', function(){
 //$('.raConfirm').on('click',function(){
 //	$('.depositBox').colorbox.close();
 //});
-
 //  收款
 $(document).on('click','.receivablesBtn', function(){
     //提示信息
@@ -361,14 +324,14 @@ $(document).on('click','.receivablesBtn', function(){
         		_val = '';
         		_this.val('') ; 
         	}
-        	
-        }
+        },
     });
     
     //  收款日期选择
     setTimeout(function(){
         var myDate = new Date();
         ymd = myDate.getFullYear()+'/'+(myDate.getMonth()+1)+'/'+myDate.getDate();
+        alert(ymd);
 		$(".receivablesTime").val(ymd).glDatePicker({
             selectableDateRange: [
                 {
