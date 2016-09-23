@@ -61,7 +61,7 @@
 .product_box.create_box .proDescribe, .product_box.edit_box .proDescribe {width:200px;height:65px;padding:5px;font-size:14px;color:#a6a7a7;text-align:left;border:1px solid #ccc;resize:none;}
 
 /*0922*/
-.product_box .z_rows .price_tips {margin-left:10px;font-size:12px;color:#ff0000;}
+.product_box .z_rows .price_tips {width:202px;margin-left:10px;font-size:12px;color:#ff0000;}
 
 /*列表*/
 #productTable {width:100%;margin:20px auto 40px;font-size:12px;}
