@@ -171,7 +171,21 @@ $('.nsSelectPostMan').on('click', function() {
     });
 });
 
-//  添加分配新规则弹窗
+//  启用星期选择
+weekChk();
+function weekChk(){
+	$(document).on('click', '.week_box div', function(){
+		var _this = $(this);
+		if(_this.hasClass('cur')){
+			_this.removeClass('cur');
+		}else {
+			_this.addClass('cur');
+		}
+	});
+		
+}
+
+/*//  添加分配新规则弹窗
 $('.week-body-btn').on('click', function() {
     //getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
     layer.open({
@@ -245,4 +259,4 @@ $('.edit-recover-btn').on('click', function() {
     $('.nsClose, .edit_recover_confirm').on('click', function() {
         layer.closeAll();           // 关闭
     });
-});
+});*/
