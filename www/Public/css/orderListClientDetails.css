@@ -357,3 +357,7 @@ a.b-radio-checked {background-position: -14px 0px;}
 .listRight#msgCont .wrBox2.msgCurr .wrBox2Top .msgListInfo {color:#f8a840;}
 .listRight#msgCont .wrBox2.msgCurr .wrBox2Top .msgListCont {color:#fff;background:#f8a840;}
 
+/*0923*/
+.listRight#orderCont li .wrBox2 .wrBox2Top .preferential {height:auto;}
+.listRight#orderCont li .wrBox2 .wrBox2Top .preferential span {width:70px;margin-right:0;}
+.listRight#orderCont li .wrBox2 .wrBox2Top .preferential ul {width:90%;height:auto;}
