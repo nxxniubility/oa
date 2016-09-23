@@ -69,7 +69,7 @@ $(document).on('click', '.btn_reserve', function(){
         title: '创建订单', 				//	不显示标题栏
         area: ['490px', '340px'],
         closeBtn:2,
-        shade: 0, 					//	遮罩
+        shade: .6, 					//	遮罩
         time: 0, 					//  关闭自动关闭
         shadeClose: true, 			//	遮罩控制关闭层
         shift: 1, 					//	出现动画
