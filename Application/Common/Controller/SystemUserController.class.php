@@ -110,7 +110,6 @@ class SystemUserController extends BaseController
         //数据验证
         $username = trim($data['username']);
         $userInfo = D('SystemUser')->getSystemUser(array('username'=>encryptPhone($username,C('PHONE_CODE_KEY'))));
-
         if (empty($userInfo)) return array('code'=>'3', 'data'=>'', 'msg'=>'该用户名未注册', 'sign'=>'username');
         if ($userInfo['status']!=1 || $userInfo['usertype']==10) return array('code'=>'3', 'data'=>'', 'msg'=>'该用户已无效,请联系管理员', 'sign'=>'username');
         if ($data['phoneverify'] != session('smsVerifyCode_activate')) return array('code'=>'3', 'data'=>'', 'msg'=>'短信验证码不正确，请重新输入', 'sign'=>'phoneverify');

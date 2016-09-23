@@ -406,7 +406,7 @@ class UserController extends ApiBaseController
             $data_save = $request;
         }
         $getService = function($data_save) {
-            if (empty($request['remark'])) return array('code' => 1, 'msg' => '备注不能为空');
+            if (empty($data_save['remark'])) return array('code' => 1, 'msg' => '备注不能为空');
             $UserService = new UserService();
             $result = $UserService->abandonUser($data_save,2);
             //返回参数
