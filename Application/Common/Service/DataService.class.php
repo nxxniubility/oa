@@ -291,7 +291,7 @@ class DataService extends BaseService
         $channelArr = array();
         //补全空白天数内容
         if(!empty($daytime)){
-            for($i = date('Ymd', strtotime($daytime[0]));$i<date('Ymd', strtotime($daytime[1]));$i++){
+            for($i = date('Ymd', strtotime($daytime[0]));$i<=date('Ymd', strtotime($daytime[1]));$i++){
                 if(empty($newArr['days'][date('m-d',strtotime($i))])){
                     $newArr['days'][date('m-d',strtotime($i))] = 0;
                 }
