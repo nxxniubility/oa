@@ -331,7 +331,6 @@ $(document).on('click','.receivablesBtn', function(){
     setTimeout(function(){
         var myDate = new Date();
         ymd = myDate.getFullYear()+'/'+(myDate.getMonth()+1)+'/'+myDate.getDate();
-        alert(ymd);
 		$(".receivablesTime").val(ymd).glDatePicker({
             selectableDateRange: [
                 {
