@@ -25,7 +25,6 @@
 .search_day p {float:left;padding:0 12px;color:#333;}
 /*搜索确定按钮*/
 .search .search_btn {width:64px;height:40px;line-height:40px;margin-left:10px;margin-right:10px;color:#fff;text-align:center;border:none;background:#53b567;cursor:pointer}
-.search .search_des_area {height:40px;color:#333;}
 
 /*主体中间公共*/
 .main_title {display:block;width:100%;height:32px;line-height:32px;font-size:14px;font-weight:700;color:#333;text-indent:20px;background:#eaeaea;}
@@ -85,3 +84,6 @@
 #sr_everyday td.red {color:#ff0000;}
 #sr_everyday tr.sr_total:hover td {background:#fff;}
 #sr_everyday tr:hover td {background:#f5f6fa;}
+
+/*0923*/
+.search .search_des_area {width:180px;height:40px;color:#999;padding:0 10px;background:#ccc;cursor:default;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
