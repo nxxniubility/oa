@@ -48,7 +48,7 @@
         <div class="afRow clearfix">
             <div class="afRowLeft"><i>&#42</i>生日:</div>
             <div class="afRowRight">
-                <input type="text" class="afTime" id="afBirthday" name="birthday" value="{:($data['systemUserInfo']['birthday']!=0)?date('Y-m-d',$data['systemUserInfo']['birthday']):''}" placeholder="2016/3/22">
+                <input type="text" class="afTime" id="afBirthday" name="birthday" readonly="readonly" value="{:($data['systemUserInfo']['birthday']!=0)?date('Y-m-d',$data['systemUserInfo']['birthday']):''}" placeholder="2016/3/22">
             </div>
         </div>
         <div class="afRow clearfix">
@@ -168,13 +168,13 @@
         <div class="afRow clearfix">
             <div class="afRowLeft"><i>&#42</i>入职时间:</div>
             <div class="afRowRight">
-                <input type="text" class="afTime" id="afBirthday2" name="entrytime" value="{:($data['systemUserInfo']['entrytime']!=0)?date('Y-m-d',$data['systemUserInfo']['entrytime']):''}" placeholder="2016/3/22">
+                <input type="text" class="afTime" id="afBirthday2" name="entrytime" readonly="readonly" value="{:($data['systemUserInfo']['entrytime']!=0)?date('Y-m-d',$data['systemUserInfo']['entrytime']):''}" placeholder="2016/3/22">
             </div>
         </div>
         <div class="afRow clearfix">
             <div class="afRowLeft"><i>&#42</i>转正时间:</div>
             <div class="afRowRight">
-                <input type="text" class="afTime" id="afBirthday3" name="straightime" value="{:($data['systemUserInfo']['straightime']!=0)?date('Y-m-d',$data['systemUserInfo']['straightime']):''}" placeholder="2016/6/22">
+                <input type="text" class="afTime" id="afBirthday3" name="straightime" readonly="readonly" value="{:($data['systemUserInfo']['straightime']!=0)?date('Y-m-d',$data['systemUserInfo']['straightime']):''}" placeholder="2016/6/22">
             </div>
         </div>
     </div>
