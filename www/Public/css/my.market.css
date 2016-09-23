@@ -86,4 +86,5 @@
 #sr_everyday tr:hover td {background:#f5f6fa;}
 
 /*0923*/
-.search .search_des_area {width:180px;height:40px;color:#999;padding:0 10px;background:#ccc;cursor:default;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.search_pic span {width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.search .search_des_area {width:120px;height:40px;color:#999;padding:0 10px;background:#ccc;cursor:default;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
