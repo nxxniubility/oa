@@ -3,6 +3,7 @@
 namespace Common\Controller;
 
 use Common\Controller\BaseController;
+use Common\Service\DataService;
 
 class OrderController extends BaseController
 {
@@ -273,7 +274,7 @@ class OrderController extends BaseController
     */
     public function auditOrder($data)
     {
-        $orderInfo = D("Order")->where("order_id = $data[order_id]")->field("zone_id,order_id,status,payway,subscription,createtime")->find();
+        $orderInfo = D("Order")->where("order_id = $data[order_id]")->field("zone_id,system_user_id,user_id,order_id,status,payway,subscription,createtime")->find();
         if (!$orderInfo) return array('code'=>'2', 'msg'=>'订单不存在');
         if ($orderInfo['status']!=10) return array('code'=>'2', 'msg'=>'订单已被审核,无法重复操作！');
         //审核人
@@ -294,6 +295,13 @@ class OrderController extends BaseController
                 $addLog['practicaltime'] = $data['practicaltime'];
                 $addLog['auditoruser_id'] = $data['system_user_id'];
                 $flag_add = $this->addLog($addLog);
+                //操作添加数据记录
+                $dataLog['operattype'] = 13;
+                $dataLog['operator_user_id'] = $orderInfo['system_user_id'];
+                $dataLog['user_id'] = $orderInfo['user_id'];
+                $dataLog['logtime'] = tiem();
+                $DataService = new DataService();
+                $DataService->addDataLogs($dataLog);
             }else{
                 $flag_add = true;
             }
@@ -465,6 +473,13 @@ class OrderController extends BaseController
         $addLog['createtime'] = time();
         $flag_add = D('OrderLogs')->add($addLog);
         if($updata!==false && $flag_add!==false) {
+            //操作添加数据记录
+            $dataLog['operattype'] = 14;
+            $dataLog['operator_user_id'] = $orderInfo['system_user_id'];
+            $dataLog['user_id'] = $orderInfo['user_id'];
+            $dataLog['logtime'] = tiem();
+            $DataService = new DataService();
+            $DataService->addDataLogs($dataLog);
             D()->commit();
             return array('code'=>0,'msg'=>'退费成功');
         }
