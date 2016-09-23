@@ -608,6 +608,7 @@ class PersonnelController extends SystemController {
                 if ($request['entrytime'] > $request['straightime']) {
                     $this->ajaxReturn(1, '转正时间不能早于入职时间' );
                 }
+                
                 //获取 数据判断
                 $request['system_user_id'] = $system_user_id;
                 $systemMain = new SystemMain();
@@ -718,6 +719,12 @@ class PersonnelController extends SystemController {
             $request['straightime'] = strtotime($request['straightime']);
             if ($request['entrytime'] > $request['straightime']) {
                 $this->ajaxReturn(2, '转正时间不能早于入职时间', '', '');
+            }
+            if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['nativeplace'])){
+                $this->ajaxReturn(1,'籍贯信息不能包含特殊字符');
+            }
+            if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['school'])){
+                $this->ajaxReturn(1,'学校不能包含特殊字符');
             }
             //数据操作
             $systemMain = new SystemMain();
