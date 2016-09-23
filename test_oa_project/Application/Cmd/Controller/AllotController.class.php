@@ -40,7 +40,6 @@ class AllotController extends BaseController {
         foreach($userApply as $k => $v){
             $userApplyArr[] = $v['user_id'];
         }
-        
         foreach($allots as $topkey => $allot){
             //是否有星期限制？
             if(!empty($allot['week_text']) && $allot['week_text']!=0){
@@ -53,7 +52,7 @@ class AllotController extends BaseController {
             //查询分配人
             $join = "left join zl_allocation_systemuser on zl_system_user.system_user_id=zl_allocation_systemuser.system_user_id";
             $allotUser = D('SystemUser')->field('zl_system_user.system_user_id,realname,zone_id')->join($join)->where(array('user_allocation_id'=>$allot['user_allocation_id'],'zl_allocation_systemuser.status'=>1,'usertype'=>array('NEQ',10)))->select();
-            
+
             //查询分配渠道
             $channel = M('Channel')->select();
             $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
@@ -105,8 +104,8 @@ class AllotController extends BaseController {
             
             $where['zone_id'] = array('IN',$zoneIds);
             $where['user_id'] = array('NOT IN',$userApplyArr);
-            
-            
+
+
             //获取近期放弃客户
             $excludeTime = $nowtime - (86400 * 7);
             $excludeUser = D('UserCallback')->field('user_id')->where(array('remark'=>array('LIKE','客户放弃:%'),'callbacktime'=>array('EGT',$excludeTime)))->select();
@@ -120,15 +119,15 @@ class AllotController extends BaseController {
             //获取所有资源信息
             $where['channel_id'] = array('IN',$allotChannel);
             $resource = $userdb->field('user_id,infoquality,channel_id,createtime')->where($where)->order('createtime desc')->limit($allotTotal)->select();
-            
+
             if(empty($resource)) continue;
-            
+
             $resultUser = array();
             foreach($resource as $k => $v){
                 $v['createtime'] = date('Y-m-d H:i:s',$v['createtime']);
                 $resultUser[$v['channel_id']][] = $v;
             }
-            
+
             //平均分配所有渠道数据
             $user = array();
             foreach($allotChannel as $k => $v){
