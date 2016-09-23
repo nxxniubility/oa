@@ -407,6 +407,15 @@ class UserService extends BaseService
         $save_user['system_user_id'] = $data['tosystem_user_id'];
         //数据更新
         D()->startTrans();
+        if($rank==1) {
+            //操作添加数据记录
+            $dataLog['operattype'] = 5;
+            $dataLog['operator_user_id'] = $data['system_user_id'];
+            $dataLog['user_id'] = $data['user_id'];
+            $dataLog['logtime'] = $_time;
+            $DataService = new DataService();
+            $DataService->addDataLogs($dataLog);
+        }
         //添加数据记录
         $save_user['zone_id'] = $_systemInfo['zone_id'];
         $where['user_id'] = array('IN',$data['user_id']);
