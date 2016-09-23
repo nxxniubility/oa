@@ -391,7 +391,7 @@ class UserService extends BaseService
             //普通员工判断归属人
             if($rank==1){
                 if($data['system_user_id']!=$v['system_user_id']) return array('code'=>1,'msg'=>'只有归属人才能分配该客户信息');
-                if($data['tosystem_user_id']==$v['system_user_id']) return array('code'=>1,'msg'=>'无法将客户转给自己哦');
+                if($data['system_user_id']==$v['system_user_id']) return array('code'=>1,'msg'=>'无法将客户转给自己哦');
             }
             //该客户是否在申请转入审核中
             $userApply = $this->isApply($v['user_id']);

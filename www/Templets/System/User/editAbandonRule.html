@@ -136,14 +136,15 @@
                 <div class="nsLeft2">回收星期限制:</div>
                 <div class="nsRight2 clearfix">
                     <div class="week_box fl">
-						<div class="cur">星期一</div>                		
-						<div>星期二</div>
-						<div>星期三</div>
-						<div>星期四</div>
-						<div>星期五</div>
-						<div>星期六</div>
-						<div>星期日</div>
-                	</div>
+                        <div data-value="1">星期一</div>
+                        <div data-value="2">星期二</div>
+                        <div data-value="3">星期三</div>
+                        <div data-value="4">星期四</div>
+                        <div data-value="5">星期五</div>
+                        <div data-value="6">星期六</div>
+                        <div data-value="7">星期日</div>
+                    </div>
+                    <input type="hidden" name="week_text" value="{$data['abandonAll']['week_text']}" autocomplete="off">
                 </div>
             </div>
             <div class="nsRow clearfix">
@@ -238,7 +239,7 @@
 
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
-<script src="__PUBLIC__/js/addaNewRule.js"></script>
+<script src="__PUBLIC__/js/addaNewRule.js?v=20160923"></script>
 <script src="__PUBLIC__/js/common_ajax.js"></script>
 <script>
     $(function(){
@@ -246,31 +247,12 @@
                 $('.zone_btn'+{$data['abandonAll']['zone_id']}).trigger('click');
         </if>
         var week_text = "{$data['abandonAll']['week_text']}";
-        //选择启动星期
-        $('.edit_recover_confirm').click(function(){
-            var _week_text = '';
-            var _week_name = '';
-            $(':input[name="week_chk"]:checked').each(function(){
-                if(_week_text==''){
-                    _week_text = $(this).val();
-                    _week_name = $(this).parent().next().text();
-                }else{
-                    _week_text += ','+$(this).val();
-                    _week_name += ','+$(this).parent().next().text();
-                };
-            });
-            if(_week_text!=''){
-                $(':input[name="week_text_name"]').val(_week_name);
-                $(':input[name="week_text"]').val(_week_text);
-            };
-        });
         //初始化
         if(week_text!=0 && week_text!=''){
             week_text = week_text.split(',');
             $.each(week_text, function(k,v){
-                $(':input[name="week_chk"][value="'+v+'"]').prop('checked', true);
+                $('.week_box div').eq(parseInt(v)-1).addClass('cur');
             });
-            $('.edit_recover_confirm').trigger('click');
         };
         $('.nsDetermine').click(function(){
             var role_id = '';
@@ -314,6 +296,10 @@
         });
 
         $('.nsSubmit').click(function(){
+            if( $(':input[name="week_text"]').val().length==0 ){
+                layer.msg('必须选择启用星期', {icon:2});
+                return false;
+            };
             var data = {
                 abandonname:$(':input[name="abandonname"]').val(),
                 channel_id:$(':input[name="channel_id"]').val(),

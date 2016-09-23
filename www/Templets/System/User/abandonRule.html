@@ -125,14 +125,15 @@
                 <div class="nsLeft2">回收星期限制:</div>
                 <div class="nsRight2 clearfix">
                     <div class="week_box fl">
-						<div class="cur">星期一</div>                		
-						<div>星期二</div>
-						<div>星期三</div>
-						<div>星期四</div>
-						<div>星期五</div>
-						<div>星期六</div>
-						<div>星期日</div>
-                	</div>
+                        <div data-value="1">星期一</div>
+                        <div data-value="2">星期二</div>
+                        <div data-value="3">星期三</div>
+                        <div data-value="4">星期四</div>
+                        <div data-value="5">星期五</div>
+                        <div data-value="6">星期六</div>
+                        <div data-value="7">星期日</div>
+                    </div>
+                    <input type="hidden" name="week_text" value="" autocomplete="off">
                 </div>
             </div>
             <div class="nsRow clearfix">
@@ -228,7 +229,7 @@
 
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
-<script src="__PUBLIC__/js/addaNewRule.js"></script>
+<script src="__PUBLIC__/js/addaNewRule.js?v=20160923"></script>
 <script src="__PUBLIC__/js/common_ajax.js"></script>
 <script>
     $(function(){
@@ -292,6 +293,10 @@
         });
 
         $('.nsSubmit').click(function(){
+            if( $(':input[name="week_text"]').val().length==0 ){
+                layer.msg('必须选择启用星期', {icon:2});
+                return false;
+            };
             var data = {
                 abandonname:$(':input[name="abandonname"]').val(),
                 channel_id:$(':input[name="channel_id"]').val(),

@@ -180,7 +180,22 @@ function weekChk(){
 			_this.removeClass('cur');
 		}else {
 			_this.addClass('cur');
-		}
+		};
+        var _week_text = '';
+        if($('.week_box .cur').length>0){
+            $('.week_box .cur').each(function(){
+                if(_week_text==''){
+                    _week_text = $(this).attr('data-value');
+                }else{
+                    _week_text += ','+$(this).attr('data-value');
+                };
+            });
+            if(_week_text!=''){
+                $(':input[name="week_text"]').val(_week_text);
+            };
+        }else{
+            $(':input[name="week_text"]').val('');
+        }
 	});
 		
 }
