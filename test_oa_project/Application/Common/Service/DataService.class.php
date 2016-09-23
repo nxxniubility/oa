@@ -143,6 +143,32 @@ class DataService extends BaseService
         $result = D('DataMarket')->where($_where)->select();
         $newArr = array();
         $SystemUserService = new SystemUserService();
+        //补全天数内容
+        if(!empty($daytime)){
+            for($i = date('Ymd', strtotime($daytime[0]));$i<date('Ymd', strtotime($daytime[1]));$i++){
+                if(empty($newArr['days'][$i])){
+                    $newArr['days'][$i] = array(
+                        'day' => mb_substr($i,0,4).'-'.mb_substr($i,4,2).'-'.mb_substr($i,6,2),
+                        'addcount'=>0,
+                        'acceptcount'=>0,
+                        'switchcount'=>0,
+                        'restartcount'=>0,
+                        'recyclecount'=>0,
+                        'redeemcount'=>0,
+                        'callbackcount'=>0,
+                        'attitudecount'=>0,
+                        'allocationcount'=>0,
+                        'visitcount'=>0,
+                        'ordercount'=>0,
+                        'refundcount'=>0,
+                        'visitratio'=>0,
+                        'conversionratio'=>0,
+                        'chargebackratio'=>0,
+                        'totalratio'=>0,
+                    );
+                }
+            }
+        }
         foreach($result as $k=>$v){
             $_count = count($result);
             //总数
@@ -263,6 +289,14 @@ class DataService extends BaseService
         $channel_list = $channel_list['data']['data'];
         $newArr = array();
         $channelArr = array();
+        //补全空白天数内容
+        if(!empty($daytime)){
+            for($i = date('Ymd', strtotime($daytime[0]));$i<date('Ymd', strtotime($daytime[1]));$i++){
+                if(empty($newArr['days'][date('m-d',strtotime($i))])){
+                    $newArr['days'][date('m-d',strtotime($i))] = 0;
+                }
+            }
+        }
         $eArr = array('1'=>'A','2'=>'B','3'=>'C','4'=>'D');
         foreach($redata as $k=>$v){
             $channelArr[$v['channel_id']] = $channelArr[$v['channel_id']]+1;

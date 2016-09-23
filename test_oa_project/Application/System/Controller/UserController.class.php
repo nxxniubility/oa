@@ -834,7 +834,7 @@ class UserController extends SystemController
                 else $this->ajaxReturn(1, '删除失败');
             }
         }
-        $re_page = I('post.page', 1);
+        $re_page = I('get.page', 1);
         $zoneIds = D("Zone")->getZoneIds($this->system_user['zone_id']);
         foreach ($zoneIds as $key => $value) {
             $zidString[] = $value['zone_id'];
@@ -1005,8 +1005,8 @@ class UserController extends SystemController
                 if ($reflag !== false) $this->ajaxReturn(0, '回收规则删除成功');
                 else $this->ajaxReturn(1, '删除失败');
             }
-        }
-        $re_page = I('post.page', 1);
+        }   
+        $re_page = I('get.page', 1);
         $zoneIds = D("Zone")->getZoneIds($this->system_user['zone_id']);
         foreach ($zoneIds as $key => $value) {
             $zidString[] = $value['zone_id'];

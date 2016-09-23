@@ -299,7 +299,7 @@ class OrderController extends BaseController
                 $dataLog['operattype'] = 13;
                 $dataLog['operator_user_id'] = $orderInfo['system_user_id'];
                 $dataLog['user_id'] = $orderInfo['user_id'];
-                $dataLog['logtime'] = tiem();
+                $dataLog['logtime'] = time();
                 $DataService = new DataService();
                 $DataService->addDataLogs($dataLog);
             }else{
@@ -477,7 +477,7 @@ class OrderController extends BaseController
             $dataLog['operattype'] = 14;
             $dataLog['operator_user_id'] = $orderInfo['system_user_id'];
             $dataLog['user_id'] = $orderInfo['user_id'];
-            $dataLog['logtime'] = tiem();
+            $dataLog['logtime'] = time();
             $DataService = new DataService();
             $DataService->addDataLogs($dataLog);
             D()->commit();
