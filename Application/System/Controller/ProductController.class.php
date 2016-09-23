@@ -42,7 +42,7 @@ class ProductController extends SystemController
         $data = I("post.");
         $data['productname'] = str_replace(' ','',$data['productname']);
         if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$data['productname'])){
-            $this->ajaxReturn(1,'不能包含特殊字符');
+            $this->ajaxReturn(1,'产品名称不能包含特殊字符');
         }
         if (empty($data['productname'])) {
             $this->ajaxReturn(2,'产品名称不能为空');
