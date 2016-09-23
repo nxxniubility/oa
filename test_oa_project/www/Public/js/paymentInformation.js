@@ -70,10 +70,6 @@ function otherSelectStatus() {
     $("[class^=select]").find("dl").removeClass("zindex4");
 }
 
-/*$('#paymentType').find('dd').each(function(){
-	
-});*/
-
 //  设置优惠方式
 $('.payPreferentialWay').on('click', function(){
     $.colorbox({
@@ -93,7 +89,6 @@ $('.pwConfirm, .notpreferential').on('click',function(){
 	var father = $('.notpreferential').closest('.preferentialWayBox'),
 		radioInp = father.find('input[type="radio"]'),
 		chkInp = father.find('input[type="checkbox"]');
-	
 });
 
 
@@ -183,9 +178,19 @@ function receivables(){
         title: "确认收款"
     });
     // 收款日期选择
+    //  收款日期选择
     setTimeout(function(){
-        $(".receivablesTime").glDatePicker({});
-    },1000);
+        var myDate = new Date();
+        ymd = myDate.getFullYear()+'/'+(myDate.getMonth()+1)+'/'+myDate.getDate();
+		$(".receivablesTime").val(ymd).glDatePicker({
+            selectableDateRange: [
+                {
+                    from: new Date(myDate.getFullYear(), (myDate.getMonth()-3), (myDate.getDate()-7)),
+                    to: new Date(myDate.getFullYear(), myDate.getMonth(), myDate.getDate())
+                }
+            ]
+        });
+    },1000)
     // 关闭返回列表
     $('#cboxClose').on('click', function(){
         window.location.href=orderList_href;
