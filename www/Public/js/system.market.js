@@ -28,6 +28,7 @@ $(document).on('click', '.city_title', function(){
 	mask.show();
 	$(this).parent().find('.seach_city_show').removeClass('dn');
 	areaChoose();
+	core();
 });
 //  显示职位选择弹层
 $(document).on('click', '.position_name', function(){
@@ -58,7 +59,7 @@ function close_layer(){
 	});
 }
 
-//  地区赋值
+//  中心赋值
 function areaChoose(){
 	$(document).on('click', '.city_partition a', function(){
 		var txt = $.trim($(this).text()),
@@ -70,6 +71,20 @@ function areaChoose(){
 		mask.hide();
 	});
 }
+
+//  城市赋值
+function core(){
+	$(document).on('click', '.show_city_cont span', function(){
+	var coreTxt = $.trim($(this).text()),
+		cityShow = $(this).closest('.seach_city_show'),
+		finalZone = $(this).closest('.search_region');
+	
+		finalZone.find('.city_title em').text(coreTxt);
+		cityShow.addClass('dn');
+		mask.hide();
+	});
+}
+
 //  展开部门职位
 function openPosition(){
 	var _this = $('.position_department'),

@@ -152,3 +152,6 @@
 #sr_staff tr.sr_total:hover td {background:#fff;}
 #sr_everyday tr:hover td,
 #sr_staff tr:hover td {background:#f5f6fa;}
+
+/*0923*/
+.search .search_region .seach_city_show .show_content .show_city_cont span {cursor:pointer;}
