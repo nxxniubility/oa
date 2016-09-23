@@ -15,7 +15,7 @@
 		<div class="wrapper_box">
 			<div class="title clearfix">
 	            <div class="title_left">
-	            	<span class="title_text">我的营销统计</span>
+	            	<span class="title_text">员工个人营销统计</span>
 	            </div>
 	        </div>
 	        <div class="main">
@@ -24,8 +24,8 @@
 	        		<form method="get" name="" action="{:U('System/Statistics/mymarket')}">
 	        			<!-- 头像 -->
 		        		<div class="search_pic fl clearfix">
-		        			<div class="picbox fl"><img src={$systemUserInfo['face']} alt="员工头像"></div>
-		        			<span>{$systemUserInfo['realname']}</span>
+		       			<div class="picbox fl"><img src={$systemUserInfo['face']} alt="员工头像"></div>
+		        			<span>{$systemUserInfo['realname']}({$systemUserInfo['role_names']})</span>
 		        		</div>
 		        		
 		        		<!-- 日期 -->
@@ -39,6 +39,7 @@
 			        			<input type="text" class="afTime endtime" name="endtime" value="" readonly="readonly" placeholder="结束时间">
 		        			</div>
 			        		<input type="submit" class="search_btn fl" value="搜索">
+			        		<div class="search_area fl">{$systemUserInfo['zonename']}</div>
 		        		</div>
 	        		</form>
 	        	</div>
