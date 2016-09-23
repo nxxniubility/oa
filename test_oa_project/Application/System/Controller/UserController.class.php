@@ -512,8 +512,8 @@ class UserController extends SystemController
             if ($reSystemList !== false) $this->ajaxReturn(0, '', $reSystemList);
             else  $this->ajaxReturn(1);
         } else if ($request['type'] == 'submit') {
-            $request['system_user_id'] = $this->system_user_id;
             $request['tosystem_user_id'] = $request['system_user_id'];
+            $request['system_user_id'] = $this->system_user_id;
             $ApiUser = new ApiUser();
             $reflag = $ApiUser->allocationUser($request);
             //返回数据操作状态
