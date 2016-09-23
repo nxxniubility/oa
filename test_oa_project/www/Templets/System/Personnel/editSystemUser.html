@@ -116,13 +116,13 @@
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>入职时间:</div>
                 <div class="nsRight">
-                    <input type="text" class="afTime" id="afBirthday" name="entrytime" value="{:($data['SystemUserInfo']['entrytime']!=0)?date('Y/m/d',$data['SystemUserInfo']['entrytime']):''}" placeholder="请选择日期">
+                    <input type="text" class="afTime" id="afBirthday" name="entrytime" readonly="readonly" value="{:($data['SystemUserInfo']['entrytime']!=0)?date('Y/m/d',$data['SystemUserInfo']['entrytime']):''}" placeholder="请选择日期">
                 </div>
             </div>
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>转正时间:</div>
                 <div class="nsRight">
-                    <input type="text" class="afTime" id="afBirthday2" name="straightime" value="{:($data['SystemUserInfo']['straightime']!=0)?date('Y/m/d',$data['SystemUserInfo']['straightime']):''}" placeholder="请选择日期">
+                    <input type="text" class="afTime" id="afBirthday2" name="straightime" readonly="readonly" value="{:($data['SystemUserInfo']['straightime']!=0)?date('Y/m/d',$data['SystemUserInfo']['straightime']):''}" placeholder="请选择日期">
                 </div>
             </div>
             <div class="nsRow clearfix">
