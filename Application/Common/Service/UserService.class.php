@@ -383,6 +383,7 @@ class UserService extends BaseService
         //获取客户信息与被转出人信息
         $userList = D('User')->field('user_id,status,channel_id,system_user_id,realname,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->select();
         $_systemInfo = D('SystemUser')->where(array('system_user_id'=>$data['tosystem_user_id']))->find();
+
         if(empty($userList)) return array('code'=>2,'msg'=>'查找不到客户信息');
         //客户验证
         foreach($userList as $k=>$v){
