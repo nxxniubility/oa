@@ -159,10 +159,9 @@ class UserController extends ApiBaseController
             if (empty($data_add['username']) && empty($data_add['tel']) && empty($data_add['qq'])) return array('code'=>11,'msg'=>'手机号码 / 固定电话 / QQ 至少填写一项');
             if (empty($data_add['infoquality'])) return array('code'=>11,'msg'=>'信息质量不能为空');
             if (empty($data_add['channel_id'])) return array('code'=>11,'msg'=>'所属渠道不能为空');
-            if (empty($data_add['course_id']) && $data_add['course_id']!=0 || $data_add['course_id']==null) return array('code'=>11,'msg'=>'请选择意向课程');
             if (empty($data_add['remark'])) return array('code'=>11,'msg'=>'备注不能为空');
-            //必要参数？ infoquality channel_id course_id remark
-            if( empty($data_add['system_user_id']) || empty($data_add['infoquality']) || empty($data_add['channel_id']) || empty($data_add['course_id']) || empty($data_add['remark']) ){
+            //必要参数？ infoquality channel_id remark
+            if( empty($data_add['system_user_id']) || empty($data_add['infoquality']) || empty($data_add['channel_id']) || empty($data_add['remark']) ){
                 return array('code'=>1,'msg'=>'缺少必要参数');
             }
             //获取接口服务层
