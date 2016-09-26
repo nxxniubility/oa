@@ -35,6 +35,7 @@
             </form>
         </div>
         <div class="viMiddle">
+        	<p class="viTips">鼠标左键双击客户信息打开对应的客户详情</p>
             <table cellpadding="0" cellspacing="0" id="viTable">
                 <tr class="viHeader">
                     <th class="optionsTh">选中</th>
@@ -49,7 +50,7 @@
                     <th class="operatingTh">操作</th>
                 </tr>
                 <foreach name="data['userAll']" item="v">
-                    <tr>
+                    <tr class="content_li">
                         <td class="optionsThTd"><input type="checkbox" class="viChk" name="viCheckBox"></td>
                         <td>{$v.realname}</td>
                         <td>{:!empty($v['username'])?(decryptPhone($v['username'],C('PHONE_CODE_KEY'))):'--'}</td>
@@ -65,7 +66,8 @@
                             <else/>
                                 <a href="javascript:;" class="confirmVisit">已到访</a>
                             </if>
-                            <a  href="{:U('System/User/detailUser',array('id'=>$v['user_id']))}"  class="detailLink" target="_blank">详情</a>
+                            <!--<a  href="{:U('System/User/detailUser',array('id'=>$v['user_id']))}"  class="detailLink" target="_blank">详情</a>-->
+                            <a  href="{:U('System/User/detailUser',array('id'=>$v['user_id']))}"  class="hrefDetail dn" target="_blank">详情</a>
                         </td>
                     </tr>
                 </foreach>
@@ -80,6 +82,8 @@
         </div>
     </div>
 </div>
+
+<form id="hrefForm" action="" method="get" target="_blank"></form>
 
 <!-- ====================== 弹窗系列     ======================= -->
 <div class="dn">
