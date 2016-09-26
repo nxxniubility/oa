@@ -73,7 +73,6 @@ $(document).on('click', '.position_name', function(){
 	if($(':input[name="sale_inp"]:checked').length==$(':input[name="sale_inp"]').length){
 		$('#all_select').prop('checked',true);
 	}
-	//openPosition();
 	positionChoose();
 	close_layer();
 });
@@ -303,7 +302,26 @@ $('.chart_topright select').change(function(){
 				}else{
 					$.each(redata.data.channel.list,function(k,v){
 						var _data = [];
-						if(_navName.indexOf(v.pname)<0){
+						//  为ie低版本增加.indexOf()放大						
+						if (!Array.prototype.indexOf){
+						  Array.prototype.indexOf = function(elt /*, from*/){
+						    var len = this.length >>> 0;
+						
+						    var from = Number(arguments[1]) || 0;
+						    from = (from < 0)
+						         ? Math.ceil(from)
+						         : Math.floor(from);
+						    if (from < 0)
+						      from += len;
+						
+						    for (; from < len; from++){
+						      if (from in this && this[from] === elt)
+						        return from;
+						    }
+						    return -1;
+						  };
+						}	// end
+						if(_navName.indexOf(v.pname)<0){		//  判断数组内是否含有pname
 							_navName.push(v.pname);
 						};
 						for(var i=1;i<_navName.length;i++){
