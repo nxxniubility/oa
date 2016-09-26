@@ -96,6 +96,11 @@
 #rnTable .rnXian { color: #d64242;}
 #rnTable .rnConfirm { display: block; width: 100%; line-height: 43px; color: #53b567;}
 
+/*0926*/
+.viMiddle {border:none;} 
+.viMiddle .viTips {margin-bottom:5px;font-size:12px;color:red;}
+#viTable {border:1px solid #e1e6eb;border-bottom:none;}
+#viTable tr.content_li {cursor:pointer;}
 
 
 
