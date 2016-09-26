@@ -118,7 +118,7 @@
 	        				<th class="firItem">新增量</th>
 	        				<th>分配量</th>
 	        				<th>到访量</th>
-	        				<th>签单量</th>
+	        				<th>订单量</th>
 	        				<th>退单量</th>
 	        				<th>到访率</th>
 	        				<th>面转率</th>
@@ -600,37 +600,32 @@
 	        	<div class="statistics_report">
 	        		<span class="main_title">客户量统计报表</span>
 	        		<div class="sr_tab clearfix">
-	        			<span class="current">每日数据</span>
-	        			<span class="">员工数据</span>
+	        			<div class="current" id="tab1" onclick="doTabClick(this)">每日数据</div>
+	        			<div  id="tab2" onclick="doTabClick(this)">员工数据</div>
 	        		</div>
 	        		
 	        		<!-- 每日数据 -->
-	        		<div class="sr_table active">
+	        		<div class="sr_table" id="stTab1" style="display:block;">
 						<?php $temp_daytime = explode('-', $data['request']['daytime']); ?>
 		        		<div class="sr_time">统计时间：{$temp_daytime[0]}至{$temp_daytime[1]}</div>
 		        		<table cellpadding="0" cellspacing="0"  id="sr_everyday">
 		        			<tr>
-		        				<th>
-		        					<div class="container">
-			        					<span>统计时间</span>
-			        					<i class="sr_down"></i>
-		        					</div>
-		        				</th>
-								<th><div class="container"><span>新增量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>出库量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>转出量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>放弃量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>系统回收量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>赎回量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>已回访量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>跟进次数</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>到访量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>订单量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>退款量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>到访率</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>面转率</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>退单率</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>总转率</span><i class="sr_down"></i></div></th>
+		        				<th><div class="container"><span>统计时间<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>新增量<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>出库量<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>转出量<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>放弃量<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>系统回收量<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>赎回量<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>已回访量<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>跟进次数<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>到访量<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>订单量<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>退款量<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>到访率<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>面转率<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>退单率<i class="sr_down"></i></span></div></th>
+								<th><div class="container"><span>总转率<i class="sr_down"></i></span></div></th>
 							</tr>
 							<tr class="sr_total">
 								<td>合计</td>
@@ -675,7 +670,7 @@
 		        	</div>
 	        		
 	        		<!--员工数据-->
-	        		<div class="sr_table">
+	        		<div class="sr_table" id="stTab2">
 		        		<div class="sr_time">统计员工：{:count($data['dataMarket']['systemuser'])} 人</div>
 		        		<table cellpadding="0" cellspacing="0" id="sr_staff">
 		        			<tr>
