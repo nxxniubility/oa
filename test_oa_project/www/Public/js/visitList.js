@@ -1,77 +1,4 @@
-
-
-//  列表边框控制
-$('#viTable tr:last-child').find('td').css('borderBottom','none');
-
-//
-////  客户是回库状态弹窗 star
-//$('.addAccount').on('click', function(){
-//    $.colorbox({
-//        inline: true,
-//        href: $("#popup1"),
-//        overlayClose: false,
-//        title: "到访客户接待提醒"
-//    });
-//});
-/*$('.viConfirm').on('click',function(){
-	$('#popup1').colorbox.close();
-});
-//  客户是回库状态弹窗 end
-
-//  到访客户接待提醒 star
-$('.addAccount1').on('click', function(){
-    $.colorbox({
-        inline: true,
-        href: $("#popup2"),
-        overlayClose: false,
-        title: "到访客户接待提醒"
-    });
-});
-$('.viCancel').on('click',function(){
-	$('#popup2').colorbox.close();
-});
-//  到访客户接待提醒 end
-
-//  操作者是本中心 star
-$('.addAccount2').on('click', function(){
-    $.colorbox({
-        inline: true,
-        href: $("#popup3"),
-        overlayClose: false,
-        title: "到访客户接待提醒"
-    });
-});
-$('.centerBtn').on('click',function(){
-	$('#popup3').colorbox.close();
-});
-//  操作者是本中心 end
-
-//  操作者是非本中心 star
-$('.addAccount3').on('click', function(){
-    $.colorbox({
-        inline: true,
-        href: $("#popup4"),
-        overlayClose: false,
-        title: "到访客户接待提醒"
-    });
-});
-$('.nonCenterBtn').on('click',function(){
-	$('#popup4').colorbox.close();
-});
-//  操作者是非本中心 end
-
 //  重新分配 star
-$('.viReassign, .viReassign2').on('click', function(){
-    $.colorbox({
-        inline: true,
-        href: $("#viReassign"),
-        overlayClose: false,
-        title: "到访客户接待提醒"
-    });
-});
-$('.rnConfirm').on('click',function(){
-	$('#viReassign').colorbox.close();
-});*/
 $('#rnTable tr:last-child').find('td').css('borderBottom','none');
 //  重新分配 end
 
@@ -169,49 +96,8 @@ $('#afTimeStar, #afTimeEnd').glDatePicker({
     },
 });
 
-//=======================================================
-$('#viTable tbody  tr').each(function(index, e) {
-    $(e).hover(function(e){
-        var e = e || window.event;
-        var table_w=$('#table2_div').width();
-        var _x=(e.pageX?e.pageX:e.clientX)+80;
-        var _y=parseInt($(this).offset().top)+9;
-        if((_x-table_w)>-50)
-		{
-			_x=_x-200;
-		}
-
-        $(this).find('.detailLink').css({"left":_x,"top":_y});
-        $(this).find('.detailLink').show();
-
-    },function(e){
-
-        $(this).find('.detailLink').hide();
-
-    });
-});
-$('.detailLink').on("mouseover",function(e){
-
-    var e = e || window.event;
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
-});
-$('.detailLink').on("mouseenter",function(e){
-    var e = e || window.event;
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
-});
-$('.detailLink').on("mouseleave",function(e){
-    var e = e || window.event;
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
-});
-$('.detailLink').on("mouseout",function(e){
-    var e = e || window.event;
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
+//  双击打开详情
+$(document).on('dblclick',".content_li",function(){
+    var el = $(this).find('.hrefDetail');
+    $('#hrefForm').attr('action', el.attr('href')).submit();
 });
