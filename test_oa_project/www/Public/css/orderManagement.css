@@ -164,3 +164,8 @@
 .Filter .frame .details.h70 p {margin-top:10px;font-size: 20px;text-align: center;color: #333;}
 .outPutUserBtn.orSubmitBtn {display:block;margin:0 auto;}
 #audit_hint {margin-left:30px;color:#53b567;}
+
+/*0926*/
+.returnBox .raRow, .receivablesBox .reRow {height:auto;}
+.returnBox .raRefundInp, .receivablesBox .receivablesInp, .returnBox .selectbox, .receivablesBox .selectbox {margin-bottom:0;}
+.returnBox .raRow .sum p, .receivablesBox .reRow .sum p {line-height:25px;font-size:12px;color:#ff0000;text-align:left;}
