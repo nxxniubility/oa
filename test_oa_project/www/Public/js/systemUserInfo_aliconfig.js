@@ -1,11 +1,10 @@
 //阿里oss客户端上传配置 演示
 
 var alioss_client_config={
-	oss_policy:{}, //存放policy,每个目录对应一个policy
-	oss_sign_url:"/System/Index/getOssSign.html",
+
 	default_oss_file_dir:'user_dir/', //默认文件上传目录
-	plupload_path:'/Public/js/alioss/plupload/',	
-	plupload_unit:[   
+	plupload_path:'/Public/js/alioss/plupload/',
+	plupload_unit:[
 		/***********这里设置每个上传单元的配置，一个页面可以有多个上传单元**********/
 	    /************上传单元1配置 begin************/
 		{
@@ -31,10 +30,8 @@ var alioss_client_config={
 				$('#uploadBtn').val("修改头像");
 				if (info.status == 200)
 				{
-					var uploader_config=up.settings.uploader_config;
-					var unique_filename=jQuery("#"+uploader_config['browse_button']).attr("unique_filename");
-					if(!unique_filename){ unique_filename='';};
-					img_src=up.settings.img_url+"/"+uploader_config['oss_dir']+unique_filename+file.name;		
+
+					img_src=up.settings.img_url+file.filename;
 					//$('#faceImg').attr("src",img_src);
 					//$('input.faceImg').val(img_src);	
 					saveface(img_src);		

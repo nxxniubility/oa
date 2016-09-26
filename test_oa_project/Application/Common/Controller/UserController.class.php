@@ -3,6 +3,7 @@
 namespace Common\Controller;
 
 use Common\Controller\BaseController;
+use Common\Service\DataService;
 use Common\Service\RedisUserService;
 
 class UserController extends BaseController
@@ -610,11 +611,11 @@ class UserController extends BaseController
                 //添加数据记录
                 $dataLog['operattype'] = '4';
                 $dataLog['operator_user_id'] = $data['system_user_id'];
-                $dataLog['system_user_id'] = $userData['system_user_id'];
                 $dataLog['user_id'] = $applyInfo['user_id'];
                 $dataLog['logtime'] = time();
-                $dataController = new DataController();
-                $dataController->addDataLogs($dataLog);
+                $DataService = new DataService();
+                $DataService->addDataLogs($dataLog);
+
                 D()->commit();
                 return array('code'=>0,'msg'=>'审核通过');
             }else{
