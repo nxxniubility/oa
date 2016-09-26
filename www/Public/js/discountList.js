@@ -1,7 +1,7 @@
 /**
  * 添加优惠
  * */
-$('.addPreferential').on('click', function(){
+$('.addDiscount').on('click', function(){
     layer.open({
         type: 1, 					//  页面层
         title: '添加分类', 		    //	不显示标题栏
