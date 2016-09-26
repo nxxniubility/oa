@@ -22,10 +22,6 @@ class RecoverController extends BaseController {
     //调用回收规则
     protected function aband($abandon_id=""){
         
-        $week = date('w');
-        $noAband = array(1);
-        if(in_array($week,$noAband)) exit();//星期天和周一不回收数据
-        
         $UserAbandonDB = D('UserAbandon');
         if(!empty($abandon_id)){
             $abandons = $UserAbandonDB->getAbandonList(array('user_abandon_id'=>$abandon_id));
@@ -72,7 +68,9 @@ class RecoverController extends BaseController {
             $systemUserJoin = "left join zl_system_user on zl_role_user.user_id=zl_system_user.system_user_id";
             
             $abandonUser = D('RoleUser')->field("system_user_id,realname")->where($roleUserWhere)->join($systemUserJoin)->select();
-            
+            if(empty($abandonUser)){
+                $this->success('找不到需要分配的员工');exit();
+            }
             $abandonUserArr =array();
             foreach($abandonUser as $zbandon_k => $zbandon_v){
                 $abandonUserArr[] = $zbandon_v['system_user_id'];
