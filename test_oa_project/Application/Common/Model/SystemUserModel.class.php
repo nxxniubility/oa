@@ -338,9 +338,9 @@ class SystemUserModel extends SystemModel{
      * @author zgt
      * @return false
      */
-    public function addSystemUser($data){
-        $data['createtime'] = time();
-        $data['createip'] = get_client_ip();
+        public function addSystemUser($data){
+            $data['createtime'] = time();
+            $data['createip'] = get_client_ip();
         $result = $this->field('realname,username,email,sex,check_id,zone_id,usertype,createtime,createip')->data($data)->add();
         if( !empty($result) ){
             if(!empty($data['role_id'])){

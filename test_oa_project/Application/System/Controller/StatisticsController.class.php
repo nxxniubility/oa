@@ -1,7 +1,6 @@
 <?php
 namespace System\Controller;
 
-use Api\Controller\DataController;
 use Common\Controller\SystemController;
 use Common\Service\DataService;
 use Common\Service\SystemUserService;

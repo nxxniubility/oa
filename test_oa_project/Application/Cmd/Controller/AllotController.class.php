@@ -22,10 +22,7 @@ class AllotController extends BaseController {
     //分配规则
     protected function allot($allocation_id="")
     {
-        
-        $week = date('w');
-        $noAband = array(0);
-        if(in_array($week,$noAband)) exit();//星期天不分配数据
+
         if(empty($allocation_id)){
             //获取分配规则
             $allots = D('UserAllocation')->where(array('status'=>1))->order('sort asc')->select();
@@ -52,7 +49,9 @@ class AllotController extends BaseController {
             //查询分配人
             $join = "left join zl_allocation_systemuser on zl_system_user.system_user_id=zl_allocation_systemuser.system_user_id";
             $allotUser = D('SystemUser')->field('zl_system_user.system_user_id,realname,zone_id')->join($join)->where(array('user_allocation_id'=>$allot['user_allocation_id'],'zl_allocation_systemuser.status'=>1,'usertype'=>array('NEQ',10)))->select();
-
+            if(empty($allotUser)){
+                $this->success('找不到需要分配的员工');exit();
+            }
             //查询分配渠道
             $channel = M('Channel')->select();
             $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
