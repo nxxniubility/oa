@@ -162,7 +162,7 @@ class BaseController extends Controller {
         $response=$osstool->get_oss_signature($oss_data);
         if($flat)
         {	
-            echo json_encode($response);
+            echo json_encode(array("code"=>0,"msg"=>"","data"=>$response));
             exit;
         }else{        	
         	return $response;
