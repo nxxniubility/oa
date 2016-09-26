@@ -1,4 +1,4 @@
-//初始化
+//初始化-职位
 if(market_zone_id!=''){
     $('.city_title').text($('#zone_'+market_zone_id).text());
 };
@@ -17,6 +17,8 @@ if(market_role_id!=''){
     }
     $('.position_name').text(temp_role_names);
 };
+
+//  单项指标左侧列表都添加点击事件
 $(function(){
     $('.chart_tab').children('li').eq(0).trigger('click');
 })
@@ -28,7 +30,34 @@ $(document).on('click', '.city_title', function(){
     mask.show();
     $(this).parent().find('.seach_city_show').removeClass('dn');
     areaChoose();
+    core();
 });
+//  中心赋值
+function areaChoose(){
+    $(document).on('click', '.city_partition a', function(){
+        var txt = $.trim($(this).text()),
+            cityShow = $(this).closest('.seach_city_show'),
+            finalZone = $(this).closest('.search_region');
+
+        finalZone.find('.city_title em').text(txt);
+        finalZone.find(':input[name="zone_id"]').val($(this).attr('data-value'));
+        cityShow.addClass('dn');
+        mask.hide();
+    });
+}
+//  城市赋值
+function core(){
+    $(document).on('click', '.show_city_cont span', function(){
+        var coreTxt = $.trim($(this).text()),
+            cityShow = $(this).closest('.seach_city_show'),
+            finalZone = $(this).closest('.search_region');
+
+        finalZone.find('.city_title em').text(coreTxt);
+        cityShow.addClass('dn');
+        mask.hide();
+    });
+}
+
 //  显示职位选择弹层
 $(document).on('click', '.position_name', function(){
     mask.show();
@@ -44,52 +73,39 @@ $(document).on('click', '.position_name', function(){
     if($(':input[name="sale_inp"]:checked').length==$(':input[name="sale_inp"]').length){
         $('#all_select').prop('checked',true);
     }
-    openPosition();
-    close_layer();
     positionChoose();
+    close_layer();
 });
-
-//  关闭职位弹层
-function close_layer(){
-    var $close = $('.cancel');
-    $close.click(function(){
-        $close.closest('.search_position_show').addClass('dn');
-        mask.hide();
-    });
-}
-
-//  地区赋值
-function areaChoose(){
-    $(document).on('click', '.city_partition a', function(){
-        var txt = $.trim($(this).text()),
-            cityShow = $(this).closest('.seach_city_show'),
-            finalZone = $(this).closest('.search_region');
-        finalZone.find('.city_title em').text(txt);
-        finalZone.find(':input[name="zone_id"]').val($(this).attr('data-value'));
-        cityShow.addClass('dn');
-        mask.hide();
-    });
-}
+openPosition();
 //  展开部门职位
 function openPosition(){
     var _this = $('.position_department'),
         _arrow = _this.find('i'),
-        _other = $('.position_destail');
+        _other = _this.parent().find($('.position_destail'));
     _this.click(function(){
         var maxLength = $(this).parent().parent().find('li').length,
             _index = $(this).parents('li').index();
         if( _index + 1 == maxLength){
-            $(this).parent().find(_other).slideDown(500).parent().find(_arrow).addClass('up');
-            $(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
-            $(this).addClass('bor_bottom');
+            //  同父级下显示/隐藏部门职位
+            if($(this).parent().find(_other).css('display') == 'none'){
+                $(this).parent().find(_other).slideDown(500).parent().find(_arrow).addClass('up');				//  自身未显示则向下展开(带箭头指向)
+                $(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');	//  点击其他则收起上一个展开项
+            }else {
+                $(this).parent().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
+            }
+            $(this).toggleClass('bor_bottom');
         }else {
-            $(this).parent().find(_other).slideDown(500).parent().find(_arrow).addClass('up');
-            $(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
+            if($(this).parent().find(_other).css('display') == 'none'){
+                $(this).parent().find(_other).slideDown(500).parent().find(_arrow).addClass('up');
+                $(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
+            }else {
+                $(this).parent().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
+            }
+            //$(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
             $(this).parents('.position_list').find('li').eq(maxLength-1).find(_this).removeClass('bor_bottom');
         }
     });
 }
-
 //  职位赋值
 function positionChoose(){
     $(document).on('click', '.confirm', function(){
@@ -124,6 +140,14 @@ function positionChoose(){
         };
     });
 };
+//  关闭职位弹层
+function close_layer(){
+    var $close = $('.cancel');
+    $close.click(function(){
+        $close.closest('.search_position_show').addClass('dn');
+        mask.hide();
+    });
+}
 
 
 // 开始时间
@@ -155,14 +179,32 @@ $(document).on('click', '.city_largearea li', function(){
 });
 
 //  每日数据与员工数据
-$(document).on('click', '.sr_tab span', function(){
-    var index=$(this).index();
-    if(index!=curIndex){
-        $(".sr_tab span").siblings().removeClass("current").eq(index).addClass("current");
-        $(".sr_table").removeClass("active").eq(index).addClass("active");
-        curIndex=index; //  当前下标赋予变量
+/*$(document).on('click', '.sr_tab div', function(){
+ var index=$(this).index();
+ if(index!=curIndex){
+ $(".sr_tab div").siblings().removeClass("current").eq(index).addClass("current");
+ $(".sr_table").removeClass("active").eq(index).addClass("active");
+ curIndex=index; //  当前下标赋予变量
+ }
+ });*/
+function doTabClick(o,parm) {
+    o.className = "current";		// 当前被中的对象设置css
+    var j;
+    var id;
+    var sbId;
+    for (var i = 1; i <= 2; i++) {	// i等于几，就表示有几个切换
+        id = "tab" + i;
+        sbId='#'+'stTab'+i;
+        j = document.getElementById(id);
+
+        if (id != o.id && j != null) {
+            j.className = "";
+            $(sbId).css('display', 'none');
+        } else {
+            $(sbId).css('display', 'block');
+        }
     }
-});
+}
 
 //  图表部分
 //  单项数据切换
@@ -278,7 +320,26 @@ $('.chart_topright select').change(function(){
                 }else{
                     $.each(redata.data.channel.list,function(k,v){
                         var _data = [];
-                        if(_navName.indexOf(v.pname)<0){
+                        //  为ie低版本增加.indexOf()放大
+                        if (!Array.prototype.indexOf){
+                            Array.prototype.indexOf = function(elt /*, from*/){
+                                var len = this.length >>> 0;
+
+                                var from = Number(arguments[1]) || 0;
+                                from = (from < 0)
+                                    ? Math.ceil(from)
+                                    : Math.floor(from);
+                                if (from < 0)
+                                    from += len;
+
+                                for (; from < len; from++){
+                                    if (from in this && this[from] === elt)
+                                        return from;
+                                }
+                                return -1;
+                            };
+                        }	// end
+                        if(_navName.indexOf(v.pname)<0){		//  判断数组内是否含有pname
                             _navName.push(v.pname);
                         };
                         for(var i=1;i<_navName.length;i++){

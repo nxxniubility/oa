@@ -24,6 +24,7 @@ var alioss_client_config={
 			   			
 			},
 			UploadProgress:function(up, file) {    //选择文件上传进程事件
+				layer.load(2);
 				$('#uploadBtn').val("已上传"+file.percent + "%");
 			},
 			FileUploaded: function(up, file, info) {   //文件上传成功后触发的事件
