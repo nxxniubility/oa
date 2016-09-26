@@ -179,14 +179,32 @@ $(document).on('click', '.city_largearea li', function(){
 });
 
 //  每日数据与员工数据
-$(document).on('click', '.sr_tab span', function(){
+/*$(document).on('click', '.sr_tab div', function(){
 	var index=$(this).index();
 	if(index!=curIndex){
-		$(".sr_tab span").siblings().removeClass("current").eq(index).addClass("current");
+		$(".sr_tab div").siblings().removeClass("current").eq(index).addClass("current");
 		$(".sr_table").removeClass("active").eq(index).addClass("active");
 	    curIndex=index; //  当前下标赋予变量
 	}
-});
+});*/
+function doTabClick(o,parm) {
+	o.className = "current";		// 当前被中的对象设置css		
+	var j;
+	var id;
+	var sbId;  
+	for (var i = 1; i <= 2; i++) {	// i等于几，就表示有几个切换 
+		id = "tab" + i;
+		sbId='#'+'stTab'+i;
+		j = document.getElementById(id);
+		
+		if (id != o.id && j != null) {
+			j.className = "";
+			$(sbId).css('display', 'none');
+		} else {
+			$(sbId).css('display', 'block');
+		}
+	}
+}
 
 //  图表部分
 //  单项数据切换
