@@ -400,9 +400,12 @@
                                                 </if>
                                                 <if condition="!empty($access_list['AFFIRMVISIT'])">
                                                     <if condition="$v['status']!=70">
-                                                        <li class="apply btn_visited">
-                                                            <span class="setVisit"></span>
-                                                            <em>确认到访</em>
+                                                        <if condition="
+                                                            empty($v['visittime'])">
+                                                            <li class="apply btn_visited">
+                                                                <span class="setVisit"></span>
+                                                                <em>确认到访</em>
+                                                            </if>
                                                         </li>
                                                     </if>
                                                 </if>
