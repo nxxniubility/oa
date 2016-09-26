@@ -110,7 +110,7 @@ $(function(){
 |-----------------------------------------------------------------------------------
 */
 function chkInt(strForText){
-    var str = /^[0-9]+.?[0-9]*$/;
+    var str = /^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/;
     var reg = new RegExp(str);
     if(!reg.test(strForText)) {
         return false;
@@ -149,11 +149,13 @@ $(function(){
 
     //收款
     $(document).on('click','#receivablesSub', function(){
-        if($(':input[name="receivables_cost"]').val().length>10){
-            layer.msg('金额不能大于10位数', {icon:2});
+        var charge = $(':input[name="receivables_cost"]').val();
+        var charge = charge.split('.');
+        if(charge[0].length>8){
+            layer.msg('收款整数位不能大于8位数', {icon:2});
             return false;
         }else if(!chkInt($(':input[name="receivables_cost"]').val())){
-            layer.msg('金额只能输入数字', {icon:2});
+            layer.msg('请输入正确的金额', {icon:2});
             return false;
         }
         var data = {
@@ -168,11 +170,13 @@ $(function(){
 
     //退款
     $(document).on('click','#returnSub', function(){
-        if($(':input[name="return_cost"]').val().length>10){
-            layer.msg('金额不能大于10位数', {icon:2});
+        var returnCost = $(':input[name="return_cost"]').val();
+        var returnCost = returnCost.split('.');
+        if(returnCost[0].length>8){
+            layer.msg('退款整数位不能大于8位数', {icon:2});
             return false;
         }else if(!chkInt($(':input[name="return_cost"]').val())){
-            layer.msg('金额只能输入数字', {icon:2});
+            layer.msg('请输入正确的金额', {icon:2});
             return false;
         }
         var data = {
