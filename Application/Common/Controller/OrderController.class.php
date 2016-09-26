@@ -759,9 +759,23 @@ class OrderController extends BaseController
     {
         if (!$request['repeat']) {
             $request['repeat'] = 0;
+        }else{
+            $repeatList = explode(",",$request['repeat']);
         }
         $discount_id = D("Discount")->data($request)->add();
         if ($discount_id) {
+            if ($repeatList) {
+                foreach ($repeatList as $key => $value) {
+                    $discountInfo = D("Discount")->where("discount_id = $value")->find();
+                    $save = array();
+                    if ($discountInfo['repeat']) {
+                        $save['repeat'] = $discountInfo['repeat'].",$discount_id";
+                    }else{
+                        $save['repeat'] = $discount_id;
+                    }
+                    $updata = D("Discount")->where("discount_id = $value")->save($save);
+                }
+            }
             return $discount_id;
         }else{
             return false;
