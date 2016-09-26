@@ -30,7 +30,7 @@ class UserController extends ApiBaseController
         if ($request === null) {
             $data['user_id'] = I('param.user_id', null);
         } else {
-            $data = $request;
+            $data['user_id'] = $request['user_id'];
         }
         $getService = function ($data) {
             //去除数组空值
