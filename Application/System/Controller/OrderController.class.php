@@ -179,9 +179,8 @@ class OrderController extends SystemController
     {
         //获取参数
         $request = I('post.');
-        $checkform = new Checkform();
         if(empty($request['order_id'])) $this->ajaxReturn(1, '参数异常！');
-        if(empty($request['cost']) || !$checkform->checkInt($request['cost'])) $this->ajaxReturn(1, '请输入收款金额', '', 'receivables_cost');
+        if(empty($request['cost'])) $this->ajaxReturn(1, '请输入收款金额', '', 'receivables_cost');
         if(empty($request['payway'])) $this->ajaxReturn(1, '请输入收款方式！');
         if(empty($request['practicaltime'])) $this->ajaxReturn(1, '请输入收款日期！', '', 'receivables_practicaltime');
 //        if (empty($request['zone_id'])) {
@@ -372,13 +371,13 @@ class OrderController extends SystemController
             if (strlen($request['dname'])>40) {
                 $this->ajaxReturn(2,'优惠名称不得超过40个字符');
             }
-            if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
-                $this->ajaxReturn(3,"请输入正确的优惠金额");
-            }
             if (!$request['dmoney']) {
                 $this->ajaxReturn(4,'请填写优惠金额');
             }elseif($request['dmoney']>2000){
                 $this->ajaxReturn(6,'优惠金额不能大于2000');
+            }
+            if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
+                $this->ajaxReturn(3,"请输入正确的优惠金额");
             }
             if (!$request['remark']) {
                 $this->ajaxReturn(7,'请填写优惠详情');
@@ -473,13 +472,13 @@ class OrderController extends SystemController
                 if (strlen($request['dname'])>40) {
                     $this->ajaxReturn(3,'优惠名称不得超过40个字符');
                 }
-                if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
-                    $this->ajaxReturn(3,"请输入正确的优惠金额");
-                }
                 if (!$request['dmoney']) {
                     $this->ajaxReturn(4,'请填写优惠金额');
                 }elseif($request['dmoney']>2000){
                     $this->ajaxReturn(6,'优惠金额不能大于2000');
+                }
+                if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
+                    $this->ajaxReturn(3,"请输入正确的优惠金额");
                 }
                 $update = D("Discount")->where("discount_id = $request[discount_id]")->save($request);
                 if ($update === false) {
