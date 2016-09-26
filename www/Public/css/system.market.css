@@ -155,3 +155,4 @@
 
 /*0923*/
 .search .search_region .seach_city_show .show_content .show_city_cont span {cursor:pointer;}
+.search .search_region .seach_city_show .show_content .show_city_cont span:hover {border-color:#53b567;}

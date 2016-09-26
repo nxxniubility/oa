@@ -1,4 +1,4 @@
-//初始化
+//初始化-职位
 if(market_zone_id!=''){
 	$('.city_title').text($('#zone_'+market_zone_id).text());
 };
@@ -17,6 +17,8 @@ if(market_role_id!=''){
 	}
 	$('.position_name').text(temp_role_names);
 };
+
+//  单项指标左侧列表都添加点击事件
 $(function(){
 	$('.chart_tab').children('li').eq(0).trigger('click');
 })
@@ -30,6 +32,32 @@ $(document).on('click', '.city_title', function(){
 	areaChoose();
 	core();
 });
+//  中心赋值
+function areaChoose(){
+	$(document).on('click', '.city_partition a', function(){
+		var txt = $.trim($(this).text()),
+			cityShow = $(this).closest('.seach_city_show'),
+			finalZone = $(this).closest('.search_region');
+			
+		finalZone.find('.city_title em').text(txt);
+		finalZone.find(':input[name="zone_id"]').val($(this).attr('data-value'));
+		cityShow.addClass('dn');
+		mask.hide();
+	});
+}
+//  城市赋值
+function core(){
+	$(document).on('click', '.show_city_cont span', function(){
+	var coreTxt = $.trim($(this).text()),
+		cityShow = $(this).closest('.seach_city_show'),
+		finalZone = $(this).closest('.search_region');
+	
+		finalZone.find('.city_title em').text(coreTxt);
+		cityShow.addClass('dn');
+		mask.hide();
+	});
+}
+
 //  显示职位选择弹层
 $(document).on('click', '.position_name', function(){
 	mask.show();
@@ -45,46 +73,11 @@ $(document).on('click', '.position_name', function(){
 	if($(':input[name="sale_inp"]:checked').length==$(':input[name="sale_inp"]').length){
 		$('#all_select').prop('checked',true);
 	}
-	openPosition();
-	close_layer();
+	//openPosition();
 	positionChoose();
+	close_layer();
 });
-
-//  关闭职位弹层
-function close_layer(){
-	var $close = $('.cancel');
-	$close.click(function(){
-		$close.closest('.search_position_show').addClass('dn');
-		mask.hide();
-	});
-}
-
-//  中心赋值
-function areaChoose(){
-	$(document).on('click', '.city_partition a', function(){
-		var txt = $.trim($(this).text()),
-			cityShow = $(this).closest('.seach_city_show'),
-			finalZone = $(this).closest('.search_region');
-		finalZone.find('.city_title em').text(txt);
-		finalZone.find(':input[name="zone_id"]').val($(this).attr('data-value'));
-		cityShow.addClass('dn');
-		mask.hide();
-	});
-}
-
-//  城市赋值
-function core(){
-	$(document).on('click', '.show_city_cont span', function(){
-	var coreTxt = $.trim($(this).text()),
-		cityShow = $(this).closest('.seach_city_show'),
-		finalZone = $(this).closest('.search_region');
-	
-		finalZone.find('.city_title em').text(coreTxt);
-		cityShow.addClass('dn');
-		mask.hide();
-	});
-}
-
+openPosition();
 //  展开部门职位
 function openPosition(){
 	var _this = $('.position_department'),
@@ -95,17 +88,25 @@ function openPosition(){
 			_index = $(this).parents('li').index();
 		if( _index + 1 == maxLength){
 			//  同父级下显示/隐藏部门职位
-			$(this).parent().find(_other).slideToggle(500).parent().find(_arrow).toggleClass('up');
-			$(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
+			if($(this).parent().find(_other).css('display') == 'none'){
+				$(this).parent().find(_other).slideDown(500).parent().find(_arrow).addClass('up');				//  自身未显示则向下展开(带箭头指向)	
+				$(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');	//  点击其他则收起上一个展开项
+			}else {
+				$(this).parent().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
+			}
 			$(this).toggleClass('bor_bottom');
 		}else {
-			$(this).parent().find(_other).slideToggle(500).parent().find(_arrow).toggleClass('up');
-			$(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
+			if($(this).parent().find(_other).css('display') == 'none'){
+				$(this).parent().find(_other).slideDown(500).parent().find(_arrow).addClass('up');
+				$(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
+			}else {
+				$(this).parent().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
+			}
+			//$(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
 			$(this).parents('.position_list').find('li').eq(maxLength-1).find(_this).removeClass('bor_bottom');
 		}
 	});
 }
-
 //  职位赋值
 function positionChoose(){
 	$(document).on('click', '.confirm', function(){
@@ -140,6 +141,14 @@ function positionChoose(){
 		};
 	});
 };
+//  关闭职位弹层
+function close_layer(){
+	var $close = $('.cancel');
+	$close.click(function(){
+		$close.closest('.search_position_show').addClass('dn');
+		mask.hide();
+	});
+}
 
 
 // 开始时间
