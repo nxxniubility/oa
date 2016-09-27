@@ -547,7 +547,7 @@ function channelPie(values,num){
 	        plotShadow: false
 	    },
 	    title: {
-	        text: '各渠道所占百分比',
+	        text: '所占百分比',
 	        verticalAlign: 'bottom'
 	    },
 	    tooltip: {

@@ -270,13 +270,15 @@ class UserService extends BaseService
         //批量新增回访
         $reflag = D('UserCallback')->addAll($add_callback);
         if($reflag!==false && $reflag_save!==false){
-            //添加数据记录
-            $dataLog['operattype'] = '11';
-            $dataLog['operator_user_id'] = $data['system_user_id'];
-            $dataLog['user_id'] = $data['user_id'];
-            $dataLog['logtime'] = time();
-            $dataController = new DataService();
-            $dataController->addDataLogs($dataLog);
+            if($rank==1) {
+                //添加数据记录
+                $dataLog['operattype'] = '11';
+                $dataLog['operator_user_id'] = $data['system_user_id'];
+                $dataLog['user_id'] = $data['user_id'];
+                $dataLog['logtime'] = time();
+                $dataController = new DataService();
+                $dataController->addDataLogs($dataLog);
+            }
             D()->commit();
             return array('code'=>0);
         }else{
@@ -418,6 +420,14 @@ class UserService extends BaseService
         if($rank==1) {
             //操作添加数据记录
             $dataLog['operattype'] = 5;
+            $dataLog['operator_user_id'] = $data['system_user_id'];
+            $dataLog['user_id'] = $data['user_id'];
+            $dataLog['logtime'] = $_time;
+            $DataService = new DataService();
+            $DataService->addDataLogs($dataLog);
+        }else{
+            //操作添加数据记录
+            $dataLog['operattype'] = 15;
             $dataLog['operator_user_id'] = $data['system_user_id'];
             $dataLog['user_id'] = $data['user_id'];
             $dataLog['logtime'] = $_time;
