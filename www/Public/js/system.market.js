@@ -486,6 +486,9 @@ function channelBar(navName,values,num){
 		chart: {
 			width:columnWidth,
 			height:450,
+			style:{
+				zIndex:1000
+			},
 			className:'channel_bar',
 			type: 'column'
 			},
