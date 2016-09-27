@@ -124,13 +124,7 @@ class StatisticsController extends SystemController
         $this->assign('data', $data);
         $this->display();
     }
-    // 'restartcount' 
-    // 'visitcount' 
-    // 'ordercount' 
-    // 'refundcount' 
-    // 'visitratio' 
-    // 'conversionratio' 
-    // 'totalratio' 
+
     /*
     |--------------------------------------------------------------------------
     | 我的营销统计
@@ -176,8 +170,11 @@ class StatisticsController extends SystemController
     */
     public function marketStandard()
     {
-
-//        $this->assign('data', $data);
+        //实例化
+        $DataService = new DataService();
+        $result = $DataService->getStandard();
+        $data['list'] = $result['data'];
+        $this->assign('data', $data);
         $this->display();
     }
 
