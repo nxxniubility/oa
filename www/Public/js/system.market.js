@@ -539,7 +539,7 @@ function channelBar(navName,values,num){
 function channelPie(values,num){
 	var _chartnav=$('.chart_tab .cur').attr('data-value'),
 		faWidth = $('.chart_main').width(),
-		pieWidth = faWidth*0.38;	
+		pieWidth = faWidth*0.35;	
 	$('#'+_chartnav).find('.pie'+num).highcharts({
 		chart: {
 			width:pieWidth,
