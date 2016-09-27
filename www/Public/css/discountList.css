@@ -2,7 +2,7 @@
 .mb34 { margin-bottom: 34px;}
 /**/
 .wrapBox { padding: 0 20px; background: #fff;}
-.regionCont { width: 1130px; margin-bottom: 20px;}
+.regionCont { width: auto; margin-bottom: 20px;}
 .regionContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
 .regionContTop .topTit { line-height: 14px; font-size: 0; cursor: default;}
 .regionContTop .topTit span { float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
@@ -153,10 +153,10 @@
 .forbiddenBox .fbCont tr {height:43px;line-height:43px;font-size:12px;}
 .forbiddenBox .fbCont th, .forbiddenBox .fbCont td {text-align:left;border-bottom:1px solid #e1e6eb;}
 .forbiddenBox .fbCont th, .forbiddenBox .fbCont tr:hover th {color:#999;background:#f5f6fa;} 
-.forbiddenBox .fbCont th.thChoice {text-indent:20px;} 
+.forbiddenBox .fbCont th.thChoice {text-indent:10px;} 
 .forbiddenBox .fbCont td {color:#696969;}
 .forbiddenBox .fbCont tr:hover td {background:#ebebeb;}
-.forbiddenBox .fbCont td.tdChoice {text-indent:25px;} 
+.forbiddenBox .fbCont td.tdChoice {text-indent:15px;} 
 .forbiddenBox .fbCont td .fbCheck {width:15px;height:15px;vertical-align:middle;}
 .forbiddenBox .fbBtn {width:100px;height:30px;line-height:30px;margin:0 20px 20px;color:#fff;text-align:center;border:none;background:#53b567;cursor:pointer;}
 .forbiddenBox .fbBtn:hover {background:#4da45e;}

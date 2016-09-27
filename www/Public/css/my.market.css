@@ -88,3 +88,6 @@
 /*0923*/
 .search_pic span {width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .search .search_des_area {width:120px;height:40px;color:#999;padding:0 10px;background:#ccc;cursor:default;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/*0927*/
+.chart_content.new_amount .please_select p {margin-top:150px;}
