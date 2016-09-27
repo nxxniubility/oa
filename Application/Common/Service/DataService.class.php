@@ -11,7 +11,7 @@ use Common\Service\BaseService;
 class DataService extends BaseService
 {
     //初始化
-    protected $statusArr;
+    protected $statusArr,$statusName;
     public function _initialize() {
         parent::_initialize();
         //统计数据状态
@@ -31,6 +31,23 @@ class DataService extends BaseService
             '12'=>'visitnum',  //到访量
             '13'=>'ordernum',  //订单量
             '14'=>'refundnum',  //退款量
+        );
+        $this->statusName = array(
+            'addcount'=>'新增量',
+            'acceptcount'=>'出库量',
+            'switchcount'=>'转出量',
+            'restartcount'=>'放弃量',
+            'recyclecount'=>'系统回收量',
+            'callbackcount'=>'已回访量',
+            'attitudecount'=>'跟进次数',
+            'allocationcount'=>'分配量',
+            'visitcount'=>'到访量',
+            'ordercount'=>'订单量',
+            'refundcount'=>'退款量',
+            'visitratio'=>'到访率',
+            'conversionratio'=>'成交率',
+            'chargebackratio'=>'退款率',
+            'totalratio'=>'总转率',
         );
     }
 
@@ -376,6 +393,65 @@ class DataService extends BaseService
         }
         return array('code'=>1,'msg'=>'数据添加失败');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 添加合格标准
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function addStandard($where)
+    {
+        //必须参数
+        if(empty($where['system_user_id'])) return array('code'=>2,'msg'=>'参数异常');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 修改合格标准
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function editStandard($where)
+    {
+        //必须参数
+        if(empty($where['system_user_id'])) return array('code'=>2,'msg'=>'参数异常');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取合格标准
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getStandard()
+    {
+        $RoleService = new RoleService();
+        $result = D('MarketStandard')->getList();
+        $statusName = $this->statusName ;
+        foreach($result as $k=>$v){
+            //获取合格标准详情
+            $info_list = D('MarketStandardInfo')->getList(array('standard_id'=>$v['standard_id']),'option_name,option_warn,option_num');
+            $arr_status = '';
+            foreach($info_list as $k2=>$v2){
+                $info_list[$k2]['status_name'] = $statusName[$v2['option_name']];
+                if($k2==0){
+                    $arr_status =$statusName[$v2['option_name']];
+                }else{
+                    $arr_status .= '、'.$statusName[$v2['option_name']];
+                }
+            }
+            $result[$k]['children'][] =$info_list;
+            $result[$k]['status_names'] =$arr_status;
+            $reRole = $RoleService->getFind($v['role_id']);
+            $result[$k]['role_name'] = $reRole['data']['name'];
+        }
+        return array('code'=>0,'data'=>$result);
+    }
+
+
+
+
 
     /**
      * 区域ID 获取子集包括自己的集合

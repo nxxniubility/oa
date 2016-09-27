@@ -52,4 +52,29 @@ class RoleService extends BaseService
         $role = $this->disposeArray($role, $order, $page, $where);
         return array('code'=>0, 'data'=>$role);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取单个职位-缓存
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getFind($role_id)
+    {
+        if( F('Cache/Personnel/role') ) {
+            $role = F('Cache/Personnel/role');
+        }else{
+            $relist = $this->getAllRole();
+            $role = $relist['data'];
+        }
+        if(!empty($role['data'])){
+            foreach($role['data'] as $k=>$v){
+                if($v['id']==$role_id){
+                    $redata = $v;
+                }
+            }
+            return array('code'=>0, 'data'=>$redata);
+        }
+        return array('code'=>1, 'msg'=>'找不到数据');
+    }
 }

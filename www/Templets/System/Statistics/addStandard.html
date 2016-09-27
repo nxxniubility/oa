@@ -65,102 +65,10 @@
 	        		<span><i>*</i>规则内容：</span>
 	        		<div class="rows_cont">
 	        			<ul class="standard_list">
-	        				<li>
-	        					<div class="list_top clearfix">
-	        						<p>新增量</p>
-	        						<a href="javascript:;" class="top_close"><img src="../../../Public/images/organization_04-01.png" alt="关闭"></a>
-	        					</div>
-	        					<div class="list_cont">
-	        						<div class="cont_top clearfix">
-	        							<span><i>*</i>标准数值</span>
-	        							<input type="text" class="list_inp">
-	        							<em>请输入正整数或者百分比数值</em>
-	        						</div>
-	        						<div class="cont_choose">
-	        							<span><i>*</i>告警数值</span>
-	        							<label for="less_than">
-	        								<input type="radio" class="list_radio" name="warning" id="less_than">
-	        								<em>低于标准数值即警告</em>
-	        							</label>
-	        							<label for="higher_than">
-	        								<input type="radio" class="list_radio" name="warning" id="higher_than">
-	        								<em>高于标准数值即警告</em>
-	        							</label>
-	        						</div>
-	        					</div>
-	        				</li>
-	        				<li>
-	        					<div class="list_top clearfix">
-	        						<p>新增量</p>
-	        						<a href="javascript:;" class="top_close"><img src="../../../Public/images/organization_04-01.png" alt="关闭"></a>
-	        					</div>
-	        					<div class="list_cont">
-	        						<div class="cont_top clearfix">
-	        							<span><i>*</i>标准数值</span>
-	        							<input type="text" class="list_inp">
-	        							<em>请输入正整数或者百分比数值</em>
-	        						</div>
-	        						<div class="cont_choose">
-	        							<span><i>*</i>告警数值</span>
-	        							<label for="less_than">
-	        								<input type="radio" class="list_radio" name="warning" id="less_than">
-	        								<em>低于标准数值即警告</em>
-	        							</label>
-	        							<label for="higher_than">
-	        								<input type="radio" class="list_radio" name="warning" id="higher_than">
-	        								<em>高于标准数值即警告</em>
-	        							</label>
-	        						</div>
-	        					</div>
-	        				</li>
-	        				<li>
-	        					<div class="list_top clearfix">
-	        						<p>新增量</p>
-	        						<a href="javascript:;" class="top_close"><img src="../../../Public/images/organization_04-01.png" alt="关闭"></a>
-	        					</div>
-	        					<div class="list_cont">
-	        						<div class="cont_top clearfix">
-	        							<span><i>*</i>标准数值</span>
-	        							<input type="text" class="list_inp">
-	        							<em>请输入正整数或者百分比数值</em>
-	        						</div>
-	        						<div class="cont_choose">
-	        							<span><i>*</i>告警数值</span>
-	        							<label for="less_than">
-	        								<input type="radio" class="list_radio" name="warning" id="less_than">
-	        								<em>低于标准数值即警告</em>
-	        							</label>
-	        							<label for="higher_than">
-	        								<input type="radio" class="list_radio" name="warning" id="higher_than">
-	        								<em>高于标准数值即警告</em>
-	        							</label>
-	        						</div>
-	        					</div>
-	        				</li>
-	        				<li>
-	        					<div class="list_top clearfix">
-	        						<p>新增量</p>
-	        						<a href="javascript:;" class="top_close"><img src="../../../Public/images/organization_04-01.png" alt="关闭"></a>
-	        					</div>
-	        					<div class="list_cont">
-	        						<div class="cont_top clearfix">
-	        							<span><i>*</i>标准数值</span>
-	        							<input type="text" class="list_inp">
-	        							<em>请输入正整数或者百分比数值</em>
-	        						</div>
-	        						<div class="cont_choose">
-	        							<span><i>*</i>告警数值</span>
-	        							<label for="less_than">
-	        								<input type="radio" class="list_radio" name="warning" id="less_than">
-	        								<em>低于标准数值即警告</em>
-	        							</label>
-	        							<label for="higher_than">
-	        								<input type="radio" class="list_radio" name="warning" id="higher_than">
-	        								<em>高于标准数值即警告</em>
-	        							</label>
-	        						</div>
-	        					</div>
-	        				</li>
+
+
+
+
 	        			</ul>
 	        		</div>
 	        	</div>
@@ -181,7 +89,34 @@
 		</div>
 		
 		
-		
+		<!-- js动态模版-->
+		<div style="display: none;" id="body_li">
+			<li>
+				<div class="list_top clearfix">
+					<p>--</p>
+					<a href="javascript:;" class="top_close"><img src="../../../Public/images/organization_04-01.png" alt="关闭"></a>
+				</div>
+				<div class="list_cont">
+					<div class="cont_top clearfix">
+						<span><i>*</i>标准数值</span>
+						<input type="text" class="list_inp">
+						<em>请输入正整数或者百分比数值</em>
+					</div>
+					<div class="cont_choose">
+						<span><i>*</i>告警数值</span>
+						<label for="less_than">
+							<input type="radio" class="list_radio" name="warning" id="less_than">
+							<em>低于标准数值即警告</em>
+						</label>
+						<label for="higher_than">
+							<input type="radio" class="list_radio" name="warning" id="higher_than">
+							<em>高于标准数值即警告</em>
+						</label>
+					</div>
+				</div>
+			</li>
+		</div>
+
 		<script src="../../../Public/js/jquery-1.9.1.min.js"></script>
 		<script src="../../../Public/js/market.new.standard.js"></script>
 	</body>
