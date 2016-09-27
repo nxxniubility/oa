@@ -29,7 +29,7 @@ class StatisticsController extends SystemController
         if(empty($request['endtime'])){
             $request['endtime'] = date('Y/m/d');
         }
-        $where['daytime'] = $request['startime'].'-'.$request['endtime'];
+        $where['daytime'] = $request['startime'].','.$request['endtime'];
         $where['zone_id'] = $request['zone_id'];
         $where['role_id'] = $request['role_id'];
         //获取接口数据
@@ -45,7 +45,7 @@ class StatisticsController extends SystemController
         $ZoneService = new ZoneService();
         $zone_list = $ZoneService->getZoneList(1);
         $data['zoneList'] = $zone_list['data'];
-        $request['daytime'] = $request['startime'].'-'.$request['endtime'];
+        $request['daytime'] = $request['startime'].','.$request['endtime'];
         $data['request'] = $request;
         $this->assign('data', $data);
         $this->display();
@@ -74,13 +74,13 @@ class StatisticsController extends SystemController
             $request['endtime'] = date('Y/m/d');
         }
         $where['system_user_id'] = $request['system_user_id'];
-        $where['daytime'] = $request['startime'].'-'.$request['endtime'];
+        $where['daytime'] = $request['startime'].','.$request['endtime'];
         $result = $SystemUser->getListCache(array('system_user_id'=>$where['system_user_id']));
         $systemUserInfo = $result['data'];
         $result = $DataService->getDataMarket($where);
         $dataMarket = $result['data'];
         $dataMarket['daytime'] = $where['daytime'];
-        $request['daytime'] = $request['startime'].'-'.$request['endtime'];
+        $request['daytime'] = $request['startime'].','.$request['endtime'];
         $data['request'] = $request;
         $this->assign('dataMarket', $dataMarket);
         $this->assign('systemUserInfo', $systemUserInfo);

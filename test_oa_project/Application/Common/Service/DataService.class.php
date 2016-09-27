@@ -120,7 +120,7 @@ class DataService extends BaseService
     {
         //时间格式转换
         if(!empty($where['daytime'])){
-            $daytime = explode('-', $where['daytime']);
+            $daytime = explode(',', $where['daytime']);
             if(count($daytime)>1){
                 $where['daytime'] = array(array('EGT',date('Ymd', strtotime($daytime[0]))),array('ELT',date('Ymd', strtotime($daytime[1]))));
             }else{
@@ -251,6 +251,7 @@ class DataService extends BaseService
             'addcount'=>'1',
             'acceptcount'=>'1,2,3,4',
             'switchcount'=>'5,15',
+            'allocationcount'=>'1,2,3,4',//分配量 还要减'5,15'
             'restartcount'=>'6',
             'recyclecount'=>'7',
             'redeemcount'=>'9',
@@ -262,7 +263,7 @@ class DataService extends BaseService
         );
         //时间格式转换
         if(!empty($where['daytime'])){
-            $daytime = explode('-', $where['daytime']);
+            $daytime = explode(',', $where['daytime']);
             if(count($daytime)>1){
                 $where['daytime'] = array(array('EGT',strtotime($daytime[0])),array('ELT',strtotime($daytime[1].'2359')));
             }else{
@@ -280,6 +281,12 @@ class DataService extends BaseService
             $_where['system_user_id'] = array('IN',$systemIds);
         }elseif(!empty($where['system_user_id'])){
             $_where['system_user_id'] = $where['system_user_id'];
+        }
+        if($where['type']=='allocationcount'){
+            $tem_id = D('DataLogs')->where(array('operattype'=>array('IN',$arr['switchcount'])))->select();
+            if(!empty($tem_id)){
+                $_where['data_logs_id'] = array('NOT IN',$arr[$where['type']]);
+            }
         }
         $_where['operattype'] = array('IN',$arr[$where['type']]);
         $_where['logtime'] = $where['daytime'];
