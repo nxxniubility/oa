@@ -368,7 +368,7 @@ class OrderController extends SystemController
             }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
                 $this->ajaxReturn(2,'不能包含特殊字符');
             }
-            if (strlen($request['dname'])>40) {
+            if (strlen($request['dname'])>30) {
                 $this->ajaxReturn(2,'优惠名称不得超过40个字符');
             }
             if (!$request['dmoney']) {
@@ -382,8 +382,8 @@ class OrderController extends SystemController
             if (!$request['remark']) {
                 $this->ajaxReturn(7,'请填写优惠详情');
             }
-            if (strlen($request['remark'])>100) {
-                $this->ajaxReturn(8,'优惠详情不得超过100个字符');
+            if (strlen($request['remark'])>50) {
+                $this->ajaxReturn(8,'优惠详情不得超过50个字符');
             } 
             if(!$request['pid']){
                 $this->ajaxReturn(9,'请选择优惠所属分类');
