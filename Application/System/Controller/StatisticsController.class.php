@@ -47,10 +47,90 @@ class StatisticsController extends SystemController
         $data['zoneList'] = $zone_list['data'];
         $request['daytime'] = $request['startime'].','.$request['endtime'];
         $data['request'] = $request;
+        $standardList = D("MarketStandard")->where()->select();
+        foreach ($standardList as $key => $standard) {
+            $infos = D("MarketStandardInfo")->where("standard_id = $standard[standard_id]")->select();
+            $infos['role_id'] = $standard['role_id'];
+            $standardInfos[$key] = $infos;
+        }
+        foreach ($data['dataMarket']['systemuser'] as $k1 => $v1) {
+            foreach ($standardInfos as $k2 => $v2) {
+                if ($v1['role_id'] == $v2['role_id']) {
+                    unset($v2['role_id']);
+                    foreach ($v2 as $k3 => $v3) {
+                        if ($v3['option_name'] == 'addcount') {
+                            if (($v1['addcount']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redaddcount'] = 1;
+                                
+                            }elseif (($v1['addcount']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redaddcount'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'restartcount') {
+                            if (($v1['restartcount']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redrestartcount'] = 1;
+                                
+                            }elseif (($v1['restartcount']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redrestartcount'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'visitcount') {
+                            if (($v1['visitcount']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redvisitcount'] = 1;
+                            }elseif (($v1['visitcount']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redvisitcount'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'ordercount') {
+                            if (($v1['ordercount']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redordercount'] = 1;
+                            }elseif (($v1['ordercount']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redordercount'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'refundcount') {
+                            if (($v1['refundcount']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redrefundcount'] = 1;
+                            }elseif (($v1['refundcount']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redrefundcount'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'visitratio') {
+                            if (($v1['visitratio']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redvisitratio'] = 1;
+                            }elseif (($v1['visitratio']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redvisitratio'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'conversionratio') {
+                            if (($v1['conversionratio']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redconversionratio'] = 1;
+                            }elseif (($v1['conversionratio']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redconversionratio'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'totalratio') {
+                            if (($v1['totalratio']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redtotalratio'] = 1;
+                            }elseif (($v1['totalratio']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redtotalratio'] = 1;
+                            }
+                        }
+                        $data['dataMarket']['systemuser'][$k1] = $v1;
+                    }
+                }
+            }
+        }
         $this->assign('data', $data);
         $this->display();
     }
-
+    // 'restartcount' 
+    // 'visitcount' 
+    // 'ordercount' 
+    // 'refundcount' 
+    // 'visitratio' 
+    // 'conversionratio' 
+    // 'totalratio' 
     /*
     |--------------------------------------------------------------------------
     | 我的营销统计
