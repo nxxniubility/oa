@@ -112,15 +112,16 @@ class SystemUserService extends BaseService
     public function getListCache($where, $order=null, $limit=null, $type=null)
     {
         $where = array_filter($where);
+        $where['usertype'] = !empty($where['usertype'])?$where['usertype']:10;
         if(F('Cache/Personnel/system_list') && empty($where['realname'])){
             $systemUserAll = F('Cache/Personnel/system_list');
         }else{
             if(!empty($where['realname'])){
                 $systemUserList = $this->getList($where);
             }else{
-                $systemUserList = $this->getList(array('usertype'=>array('neq',10)));
+                $systemUserList = $this->getList();
             }
-            $systemUserCount = $this->getCount(array('usertype'=>array('neq',10)));
+            $systemUserCount = $this->getCount();
             $systemUserAll['data'] = $systemUserList['data'];
             $systemUserAll['count'] = $systemUserCount['data'];
             if(empty($where['realname'])){
@@ -145,16 +146,23 @@ class SystemUserService extends BaseService
                 }
             }
         }
-        if($limit!==null){
-            $limit = explode(',',$limit);
-            $systemUserAll['data'] = array_slice($systemUserAll['data'], $limit[0], $limit[1]);
-        }
         if(!empty($where['system_user_id'])){
             foreach($systemUserAll['data'] as $k=>$v){
                 if($v['system_user_id']==$where['system_user_id']){
                     $systemUserAll['data'] = $v;
                 }
             }
+        }elseif($where['usertype'] == 10){
+            foreach($systemUserAll['data'] as $k=>$v){
+                if($v['usertype']==$where['usertype']){
+                    unset($systemUserAll['data'][$k]);
+                }
+            }
+            $systemUserAll['count'] = count($systemUserAll['data']);
+        }
+        if($limit!==null){
+            $limit = explode(',',$limit);
+            $systemUserAll['data'] = array_slice($systemUserAll['data'], $limit[0], $limit[1]);
         }
         //返回数据与状态
         return array('code'=>'0', 'data'=>$systemUserAll['data']);
