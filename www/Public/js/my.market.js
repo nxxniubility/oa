@@ -152,14 +152,14 @@ function close_layer(){
 
 // 开始时间
 $(document).ready(function(){
-    var _daytime = market_daytime.split('-');
+    var _daytime = market_daytime.split(',');
     setTimeout(function(){
         $(".startime").val(_daytime[0]).glDatePicker({});
     },500)
 });
 // 结束时间
 $(document).ready(function(){
-    var _daytime = market_daytime.split('-');
+    var _daytime = market_daytime.split(',');
     setTimeout(function(){
         $(".endtime").val(_daytime[1]).glDatePicker({});
     },500)
