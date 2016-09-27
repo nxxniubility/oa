@@ -180,12 +180,17 @@ class OrderController extends SystemController
         //获取参数
         $request = I('post.');
         if(empty($request['order_id'])) $this->ajaxReturn(1, '参数异常！');
-        if(empty($request['cost'])) $this->ajaxReturn(1, '请输入收款金额', '', 'receivables_cost');
+        $zone_id = $this->system_user['zone_id'];
+        $zoneInfo = D("Zone")->where("zone_id = $zone_id")->field("centersign")->find();
+        if ($zoneInfo['centersign'] != 10) {
+            if (empty($request['zone_id'])) {
+                $this->ajaxReturn(1, '请选择中心！');
+            }
+        } 
         if(empty($request['payway'])) $this->ajaxReturn(1, '请输入收款方式！');
+        if(empty($request['cost'])) $this->ajaxReturn(1, '请输入收款金额', '', 'receivables_cost');
         if(empty($request['practicaltime'])) $this->ajaxReturn(1, '请输入收款日期！', '', 'receivables_practicaltime');
-//        if (empty($request['zone_id'])) {
-//            $this->ajaxReturn(1, '请选择中心！', '', 'receivables_practicaltime');
-//        }
+              
         //添加参数
         $request['practicaltime'] = strtotime($request['practicaltime']);
         $request['system_user_id'] = $this->system_user_id;
