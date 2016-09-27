@@ -179,14 +179,6 @@ $(document).on('click', '.city_largearea li', function(){
 });
 
 //  每日数据与员工数据
-/*$(document).on('click', '.sr_tab div', function(){
-	var index=$(this).index();
-	if(index!=curIndex){
-		$(".sr_tab div").siblings().removeClass("current").eq(index).addClass("current");
-		$(".sr_table").removeClass("active").eq(index).addClass("active");
-	    curIndex=index; //  当前下标赋予变量
-	}
-});*/
 function doTabClick(o,parm) {
 	o.className = "current";		// 当前被中的对象设置css		
 	var j;
