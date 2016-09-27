@@ -645,7 +645,7 @@
 	        		
 	        		<!-- 每日数据 -->
 	        		<div class="sr_table" id="stTab1" style="display:block;">
-						<?php $temp_daytime = explode('-', $data['request']['daytime']); ?>
+						<?php $temp_daytime = explode(',', $data['request']['daytime']); ?>
 		        		<div class="sr_time">统计时间：{$temp_daytime[0]}至{$temp_daytime[1]}</div>
 		        		<table cellpadding="0" cellspacing="0"  id="sr_everyday">
 		        			<tr>
