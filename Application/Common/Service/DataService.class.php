@@ -26,7 +26,7 @@ class DataService extends BaseService
             '7'=>'recyclenum',   //系统回收量
             '8'=>'directorrecovernum',   //主管回收
             '9'=>'redeemnum',   //赎回量
-//            '10'=>'callbacknum',  //已回访量
+            '10'=>'callbacknum',  //已回访量
             '11'=>'attitudenum',  //跟进次数
             '12'=>'visitnum',  //到访量
             '13'=>'ordernum',  //订单量
@@ -282,12 +282,6 @@ class DataService extends BaseService
         }elseif(!empty($where['system_user_id'])){
             $_where['system_user_id'] = $where['system_user_id'];
         }
-        if($where['type']=='allocationcount'){
-            $tem_id = D('DataLogs')->where(array('operattype'=>array('IN',$arr['switchcount'])))->select();
-            if(!empty($tem_id)){
-                $_where['data_logs_id'] = array('NOT IN',$arr[$where['type']]);
-            }
-        }
         $_where['operattype'] = array('IN',$arr[$where['type']]);
         $_where['logtime'] = $where['daytime'];
         $redata = D('DataLogs')->where($_where)->order('logtime asc')->select();
@@ -349,6 +343,7 @@ class DataService extends BaseService
     {
         //必须参数
         if(empty($where['system_user_id'])) return array('code'=>2,'msg'=>'参数异常');
+        $_time = time();
         //$where['num'] =  +1/-1
         $data_where['daytime'] = date('Ymd');
         $data_where['zone_id'] = $where['zone_id'];
@@ -359,10 +354,14 @@ class DataService extends BaseService
         }
         //添加跟进记录？
         if($where['name']=='attitudenum'){
-            $dayCallback = D('DataLogs')->where(array('system_user_id'=>$where['system_user_id'],'zone_id'=>$data_where['zone_id'],'user_id'=>array('IN',$where['user_id']),'logtime'=>array('GT',$data_where['daytime'])))->count();
-            if($dayCallback==0){
-                $save_callback['callbacknum'] = array('exp','callbacknum+1');
-                D('DataMarket')->where($data_where)->save($save_callback);
+            $dayCallback = D('DataLogs')->where(array('operattype'=>11,'system_user_id'=>$where['system_user_id'],'zone_id'=>$data_where['zone_id'],'user_id'=>array('IN',$where['user_id']),'logtime'=>array('GT',strtotime(date('Y-m-d')))))->count();
+            if($dayCallback==1){
+                //操作添加数据记录
+                $dataLog['operattype'] = 10;
+                $dataLog['operator_user_id'] = $where['system_user_id'];
+                $dataLog['user_id'] = $where['user_id'];
+                $dataLog['logtime'] = $_time;
+                $this->addDataLogs($dataLog);
             }
         }
         $field = $where['name'];
