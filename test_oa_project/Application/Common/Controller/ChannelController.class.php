@@ -90,8 +90,8 @@ class ChannelController extends BaseController
         if( F('Cache/channel/channel') ) {
             $channelist = F('Cache/channel/channel');
         }else{
-            $channelist['data'] = D('Channel')->where(array('system_user_id'=>0))->select();
-            $channelist['count'] = D('Channel')->where('system_user_id=0')->count();
+            $channelist['data'] = D('Channel')->select();
+            $channelist['count'] = D('Channel')->count();
             F('Cache/channel/channel', $channelist);
         }
         //数组分级
@@ -115,8 +115,8 @@ class ChannelController extends BaseController
         if( F('Cache/channel/channel') ) {
             $channelist = F('Cache/channel/channel');
         }else{
-            $channelist['data'] = D('Channel')->where(array('system_user_id'=>0))->select();
-            $channelist['count'] = D('Channel')->where('system_user_id=0')->count();
+            $channelist['data'] = D('Channel')->select();
+            $channelist['count'] = D('Channel')->count();
         }
         foreach($channelist['data'] as $k=>$v){
             if($v['channel_id']==$channel_id){
@@ -146,8 +146,8 @@ class ChannelController extends BaseController
         if( F('Cache/channel/channel') ) {
             $channel = F('Cache/channel/channel');
         }else{
-            $channel['data'] = D('Channel')->where('system_user_id=0')->select();
-            $channel['count'] = D('Channel')->where('system_user_id=0')->count();
+            $channel['data'] = D('Channel')->select();
+            $channel['count'] = D('Channel')->count();
             F('Cache/channel/channel', $channel);
         }
         //数组分级

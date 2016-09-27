@@ -213,6 +213,7 @@ class DataService extends BaseService
             //员工
             if(empty($newArr['systemuser'][$v['system_user_id']]['system_user_id'])){
                 $sys_where['system_user_id'] = $v['system_user_id'];
+                $sys_where['usertype'] = 1;
                 $info = $SystemUserService->getListCache($sys_where);
                 $info = $info['data'];
                 $newArr['systemuser'][$v['system_user_id']]['realname'] = $info['realname'];
