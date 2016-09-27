@@ -161,6 +161,7 @@ class DataController extends ApiBaseController
         }else{
             $where = $requesr;
         }
+
         $getService = function($where){
             //去除数组空值
             $where = array_filter($where);

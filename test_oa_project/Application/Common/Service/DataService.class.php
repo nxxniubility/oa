@@ -285,6 +285,7 @@ class DataService extends BaseService
         $_where['operattype'] = array('IN',$arr[$where['type']]);
         $_where['logtime'] = $where['daytime'];
         $redata = D('DataLogs')->where($_where)->order('logtime asc')->select();
+       
         $ChannelService = new ChannelService();
         $channel_list = $ChannelService->getAllChannel();
         $channel_list = $channel_list['data']['data'];
