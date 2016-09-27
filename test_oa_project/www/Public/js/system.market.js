@@ -480,7 +480,7 @@ function dailyStats(days,values,name){
 function channelBar(navName,values,num){
 	var _chartnav=$('.chart_tab .cur').attr('data-value'),
 		faWidth = $('.chart_main').width(),
-		columnWidth = faWidth*0.6;
+		columnWidth = faWidth*0.58;
 		
 	$('#'+_chartnav).find('.bar'+num).highcharts({
 		chart: {
@@ -539,7 +539,7 @@ function channelBar(navName,values,num){
 function channelPie(values,num){
 	var _chartnav=$('.chart_tab .cur').attr('data-value'),
 		faWidth = $('.chart_main').width(),
-		pieWidth = faWidth*0.4;	
+		pieWidth = faWidth*0.38;	
 	$('#'+_chartnav).find('.pie'+num).highcharts({
 		chart: {
 			width:pieWidth,
