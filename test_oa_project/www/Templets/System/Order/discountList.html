@@ -20,9 +20,7 @@
 				</div>
 				<div class="regionContMiddle">
 					<dl class="regionTit  clearfix">
-						<dt class="wOne regionSequence clearfix">
-							<span>ID</span>
-						</dt>
+						<dt class="wOne regionSequence clearfix"><span>ID</span></dt>
 						<dt class="wTwo">优惠名称</dt>
 						<dt class="wThr">优惠金额</dt>
 						<dt class="wFou">优惠详情</dt>
@@ -73,7 +71,7 @@
 			<div class="preCont">
 				<div class="preRows clearfix">
 					<span>优惠名称：</span>
-					<input type="text" class="preInt" name="dname" autocomplete="off">
+					<input type="text" class="preInt" name="dname" autocomplete="off" onkeyup="chkLength(this,20)">
 				</div>
 				<div class="preRows clearfix">
 					<span>优惠金额：</span>
@@ -84,7 +82,7 @@
 				</div>
 				<div class="preRows clearfix">
 					<span>优惠详情：</span>
-					<input type="text" class="preInt" name="remark" autocomplete="off">
+					<input type="text" class="preInt" name="remark" autocomplete="off" onkeyup="chkLength(this,30)">
 				</div>
 				<div class="preRows clearfix">
 					<span>归属类别：</span>
@@ -156,7 +154,7 @@
 				</div>
 				<div class="preRows clearfix">
 					<span>优惠名称：</span>
-					<input type="text" class="preInt edit" name="edit_dname">
+					<input type="text" class="preInt edit" name="edit_dname" onkeyup="chkLength(this,20)">
 				</div>
 				<div class="preRows clearfix">
 					<span>优惠金额：</span>
@@ -167,7 +165,7 @@
 				</div>
 				<div class="preRows clearfix">
 					<span>优惠详情：</span>
-					<input type="text" class="preInt edit" name="edit_remark">
+					<input type="text" class="preInt edit" name="edit_remark" onkeyup="chkLength(this,30)">
 				</div>
 				<div class="preRows clearfix">
 					<span>归属类别：</span>
