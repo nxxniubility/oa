@@ -26,10 +26,19 @@ function sideber(){
 		$(this).next(".sideber_trans").slideToggle();
 	});
 	
-	$('.sidebarbox').bind('mousewheel', function(event) {
+	$('.sidebarbox').bind('mousewheel', function(event,delta,deltaX,deltaY) {
           event.preventDefault();
           var scrollTop = this.scrollTop;
           this.scrollTop = (scrollTop + ((event.deltaY * event.deltaFactor) * -1));
+          //IS IE?
+		    if(navigator.userAgent.indexOf("MSIE")>0)
+		    {
+		        if(navigator.userAgent.indexOf("MSIE 8.0")>0)
+		        {
+		            //	alert("ie8");
+		            this.scrollTop = (scrollTop + ((event.deltaY * event.deltaFactor * 50) * -1));
+		        }
+		    }
           //console.log(event.deltaY, event.deltaFactor, event.originalEvent.deltaMode, event.originalEvent.wheelDelta);
 	});
 	
