@@ -17,7 +17,7 @@
 	            	<span class="title_text">营销统计管理</span>
 	            </div>
 	            <div class="title_right fr clearfix">
-	            	<a href="{:U('System/Statistics/marketStandard')}" class="setup_btn">设置合格标准</a>
+	            	<a href="{:U('System/Statistics/marketStandard')}" class="return">设置合格标准</a>
 	            	<!--<a href="javascript:;" class="export_btn">导出数据</a>-->
 	            </div>
 	        </div>
@@ -49,6 +49,7 @@
 											</div>
 										</foreach>
 									</foreach>
+									<input type="button" class="reset_btn" value="重置">
 									<input type="hidden" name="zone_id" value="{$data.request.zone_id}" autocomplete="off">
 		        				</div>
 		        			</div>
@@ -452,7 +453,7 @@
 						</div>
 						<div class="chart_main fl">
 							<div class="chart_top clearfix">
-								<span class="chart_toptitle">签单量:{$data.dataMarket.count.ordercount}</span>
+								<span class="chart_toptitle">订单量:{$data.dataMarket.count.ordercount}</span>
 								<div class="chart_topright fr">
 									<p>选择指标:</p>
 									<select autocomplete="off">
@@ -750,7 +751,7 @@
 	        </div>
 		</div>	
 			
-		<div id="mask" class="dn"></div>
+		<div id="mask"></div>
 		<script>
 			var get_info_url = '/Api/Data/getDataMarketInfo';
 			var market_daytime = '{$data.request.daytime}';

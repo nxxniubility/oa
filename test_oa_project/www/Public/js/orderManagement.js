@@ -84,7 +84,7 @@ $(document).on('click', '.forSelect',function(event){
     event.stopPropagation();
 });
 
- $(document).click(function() {
+$(document).click(function() {
 	$('.otherOperation').hide();
 });
 
