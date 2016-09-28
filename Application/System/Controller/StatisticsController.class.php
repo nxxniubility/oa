@@ -47,16 +47,16 @@ class StatisticsController extends SystemController
         $data['zoneList'] = $zone_list['data'];
         $request['daytime'] = $request['startime'].','.$request['endtime'];
         $data['request'] = $request;
-        $standardList = D("MarketStandard")->where()->select();
-        foreach ($standardList as $key => $standard) {
-            $infos = D("MarketStandardInfo")->where("standard_id = $standard[standard_id]")->select();
-            $infos['role_id'] = $standard['role_id'];
-            $standardInfos[$key] = $infos;
+        $standardList = $DataService->getStandard();
+        foreach ($standardList['data'] as $key => $standard) {
+            $infos = $DataService->getStandardInfos(array('standard_id'=>$standard['standard_id']));
+            $standard['role_id'] = explode(',', $standard['role_id']);
+            $infos['data']['role_ids'] = $standard['role_id'];
+            $standardInfos[$key] = $infos['data'];
         }
         foreach ($data['dataMarket']['systemuser'] as $k1 => $v1) {
             foreach ($standardInfos as $k2 => $v2) {
-                if ($v1['role_id'] == $v2['role_id']) {
-                    unset($v2['role_id']);
+                if (in_array($v1['role_id'], $v2['role_ids'])) {
                     foreach ($v2 as $k3 => $v3) {
                         if ($v3['option_name'] == 'addcount') {
                             if (($v1['addcount']>$v3['option_num']) && ($v3['option_warn']==2)) {
