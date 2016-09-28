@@ -150,7 +150,7 @@ function positionChoose(){
 		if(_role_names.length>13){
 			_role_names = _role_names.substring(0,13)+'...';
 		}
-		$('.position_name').text(_role_names);
+		$('.position_name em').text(_role_names);
 		$close.closest('.search_position_show').addClass('dn');
 		mask.hide();
 	});
