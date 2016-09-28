@@ -20,9 +20,9 @@
         </div>
         <div class="viCondition clearfix">
             <span>实际到访时间：</span>
-            <input type="text" class="afTime start" id="afTimeStar" value="{$data['request']['visittime_val'][0]}" placeholder="开始时间">
+            <input type="text" class="afTime start" id="afTimeStar" value="{$data['request']['visittime_val'][0]}" placeholder="开始时间" readonly="readonly">
             <em>至</em>
-            <input type="text" class="afTime end" id="afTimeEnd" value="{$data['request']['visittime_val'][1]}" data-url="{:U('System/Visit/visitList').'?visittime='}" placeholder="截止时间">
+            <input type="text" class="afTime end" id="afTimeEnd" value="{$data['request']['visittime_val'][1]}" data-url="{:U('System/Visit/visitList').'?visittime='}" placeholder="截止时间"  readonly="readonly">
 
             <form action="{:U('System/Visit/visitList')}" method="get" onsubmit="layer.load(2);">
             	<select class="visSelect" name="keyname">

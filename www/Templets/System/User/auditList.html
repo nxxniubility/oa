@@ -44,18 +44,18 @@
 										<if condition="(!empty($data['request']['applytime']) && $getapplytime[0]!='time' && $getapplytime[1]!='time')">
 											<li class="clickli twoCurr">自定义时间段</li>
 											<li class="selectbox employeeStatus l start" style="display: block; visibility: visible;">
-												<input type="text" class="afTime" value="{$getapplytime[0]}" placeholder="开始时间">
+												<input type="text" class="afTime" value="{$getapplytime[0]}" placeholder="开始时间"  readonly="readonly">
 											</li>
 											<li class="selectbox employeeStatus l end" style="display: block; visibility: visible;">
-												<input type="text" class="afTime endTiem" data-url="{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime=" value="{$getapplytime[1]}" placeholder="结束时间" autocomplete="off">
+												<input type="text" class="afTime endTiem" data-url="{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime=" value="{$getapplytime[1]}" placeholder="结束时间" autocomplete="off"  readonly="readonly">
 											</li>
 										<else />
 											<li class="clickli">自定义时间段</li>
 											<li class="selectbox employeeStatus l start">
-												<input type="text" class="afTime" value="" placeholder="开始时间" autocomplete="off">
+												<input type="text" class="afTime" value="" placeholder="开始时间" autocomplete="off"  readonly="readonly">
 											</li>
 											<li class="selectbox employeeStatus l end">
-												<input type="text" class="afTime endTiem" data-url="{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime=" value="" placeholder="结束时间" autocomplete="off">
+												<input type="text" class="afTime endTiem" data-url="{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime=" value="" placeholder="结束时间" autocomplete="off"  readonly="readonly">
 											</li>
 										</if>
 
@@ -72,7 +72,7 @@
 									</select>
 								</div>
 							</div>
-							
+
 							<div class="atKeyword clearfix">
 								<form action="{:U('System/User/auditList')}" method="get">
 								<select class="atSearchSelect" name="key_name" >
@@ -133,7 +133,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
     	<script src="__PUBLIC__/js/auditTransferred.js"></script>
