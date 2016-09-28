@@ -112,8 +112,8 @@
 .chart_content.new_amount .daily_stats {width:100%;margin-top:65px;border-right:1px solid #d9d9d9;}
 
 .chart_content.new_amount .channel_box {margin-top:65px;}
-.chart_content.new_amount .channel_bar {float:left;width:65%;height:200px;}
-.chart_content.new_amount .channel_pie {float:right;width:35%;height:300px;}
+.chart_content.new_amount .channel_bar {float:left;width:55%;}
+.chart_content.new_amount .channel_pie {float:right;width:38%;}
 
 
 /*统计报表*/
