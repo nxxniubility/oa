@@ -52,7 +52,8 @@ $(function(){
             standard_name:_standard_name,
             department_id:_department_id,
             standard_remark:_standard_remark,
-            option_objs:_option_objs
+            option_objs:_option_objs,
+            standard_id:data_standard_id
         };
         common_ajax2(data, add_standard_url, 'no', _reData);
         function _reData(redata){

@@ -456,7 +456,50 @@ class DataService extends BaseService
     public function editStandard($where)
     {
         //必须参数
-        if(empty($where['system_user_id'])) return array('code'=>2,'msg'=>'参数异常');
+        if(empty($where['standard_id'])) return array('code'=>200,'msg'=>'参数异常');
+        if(empty($where['standard_name'])) return array('code'=>201,'msg'=>'名称不能为空');
+        if(empty($where['department_id'])) return array('code'=>202,'msg'=>'部门ID不能为空');
+        if(empty($where['option_objs'])) return array('code'=>202,'msg'=>'规则内容不能为空');
+        $_standard_id = $where['standard_id'];
+        $_standard_data['standard_name'] = $where['standard_name'];
+        $_standard_data['department_id'] = $where['department_id'];
+        $_standard_data['standard_remark'] = $where['standard_remark'];
+        $_option_objs =  (array) json_decode(htmlspecialchars_decode($where['option_objs']));
+        //获取
+        $rolist = D('Role')->getList(array('department_id'=>$where['department_id']));
+        if(!empty($rolist)){
+            foreach($rolist as $k=>$v){
+                if($k==0){
+                    $role_ids = $v['id'];
+                }else{
+                    $role_ids += ','.$v['id'];
+                }
+            }
+            $_standard_data['role_id'] = $role_ids;
+        }
+        D()->startTrans();
+        $redata = D('MarketStandard')->editData($_standard_data,$_standard_id);
+        if(empty($redata['code'])){
+            D('MarketStandardInfo')->delData($_standard_id);
+            foreach($_option_objs as $k=>$v){
+                $v = (array) $v;
+                $_info_data = array(
+                    'standard_id' => $_standard_id,
+                    'option_name' => $v['option_name'],
+                    'option_num' => $v['option_num'],
+                    'option_warn' => $v['option_warn'],
+                );
+                $redata_info = D('MarketStandardInfo')->addData($_info_data);
+                if(!empty($redata_info['code'])){
+                    D()->rollback();
+                    return $redata_info;exit();
+                }
+            }
+            D()->commit();
+            return array('code'=>0,'msg'=>'添加成功');
+        }
+        D()->rollback();
+        return $redata;exit();
     }
 
     /*

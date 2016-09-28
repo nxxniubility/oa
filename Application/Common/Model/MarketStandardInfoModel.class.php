@@ -86,4 +86,16 @@ class MarketStandardInfoModel extends SystemModel
             return $this->where(array('standard_id'=>$id))->save($data);
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 删除
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function delData($id)
+    {
+        return $this->where(array('standard_id'=>$id))->delete();
+    }
+
 }
