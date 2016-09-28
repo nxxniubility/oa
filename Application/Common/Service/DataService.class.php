@@ -403,7 +403,10 @@ class DataService extends BaseService
     public function addStandard($where)
     {
         //必须参数
-        if(empty($where['system_user_id'])) return array('code'=>2,'msg'=>'参数异常');
+        if(empty($where['standard_name'])) return array('code'=>201,'msg'=>'参数异常');
+        if(empty($where['standard_remark'])) return array('code'=>202,'msg'=>'参数异常');
+        if(empty($where['department_id'])) return array('code'=>202,'msg'=>'参数异常');
+
     }
 
     /*

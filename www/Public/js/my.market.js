@@ -179,14 +179,6 @@ $(document).on('click', '.city_largearea li', function(){
 });
 
 //  每日数据与员工数据
-/*$(document).on('click', '.sr_tab div', function(){
- var index=$(this).index();
- if(index!=curIndex){
- $(".sr_tab div").siblings().removeClass("current").eq(index).addClass("current");
- $(".sr_table").removeClass("active").eq(index).addClass("active");
- curIndex=index; //  当前下标赋予变量
- }
- });*/
 function doTabClick(o,parm) {
     o.className = "current";		// 当前被中的对象设置css
     var j;
@@ -251,10 +243,10 @@ $('.chart_topright select').change(function(){
     };
     if(_chartnav == 'totalratio' || _chartnav == 'chargebackratio' || _chartnav == 'conversionratio' || _chartnav == 'visitratio'){
         var navnum = {
-            'totalratio':15,
-            'chargebackratio':14,
-            'conversionratio':13,
-            'visitratio':12,
+            'totalratio':16,
+            'chargebackratio':15,
+            'conversionratio':14,
+            'visitratio':13,
         };
         if($('#sr_everyday').find('tr').length>2){
             //每日统计
@@ -488,12 +480,15 @@ function dailyStats(days,values,name){
 function channelBar(navName,values,num){
     var _chartnav=$('.chart_tab .cur').attr('data-value'),
         faWidth = $('.chart_main').width(),
-        columnWidth = faWidth*0.6;
+        columnWidth = faWidth*0.58;
 
     $('#'+_chartnav).find('.bar'+num).highcharts({
         chart: {
             width:columnWidth,
             height:450,
+            style:{
+                zIndex:1000
+            },
             className:'channel_bar',
             type: 'column'
         },
@@ -544,7 +539,7 @@ function channelBar(navName,values,num){
 function channelPie(values,num){
     var _chartnav=$('.chart_tab .cur').attr('data-value'),
         faWidth = $('.chart_main').width(),
-        pieWidth = faWidth*0.4;
+        pieWidth = faWidth*0.35;
     $('#'+_chartnav).find('.pie'+num).highcharts({
         chart: {
             width:pieWidth,

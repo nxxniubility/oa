@@ -243,10 +243,10 @@ $('.chart_topright select').change(function(){
 	};
 	if(_chartnav == 'totalratio' || _chartnav == 'chargebackratio' || _chartnav == 'conversionratio' || _chartnav == 'visitratio'){
 		var navnum = {
-			'totalratio':15,
-			'chargebackratio':14,
-			'conversionratio':13,
-			'visitratio':12,
+			'totalratio':16,
+			'chargebackratio':15,
+			'conversionratio':14,
+			'visitratio':13,
 		};
 		if($('#sr_everyday').find('tr').length>2){
 			//每日统计

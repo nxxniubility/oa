@@ -221,4 +221,28 @@ class DataController extends ApiBaseController
             $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
         }
     }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 添加营销数据
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function addStandard()
+    {
+        $data['standard_name'] = I('param.standard_name',null);
+        $data['standard_remark'] = I('param.standard_remark',null);
+        $data['department_id'] = I('param.department_id',null);
+        $data['option_objs'] = I('param.option_objs',null);
+        //去除数组空值
+        $data = array_filter($data);
+        //获取接口服务层
+        $DataService = new DataService();
+        $result = $DataService->addStandard($data);
+        //返回参数
+        if($result['code']==0){
+            return array('code'=>0,'msg'=>'获取成功','data'=>$result['data']);
+        }
+        return array('code'=>$result['code'],'msg'=>$result['msg']);
+    }
 }
