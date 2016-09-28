@@ -99,6 +99,13 @@ class IndexController extends SystemController
                 $this->ajaxReturn('0','无任何到访通知');
             }
         }else{
+            //是否滴答URL
+            $get_url = $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+            $is_dida = 0;
+            if(strstr($get_url,'crm.didazp')){
+                $is_dida = 1;
+            }
+            $this->assign('is_dida', $is_dida);
             $userRole = D('RoleUser')->field('name, role_id')->where(array('user_id' => session('system_user_id')))
                 ->join('LEFT JOIN zl_role on zl_role_user.role_id=zl_role.id')->select();
             foreach ($userRole as $key => $value) {
