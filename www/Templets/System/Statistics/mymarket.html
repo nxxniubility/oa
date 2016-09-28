@@ -572,7 +572,7 @@
 								<td>{$dataMarket['count']['restartcount']?$dataMarket['count']['restartcount']:0}</td>
 								<td>{$dataMarket['count']['recyclecount']?$dataMarket['count']['recyclecount']:0}</td>
 								<td>{$dataMarket['count']['redeemcount']?$dataMarket['count']['redeemcount']:0}</td>
-								<td class="red">{$dataMarket['count']['callbackcount']?$dataMarket['count']['callbackcount']:0}</td>
+								<td>{$dataMarket['count']['callbackcount']?$dataMarket['count']['callbackcount']:0}</td>
 								<td>{$dataMarket['count']['attitudecount']?$dataMarket['count']['attitudecount']:0}</td>
 								<td>{$dataMarket['count']['visitcount']?$dataMarket['count']['visitcount']:0}</td>
 								<td>{$dataMarket['count']['ordercount']?$dataMarket['count']['ordercount']:0}</td>
@@ -585,22 +585,22 @@
 		        			<foreach name="dataMarket['days']" item="v" key="k">
 								<tr>
 									<td>{$v.day}</td>
-									<td {:!empty($v['redaddcount'])?'class="red"':''}>{$v.addcount}</td>
-									<td {:!empty($v['redallocationcount'])?'class="red"':''}>{$v.allocationcount}</td>
-									<td {:!empty($v['redacceptcount'])?'class="red"':''}>{$v.acceptcount}</td>
-									<td {:!empty($v['redswitchcount'])?'class="red"':''}>{$v.switchcount}</td>
-									<td {:!empty($v['redrestartcount'])?'class="red"':''}>{$v.restartcount}</td>
-									<td {:!empty($v['redrecyclecount'])?'class="red"':''}>{$v.recyclecount}</td>
-									<td {:!empty($v['redredeemcount'])?'class="red"':''}>{$v.redeemcount}</td>
-									<td {:!empty($v['redcallbackcount'])?'class="red"':''}>{$v.callbackcount}</td>
-									<td {:!empty($v['redattitudecount'])?'class="red"':''}>{$v.attitudecount}</td>
-									<td {:!empty($v['redvisitcount'])?'class="red"':''}>{$v.visitcount}</td>
-									<td {:!empty($v['redordercount'])?'class="red"':''}>{$v.ordercount}</td>
-									<td {:!empty($v['redrefundcount'])?'class="red"':''}>{$v.refundcount}</td>
-									<td {:!empty($v['redvisitratio'])?'class="red"':''}>{$v.visitratio}%</td>
-									<td {:!empty($v['redconversionratio'])?'class="red"':''}>{$v.conversionratio}%</td>
+									<td>{$v.addcount}</td>
+									<td>{$v.allocationcount}</td>
+									<td>{$v.acceptcount}</td>
+									<td>{$v.switchcount}</td>
+									<td>{$v.restartcount}</td>
+									<td>{$v.recyclecount}</td>
+									<td>{$v.redeemcount}</td>
+									<td>{$v.callbackcount}</td>
+									<td>{$v.attitudecount}</td>
+									<td>{$v.visitcount}</td>
+									<td>{$v.ordercount}</td>
+									<td>{$v.refundcount}</td>
+									<td>{$v.visitratio}%</td>
+									<td>{$v.conversionratio}%</td>
 									<td>{$v.chargebackratio}%</td>
-									<td {:!empty($v['redtotalratio'])?'class="red"':''}>{$v.totalratio}%</td>
+									<td>{$v.totalratio}%</td>
 								</tr>
 							</foreach>
 		        		</table>
