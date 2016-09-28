@@ -18,6 +18,14 @@ class AdminController extends BaseController {
 
     public function _initialize(){
         parent::_initialize();
+
+        //是否滴答URL
+        $get_url = $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+        $is_dida = 0;
+        if(strstr($get_url,'crm.didazp')){
+            $is_dida = 1;
+        }
+        $this->assign('is_dida', $is_dida);
     }
 
     /*

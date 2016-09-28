@@ -216,4 +216,14 @@ class RoleModel extends SystemModel{
 		return $newZoneList;
 	}
 
+    /*
+    |--------------------------------------------------------------------------
+    | 获取列表
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getList($where=null, $field='*', $order=null, $limit=null, $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->order($order)->limit($limit)->select();
+    }
 }

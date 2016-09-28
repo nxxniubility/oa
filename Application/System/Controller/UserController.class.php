@@ -634,16 +634,18 @@ class UserController extends SystemController
         $where['zone_id'] = !empty($where['zone_id'])?$where['zone_id']:$this->system_user['zone_id'];
         $re_page = isset($where['page']) ? $where['page'] : 1;
         unset($request['page']);unset($where['page']);unset($where['type']);unset($where['_pjax']);
-        if ($where['status'] == 0) {
-            $where['status'] = array('IN', array(20, 30, 70, 160));
-        }
-        unset($where['callbackTimeout']);
         //排序
         if ($where['status'] == 30){
             $order = 'nextvisit ASC';
         }else{
             $order = 'createtime DESC';
-        }      
+        }
+        if ($where['status'] == 0) {
+            $where['status'] = array('IN', array(20, 30, 70, 160));
+        }else{
+            $where['status'] = array('IN', $where['status']);
+        }
+        unset($where['callbackTimeout']);
         //日期转换时间戳
         foreach ($where as $k => $v) {
             if (!empty($where[$k]) && $where[$k]!='1@0') {

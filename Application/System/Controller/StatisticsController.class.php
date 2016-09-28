@@ -186,8 +186,11 @@ class StatisticsController extends SystemController
     */
     public function addStandard()
     {
-
-//        $this->assign('data', $data);
+        //获取职位及部门
+        $DepartmentService = new DepartmentService();
+        $department_list = $DepartmentService->getList();
+        $data['departmentList'] = $department_list['data'];
+        $this->assign('data', $data);
         $this->display();
     }
 
@@ -199,8 +202,14 @@ class StatisticsController extends SystemController
     */
     public function editStandard()
     {
-
-//        $this->assign('data', $data);
+        $standard_id = I('get.standard_id');
+        //获取职位及部门
+        $DepartmentService = new DepartmentService();
+        $department_list = $DepartmentService->getList();
+        $data['departmentList'] = $department_list['data'];
+        $DataService = new DataService();
+        $reInfo = $DataService->getStandardInfo(array('standard_id'=>$standard_id));
+        $this->assign('data', $data);
         $this->display();
     }
 }

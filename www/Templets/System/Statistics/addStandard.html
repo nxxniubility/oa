@@ -33,10 +33,9 @@
 	        		<div class="rows_cont">
 	        			<select name="department_id">
 	        				<option selected="selected" value="0">请选择标准应用部门</option>
-	        				<option value="1">客服部</option>
-	        				<option value="2">邀约部</option>
-	        				<option value="3">销售部</option>
-	        				<option value="4">教务部</option>
+							<foreach name="data['departmentList']['data']" item="v" key="k">
+								<option value="{$v.department_id}">{$v.departmentname}</option>
+							</foreach>
 	        			</select>
 	        		</div>
 	        	</div>
@@ -97,17 +96,19 @@
 				<div class="list_cont">
 					<div class="cont_top clearfix">
 						<span><i>*</i>标准数值</span>
-						<input type="text" class="list_inp">
+						<input type="text" class="list_inp" name="option_num">
 						<em>请输入正整数或者百分比数值</em>
 					</div>
 					<div class="cont_choose">
 						<span><i>*</i>告警数值</span>
-						<label for="less_than">
-							<input type="radio" class="list_radio" name="warning" id="less_than">
+						<!-- less_than-->
+						<label >
+							<input type="radio" class="list_radio" name="warning" value="1" checked="checked">
 							<em>低于标准数值即警告</em>
 						</label>
-						<label for="higher_than">
-							<input type="radio" class="list_radio" name="warning" id="higher_than">
+						<!-- higher_than-->
+						<label >
+							<input type="radio" class="list_radio" name="warning" value="1">
 							<em>高于标准数值即警告</em>
 						</label>
 					</div>
@@ -117,6 +118,7 @@
 
 		<script>
 			var add_standard_url = '/Api/Data/addStandard';
+			var href_standard = "{:U('System/Statistics/marketStandard')}";
 		</script>
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/layer/layer.js"></script>

@@ -8,7 +8,11 @@
 	<body class="bodyBg">
 		<div class="sysWrap">
 			<div class="activationBox">
-				<div class="logoPic"></div>
+				<if condition="$is_dida eq 1">
+					<div class="logoPic" style="background:url('__PUBLIC__/images/didazp-logo2.png') no-repeat;"></div>
+					<else/>
+					<div class="logoPic"></div>
+				</if>
 				<div class="rows">
 					<input type="text" class="nameInp" placeholder="请输入手机号" name="username">
 					<i class="nameIcon"></i>

@@ -37,4 +37,27 @@ class DepartmentService extends BaseService
         return array('code'=>0, 'data'=>$departmentAll);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 获取区域详情-缓存
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getInfo($department_id)
+    {
+        if( F('Cache/Personnel/department') ){
+            $departmentList = F('Cache/Personnel/department');
+        }else{
+            $departmentList = D('Department')->where("status=1")->select();
+            F('Cache/Personnel/department', $departmentList);
+        }
+        if(!empty($departmentList['data'])){
+            foreach($departmentList['data'] as $k=>$v){
+                if($v['department_id']==$department_id){
+                    $newZoneList = $v;
+                }
+            }
+        }
+        return array('code'=>0,'data'=>$newZoneList);
+    }
 }

@@ -116,7 +116,7 @@ class DataService extends BaseService
     | 获取营销数据
     |--------------------------------------------------------------------------
     |  //新增量 addnum
-    |  //出库量 addnum + acceptnum + directoroutnum + applynum
+    |  //出库量 addnum + acceptnum + directoroutnum + applynum + redeemnum
     |  //转出量 switchnum + switchmanagenum
     |  //放弃量 restartnum
     |  //系统回收量 recyclenum
@@ -162,7 +162,7 @@ class DataService extends BaseService
         $SystemUserService = new SystemUserService();
         //补全天数内容
         if(!empty($daytime)){
-            for($i = date('Ymd', strtotime($daytime[0]));$i<date('Ymd', strtotime($daytime[1]));$i++){
+            for($i = date('Ymd', strtotime($daytime[0]));$i<=date('Ymd', strtotime($daytime[1]));$i++){
                 if(empty($newArr['days'][$i])){
                     $newArr['days'][$i] = array(
                         'day' => mb_substr($i,0,4).'-'.mb_substr($i,4,2).'-'.mb_substr($i,6,2),
@@ -190,7 +190,7 @@ class DataService extends BaseService
             $_count = count($result);
             //总数
             $newArr['count']['addcount'] = $newArr['count']['addcount']+$v['addnum'];
-            $newArr['count']['acceptcount'] = $newArr['count']['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum'];
+            $newArr['count']['acceptcount'] = $newArr['count']['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum']+$v['redeemnum'];
             $newArr['count']['switchcount'] = $newArr['count']['switchcount']+$v['switchnum']+$v['switchmanagenum'];
             $newArr['count']['restartcount'] = $newArr['count']['restartcount']+$v['restartnum'];
             $newArr['count']['recyclecount'] = $newArr['count']['recyclecount']+$v['recyclenum'];
@@ -210,7 +210,7 @@ class DataService extends BaseService
             //天数单位
             $newArr['days'][$v['daytime']]['day'] = mb_substr($v['daytime'],0,4).'-'.mb_substr($v['daytime'],4,2).'-'.mb_substr($v['daytime'],6,2);
             $newArr['days'][$v['daytime']]['addcount'] = $newArr['days'][$v['daytime']]['addcount'] + $v['addnum'];
-            $newArr['days'][$v['daytime']]['acceptcount'] = $newArr['days'][$v['daytime']]['acceptcount'] + $v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum'];
+            $newArr['days'][$v['daytime']]['acceptcount'] = $newArr['days'][$v['daytime']]['acceptcount'] + $v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum']+$v['redeemnum'];
             $newArr['days'][$v['daytime']]['switchcount'] = $newArr['days'][$v['daytime']]['switchcount'] + $v['switchnum']+$v['switchmanagenum'];
             $newArr['days'][$v['daytime']]['restartcount'] = $newArr['days'][$v['daytime']]['restartcount'] + $v['restartnum'];
             $newArr['days'][$v['daytime']]['recyclecount'] = $newArr['days'][$v['daytime']]['recyclecount'] + $v['recyclenum'];
@@ -239,7 +239,7 @@ class DataService extends BaseService
                 $newArr['systemuser'][$v['system_user_id']]['system_user_id'] = $v['system_user_id'];
             }
             $newArr['systemuser'][$v['system_user_id']]['addcount'] = $newArr['systemuser'][$v['system_user_id']]['addcount']+$v['addnum'];
-            $newArr['systemuser'][$v['system_user_id']]['acceptcount'] = $newArr['systemuser'][$v['system_user_id']]['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum'];
+            $newArr['systemuser'][$v['system_user_id']]['acceptcount'] = $newArr['systemuser'][$v['system_user_id']]['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum']+$v['redeemnum'];
             $newArr['systemuser'][$v['system_user_id']]['switchcount'] = $newArr['systemuser'][$v['system_user_id']]['switchcount']+$v['switchnum']+$v['switchmanagenum'];
             $newArr['systemuser'][$v['system_user_id']]['restartcount'] = $newArr['systemuser'][$v['system_user_id']]['restartcount']+$v['restartnum'];
             $newArr['systemuser'][$v['system_user_id']]['recyclecount'] = $newArr['systemuser'][$v['system_user_id']]['recyclecount']+$v['recyclenum'];
@@ -404,10 +404,47 @@ class DataService extends BaseService
     public function addStandard($where)
     {
         //必须参数
-        if(empty($where['standard_name'])) return array('code'=>201,'msg'=>'参数异常');
-        if(empty($where['standard_remark'])) return array('code'=>202,'msg'=>'参数异常');
-        if(empty($where['department_id'])) return array('code'=>202,'msg'=>'参数异常');
-
+        if(empty($where['standard_name'])) return array('code'=>201,'msg'=>'名称不能为空');
+        if(empty($where['department_id'])) return array('code'=>202,'msg'=>'部门ID不能为空');
+        if(empty($where['option_objs'])) return array('code'=>202,'msg'=>'规则内容不能为空');
+        $_standard_data['standard_name'] = $where['standard_name'];
+        $_standard_data['department_id'] = $where['department_id'];
+        $_standard_data['standard_remark'] = $where['standard_remark'];
+        $_option_objs =  (array) json_decode(htmlspecialchars_decode($where['option_objs']));
+        //获取
+        $rolist = D('Role')->getList(array('department_id'=>$where['department_id']));
+        if(!empty($rolist)){
+            foreach($rolist as $k=>$v){
+                if($k==0){
+                    $role_ids = $v['id'];
+                }else{
+                    $role_ids += ','.$v['id'];
+                }
+            }
+            $_standard_data['role_id'] = $role_ids;
+        }
+        D()->startTrans();
+        $redata = D('MarketStandard')->addData($_standard_data);
+        if(empty($redata['code'])){
+            foreach($_option_objs as $k=>$v){
+                $v = (array) $v;
+                $_info_data = array(
+                    'standard_id' => $redata,
+                    'option_name' => $v['option_name'],
+                    'option_num' => $v['option_num'],
+                    'option_warn' => $v['option_warn'],
+                );
+                $redata_info = D('MarketStandardInfo')->addData($_info_data);
+                if(!empty($redata_info['code'])){
+                    D()->rollback();
+                    return $redata_info;exit();
+                }
+            }
+            D()->commit();
+            return array('code'=>0,'msg'=>'添加成功');
+        }
+        D()->rollback();
+        return $redata;exit();
     }
 
     /*
@@ -421,6 +458,68 @@ class DataService extends BaseService
         //必须参数
         if(empty($where['system_user_id'])) return array('code'=>2,'msg'=>'参数异常');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取合格标准
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getStandard($where=null)
+    {
+        $DepartmentService = new DepartmentService();
+        $result = D('MarketStandard')->getList($where);
+        $statusName = $this->statusName ;
+        foreach($result as $k=>$v){
+            //获取合格标准详情
+            $info_list = D('MarketStandardInfo')->getList(array('standard_id'=>$v['standard_id']),'option_name,option_warn,option_num');
+            $arr_status = '';
+            foreach($info_list as $k2=>$v2){
+                $info_list[$k2]['status_name'] = $statusName[$v2['option_name']];
+                if($k2==0){
+                    $arr_status =$statusName[$v2['option_name']];
+                }else{
+                    $arr_status .= '、'.$statusName[$v2['option_name']];
+                }
+            }
+            $result[$k]['children'][] =$info_list;
+            $result[$k]['status_names'] =$arr_status;
+            $department = $DepartmentService->getInfo($v['department_id']);
+            $result[$k]['department_name'] = $department['data']['departmentname'];
+        }
+        return array('code'=>0,'data'=>$result);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取合格标准
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getStandardInfo($where=null)
+    {
+        $DepartmentService = new DepartmentService();
+        $result = D('MarketStandard')->getFind($where);
+        $statusName = $this->statusName ;
+        //获取合格标准详情
+        $info_list = D('MarketStandardInfo')->getList($where,'option_name,option_warn,option_num');
+        $arr_status = '';
+        foreach($info_list as $k2=>$v2){
+            $info_list[$k2]['status_name'] = $statusName[$v2['option_name']];
+            if($k2==0){
+                $arr_status =$statusName[$v2['option_name']];
+            }else{
+                $arr_status .= '、'.$statusName[$v2['option_name']];
+            }
+        }
+        $result['children'][] =$info_list;
+        $result['status_names'] =$arr_status;
+        $department = $DepartmentService->getInfo($v['department_id']);
+        $result['department_name'] = $department['data']['departmentname'];
+        return array('code'=>0,'data'=>$result);
+    }
+
+
 
     /*
     |--------------------------------------------------------------------------

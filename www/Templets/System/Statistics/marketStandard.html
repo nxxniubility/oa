@@ -28,25 +28,23 @@
 	        			<th>标准名称</th>
 	        			<th>统计单项</th>
 	        			<th>应用部门</th>
-	        			<th>创建时间</th>
+	        			<th></th>
 	        			<th>操作</th>
 	        		</tr>
 					<foreach name="data['list']" item="v" key="k">
 						<tr>
 							<td>{$v.standard_name}</td>
 							<td>{$v.status_names}</td>
-							<td>{$v.role_name}</td>
-							<td>2016-04-21 20:51</td>
+							<td>{$v.department_name}</td>
+							<td></td>
 							<td>
-								<a href="javascript:;" class="set_edit">修改</a>
+								<a href="{:U('/System/Statistics/editStandard',array('standard_id'=>$v['standard_id']))}" class="set_edit">修改</a>
 								<a href="javascript:;" class="set_del">删除</a>
 							</td>
 						</tr>
 					</foreach>
-
-	        		
 	        	</table>
-	        	<div class="collegaPage">分页</div>
+	        	<!--<div class="collegaPage">分页</div>-->
 	        	
 	        	<!-- 没有设置过标准 -->
         		<!--<div class="nothing"><i></i>暂无合格标准，请先新建标准。</div>-->
