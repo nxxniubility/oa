@@ -99,10 +99,10 @@
                         <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-7 day')).'@time'}" {:$getlastvisit[0]==4?'class="on_hover"':''}>一周内已回访</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getlastvisit[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getlastvisit[0]==5)?'style="display: block; visibility: visible;"':''} >
-                        <input type="text" class="afTime" value="{$getlastvisit[1]}" placeholder="开始时间">
+                        <input type="text" class="afTime" value="{$getlastvisit[1]}" placeholder="开始时间"  readonly="readonly">
                         </li>
                         <li class="selectbox1 employeeStatus l end" {:($getlastvisit[0]==5)?'style="display: block; visibility: visible;"':''}>
-                        <input type="text" class="afTime endTiem" value="{$getlastvisit[2]}" placeholder="结束时间" autocomplete="off">
+                        <input type="text" class="afTime endTiem" value="{$getlastvisit[2]}" placeholder="结束时间" autocomplete="off"  readonly="readonly">
                         </li>
                     </ul>
                 </div>
@@ -118,10 +118,10 @@
                         <li><a href="javascript:;" data-value="7@1" {:$getnextvisit[0]==7?'class="on_hover"':''}>跟进超时</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getnextvisit[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getnextvisit[0]==5)?'style="display: block; visibility: visible;"':''} >
-                        <input type="text" class="afTime" value="{$getnextvisit[1]}" placeholder="开始时间">
+                        <input type="text" class="afTime" value="{$getnextvisit[1]}" placeholder="开始时间"  readonly="readonly">
                         </li>
                         <li class="selectbox1 employeeStatus l end" {:($getnextvisit[0]==5)?'style="display: block; visibility: visible;"':''}>
-                        <input type="text" class="afTime endTiem" value="{$getnextvisit[2]}" placeholder="结束时间" autocomplete="off">
+                        <input type="text" class="afTime endTiem" value="{$getnextvisit[2]}" placeholder="结束时间" autocomplete="off"  readonly="readonly">
                         </li>
                     </ul>
                 </div>
@@ -135,10 +135,10 @@
                         <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-7 day')).'@time'}" {:$getvisittime[0]==4?'class="on_hover"':''}>一周内到访</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getvisittime[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getvisittime[0]==5)?'style="display: block; visibility: visible;"':''} >
-                        <input type="text" class="afTime" value="{$getvisittime[1]}" placeholder="开始时间">
+                        <input type="text" class="afTime" value="{$getvisittime[1]}" placeholder="开始时间"  readonly="readonly">
                         </li>
                         <li class="selectbox1 employeeStatus l end" {:($getvisittime[0]==5)?'style="display: block; visibility: visible;"':''}>
-                        <input type="text" class="afTime endTiem" value="{$getvisittime[2]}" placeholder="结束时间" autocomplete="off">
+                        <input type="text" class="afTime endTiem" value="{$getvisittime[2]}" placeholder="结束时间" autocomplete="off"  readonly="readonly">
                         </li>
                     </ul>
                 </div>
@@ -152,10 +152,10 @@
                         <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-7 day')).'@time'}" {:$getallocationtime[0]==4?'class="on_hover"':''}>一周内分配</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getallocationtime[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getallocationtime[0]==5)?'style="display: block; visibility: visible;"':''} >
-                        <input type="text" class="afTime" value="{$getallocationtime[1]}" placeholder="开始时间">
+                        <input type="text" class="afTime" value="{$getallocationtime[1]}" placeholder="开始时间"  readonly="readonly">
                         </li>
                         <li class="selectbox1 employeeStatus l end" {:($getallocationtime[0]==5)?'style="display: block; visibility: visible;"':''}>
-                        <input type="text" class="afTime endTiem" value="{$getallocationtime[2]}" placeholder="结束时间" autocomplete="off">
+                        <input type="text" class="afTime endTiem" value="{$getallocationtime[2]}" placeholder="结束时间" autocomplete="off"  readonly="readonly">
                         </li>
                     </ul>
                 </div>
@@ -169,10 +169,10 @@
                         <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-7 day')).'@time'}" {:$getupdatetime[0]==4?'class="on_hover"':''}>一周内出库</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getupdatetime[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getupdatetime[0]==5)?'style="display: block; visibility: visible;"':''} >
-                        <input type="text" class="afTime" value="{$getupdatetime[1]}" placeholder="开始时间">
+                        <input type="text" class="afTime" value="{$getupdatetime[1]}" placeholder="开始时间"  readonly="readonly">
                         </li>
                         <li class="selectbox1 employeeStatus l end" {:($getupdatetime[0]==5)?'style="display: block; visibility: visible;"':''}>
-                        <input type="text" class="afTime endTiem" value="{$getupdatetime[2]}" placeholder="结束时间" autocomplete="off">
+                        <input type="text" class="afTime endTiem" value="{$getupdatetime[2]}" placeholder="结束时间" autocomplete="off"  readonly="readonly">
                         </li>
                     </ul>
                 </div>
@@ -186,10 +186,10 @@
                         <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-7 day')).'@time'}" {:$getcreatetime[0]==4?'class="on_hover"':''}>一周内创建</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getcreatetime[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getcreatetime[0]==5)?'style="display: block; visibility: visible;"':''} >
-                        <input type="text" class="afTime" value="{$getcreatetime[1]}" placeholder="开始时间">
+                        <input type="text" class="afTime" value="{$getcreatetime[1]}" placeholder="开始时间"  readonly="readonly">
                         </li>
                         <li class="selectbox1 employeeStatus l end" {:($getcreatetime[0]==5)?'style="display: block; visibility: visible;"':''}>
-                        <input type="text" class="afTime endTiem" value="{$getcreatetime[2]}" placeholder="结束时间" autocomplete="off">
+                        <input type="text" class="afTime endTiem" value="{$getcreatetime[2]}" placeholder="结束时间" autocomplete="off"  readonly="readonly">
                         </li>
                     </ul>
                 </div>

@@ -47,9 +47,9 @@
 											<span>  </span>
 											<input type="text" class="afTime end" id="atEnd" value="{$request['dateEnd2']}" data-url="{:U('System/User/applyList',array('status'=>$request['status']))}" placeholder="" style="display: block; visibility: visible;">
 										<else/>
-											<input type="text" class="afTime start" id="atStar" value="开始时间" placeholder="" >
+											<input type="text" class="afTime start" id="atStar" value="开始时间" placeholder=""  readonly="readonly" >
 											<span>  </span>
-											<input type="text" class="afTime end" id="atEnd" value="结束时间" data-url="{:U('System/User/applyList',array('status'=>$request['status']))}" placeholder="" >
+											<input type="text" class="afTime end" id="atEnd" value="结束时间" data-url="{:U('System/User/applyList',array('status'=>$request['status']))}" placeholder=""  readonly="readonly" >
 										</if>
 									</div>
 								</div>
