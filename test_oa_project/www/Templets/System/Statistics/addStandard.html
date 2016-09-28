@@ -6,8 +6,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
 		<title>系统首页-{$siteinfo.sitename}</title>
-		<link rel="stylesheet" href="../../../Public/css/common.css">
-		<link rel="stylesheet" href="../../../Public/css/market.new.standard.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/market.new.standard.css">
 	</head>
 	<body>
 		<div class="wrapper_box">
@@ -25,13 +25,13 @@
 	        	<div class="ns_rows clearfix">
 	        		<span><i>*</i>标准名称：</span>
 	        		<div class="rows_cont">
-	        			<input type="text" class="ns_inp">
+	        			<input type="text" class="ns_inp" name="standard_name">
 	        		</div>
 	        	</div>
 	        	<div class="ns_rows clearfix">
 	        		<span><i>*</i>应用部门：</span>
 	        		<div class="rows_cont">
-	        			<select>
+	        			<select name="department_id">
 	        				<option selected="selected" value="0">请选择标准应用部门</option>
 	        				<option value="1">客服部</option>
 	        				<option value="2">邀约部</option>
@@ -67,15 +67,13 @@
 	        			<ul class="standard_list">
 
 
-
-
 	        			</ul>
 	        		</div>
 	        	</div>
 	        	<div class="ns_rows clearfix">
 	        		<span>备注：</span>
 	        		<div class="rows_cont">
-	        			<textarea></textarea>
+	        			<textarea name="standard_remark"></textarea>
 	        		</div>
 	        	</div>
 	        	<div class="ns_rows clearfix">
@@ -94,7 +92,7 @@
 			<li>
 				<div class="list_top clearfix">
 					<p>--</p>
-					<a href="javascript:;" class="top_close"><img src="../../../Public/images/organization_04-01.png" alt="关闭"></a>
+					<a href="javascript:;" class="top_close"><img src="__PUBLIC__/images/organization_04-01.png" alt="关闭"></a>
 				</div>
 				<div class="list_cont">
 					<div class="cont_top clearfix">
@@ -117,7 +115,12 @@
 			</li>
 		</div>
 
-		<script src="../../../Public/js/jquery-1.9.1.min.js"></script>
-		<script src="../../../Public/js/market.new.standard.js"></script>
+		<script>
+			var add_standard_url = '/Api/Data/addStandard';
+		</script>
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+		<script src="__PUBLIC__/js/market.new.standard.js"></script>
 	</body>
 </html>
