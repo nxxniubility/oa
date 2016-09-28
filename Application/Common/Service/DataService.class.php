@@ -268,9 +268,9 @@ class DataService extends BaseService
     {
         $arr = array(
             'addcount'=>'1',
-            'acceptcount'=>'1,2,3,4',
+            'acceptcount'=>'1,2,3,4,9',
             'switchcount'=>'5,15',
-            'allocationcount'=>'1,2,3,4',//分配量 还要减'5,15'
+            'allocationcount'=>'1,2,3,4,9',//分配量 还要减'5,15'
             'restartcount'=>'6',
             'recyclecount'=>'7',
             'redeemcount'=>'9',
@@ -512,15 +512,30 @@ class DataService extends BaseService
                 $arr_status .= '、'.$statusName[$v2['option_name']];
             }
         }
-        $result['children'][] =$info_list;
+        $result['children'] =$info_list;
         $result['status_names'] =$arr_status;
-        $department = $DepartmentService->getInfo($v['department_id']);
+        $department = $DepartmentService->getInfo($result['department_id']);
         $result['department_name'] = $department['data']['departmentname'];
         return array('code'=>0,'data'=>$result);
     }
 
 
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取合格标准
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getStandardInfos($where)
+    {
+        $result = D('MarketStandardInfo')->where($where)->select();
+        if (!$result) {
+            return array('code'=>1,'data'=>'','msg'=>'没有合格标准');
+        }
+        return array('code'=>0,'data'=>$result);
+    }
 
 
 
