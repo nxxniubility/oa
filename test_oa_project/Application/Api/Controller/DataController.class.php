@@ -241,8 +241,8 @@ class DataController extends ApiBaseController
         $result = $DataService->addStandard($data);
         //返回参数
         if($result['code']==0){
-            return array('code'=>0,'msg'=>'获取成功','data'=>$result['data']);
+            $this->ajaxReturn(0, '操作成功', $result['data']);
         }
-        return array('code'=>$result['code'],'msg'=>$result['msg']);
+        $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
     }
 }

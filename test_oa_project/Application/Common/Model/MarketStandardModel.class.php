@@ -21,12 +21,7 @@ class MarketStandardModel extends SystemModel
    */
     public function getFind($where=null, $field='*', $order=null, $join=null)
     {
-        if (!$this->create($where)){
-            // 如果创建失败 表示验证没有通过 输出错误提示信息
-            return $this->getError();
-        }else{
-            return $this->field($field)->where($where)->join($join)->order($order)->find();
-        }
+        return $this->field($field)->where($where)->join($join)->order($order)->find();
     }
 
     /*
@@ -71,8 +66,6 @@ class MarketStandardModel extends SystemModel
     */
     public function addData($data)
     {
-        $data['createtime'] = time();
-        $data['createip'] = get_client_ip();
         // 如果创建失败 表示验证没有通过 输出错误提示信息
         if (!$this->create($data)){
             return $this->getError();
