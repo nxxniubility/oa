@@ -234,7 +234,8 @@ class DataService extends BaseService
                 $info = $SystemUserService->getListCache($sys_where);
                 $info = $info['data'];
                 $newArr['systemuser'][$v['system_user_id']]['realname'] = $info['realname'];
-                $newArr['systemuser'][$v['system_user_id']]['rolename'] = $info['rolename'];
+                $newArr['systemuser'][$v['system_user_id']]['role_id'] = $info['roles'][0]['role_id'];
+                $newArr['systemuser'][$v['system_user_id']]['rolename'] = $info['role_names'];
                 $newArr['systemuser'][$v['system_user_id']]['system_user_id'] = $v['system_user_id'];
             }
             $newArr['systemuser'][$v['system_user_id']]['addcount'] = $newArr['systemuser'][$v['system_user_id']]['addcount']+$v['addnum'];
@@ -429,29 +430,27 @@ class DataService extends BaseService
     */
     public function getStandard()
     {
-        $RoleService = new RoleService();
         $result = D('MarketStandard')->getList();
-        $statusName = $this->statusName ;
-        foreach($result as $k=>$v){
-            //获取合格标准详情
-            $info_list = D('MarketStandardInfo')->getList(array('standard_id'=>$v['standard_id']),'option_name,option_warn,option_num');
-            $arr_status = '';
-            foreach($info_list as $k2=>$v2){
-                $info_list[$k2]['status_name'] = $statusName[$v2['option_name']];
-                if($k2==0){
-                    $arr_status =$statusName[$v2['option_name']];
-                }else{
-                    $arr_status .= '、'.$statusName[$v2['option_name']];
-                }
-            }
-            $result[$k]['children'][] =$info_list;
-            $result[$k]['status_names'] =$arr_status;
-            $reRole = $RoleService->getFind($v['role_id']);
-            $result[$k]['role_name'] = $reRole['data']['name'];
+        if (!$result) {
+            return array('code'=>1,'data'=>'','msg'=>'没有合格标准');
         }
         return array('code'=>0,'data'=>$result);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 获取合格标准
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getStandardInfos($where)
+    {
+        $result = D('MarketStandardInfo')->where($where)->select();
+        if (!$result) {
+            return array('code'=>1,'data'=>'','msg'=>'没有合格标准');
+        }
+        return array('code'=>0,'data'=>$result);
+    }
 
 
 
