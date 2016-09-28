@@ -162,10 +162,15 @@ class DataService extends BaseService
         $SystemUserService = new SystemUserService();
         //补全天数内容
         if(!empty($daytime)){
-            for($i = date('Ymd', strtotime($daytime[0]));$i<=date('Ymd', strtotime($daytime[1]));$i++){
-                if(empty($newArr['days'][$i])){
-                    $newArr['days'][$i] = array(
-                        'day' => mb_substr($i,0,4).'-'.mb_substr($i,4,2).'-'.mb_substr($i,6,2),
+            $start = $daytime[0];
+            $end = $daytime[1];
+            $diff = strtotime($end) - strtotime($start);
+            $diffDay = $diff / (24*60*60);
+            for ($i = 1; $i <= $diffDay; $i++){
+                $new_time = (strtotime($start) + $i * 24 * 60 * 60 );
+                if(empty($newArr['days'][date('Ymd', $new_time)])){
+                    $newArr['days'][date('Ymd', $new_time)] = array(
+                        'day' => date('Y-m-d', $new_time),
                         'addcount'=>0,
                         'acceptcount'=>0,
                         'switchcount'=>0,
@@ -312,9 +317,14 @@ class DataService extends BaseService
         $channelArr = array();
         //补全空白天数内容
         if(!empty($daytime)){
-            for($i = date('Ymd', strtotime($daytime[0]));$i<=date('Ymd', strtotime($daytime[1]));$i++){
-                if(empty($newArr['days'][date('m-d',strtotime($i))])){
-                    $newArr['days'][date('m-d',strtotime($i))] = 0;
+            $start = $daytime[0];
+            $end = $daytime[1];
+            $diff = strtotime($end) - strtotime($start);
+            $diffDay = $diff / (24*60*60);
+            for ($i = 1; $i <= $diffDay; $i++){
+                $new_time = (strtotime($start) + $i * 24 * 60 * 60 );
+                if(empty($newArr['days'][date('m-d',$new_time)])){
+                    $newArr['days'][date('m-d',$new_time)] = 0;
                 }
             }
         }
@@ -497,6 +507,28 @@ class DataService extends BaseService
             }
             D()->commit();
             return array('code'=>0,'msg'=>'添加成功');
+        }
+        D()->rollback();
+        return $redata;exit();
+    }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 删除合格标准
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function delStandard($where=null)
+    {
+        //必须参数
+        if(empty($where['standard_id'])) return array('code'=>200,'msg'=>'参数异常');
+        $_standard_id = $where['standard_id'];
+        D()->startTrans();
+        $redata = D('MarketStandard')->delData($_standard_id);
+        $redata_info = D('MarketStandardInfo')->delData($_standard_id);
+        if($redata!==false && $redata_info!==false){
+            D()->commit();
+            return array('code'=>0,'msg'=>'删除成功');
         }
         D()->rollback();
         return $redata;exit();

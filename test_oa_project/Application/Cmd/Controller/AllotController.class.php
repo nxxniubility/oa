@@ -23,6 +23,7 @@ class AllotController extends BaseController {
     protected function allot($allocation_id="")
     {
 
+        $DataService = new DataService();
         if(empty($allocation_id)){
             //获取分配规则
             $allots = D('UserAllocation')->where(array('status'=>1))->order('sort asc')->select();
@@ -264,6 +265,12 @@ class AllotController extends BaseController {
                     $callbackDataAdd['callbacktime'] = $nowtime;
                     $callbackDataAdd['nexttime'] = $nowtime;
                     D('UserCallback')->add($callbackDataAdd);
+                    //添加数据记录
+                    $dataLog['operattype'] = '2';
+                    $dataLog['operator_user_id'] = 0;
+                    $dataLog['user_id'] = $arrvalue1;
+                    $dataLog['logtime'] = time();
+                    $DataService->addDataLogs($dataLog);
                 }
                 
                 foreach($allotvalue['allotnumchannel'] as $channelkey => $channelvalue){
