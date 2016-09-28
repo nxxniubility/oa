@@ -245,4 +245,29 @@ class DataController extends ApiBaseController
         }
         $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
     }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 修改营销数据
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function editStandard()
+    {
+        $data['standard_id'] = I('param.standard_id',null);
+        $data['standard_name'] = I('param.standard_name',null);
+        $data['standard_remark'] = I('param.standard_remark',null);
+        $data['department_id'] = I('param.department_id',null);
+        $data['option_objs'] = I('param.option_objs',null);
+        //去除数组空值
+        $data = array_filter($data);
+        //获取接口服务层
+        $DataService = new DataService();
+        $result = $DataService->editStandard($data);
+        //返回参数
+        if($result['code']==0){
+            $this->ajaxReturn(0, '操作成功', $result['data']);
+        }
+        $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
+    }
 }

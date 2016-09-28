@@ -209,7 +209,8 @@ class StatisticsController extends SystemController
         $data['departmentList'] = $department_list['data'];
         $DataService = new DataService();
         $reInfo = $DataService->getStandardInfo(array('standard_id'=>$standard_id));
-        $data['info'] = $reInfo['data'];print_r($data['info']);
+        $data['info'] = $reInfo['data'];
+        $data['standard_id'] = $standard_id;
         $this->assign('data', $data);
         $this->display();
     }
