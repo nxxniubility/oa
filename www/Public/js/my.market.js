@@ -29,11 +29,17 @@ var mask = $('#mask');
 $(document).on('click', '.city_title', function(){
     mask.show();
     $(this).parent().find('.seach_city_show').removeClass('dn');
-    areaChoose();
-    core();
+    //  中心赋值
+    centralAssignment();
+    //  城市赋值
+    cityAssignment();
+    //  重置地区
+    areaReset();
+    //  点遮罩关闭
+    layerClose();
 });
 //  中心赋值
-function areaChoose(){
+function centralAssignment(){
     $(document).on('click', '.city_partition a', function(){
         var txt = $.trim($(this).text()),
             cityShow = $(this).closest('.seach_city_show'),
@@ -46,7 +52,7 @@ function areaChoose(){
     });
 }
 //  城市赋值
-function core(){
+function cityAssignment(){
     $(document).on('click', '.show_city_cont span', function(){
         var coreTxt = $.trim($(this).text()),
             cityShow = $(this).closest('.seach_city_show'),
@@ -57,6 +63,17 @@ function core(){
         mask.hide();
     });
 }
+
+//  地区重置
+function areaReset(){
+    $(document).on('click', '.reset_btn', function(){
+        $(this).closest('.search_region').find('.city_title em').text('请选择区域');
+        $(this).closest('.seach_city_show').addClass('dn');
+        $(this).next('input[name="zone_id"]').val('');
+        mask.hide();
+    });
+}
+
 
 //  显示职位选择弹层
 $(document).on('click', '.position_name', function(){
@@ -73,9 +90,15 @@ $(document).on('click', '.position_name', function(){
     if($(':input[name="sale_inp"]:checked').length==$(':input[name="sale_inp"]').length){
         $('#all_select').prop('checked',true);
     }
+    //  职位赋值
     positionChoose();
-    close_layer();
+    //  点遮罩关闭
+    layerClose();
+    //  点取消关闭
+    cancelClose();
 });
+
+//  展开部门职位
 openPosition();
 //  展开部门职位
 function openPosition(){
@@ -127,7 +150,7 @@ function positionChoose(){
         if(_role_names.length>13){
             _role_names = _role_names.substring(0,13)+'...';
         }
-        $('.position_name').text(_role_names);
+        $('.position_name em').text(_role_names);
         $close.closest('.search_position_show').addClass('dn');
         mask.hide();
     });
@@ -140,15 +163,22 @@ function positionChoose(){
         };
     });
 };
+
 //  关闭职位弹层
-function close_layer(){
+function cancelClose(){
     var $close = $('.cancel');
     $close.click(function(){
         $close.closest('.search_position_show').addClass('dn');
         mask.hide();
     });
 }
-
+//  点遮罩关闭地区\职位layer
+function layerClose(){
+    $(document).on('click', '#mask', function(){
+        $('.seach_city_show, .search_position_show').addClass('dn');
+        mask.hide();
+    });
+}
 
 // 开始时间
 $(document).ready(function(){
@@ -159,9 +189,17 @@ $(document).ready(function(){
 });
 // 结束时间
 $(document).ready(function(){
-    var _daytime = market_daytime.split(',');
+    var _daytime = market_daytime.split(','),
+        _myDate = new Date();
     setTimeout(function(){
-        $(".endtime").val(_daytime[1]).glDatePicker({});
+        $(".endtime").val(_daytime[1]).glDatePicker({
+            selectableDateRange: [
+                {
+                    from: new Date(_myDate.getFullYear(), (_myDate.getMonth()-2), (_myDate.getDate()-7)),
+                    to: new Date(_myDate.getFullYear(), _myDate.getMonth(), _myDate.getDate())
+                }
+            ]
+        });
     },500)
 });
 
@@ -480,7 +518,7 @@ function dailyStats(days,values,name){
 function channelBar(navName,values,num){
     var _chartnav=$('.chart_tab .cur').attr('data-value'),
         faWidth = $('.chart_main').width(),
-        columnWidth = faWidth*0.58;
+        columnWidth = faWidth*0.55;
 
     $('#'+_chartnav).find('.bar'+num).highcharts({
         chart: {
@@ -539,7 +577,7 @@ function channelBar(navName,values,num){
 function channelPie(values,num){
     var _chartnav=$('.chart_tab .cur').attr('data-value'),
         faWidth = $('.chart_main').width(),
-        pieWidth = faWidth*0.35;
+        pieWidth = faWidth*0.38;
     $('#'+_chartnav).find('.pie'+num).highcharts({
         chart: {
             width:pieWidth,
@@ -575,4 +613,22 @@ function channelPie(values,num){
 
         }]
     });
+}
+
+function daytime(){
+    var startime = $(':input[name="startime"]').val();
+    var endtime = $(':input[name="endtime"]').val();
+    if(DateDiff(startime,endtime)>62){
+        layer.msg('日期选择区间不能大于62天', {icon:2});return false;
+    }
+
+}
+function  DateDiff(sDate1,  sDate2){    //sDate1和sDate2是2006-12-18格式
+    var  aDate,  oDate1,  oDate2,  iDays
+    aDate  =  sDate1.split("/")
+    oDate1  =  new  Date(aDate[1]  +  '/'  +  aDate[2]  +  '/'  +  aDate[0])    //转换为12/18/2006格式
+    aDate  =  sDate2.split("/")
+    oDate2  =  new  Date(aDate[1]  +  '/'  +  aDate[2]  +  '/'  +  aDate[0])
+    iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24)    //把相差的毫秒数转换为天数
+    return  iDays + 1
 }

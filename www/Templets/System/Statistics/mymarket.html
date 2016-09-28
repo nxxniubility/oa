@@ -21,10 +21,18 @@
 	        <div class="main">
 	        	<div class="search clearfix">
 	        		
-	        		<form method="get" name="" action="{:U('System/Statistics/mymarket')}">
+	        		<form method="get" action="{:U('System/Statistics/mymarket')}" onsubmit="return daytime();">
 	        			<!-- 头像 -->
 		        		<div class="search_pic fl clearfix">
-		       			<div class="picbox fl"><img src={$systemUserInfo['face']} alt="员工头像"></div>
+							<div class="picbox fl">
+								<if condition = "!empty($systemUserInfo[face])">
+									<img src={$systemUserInfo['face']} alt="员工头像">
+									<elseif condition="$systemUserInfo[sex] eq '1'"/>
+									<img src="__PUBLIC__/images/personalInfo_01-02.jpg">
+									<else/>
+									<img src="__PUBLIC__/images/personalInfo_01-01.jpg">
+								</if>
+							</div>
 		        			<span>{$systemUserInfo['realname']}({$systemUserInfo['role_names']})</span>
 		        		</div>
 		        		

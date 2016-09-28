@@ -23,7 +23,7 @@
 	        </div>
 	        <div class="main">
 	        	<div class="search clearfix">
-	        		<form method="get" name="" action="{:U('System/Statistics/market')}">
+	        		<form method="get" name="" action="{:U('System/Statistics/market')}" onsubmit="return daytime();">
 	        			<!-- 地区选择 -->
 		        		<div class="search_region fl clearfix">
 	        				<span class="city_title"><em>请选择区域</em><i></i></span>
@@ -39,7 +39,7 @@
 										<foreach name="v['children']" item="v2" key="k2">
 											<div class="show_city_cont active">
 												<div class="section">
-													<span>{$v2.name}</span>
+													<span data-value="{$v2.zone_id}">{$v2.name}</span>
 													<ul class="city_partition clearfix">
 														<foreach name="v2.children" item="v3" key="k3">
 															<li><a href="javascript:;" id="zone_{$v3.zone_id}" data-value="{$v3.zone_id}">{$v3.name}</a></li>

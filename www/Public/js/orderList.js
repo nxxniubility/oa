@@ -136,6 +136,12 @@ $(function(){
 
     //退订金
     $(document).on('click','#depositSub', function(){
+        if($('input[name="deposit_zone_id"]').length>0){
+            if($('input[name="deposit_zone_id"]').val().length==0){
+                layer.msg('请选择选择中心', {icon:2});
+                return false;
+            };
+        };
         var data = {
             type:'deposit',
             order_id : $('input[name="order_id"]').val(),
@@ -157,7 +163,12 @@ $(function(){
         }else if(!chkInt($(':input[name="receivables_cost"]').val())){
             layer.msg('请输入正确的金额', {icon:2});
             return false;
-        }
+        }else if($('input[name="receivables_zone_id"]').length>0){
+            if($('input[name="receivables_zone_id"]').val().length==0){
+                layer.msg('请选择选择中心', {icon:2});
+                return false;
+            };
+        };
         var data = {
             order_id : $('input[name="order_id"]').val(),
             practicaltime : $('input[name="receivables_practicaltime"]').val(),
@@ -178,7 +189,12 @@ $(function(){
         }else if(!chkInt($(':input[name="return_cost"]').val())){
             layer.msg('请输入正确的金额', {icon:2});
             return false;
-        }
+        }else if($('input[name="return_zone_id"]').length>0){
+            if($('input[name="return_zone_id"]').val().length==0){
+                layer.msg('请选择选择中心', {icon:2});
+                return false;
+            };
+        };
         var data = {
             order_id : $('input[name="order_id"]').val(),
             practicaltime : $('input[name="return_practicaltime"]').val(),

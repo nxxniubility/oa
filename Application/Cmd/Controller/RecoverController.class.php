@@ -1,6 +1,8 @@
 <?php
 namespace Cmd\Controller;
 use Common\Controller\BaseController;
+use Common\Service\DataService;
+
 class RecoverController extends BaseController {
 
     /*
@@ -21,7 +23,7 @@ class RecoverController extends BaseController {
 
     //调用回收规则
     protected function aband($abandon_id=""){
-        
+        $DataService = new DataService();
         $UserAbandonDB = D('UserAbandon');
         if(!empty($abandon_id)){
             $abandons = $UserAbandonDB->getAbandonList(array('user_abandon_id'=>$abandon_id));
@@ -120,6 +122,12 @@ class RecoverController extends BaseController {
                     $callbackDataAdd['callbacktime'] = $nowtime;
                     $callbackDataAdd['nexttime'] = $nowtime;
                     D('UserCallback')->add($callbackDataAdd);
+                    //添加数据记录
+                    $dataLog['operattype'] = '7';
+                    $dataLog['operator_user_id'] = 0;
+                    $dataLog['user_id'] = $value['user_id'];
+                    $dataLog['logtime'] = time();
+                    $DataService->addDataLogs($dataLog);
                 }
             }
             

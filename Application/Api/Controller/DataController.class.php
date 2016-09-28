@@ -270,4 +270,25 @@ class DataController extends ApiBaseController
         }
         $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
     }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 删除营销数据
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function delStandard()
+    {
+        $data['standard_id'] = I('param.standard_id',null);
+        //去除数组空值
+        $data = array_filter($data);
+        //获取接口服务层
+        $DataService = new DataService();
+        $result = $DataService->delStandard($data);
+        //返回参数
+        if($result['code']==0){
+            $this->ajaxReturn(0, '操作成功', $result['data']);
+        }
+        $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
+    }
 }
