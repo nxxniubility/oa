@@ -521,35 +521,6 @@ class DataService extends BaseService
 
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | 获取合格标准
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function getStandard()
-    {
-        $result = D('MarketStandard')->getList();
-        if (!$result) {
-            return array('code'=>1,'data'=>'','msg'=>'没有合格标准');
-        }
-        return array('code'=>0,'data'=>$result);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 获取合格标准
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function getStandardInfos($where)
-    {
-        $result = D('MarketStandardInfo')->where($where)->select();
-        if (!$result) {
-            return array('code'=>1,'data'=>'','msg'=>'没有合格标准');
-        }
-        return array('code'=>0,'data'=>$result);
-    }
 
 
 
