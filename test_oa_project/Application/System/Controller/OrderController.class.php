@@ -39,7 +39,7 @@ class OrderController extends SystemController
                 }else{
                     $where['finishtime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
                 }
-            }elseif ($k == 'createtime') {            
+            }elseif ($k == 'createtime') {
                 $_time = explode('--', str_replace('/', '-', $where[$k]));
                 if($_time[1]=='') $_time[1] = 'time';
                 if($_time[0]==''){
@@ -186,14 +186,25 @@ class OrderController extends SystemController
         //获取参数
         $request = I('post.');
         if(empty($request['order_id'])) $this->ajaxReturn(1, '参数异常！');
+        $zone_id = $this->system_user['zone_id'];
+        if ($zone_id == 6 || $zone_id == 1) {
+            $zone_id = 4;
+        }else{
+            $zoneInfo = D("Zone")->where("zone_id = $zone_id")->field("centersign")->find();
+            if (empty($request['zone_id'])) {
+                if ($zoneInfo['centersign'] != 10) {
+                    $this->ajaxReturn(1, '请选择中心！');
+                }
+            }
+        }
         if(empty($request['payway'])) $this->ajaxReturn(1, '请输入收款方式！');
         if(empty($request['cost'])) $this->ajaxReturn(1, '请输入收款金额', '', 'receivables_cost');
         if(empty($request['practicaltime'])) $this->ajaxReturn(1, '请输入收款日期！', '', 'receivables_practicaltime');
-              
+
         //添加参数
         $request['practicaltime'] = strtotime($request['practicaltime']);
         $request['system_user_id'] = $this->system_user_id;
-        $request['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
+        $request['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$zone_id;
         //获取接口
         $orderMainController = new OrderMainController();
         $result = $orderMainController->payOrder($request);
@@ -215,7 +226,7 @@ class OrderController extends SystemController
         $request['practicaltime'] = strtotime($request['practicaltime']);
         if ($request['practicaltime'] < $orderLog['practicaltime']) {
             $this->ajaxReturn(1,"退款日期不得早于上次缴费时间");
-        }       
+        }
         if(empty($request['payway'])) $this->ajaxReturn(1, '退款方式！');
         if(empty($request['type']) || $request['type']!='deposit'){
             if(empty($request['cost'])) $this->ajaxReturn(1, '退款金额！');
@@ -276,7 +287,7 @@ class OrderController extends SystemController
                         }else{
                             $requestP['finishtime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
                         }
-                    }elseif ($k == 'createtime') {            
+                    }elseif ($k == 'createtime') {
                         $_time = explode('--', str_replace('/', '-', $requestP[$k]));
                         if($_time[1]=='') $_time[1] = 'time';
                         if($_time[0]==''){
@@ -289,7 +300,7 @@ class OrderController extends SystemController
                 $requestP['system_user_id'] = $system_user_id;
                 return $orderMainController->outputOrderList($requestP);
             }
-            
+
         }
         $orderMainController = new OrderMainController();
         //$result = $orderMainController->getList($where, 'createtime DESC', $limit);
@@ -388,7 +399,7 @@ class OrderController extends SystemController
             }
             if (strlen($request['remark'])>50) {
                 $this->ajaxReturn(8,'优惠详情不得超过50个字符');
-            } 
+            }
             if(!$request['pid']){
                 $this->ajaxReturn(9,'请选择优惠所属分类');
             }
@@ -490,7 +501,7 @@ class OrderController extends SystemController
                 }
                 $this->ajaxReturn(0,'修改优惠成功');
             }
-            
+
         }
         $discountList = D("Discount")->where("pid = 0")->select();
         $this->assign('discountList', $discountList);
@@ -559,7 +570,7 @@ class OrderController extends SystemController
             }
             $this->ajaxReturn(0,'启用优惠成功');
         }
-        
+
     }
 
 
