@@ -24,7 +24,7 @@
     </script>
 </head>
 <body>
-<div class="wrapBox">
+<div class="wrapBox" id="user_detail">
     <div class="proCont">
         <div class="proContTop clearfix">
             <div class="topTit l">
@@ -32,6 +32,10 @@
                 <span><em>&gt;</em>客户详情</span>
             </div>
             <div class="topRight r" data-value="{$data['userInfo']['user_id']}">
+            	<a href="javascript:;" class="return btn_phone " data-value="">
+            		<span><i></i></span>
+            		网络电话
+            	</a>
                 <!-- 待联系 待跟进-->
                 <if condition="($data['userInfo']['status']==20 || $data['userInfo']['status']==30) &&  !empty($data['isSelf'])">
                     <a href="javascript:;" class="return btn_mark {:$data['userInfo']['mark']==2?'active':''}" data-value="2">重点</a>
@@ -49,7 +53,7 @@
                     <a href="javascript:;" class="return btn_mark {:$data['userInfo']['mark']==2?'active':''}" data-value="2">重点</a>
                     <a href="javascript:;" class="return btn_mark mr10 {:$data['userInfo']['mark']==1?'active':''}" data-value="1">普通</a>
                     <if condition="!empty($access_list['CREATEORDER'])">
-                        <a href="javascript:;" class="return mr10 btn_reserve">创建订单</a>
+                        <a href="javascript:;" class="return btn_reserve">创建订单</a>
                     </if>
                 <elseif condition="($data['userInfo']['status']==160 && ($data['userInfo']['system_user_id'] == $userinfo['system_user_id']))" />
                     <if condition="!empty($access_list['REDEEMUSER'])">
@@ -66,23 +70,25 @@
         </div>
         <div class="addContMiddle">
             <div class="title dn">
-                有关&nbsp;<span class="red">13651441011</span>&nbsp;的客户
+               	有关&nbsp;<span class="red">13651441011</span>&nbsp;的客户
             </div>
-            <div class="tab" style="width: auto;">
+            <div class="tab">
                 <div class="cur">系统信息</div>
                 <div>个人信息</div>
                 <if condition="($data['userInfo']['status']==20 || $data['userInfo']['status']==30)">
                     <div>回访记录</div>
                     <div class="dn">缴费信息</div>
                     <div>短信记录</div>
+                    <div>通话记录</div>
                 <else/>
                     <div>回访记录</div>
                     <div>缴费信息</div>
                     <div>短信记录</div>
+                    <div>通话记录</div>
                 </if>
             </div>
             <!--  系统信息 start-->
-            <div class="content active">
+            <div class="content active clearfix">
                 <div class="content-child">
                     <div class="addRow clearfix">
                         <div class="contenCol">
@@ -595,7 +601,7 @@
                     <if condition="(!empty($data['isSelf']))">
                         <div class="addRow clearfix">
                         	<div class="reWay clearfix">
-                        		<span class="reTit"><em>*</em>回放方式：</span>
+                        		<span class="reTit"><em>*</em>回访方式：</span>
 	                        	<ol class="clearfix" id="waytype">
                                     <foreach name="data['callback']" item="v" key="k">
                                         <li data-value="{$v.num}">{$v.text}</li>
@@ -633,70 +639,48 @@
                         	</div>
                         </div>
                         <div class="addRow mb20 clearfix">
-                        <div class="contenCol w100 hauto clearfix">
-                            <div class="contenColLeft"><i>*</i>备注&nbsp;:&nbsp;</div>
-                            <div class="contenColRight backrecord">
-                                <script id="editor2" name="advantage"  type="text/plain" ></script>
-                            </div>
+                        	<div class="reWay clearfix">
+		                        <div class="contenCol w100 hauto clearfix">
+		                            <div class="contenColLeft"><i>*</i>备注&nbsp;:&nbsp;</div>
+		                            <div class="contenColRight backrecord">
+		                                <script id="editor2" name="advantage"  type="text/plain" ></script>
+		                            </div>
+		                        </div>
+		                        <div class="contenCol clearfix">
+		                            <div class="contenColLeft">&nbsp;</div>
+		                            <div class="contenColRight"><input type="submit" id="submit3" class="nsSubmit" value="提交"></div>
+		                        </div>
+		                    </div>
                         </div>
-                        <div class="contenCol clearfix">
-                            <div class="contenColLeft">&nbsp;</div>
-                            <div class="contenColRight"><input type="submit" id="submit3" class="nsSubmit" value="提交"></div>
-                        </div>
-                    </div>
                     </if>
                     <!-- 回访记录 -非回库状态-->
-                        <ul class="clearfix" id="callback_body">
-                        <!--<li class="active">-->
-                            <!--<div class="list-l">-->
-                                <!--<img src="__PUBLIC__/images/personalInfo_01-01.jpg" title="">-->
-                            <!--</div>-->
-                            <!--<div class="list-r">-->
-                                <!--<i></i>-->
-                                <!--<div class="wrBox2">-->
-                                    <!--<div class="wrTriangle"></div>-->
-                                    <!--<div class="wrBox2Tit">-->
-                                        <!--<div>叶静</div>-->
-                                        <!--<div>2016-03-12 20:12:10</div>-->
-                                        <!--<div>电话回访</div>-->
-                                    <!--</div>-->
-                                    <!--<div class="wrBox2Cont">-->
-                                        <!--<div class="wrReason">-->
-                                            <!--<p class="backTitle">承诺到访</p>-->
-                                            <!--<p class="backCon">现在在职</p>-->
-                                            <!--<p class="backTime">承诺到访时间：2016-03-10 10：22：55</p>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</li>-->
-
+                    <ul class="clearfix" id="callback_body">
                         <foreach name="data['callbackList']" item="v" key="k" >
-                        <li>
-                            <div class="list-l">
-                                <img src="{:$v['face']?$v['face']:'__PUBLIC__/images/personalInfo_01-01.jpg'}">
-                            </div>
-                            <div class="list-r">
-                                <i></i>
-                                <div class="wrBox2">
-                                    <div class="wrTriangle"></div>
-                                    <div class="wrBox2Tit">
-                                        <div>{$v.realname}</div>
-                                        <div>{:date('Y-m-d H:i:s', $v['callbacktime'])}</div>
-                                        <div>{:$data['USER_CALLBACK'][$v['waytype']]['text']}回访</div>
-                                    </div>
-                                    <div class="wrBox2Cont">
-                                        <div class="wrReason">
-                                            <p class="backTitle">{:$data['USER_ATTITUDE'][$v['attitude_id']]['text']}</p>
-                                            <div class="backCon">{:htmlspecialchars_decode($v['remark'])}</div>
-                                            <if condition="$v['nexttime'] neq 0">
-                                            <p class="backTime">{:$v['attitude_id']==2?'承诺到访':'下次回访'}时间：{:date('Y-m-d H:i:s', $v['nexttime'])}</p>
-                                            </if>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+	                        <li>
+	                            <div class="list-l">
+	                                <img src="{:$v['face']?$v['face']:'__PUBLIC__/images/personalInfo_01-01.jpg'}">
+	                            </div>
+	                            <div class="list-r">
+	                                <i></i>
+	                                <div class="wrBox2">
+	                                    <div class="wrTriangle"></div>
+	                                    <div class="wrBox2Tit">
+	                                        <div>{$v.realname}</div>
+	                                        <div>{:date('Y-m-d H:i:s', $v['callbacktime'])}</div>
+	                                        <div>{:$data['USER_CALLBACK'][$v['waytype']]['text']}回访</div>
+	                                    </div>
+	                                    <div class="wrBox2Cont">
+	                                        <div class="wrReason">
+	                                            <p class="backTitle">{:$data['USER_ATTITUDE'][$v['attitude_id']]['text']}</p>
+	                                            <div class="backCon">{:htmlspecialchars_decode($v['remark'])}</div>
+	                                            <if condition="$v['nexttime'] neq 0">
+	                                            <p class="backTime">{:$v['attitude_id']==2?'承诺到访':'下次回访'}时间：{:date('Y-m-d H:i:s', $v['nexttime'])}</p>
+	                                            </if>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </li>
                         </foreach>
                     </ul>
                 </div>
@@ -714,15 +698,55 @@
             <div class="content">
                 <div class="listRight" id="msgCont">
                     <ul class="clearfix" id="">
-                    	<!--  
-                    		<i class="current"></i>  //  当前项
-                    		<div class="wrBox2 msgCurr"> + <div class="msgStatus msgSendSuccess"></div> 发送成功且颜色高亮
-                    		<div class="wrBox2"> + <div class="msgStatus msgFailedToSend"></div>  发送失败且颜色低灰
-                    	-->
+                    	  
+                		<!--<i class="current"></i>  //  当前项
+                		<div class="wrBox2 msgCurr"> + <div class="msgStatus msgSendSuccess"></div> 发送成功且颜色高亮
+                		<div class="wrBox2"> + <div class="msgStatus msgFailedToSend"></div>  发送失败且颜色低灰-->
+                    	
                     </ul>
                 </div>
             </div>
             <!-- 短信记录 end -->
+            
+            <!-- 通话记录 start -->
+            <div class="content">
+                <div class="listRight" id="call-cont">
+                    <ul class="clearfix" id="">
+                    	<li>
+                    		<div class="list-l">
+                    			<img src="/Public/images/personalInfo_01-01.jpg" title="">
+                    		</div> 
+                    		<div class="list-r"> 
+                    			<i></i> 
+                    			<div class="wrBox2"> 
+                    				<div class="wrTriangle"></div> 
+                    				<div class="wrBox2Top">
+                    					<div class="call-info">
+                    						<span>张慧</span>
+                    						<span>2016-09-29 15:38:00</span>
+                    						<span class="call-status">呼叫成功</span>
+                    						<!--<span class="call-status">呼叫未应答</span>
+                    						<span class="call-status">呼叫被拒绝</span>
+                    						<span class="call-status">呼叫未应答超时</span>
+                    						<span class="call-status">线路不通</span>-->
+                    					</div>
+                    					<div class="call-address clearfix">
+                    						<a href="javascript:;">
+                    							<img src="__PUBLIC__/images/play- recording.png" alt="播放录音">
+                    						</a>
+                    						<span>录音时长3000秒</span>
+                    						<a href="javascript:;">
+                    							<input type="button" class="play-btn" value="点击播放通话录音">
+                    						</a>
+                    					</div>
+                    				</div>
+                    			</div>
+                    		</div>
+                    	</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 通话记录 end -->
             
         </div>
     </div>
