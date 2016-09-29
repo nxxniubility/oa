@@ -134,7 +134,7 @@ function positionChoose(){
 	$(document).on('click', '.confirm', function(){
 		var _this = $('.position_list'),
 			_checkbox = $(':input[name="sale_inp"]:checked'),
-			$close = $('.cancel'),
+			position_close = $('.cancel'),
 			_role_ids = '',
 			_role_names = '';
 		_checkbox.each(function(){
@@ -147,11 +147,17 @@ function positionChoose(){
 			};
 		});
 		$(this).next('input').val(_role_ids);
+		// role_id两种情况，有值与无值
 		if(_role_names.length>13){
 			_role_names = _role_names.substring(0,13)+'...';
+			$('.position_name em').text(_role_names);
+		}else{
+			//  如果取消全选，则role_id清空，提示字段还原
+			$(this).next('input').val('');
+			$('.position_name em').text('请选择职位');
 		}
-		$('.position_name em').text(_role_names);
-		$close.closest('.search_position_show').addClass('dn');
+		
+		position_close.closest('.search_position_show').addClass('dn');
 		mask.hide();
 	});
 
@@ -166,9 +172,9 @@ function positionChoose(){
 
 //  关闭职位弹层
 function cancelClose(){
-	var $close = $('.cancel');
-	$close.click(function(){
-		$close.closest('.search_position_show').addClass('dn');
+	var _close = $('.cancel');
+	_close.click(function(){
+		_close.closest('.search_position_show').addClass('dn');
 		mask.hide();
 	});
 }
