@@ -182,24 +182,24 @@ function layerClose(){
 
 // 开始时间
 $(document).ready(function(){
-	var _daytime = market_daytime.split(',');
+	var _daytime = market_daytime.split(','),
+		my_date = new Date();
 	setTimeout(function(){
-		$(".startime").val(_daytime[0]).glDatePicker({});
+		$(".startime").val(_daytime[0]).glDatePicker({
+			selectableDateRange: [
+	            {
+	            	from: new Date(1990, 1, 1) ,
+	            	to: new Date(my_date.getFullYear(), my_date.getMonth(), my_date.getDate())
+	            }
+	        ]
+		});
     },500)
 });
 // 结束时间
 $(document).ready(function(){
-	var _daytime = market_daytime.split(','),
-		_myDate = new Date();
+	var _daytime = market_daytime.split(',');
 	setTimeout(function(){
-		$(".endtime").val(_daytime[1]).glDatePicker({
-			selectableDateRange: [
-                {
-                    from: new Date(_myDate.getFullYear(), (_myDate.getMonth()-2), (_myDate.getDate()-7)),
-                    to: new Date(_myDate.getFullYear(), _myDate.getMonth(), _myDate.getDate())
-                }
-            ]
-		});
+		$(".endtime").val(_daytime[1]).glDatePicker({});
     },500)
 });
 
