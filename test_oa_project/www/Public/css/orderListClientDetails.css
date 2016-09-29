@@ -369,8 +369,8 @@ a.b-radio-checked {background-position: -14px 0px;}
 .wrapBox#user_detail .topRight .btn_phone span i {display:block;width:100%;height:24px;background: url(../images/phone_01-01.png) no-repeat;}
 .wrapBox#user_detail .topRight .btn_phone.return:hover span i {background: url(../images/phone_01-02.png) no-repeat;}
 .wrapBox#user_detail .addContMiddle {width:100%;padding:40px 0;}
-.wrapBox#user_detail .tab {border-right:none;}
-.wrapBox#user_detail .tab div {width:16.59%;border-right:1px solid #dedede;}
+.wrapBox#user_detail .tab {border:none;}
+.wrapBox#user_detail .tab div {width:16.57%;border:1px solid #dedede;border-right:none;}
 .wrapBox#user_detail .listRight .wrBox2 {height:auto;min-height:initial;}
 /*通话记录*/
 .listRight#call-cont li .wrBox2 {width:910px;}
