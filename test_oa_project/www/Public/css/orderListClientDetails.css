@@ -8,7 +8,7 @@
 .topRight { height: 55px; font-size: 0;}
 .topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
 .topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
-.tab{height:33px;float:left;width:100%;border:1px solid #DEDEDE;width:auto}
+.tab{height:33px;float:left;width:100%;border:1px solid #dedede;}
 .tab div{background:#efefef;width:208px;float:left;height:33px;line-height:33px;text-align:center;border-right:1px solid #DEDEDE;cursor:pointer;}
 .tab div:last-child{border:none;}
 .tab div.cur{background:#54B568;color:#fff;}
@@ -361,3 +361,48 @@ a.b-radio-checked {background-position: -14px 0px;}
 .listRight#orderCont li .wrBox2 .wrBox2Top .preferential {height:auto;}
 .listRight#orderCont li .wrBox2 .wrBox2Top .preferential span {width:70px;margin-right:0;}
 .listRight#orderCont li .wrBox2 .wrBox2Top .preferential ul {width:90%;height:auto;}
+
+/*0929*/
+.wrapBox#user_detail .proCont {width:auto;}
+.wrapBox#user_detail .topRight .btn_phone {margin-right:10px;}
+.wrapBox#user_detail .topRight .btn_phone span {float:left;width:16px;height:16px;margin:6px 0 6px 10px;}
+.wrapBox#user_detail .topRight .btn_phone span i {display:block;width:100%;height:24px;background: url(../images/phone_01-01.png) no-repeat;}
+.wrapBox#user_detail .topRight .btn_phone.return:hover span i {background: url(../images/phone_01-02.png) no-repeat;}
+.wrapBox#user_detail .addContMiddle {width:100%;padding:40px 0;}
+.wrapBox#user_detail .tab {border-right:none;}
+.wrapBox#user_detail .tab div {width:16.59%;border-right:1px solid #dedede;}
+.wrapBox#user_detail .listRight .wrBox2 {height:auto;min-height:initial;}
+/*通话记录*/
+.listRight#call-cont li .wrBox2 {width:910px;}
+.listRight#call-cont li i {background-position: 0 -12px;}
+.listRight#call-cont li .wrBox2 .wrTriangle {background: url(../images/adWithReview_01-03.png) no-repeat 0 0;}
+.listRight#call-cont li .wrBox2 .wrBox2Top {position:relative;height:auto;/*padding:25px 27px 17px;*/background:#efefef;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-info {height:40px;line-height:40px;color:#53b567;text-indent:22px;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-info span {margin-right:50px;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-info span.call-status {font-size:16px;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-address {height: auto;line-height:1.8;padding:10px 40px 10px 22px;color: #333;text-align:justify;background: #efefef;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-address a, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address span {float:left;line-height:32px;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-address a img {display:block;width:32px;height:32px;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-address a .play-btn {padding:4px 15px;color:#696969;cursor:pointer;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-address span {margin:0 10px;}
+
+.listRight#call-cont li.green .wrBox2 {border-color:#53b567;}
+.listRight#call-cont li.green .wrTriangle {background: url(../images/adWithReview_01-03.png) no-repeat 0 -17px;}
+.listRight#call-cont li.green  .wrBox2 .wrBox2Top {background:#53b567;}
+.listRight#call-cont li.green .wrBox2 .wrBox2Top table td {color:#fff;}
+.listRight#call-cont li.green .wrBox2 .wrBox2Top .preferential span {color:#fff;}
+.listRight#call-cont li.green .wrBox2 .wrBox2Top .preferential ul li {color:#178e30;background:#98d3a4;}
+.listRight#call-cont li.green .wrBox2 .wrBox2Top table td span {color:#f0f0f0;}
+.listRight#call-cont li.green .wrBox2 .wrBox2Top table td span.desOrderNum {font-size:16px;color:#fff;}
+.listRight#call-cont li .wrBox2 .wrBox2Cont {padding:0 20px;background:#fff;}
+
+
+.wrapBox#user_detail .listRight#orderCont li .wrBox2 .wrBox2Top {padding:25px 27px 17px;}
+.applicationDetails .remark, .backrecord {margin-top:15px;}
+.applicationDetails .remark {padding:0 0 0 15px;border:none;}
+.backrecord {padding:0 0 0 8px;}
+#submit1, #submit2, #submit3 {margin-top:30px;}
+#submit1 {margin-left:50px;}
+#submit3 {margin-left:50px;}
+.hauto {padding-left:0;}
+.layui-layer-btn {text-align:center !important;}

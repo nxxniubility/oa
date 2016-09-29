@@ -215,3 +215,30 @@ $('#waytype li,#attitude_id li').click(function(){
     //}
     $(this).addClass('curr').siblings('li').removeClass('curr');
 });
+
+//  网络电话，正在拨号
+$(document).on('click', '.btn_phone', function(){
+	layer.msg('网络电话正在接通中，请注意您的手机状态及时接通电话.', {icon:6,time:5000});
+	
+	//  通话结束
+	//call_end();
+	
+	//  拨不通取消或者转拨固话
+	dialing_error();
+});
+
+
+//  通话结束
+function call_end(){
+	layer.msg('网络电话通话完成，请在“通话记录”内查阅录音记录.', {icon:1,time:3000});
+}
+
+//  拨不通取消或者转拨固话
+function dialing_error(){
+	layer.confirm('客户手机拨打失败，请确认是否继续拨打客户固定电话.', {icon:7,title:'警告'},function(index){
+		//  确定继续拨打固化
+		layer.msg('正在拨打客户固定电话中...', {icon:6,time:3000});
+		
+		layer.close(index);
+	});
+}
