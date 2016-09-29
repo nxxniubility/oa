@@ -15,7 +15,7 @@ if(market_role_id!=''){
 	if(temp_role_names.length>13){
 		temp_role_names = temp_role_names.substring(0,13)+'...';
 	}
-	$('.position_name').text(temp_role_names);
+	$('.position_name em').text(temp_role_names);
 };
 
 //  单项指标左侧列表都添加点击事件
