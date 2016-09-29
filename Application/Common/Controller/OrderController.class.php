@@ -453,7 +453,7 @@ class OrderController extends BaseController
                 $order['status'] = 60;
                 $order['cost'] = ((int)$orderInfo['cost']) - ((int)$data['cost']);
                 $order['sparecost'] = ((int)$orderInfo['sparecost']) + ((int)$data['cost']);
-            }else{
+            }elseif(((int)$data['cost']) > ((int)$orderInfo['cost'])){
                 return array('code'=>2,'msg'=>'退款金额大于缴费金额');
             }
         }
@@ -580,7 +580,7 @@ class OrderController extends BaseController
             'create_time'=>'订单创建时间',
             'finish_time'=>'订单完成时间',
         );
-        $letter = array('A','B','C','D','E','F','G','H','I','J','H','I','J','K','L','M','N','O');  
+        $letter = array('A','B','C','D','E','F','G','H','I','J','H','I','J','K','L','M','N','O');
         $filename = "outputOrder";
         return outExecl($filename,array_values($excel_key_value),$newOrderList,$letter);
     }
