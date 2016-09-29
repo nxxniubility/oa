@@ -183,10 +183,7 @@ $(function(){
     $(document).on('click','#returnSub', function(){
         var returnCost = $(':input[name="return_cost"]').val();
         var returnCost = returnCost.split('.');
-        if(returnCost[0].length>8){
-            layer.msg('退款整数位不能大于8位数', {icon:2});
-            return false;
-        }else if(!chkInt($(':input[name="return_cost"]').val())){
+        if(!chkInt($(':input[name="return_cost"]').val())){
             layer.msg('请输入正确的金额', {icon:2});
             return false;
         }else if($('input[name="return_zone_id"]').length>0){
