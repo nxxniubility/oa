@@ -632,3 +632,11 @@ function  DateDiff(sDate1,  sDate2){    //sDate1和sDate2是2006-12-18格式
 	iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24)    //把相差的毫秒数转换为天数
 	return  iDays + 1
 }
+
+//  统计报表超出当前分辨率宽度则出现滚动条
+$(document).ready(function(){
+	var tab = $('.tab-container');
+		wrap_width = $('.wrapper_box').width();
+	
+	tab.width(wrap_width);
+});

@@ -217,7 +217,11 @@
         onHide: function(calendar) {
             calendar.hide();
         },
-
+		
+		onDestory:function(calendar){
+			calendar.remove();
+		},
+		
         // First date of the month.
         firstDate: null
     };

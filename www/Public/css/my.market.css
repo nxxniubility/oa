@@ -73,13 +73,13 @@
 #sr_everyday th {font-size:12px;cursor:pointer;}
 #sr_everyday th .container {position:relative;height:43px;background:#c9c8c8;}
 #sr_everyday .container span {display:block;height:43px;}
-#sr_everyday .container i {position:absolute;top:0;right:6px;display:block;width:100%;height:43px;}
-#sr_everyday .container i.sr_down {background:url(../images/market_sortdown-01.png) no-repeat center right;}
-#sr_everyday .container i.sr_up {background:url(../images/market_sortup-03.png) no-repeat center right;}
+#sr_everyday .container i {position:absolute;top:0;right:1px;display:block;width:50%;height:43px;}
+#sr_everyday .container i.sr_down {background:url(../images/market_sortdown-01.png) no-repeat center center;}
+#sr_everyday .container i.sr_up {background:url(../images/market_sortup-03.png) no-repeat center center;}
 #sr_everyday .container:hover {background:#53b567;}
 #sr_everyday .container:hover span {color:#fff;}
-#sr_everyday .container:hover i.sr_down {background:url(../images/market_sortdown-02.png) no-repeat center right;}
-#sr_everyday .container:hover i.sr_up {background:url(../images/market_sortup-04.png) no-repeat center right;}
+#sr_everyday .container:hover i.sr_down {background:url(../images/market_sortdown-02.png) no-repeat center center;}
+#sr_everyday .container:hover i.sr_up {background:url(../images/market_sortup-04.png) no-repeat center center;}
 #sr_everyday td {font-size:14px;color:#696969;background:#fff;}
 #sr_everyday td.red {color:#ff0000;}
 #sr_everyday tr.sr_total:hover td {background:#fff;}
@@ -91,3 +91,7 @@
 
 /*0927*/
 .chart_content.new_amount .please_select p {margin-top:150px;}
+
+/*0929*/
+.statistics_report .sr_table .tab-container {overflow-x:auto;overflow-y:hidden;}
+#sr_everyday th, #sr_everyday td {min-width:130px;}
