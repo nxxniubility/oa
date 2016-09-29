@@ -1064,14 +1064,22 @@ class UserController extends BaseController
     protected function dispostWhere($where)
     {
         $where = array_filter($where);
+        $systemType = !empty($where['system_type'])?$where['system_type']:'system_user_id';
+        unset($where['system_type']);
         foreach($where as $k=>$v){
             if($k=='role_id'){
-                $ids = $this->getRoleIds($v);
-                $where["{$this->DB_PREFIX}user.system_user_id"] = array('IN', $ids);
+                $sys_ids = $this->getRoleIds($v);
             }elseif($v!='0'){
                 $where["{$this->DB_PREFIX}user.".$k] = $v;
             }
             unset($where[$k]);
+        }
+        if(!empty($where["{$this->DB_PREFIX}user.system_user_id"])){
+            $system_user_id = $where["{$this->DB_PREFIX}user.system_user_id"];
+            unset($where["{$this->DB_PREFIX}user.system_user_id"]);
+            $where["{$this->DB_PREFIX}user.".$systemType] = $system_user_id;
+        }elseif(!empty($sys_ids)){
+            $where["{$this->DB_PREFIX}user.".$systemType] = array('IN', $sys_ids);
         }
         if(!empty($where["{$this->DB_PREFIX}user.zone_id"])){
             $zoneIdArr = $this->getZoneIds($where["{$this->DB_PREFIX}user.zone_id"]);

@@ -49,6 +49,17 @@ class SystemUserModel extends SystemModel{
     }
 
     /*
+    |--------------------------------------------------------------------------
+    | 获取单条记录
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getFind($where=null, $field='*', $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->find();
+    }
+
+    /*
      * 添加登录日志
      * @author zgt
      * @return false

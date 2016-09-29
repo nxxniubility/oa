@@ -61,13 +61,12 @@ class MarketStandardInfoModel extends SystemModel
     */
     public function addData($data)
     {
-        $data['createtime'] = time();
-        $data['createip'] = get_client_ip();
         // 如果创建失败 表示验证没有通过 输出错误提示信息
         if (!$this->create($data)){
             return $this->getError();
         }else{
-            return $this->add($data);
+            $result = $this->add($data);
+            return array('code'=>0, 'data'=>$result);
         }
     }
 
@@ -83,7 +82,8 @@ class MarketStandardInfoModel extends SystemModel
         if (!$this->create($data)){
             return $this->getError();
         }else{
-            return $this->where(array('standard_id'=>$id))->save($data);
+            $result = $this->where(array('standard_id'=>$id))->save($data);
+            return array('code'=>0, 'data'=>$result);
         }
     }
 

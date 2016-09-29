@@ -656,6 +656,104 @@ class UserService extends BaseService
     }
 
     /*
+    |--------------------------------------------------------------------------
+    | 专线电话 呼叫客户
+    |--------------------------------------------------------------------------
+    | user_id:客户 system_user_id：操作人
+    | @author zgt
+    */
+    public function callUser($param)
+    {
+        //必要参数
+        if(empty($param['user_id'])) return array('code'=>201,'msg'=>'参数异常');
+        $re_data = D('User')->getFind(array('user_id'=>$param['user_id']), 'username,system_user_id,tel');
+        if(empty($re_data)) return array('code'=>101,'msg'=>'找不到该客户信息');
+        if($re_data['system_user_id']!=$param['system_user_id']) return array('code'=>102,'msg'=>'您不是该客户所属人，无该操作权限！');
+        //实例化接口
+        $NeteaseService = new NeteaseService();
+        //获取操作人手机号码
+        $re_data_sys = D('SystemUser')->getFind(array('system_user_id'=>$param['system_user_id']), 'username');
+        $mobile_caller = decryptPhone($re_data_sys['username'],C('PHONE_CODE_KEY'));
+        if(!empty($re_data['username'])){
+            $mobile_callee = decryptPhone($re_data['username'],C('PHONE_CODE_KEY'));
+            $re_flag = $NeteaseService->startcall($mobile_caller,$mobile_callee);
+            if($re_flag['code']==0){
+                $_add_data = array(
+                    'call_key' => $re_flag['data'],
+                    'user_id' => $param['user_id'],
+                    'system_user_id' => $param['system_user_id'],
+                    'call_caller' => $mobile_caller,
+                    'call_callee' => $mobile_callee,
+                    'call_time' => time()
+                );
+                session('call_phone',$re_flag['data']);
+                D('CallLogs')->addData($_add_data);
+            }
+            return array('code'=>$re_flag['code'],'msg'=>$re_flag['msg'],'data'=>$re_flag['data']);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 专线电话 查看呼叫详情
+    |--------------------------------------------------------------------------
+    | user_id:客户 system_user_id：操作人
+    | @author zgt
+    */
+    public function getCall()
+    {
+        $callArr = array(
+            'CALL_REJECTED'=>'呼叫被拒绝',
+            'NO_ANSWER'=>'呼叫未应答',
+            'NONE'=>'呼叫失败',
+            'NORMAL_CLEARING'=>'呼叫正常',
+            'NORMAL_TEMPORARY_FAILURE'=>'呼叫线路超时',
+            'NORMAL_UNSPECIFIED'=>'一般是线路不通',
+            'NO_USER_RESPONSE'=>'呼叫未应答超时',
+            'RECOVERY_ON_TIMER_EXPIRE'=>'媒体超时',
+            'UNALLOCATED_NUMBER'=>'线路不通',
+            'USER_BUSY'=>'用户占线繁忙',
+        );
+        $call_key = session('call_phone');
+        $re_flag = D('Netease','Service')->queryBySession($call_key);
+        if($re_flag['data']->status=='SUCCESS'){
+            $_edit_data = array(
+                'call_mp3' => $re_flag['data']->recordUrl,
+                'call_length' => $re_flag['data']->durationSec,
+                'call_status' => 1,
+                'call_cause'=>$callArr[$re_flag['data']->legs[1]->hangCause]
+            );
+            D('CallLogs')->editData($_edit_data,$re_flag['data']->session);
+            return array('code'=>0,'msg'=>'通话结束');
+        }
+        return array('code'=>1,'msg'=>'通话中');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 专线电话 查看呼叫详情
+    |--------------------------------------------------------------------------
+    | user_id:客户 system_user_id：操作人
+    | @author zgt
+    */
+    public function getCallList($param)
+    {
+        $param['rank'] =  !empty($param['rank'])?$param['rank']:1;
+        if($param['rank']==1) $_where['system_user_id'] = $param['system_user_id'];
+        $_where['user_id'] = $param['user_id'];
+        $_where['call_status'] = 1;
+        $result = D('CallLogs')->getList($_where);
+        foreach($result as $k=>$v){
+            $info = D('SystemUser','Service')->getListCache(array('system_user_id'=>$v['system_user_id']));
+            $result[$k]['system_realname'] = $info['data']['realname'];
+            $result[$k]['system_face'] = $info['data']['face'];
+            $result[$k]['system_sex'] = $info['data']['sex'];
+            $result[$k]['call_time_ymd'] = date('Y-m-d H:i', $v['call_time']);
+        }
+        return array('code'=>0, 'data'=>$result);
+    }
+
+    /*
    * 参数处理 QQ username tel introducermobile interviewurl
    * @author zgt
    * @return false

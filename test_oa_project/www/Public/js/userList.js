@@ -20,8 +20,8 @@ $(function(){
         if($(':input[name="system_sele"]').length>0){
             $(':input[name="system_sele"]').get(0).selectedIndex=0;
         }
-        if($(':input[name="createsystem_sele"]').length>0){
-            $(':input[name="createsystem_sele"]').get(0).selectedIndex=0;
+        if($(':input[name="system_type_sele"]').length>0){
+            $(':input[name="system_type_sele"]').get(0).selectedIndex=0;
         }
         $('#subForm').children('input[type="hidden"]').val('');
     });

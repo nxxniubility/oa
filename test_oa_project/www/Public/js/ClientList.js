@@ -554,10 +554,10 @@ $('.details').find('a').click(function(){
     };
 });
 //筛选渠道获取列表
-$(':input[name="channel_sele"],:input[name="zone_sele"],:input[name="role_sele"],:input[name="system_sele"],:input[name="createsystem_sele"]').change(function(){
+$(':input[name="channel_sele"],:input[name="zone_sele"],:input[name="role_sele"],:input[name="system_sele"],:input[name="system_type_sele"]').change(function(){
     var data_id = $(this).attr('data-id');
     $(':input[name="'+data_id+'"]').val($(this).val());
-    if( data_id!='channel_id' && data_id!='system_user_id' && data_id!='createuser_id' ){
+    if( data_id!='channel_id' && data_id!='system_user_id' && data_id!='system_type' ){
         getsystem();
     }
 });
