@@ -364,7 +364,7 @@ a.b-radio-checked {background-position: -14px 0px;}
 
 /*0929*/
 .wrapBox#user_detail .proCont {width:auto;}
-.wrapBox#user_detail .topRight .btn_phone {margin-right:10px;}
+.wrapBox#user_detail .topRight .btn_phone {margin-right:20px;}
 .wrapBox#user_detail .topRight .btn_phone span {float:left;width:16px;height:16px;margin:6px 0 6px 10px;}
 .wrapBox#user_detail .topRight .btn_phone span i {display:block;width:100%;height:24px;background: url(../images/phone_01-01.png) no-repeat;}
 .wrapBox#user_detail .topRight .btn_phone.return:hover span i {background: url(../images/phone_01-02.png) no-repeat;}

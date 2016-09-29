@@ -546,72 +546,88 @@
 	        		<div class="sr_table active">
 		        		<?php $temp_daytime = explode(',', $dataMarket['daytime']); ?>
 		        		<div class="sr_time">统计时间：{$temp_daytime[0]}至{$temp_daytime[1]}</div>
-		        		<table cellpadding="0" cellspacing="0"  id="sr_everyday">
-		        			<tr>
-		        				<th>
-		        					<div class="container">
-			        					<span>统计时间</span>
-			        					<i class="sr_down"></i>
-		        					</div>
-		        				</th>
-		        				<th><div class="container"><span>新增量</span><i class="sr_down"></i></div></th>
-		        				<th><div class="container"><span>分配量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>出库量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>转出量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>放弃量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>系统回收量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>赎回量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>已回访量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>跟进次数</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>到访量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>订单量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>退款量</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>到访率</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>成交率</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>退款率</span><i class="sr_down"></i></div></th>
-								<th><div class="container"><span>总转率</span><i class="sr_down"></i></div></th>
-		        			</tr>
-		        			<tr class="sr_total">
-		        				<td>合计</td>
-		        				<td>{$dataMarket['count']['addcount']?$dataMarket['count']['addcount']:0}</td>
-		        				<td>{$dataMarket['count']['allocationcount']?$dataMarket['count']['allocationcount']:0}</td>
-								<td>{$dataMarket['count']['acceptcount']?$dataMarket['count']['acceptcount']:0}</td>
-								<td>{$dataMarket['count']['switchcount']?$dataMarket['count']['switchcount']:0}</td>
-								<td>{$dataMarket['count']['restartcount']?$dataMarket['count']['restartcount']:0}</td>
-								<td>{$dataMarket['count']['recyclecount']?$dataMarket['count']['recyclecount']:0}</td>
-								<td>{$dataMarket['count']['redeemcount']?$dataMarket['count']['redeemcount']:0}</td>
-								<td>{$dataMarket['count']['callbackcount']?$dataMarket['count']['callbackcount']:0}</td>
-								<td>{$dataMarket['count']['attitudecount']?$dataMarket['count']['attitudecount']:0}</td>
-								<td>{$dataMarket['count']['visitcount']?$dataMarket['count']['visitcount']:0}</td>
-								<td>{$dataMarket['count']['ordercount']?$dataMarket['count']['ordercount']:0}</td>
-								<td>{$dataMarket['count']['refundcount']?$dataMarket['count']['refundcount']:0}</td>
-								<td>{$dataMarket['count']['visitratio']?$dataMarket['count']['visitratio']:0}%</td>
-								<td>{$dataMarket['count']['conversionratio']?$dataMarket['count']['conversionratio']:0}%</td>
-								<td>{$dataMarket['count']['chargebackratio']?$dataMarket['count']['chargebackratio']:0}%</td>
-								<td>{$dataMarket['count']['totalratio']?$dataMarket['count']['totalratio']:0}%</td>
-		        			</tr>
-		        			<foreach name="dataMarket['days']" item="v" key="k">
-								<tr>
-									<td>{$v.day}</td>
-									<td>{$v.addcount}</td>
-									<td>{$v.allocationcount}</td>
-									<td>{$v.acceptcount}</td>
-									<td>{$v.switchcount}</td>
-									<td>{$v.restartcount}</td>
-									<td>{$v.recyclecount}</td>
-									<td>{$v.redeemcount}</td>
-									<td>{$v.callbackcount}</td>
-									<td>{$v.attitudecount}</td>
-									<td>{$v.visitcount}</td>
-									<td>{$v.ordercount}</td>
-									<td>{$v.refundcount}</td>
-									<td>{$v.visitratio}%</td>
-									<td>{$v.conversionratio}%</td>
-									<td>{$v.chargebackratio}%</td>
-									<td>{$v.totalratio}%</td>
-								</tr>
-							</foreach>
-		        		</table>
+		        		<div class="tab-container">
+			        		<table cellpadding="0" cellspacing="0"  id="sr_everyday">
+			        			<!--<tr>
+			        				<th><div class="container"><span>统计时间<i class="sr_down"></i></span></div></th>
+			        				<th><div class="container"><span>新增量<i class="sr_down"></i></span></div></th>
+			        				<th><div class="container"><span>分配量<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>出库量<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>转出量<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>放弃量<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>系统回收量<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>赎回量<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>已回访量<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>跟进次数<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>到访量<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>订单量<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>退款量<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>到访率<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>成交率<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>退款率<i class="sr_down"></i></span></div></th>
+									<th><div class="container"><span>总转率<i class="sr_down"></i></span></div></th>
+			        			</tr>-->
+			        			<tr>
+			        				<th><div class="container"><span>统计时间</span></div></th>
+			        				<th><div class="container"><span>新增量</span></div></th>
+			        				<th><div class="container"><span>分配量</span></div></th>
+									<th><div class="container"><span>出库量</span></div></th>
+									<th><div class="container"><span>转出量</span></div></th>
+									<th><div class="container"><span>放弃量</span></div></th>
+									<th><div class="container"><span>系统回收量</span></div></th>
+									<th><div class="container"><span>赎回量</span></div></th>
+									<th><div class="container"><span>已回访量</span></div></th>
+									<th><div class="container"><span>跟进次数</span></div></th>
+									<th><div class="container"><span>到访量</span></div></th>
+									<th><div class="container"><span>订单量</span></div></th>
+									<th><div class="container"><span>退款量</span></div></th>
+									<th><div class="container"><span>到访率</span></div></th>
+									<th><div class="container"><span>成交率</span></div></th>
+									<th><div class="container"><span>退款率</span></div></th>
+									<th><div class="container"><span>总转率</span></div></th>
+			        			</tr>
+			        			<tr class="sr_total">
+			        				<td>合计</td>
+			        				<td>{$dataMarket['count']['addcount']?$dataMarket['count']['addcount']:0}</td>
+			        				<td>{$dataMarket['count']['allocationcount']?$dataMarket['count']['allocationcount']:0}</td>
+									<td>{$dataMarket['count']['acceptcount']?$dataMarket['count']['acceptcount']:0}</td>
+									<td>{$dataMarket['count']['switchcount']?$dataMarket['count']['switchcount']:0}</td>
+									<td>{$dataMarket['count']['restartcount']?$dataMarket['count']['restartcount']:0}</td>
+									<td>{$dataMarket['count']['recyclecount']?$dataMarket['count']['recyclecount']:0}</td>
+									<td>{$dataMarket['count']['redeemcount']?$dataMarket['count']['redeemcount']:0}</td>
+									<td>{$dataMarket['count']['callbackcount']?$dataMarket['count']['callbackcount']:0}</td>
+									<td>{$dataMarket['count']['attitudecount']?$dataMarket['count']['attitudecount']:0}</td>
+									<td>{$dataMarket['count']['visitcount']?$dataMarket['count']['visitcount']:0}</td>
+									<td>{$dataMarket['count']['ordercount']?$dataMarket['count']['ordercount']:0}</td>
+									<td>{$dataMarket['count']['refundcount']?$dataMarket['count']['refundcount']:0}</td>
+									<td>{$dataMarket['count']['visitratio']?$dataMarket['count']['visitratio']:0}%</td>
+									<td>{$dataMarket['count']['conversionratio']?$dataMarket['count']['conversionratio']:0}%</td>
+									<td>{$dataMarket['count']['chargebackratio']?$dataMarket['count']['chargebackratio']:0}%</td>
+									<td>{$dataMarket['count']['totalratio']?$dataMarket['count']['totalratio']:0}%</td>
+			        			</tr>
+			        			<foreach name="dataMarket['days']" item="v" key="k">
+									<tr>
+										<td>{$v.day}</td>
+										<td>{$v.addcount}</td>
+										<td>{$v.allocationcount}</td>
+										<td>{$v.acceptcount}</td>
+										<td>{$v.switchcount}</td>
+										<td>{$v.restartcount}</td>
+										<td>{$v.recyclecount}</td>
+										<td>{$v.redeemcount}</td>
+										<td>{$v.callbackcount}</td>
+										<td>{$v.attitudecount}</td>
+										<td>{$v.visitcount}</td>
+										<td>{$v.ordercount}</td>
+										<td>{$v.refundcount}</td>
+										<td>{$v.visitratio}%</td>
+										<td>{$v.conversionratio}%</td>
+										<td>{$v.chargebackratio}%</td>
+										<td>{$v.totalratio}%</td>
+									</tr>
+								</foreach>
+			        		</table>
+			        	</div>
 		        	</div>
 	        	</div>
 	        </div>
