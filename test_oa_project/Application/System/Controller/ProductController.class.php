@@ -48,7 +48,7 @@ class ProductController extends SystemController
             $this->ajaxReturn(2,'产品名称不能为空');
         }
         if($data['price'] == 0){
-            $this->ajaxReturn(3,"金额不能为零,你这样做我们会血亏的");
+            $this->ajaxReturn(3,"金额不能为零");
         }
         if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(4,'请选择产品类型');
         // if (empty(trim($data['description']))) {
@@ -79,7 +79,7 @@ class ProductController extends SystemController
             $this->ajaxReturn(2,'不能包含特殊字符');
         }
         if($data['price'] == 0){
-            $this->ajaxReturn(3,"金额不能为零,你这样做我们会血亏的");
+            $this->ajaxReturn(3,"金额不能为零");
         }
         if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(5,'请选择产品类型');
         //执行操作
