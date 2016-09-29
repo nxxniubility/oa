@@ -131,6 +131,11 @@ class OrderController extends SystemController
         $CourseProductController = new CourseProductController();
         $courseList = $CourseProductController->getList();
         $data['courseList'] = $courseList['data'];
+        //获取区域下
+        $zoneMain = new ZoneController();
+        $data['zoneAll']['children'] = $zoneMain->getZoneList($this->system_user['zone_id']);
+        $centersign = 10;
+        $centerList = $zoneMain->getZoneCenter($centersign);
         //优惠方式
         $data['discount'] = $orderMainController->getDiscount();
         //获取配置状态值
@@ -139,6 +144,7 @@ class OrderController extends SystemController
         $data['order_receivetype'] = C('USER_RECEIVETYPE');
         //模版赋值
         $data['order_id'] = $order_id;
+        $this->assign('centerList', $centerList);
         $this->assign('data', $data);
         $this->display();
     }
@@ -180,13 +186,6 @@ class OrderController extends SystemController
         //获取参数
         $request = I('post.');
         if(empty($request['order_id'])) $this->ajaxReturn(1, '参数异常！');
-        $zone_id = $this->system_user['zone_id'];
-        $zoneInfo = D("Zone")->where("zone_id = $zone_id")->field("centersign")->find();
-        if ($zoneInfo['centersign'] != 10) {
-            if (empty($request['zone_id'])) {
-                $this->ajaxReturn(1, '请选择中心！');
-            }
-        } 
         if(empty($request['payway'])) $this->ajaxReturn(1, '请输入收款方式！');
         if(empty($request['cost'])) $this->ajaxReturn(1, '请输入收款金额', '', 'receivables_cost');
         if(empty($request['practicaltime'])) $this->ajaxReturn(1, '请输入收款日期！', '', 'receivables_practicaltime');

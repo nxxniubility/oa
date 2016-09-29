@@ -243,11 +243,18 @@ function hintDispost(reflag){
 };
 //收款
 $('#receivablesSub').on('click', function(){
+    if($('input[name="receivables_zone_id"]').length>0){
+        if($('input[name="receivables_zone_id"]').val().length==0){
+            layer.msg('请选择选择中心', {icon:2});
+            return false;
+        };
+    };
     var data = {
         order_id : $('input[name="order_id"]').val(),
         practicaltime : $('input[name="receivables_practicaltime"]').val(),
         payway: $('input[name="receivables_payway"]').val(),
-        cost: $('input[name="receivables_cost"]').val()
+        cost: $('input[name="receivables_cost"]').val(),
+        zone_id: $('input[name="receivables_zone_id"]').val()
     }
     common_ajax2(data, payfundOrder_href, 'no', hrefUrl);
 });

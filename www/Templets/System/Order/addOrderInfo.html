@@ -174,6 +174,36 @@
             <span>所属人：</span>
             <em>{$data.info.orderInfo.system_user_realname}</em>
         </div>
+        <if condition="$data['zoneAll']['children']['centersign'] NEQ 10">
+            <div class="raRow clearfix">
+                <span><i>&#42</i>退款中心：</span>
+                <div class="selectbox l">
+                    <dl class="select">
+                        <dt>
+                        <div class="select_title l">选择中心</div>
+                        <div class="arrow r"></div>
+                        </dt>
+                        <foreach name="data['zoneAll']" item="v1" key="k1">
+                            <dd class="fxDone" data-value="{$v1['zone_id']}">{$v1['name']}</dd>
+                            <if condition = "($v1['centersign'] neq 10) && (!empty($v1['children']))">
+                                <foreach name = "v1['children']" item = "v2">
+                                    <dd class="fxDone" data-value="{$v2['zone_id']}">&nbsp;&nbsp;├─ {$v2['name']}</dd>
+                                    <if condition = "($v2['centersign'] neq 10) && (!empty($v2['children']))">
+                                        <foreach name = "v2['children']" item = "v3">
+                                            <dd class="fxDone" data-value="{$v3['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v3['name']}</dd>
+                                            <?php foreach($v3['children'] as $v4){ ?>
+                                            <dd class="fxDone" data-value="{$v4['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v4['name']}</dd>
+                                            <?php } ?>
+                                        </foreach>
+                                    </if>
+                                </foreach>
+                            </if>
+                        </foreach>
+                    </dl>
+                    <input type="hidden" name="receivables_zone_id" aotucomplete="off" value="">
+                </div>
+            </div>
+        </if>
         <div class="reRow clearfix">
             <span><i>&#42</i>收款日期：</span>
             <input type="text" class="receivablesTime" name="receivables_practicaltime" value="" readonly="readonly" placeholder="选择日期">
