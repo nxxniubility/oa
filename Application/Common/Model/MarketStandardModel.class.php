@@ -70,7 +70,8 @@ class MarketStandardModel extends SystemModel
         if (!$this->create($data)){
             return $this->getError();
         }else{
-            return $this->add($data);
+            $result =  $this->add($data);
+            return array('code'=>0, 'data'=>$result);
         }
     }
 
@@ -86,7 +87,8 @@ class MarketStandardModel extends SystemModel
         if (!$this->create($data)){
             return $this->getError();
         }else{
-            return $this->where(array('standard_id'=>$id))->save($data);
+            $result =  $this->where(array('standard_id'=>$id))->save($data);
+            return array('code'=>0, 'data'=>$result);
         }
     }
 

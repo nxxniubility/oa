@@ -50,6 +50,17 @@ class UserModel extends SystemModel
     }
 
     /*
+    |--------------------------------------------------------------------------
+    | 获取单条记录
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getFind($where=null, $field='*', $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->find();
+    }
+
+    /*
      * 添加自定义列自定义列
      * $columnNames = name-sort,name-sort......
      * @author zgt

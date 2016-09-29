@@ -166,7 +166,7 @@ class DataService extends BaseService
             $end = $daytime[1];
             $diff = strtotime($end) - strtotime($start);
             $diffDay = $diff / (24*60*60);
-            for ($i = 1; $i <= $diffDay; $i++){
+            for ($i = 0; $i <= $diffDay; $i++){
                 $new_time = (strtotime($start) + $i * 24 * 60 * 60 );
                 if(empty($newArr['days'][date('Ymd', $new_time)])){
                     $newArr['days'][date('Ymd', $new_time)] = array(
@@ -321,7 +321,7 @@ class DataService extends BaseService
             $end = $daytime[1];
             $diff = strtotime($end) - strtotime($start);
             $diffDay = $diff / (24*60*60);
-            for ($i = 1; $i <= $diffDay; $i++){
+            for ($i = 0; $i <= $diffDay; $i++){
                 $new_time = (strtotime($start) + $i * 24 * 60 * 60 );
                 if(empty($newArr['days'][date('m-d',$new_time)])){
                     $newArr['days'][date('m-d',$new_time)] = 0;
@@ -417,6 +417,8 @@ class DataService extends BaseService
         if(empty($where['standard_name'])) return array('code'=>201,'msg'=>'名称不能为空');
         if(empty($where['department_id'])) return array('code'=>202,'msg'=>'部门ID不能为空');
         if(empty($where['option_objs'])) return array('code'=>202,'msg'=>'规则内容不能为空');
+        $is_department = D('MarketStandard')->getFind(array('department_id'=>$where['department_id']));
+        if(!empty($is_department))return array('code'=>100,'msg'=>'该部门合格标准已存在，无法重复添加！');
         $_standard_data['standard_name'] = $where['standard_name'];
         $_standard_data['department_id'] = $where['department_id'];
         $_standard_data['standard_remark'] = $where['standard_remark'];
@@ -435,17 +437,17 @@ class DataService extends BaseService
         }
         D()->startTrans();
         $redata = D('MarketStandard')->addData($_standard_data);
-        if(empty($redata['code'])){
+        if($redata['code']==0){
             foreach($_option_objs as $k=>$v){
                 $v = (array) $v;
                 $_info_data = array(
-                    'standard_id' => $redata,
+                    'standard_id' => $redata['data'],
                     'option_name' => $v['option_name'],
                     'option_num' => $v['option_num'],
                     'option_warn' => $v['option_warn'],
                 );
                 $redata_info = D('MarketStandardInfo')->addData($_info_data);
-                if(!empty($redata_info['code'])){
+                if($redata_info['code']!=0){
                     D()->rollback();
                     return $redata_info;exit();
                 }
@@ -489,7 +491,7 @@ class DataService extends BaseService
         }
         D()->startTrans();
         $redata = D('MarketStandard')->editData($_standard_data,$_standard_id);
-        if(empty($redata['code'])){
+        if($redata['code']==0){
             D('MarketStandardInfo')->delData($_standard_id);
             foreach($_option_objs as $k=>$v){
                 $v = (array) $v;
@@ -500,7 +502,7 @@ class DataService extends BaseService
                     'option_warn' => $v['option_warn'],
                 );
                 $redata_info = D('MarketStandardInfo')->addData($_info_data);
-                if(!empty($redata_info['code'])){
+                if($redata_info['code']!=0){
                     D()->rollback();
                     return $redata_info;exit();
                 }

@@ -1,6 +1,7 @@
 <?php
 namespace Cmd\Controller;
 use Common\Controller\BaseController;
+use Common\Service\DataService;
 use Org\Util\Date;
 class AllotController extends BaseController {
 
@@ -22,7 +23,6 @@ class AllotController extends BaseController {
     //分配规则
     protected function allot($allocation_id="")
     {
-
         $DataService = new DataService();
         if(empty($allocation_id)){
             //获取分配规则

@@ -13,6 +13,7 @@ use Common\Controller\ProidController;
 use Common\Controller\UserController as UserMain;
 use Common\Controller\ZoneController;
 use Api\Controller\UserController as ApiUser;
+use Common\Service\UserService;
 
 class UserController extends SystemController
 {
@@ -225,6 +226,10 @@ class UserController extends SystemController
             //回访记录
             $callbackList = $ApiUser->getUserCallback(array('user_id'=>$user_id,'callbackType'=>$callbackType));
             $data['callbackList'] = $callbackList['data'];
+            //通话记录
+            $UserService = new UserService();
+            $call_List = $UserService->getCallList(array('user_id'=>$user_id,'system_user_id'=>$this->system_user_id,'rank'=>$callbackType));
+            $data['call_List'] = $call_List['data'];
             //获取学历表
             $educationMain = new EducationController();
             $educationList = $educationMain->getList();
@@ -393,6 +398,28 @@ class UserController extends SystemController
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
+    }
+
+    /*
+    * 呼叫客户（客户详情） 异步处理方法
+    * @author zgt
+    */
+    public function callUser()
+    {
+        $param = I('post.');
+        $UserService = new UserService();
+        if($param['type']=='getcall'){
+            $reflag = $UserService->getCall();
+            //返回数据操作状态
+            if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
+            else  $this->ajaxReturn(1, $reflag['msg'], $reflag['data']);
+        }elseif($param['type']=='callphone'){
+            $param['system_user_id'] = $this->system_user_id;
+            $reflag = $UserService->callUser($param);
+            //返回数据操作状态
+            if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
+            else  $this->ajaxReturn(1, $reflag['msg'], $reflag['data']);
+        }
     }
 
     /*

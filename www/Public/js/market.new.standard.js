@@ -35,8 +35,8 @@ $(function(){
             _option_name = $(this).attr('class');
             _option_num = $(this).find(':input[name="option_num"]').val();
             _option_warn = $(this).find(':input[name="than_'+_option_name+'"]:checked').val();
-            if(_option_num.length>5 || _option_num.length==0){
-                layer.msg('标准数值不能为空且不能大于5为数字',{icon:2});
+            if(_option_num.length>6 || _option_num.length==0){
+                layer.msg('标准数值不能为空且不能大于6为数字',{icon:2});
                 _option_objs = '';return false;
             };
             _option_objs.push({

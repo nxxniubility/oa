@@ -630,5 +630,17 @@ class UserController extends ApiBaseController
             $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
         }
     }
+    /*
+    |--------------------------------------------------------------------------
+    | 网易云信 回调响应接口
+    |--------------------------------------------------------------------------
+    |  user_id:客户 tosystem_user_id：被转员工 system_user_id：操作人
+    | @author zgt
+    */
+    public function netease()
+    {
+        $param = I('param.');
+        D('CallLogs')->editData(array('call_mp3'=>12334),$param['session']);
+    }
 
 }

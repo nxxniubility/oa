@@ -711,38 +711,42 @@
             <!-- 通话记录 start -->
             <div class="content">
                 <div class="listRight" id="call-cont">
-                    <ul class="clearfix" id="">
-                    	<li>
-                    		<div class="list-l">
-                    			<img src="/Public/images/personalInfo_01-01.jpg" title="">
-                    		</div> 
-                    		<div class="list-r"> 
-                    			<i></i> 
-                    			<div class="wrBox2"> 
-                    				<div class="wrTriangle"></div> 
-                    				<div class="wrBox2Top">
-                    					<div class="call-info">
-                    						<span>张慧</span>
-                    						<span>2016-09-29 15:38:00</span>
-                    						<span class="call-status">呼叫成功</span>
-                    						<!--<span class="call-status">呼叫未应答</span>
-                    						<span class="call-status">呼叫被拒绝</span>
-                    						<span class="call-status">呼叫未应答超时</span>
-                    						<span class="call-status">线路不通</span>-->
-                    					</div>
-                    					<div class="call-address clearfix">
-                    						<a href="javascript:;">
-                    							<img src="__PUBLIC__/images/play- recording.png" alt="播放录音">
-                    						</a>
-                    						<span>录音时长3000秒</span>
-                    						<a href="javascript:;">
-                    							<input type="button" class="play-btn" value="点击播放通话录音">
-                    						</a>
-                    					</div>
-                    				</div>
-                    			</div>
-                    		</div>
-                    	</li>
+                    <ul class="clearfix">
+                        <foreach name="data['call_List']" item="v">
+                            <li>
+                                <div class="list-l">
+                                    <if condition="!empty($v['system_face'])">
+                                        <img src="{$v['system_face']}">
+                                        <elseif condition="!empty($v['system_sex']) eq 2"/>
+                                        <img src="/Public/images/personalInfo_01-01.jpg">
+                                        <else/>
+                                        <img src="/Public/images/personalInfo_01-02.jpg">
+                                    </if>
+                                </div>
+                                <div class="list-r">
+                                    <i></i>
+                                    <div class="wrBox2">
+                                        <div class="wrTriangle"></div>
+                                        <div class="wrBox2Top">
+                                            <div class="call-info">
+                                                <span>{$v.system_realname}</span>
+                                                <span>{$v.call_time_ymd}</span>
+                                                <span class="call-status">{$v.call_cause}</span>
+                                            </div>
+                                            <div class="call-address clearfix">
+                                                <a href="{$v.call_mp3}" target="_blank">
+                                                    <img src="__PUBLIC__/images/play- recording.png" alt="播放录音">
+                                                </a>
+                                                <span>录音时长{$v.call_length}秒</span>
+                                                <a href="{$v.call_mp3}" target="_blank">
+                                                    <input type="button" class="play-btn" value="点击播放通话录音">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </foreach>
                     </ul>
                 </div>
             </div>
@@ -1077,7 +1081,7 @@
     //是否动态加载缴费记录
     getFeeLog();
     getSmsLog();
-    var apply_remak='';
+    var apply_remak='',in_call='';
     var ue = UE.getEditor('editor1',{
         toolbars: [
             ['fullscreen', 'source','fontsize','fontfamily', 'undo', 'redo','underline', 'bold','simpleupload','spechars','justifyleft','justifyright','justifycenter','emotion']
@@ -1171,7 +1175,20 @@
                 common_ajax(data, '', 'no',callbackli);
             }
         });
-
+        //呼叫电话
+        $('.btn_phone').click(function(){
+            var data = {
+                type : 'callphone',
+                user_id : $(':input[name="temp_user_id"]').val()
+            };
+            common_ajax2(data, "{:U('System/User/callUser')}", 'no',_callPhone);
+            function _callPhone(redata){
+                if(redata.code==0){
+                    layer.msg('网络电话正在接通中，请注意您的手机状态及时接通电话.', {icon:6,time:5000});
+                    in_call=setInterval(getCall,1800);
+                };
+            };
+        });
         //放弃自动填充备注
         $(':input[name="abandon_attitude_id"]').change(function(){
             var remarkObj = $('.abandon_remark');
@@ -1241,6 +1258,20 @@
         });
 
     });
+    //通话
+    function getCall(){
+        var data = {
+            type : 'getcall',
+            user_id : $(':input[name="temp_user_id"]').val()
+        };
+        common_ajax2(data, "{:U('System/User/callUser')}", 'no', _hintCall);
+        function _hintCall(redata){
+            if(redata.code==0){
+                clearInterval(in_call);
+                call_end();
+            }
+        }
+    }
     function callbackli(){
         var d = new Date();
         var d_h = d.getHours();
@@ -1287,6 +1318,7 @@
         };
 
     };
+
     //异步加载缴费记录
     function getFeeLog(){
         var data = {

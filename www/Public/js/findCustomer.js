@@ -223,13 +223,12 @@ $(function(){
 
 //  网络电话，正在拨号
 $(document).on('click', '.btn_phone', function(){
-	layer.msg('网络电话正在接通中，请注意您的手机状态及时接通电话.', {icon:6,time:5000});
 	
 	//  通话结束
 	//call_end();
 	
 	//  拨不通取消或者转拨固话
-	dialing_error();
+	//dialing_error();
 });
 
 

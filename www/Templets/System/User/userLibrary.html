@@ -254,12 +254,14 @@
                         </foreach>
                     </select>
 
-                    <span>所属人：</span>
-                    <select name="system_sele" data-id="system_user_id" autocompolete="off" class="toYourPeople">
+                    <span>类型：</span>
+                    <select name="system_type_sele" data-id="system_type" autocompolete="off" class="toYourPeople">
+                        <option value="system_user_id" {:$data['request']['system_type']=='system_user_id'?'selected="selected"':''}>所属人</option>
+                        <option value="createuser_id" {:$data['request']['system_type']=='createuser_id'?'selected="selected"':''}>创建人</option>
                     </select>
 
-                    <span>创建人：</span>
-                    <select name="createsystem_sele" data-id="createuser_id" autocompolete="off" class="toYourPeople">
+                    <span>员工：</span>
+                    <select name="system_sele" data-id="system_user_id" autocompolete="off" class="toYourPeople">
                     </select>
                     <a href="javascript:void(0);" class="loading"><img src="__PUBLIC__/images/loading.gif"></a>
 
@@ -285,7 +287,7 @@
                         <input type="hidden" name="zone_id" value="{$data['request']['zone_id']}" autocomplete="off">
                         <input type="hidden" name="role_id" value="{$data['request']['role_id']}" autocomplete="off">
                         <input type="hidden" name="system_user_id" value="{$data['request']['system_user_id']}" autocomplete="off">
-                        <input type="hidden" name="createuser_id" value="{$data['request']['createuser_id']}" autocomplete="off">
+                        <input type="hidden" name="system_type" value="{$data['request']['system_type']}" autocomplete="off">
 
                         <input type="submit" class="confirmBtn" id="subSearch" value="确定">
                     </form>
@@ -836,9 +838,9 @@
 <script src="__PUBLIC__/js/placeholder.js"></script>
 <script src="__PUBLIC__/js/addFile.js"></script>
 <script src="__PUBLIC__/js/programList.js"></script>
-<script src="__PUBLIC__/js/ClientList.js?v=201608222"></script>
+<script src="__PUBLIC__/js/ClientList.js?v=20160929"></script>
 <script src="__PUBLIC__/js/common_ajax.js?v=20160822"></script>
-<script src="__PUBLIC__/js/userList.js?v=201608222"></script>
+<script src="__PUBLIC__/js/userList.js?v=20160929"></script>
 
 <script>
     $(function(){
