@@ -216,6 +216,11 @@ $('#waytype li,#attitude_id li').click(function(){
     $(this).addClass('curr').siblings('li').removeClass('curr');
 });
 
+//  最后一个tab则加上boreder-right
+$(function(){
+	$('.wrapBox#user_detail .tab div:last-child').css('borderRight','1px solid #dedede');
+});
+
 //  网络电话，正在拨号
 $(document).on('click', '.btn_phone', function(){
 	layer.msg('网络电话正在接通中，请注意您的手机状态及时接通电话.', {icon:6,time:5000});
