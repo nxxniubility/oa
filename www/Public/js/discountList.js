@@ -89,28 +89,10 @@ $('.fbBtn').on('click',function(){
     }
 });
 
-//  限制字符提示弹窗
-function tip_msg(msg,w,h,time){
-	var w=w||260;
-	var h=h||80;
-	var time=time||1000;
-	var str= "<div><div id='common_msg_c' class='note-small' style=' display: block; width: "+w+"px; height: "+h+"px; line-height: 80px; font-size: 18px; color: #4dbd88; text-align: center;'>"+msg+"</div></div>";
-	layer.open({
-		type: 1,					//  页面层
-		title: false,				//	不显示标题栏
-		area: [w+'px',h+'px'],	
-		shade: .6,					//	遮罩
-		time: time,					//  关闭自动关闭
-		shadeClose: true,			//	遮罩控制关闭层
-		closeBtn: false,			//	不显示关闭按钮
-		shift: 1,				//	出现动画
-		content:str 				//  加载主体内容
-	});
-}
 // 限制字符长度
 function chkLength(el,size){
 	if(el.value.length > size){
-		tip_msg('已字超过数上限啦！');
+		layer.msg('已超出字数规定上限.',{icon:2});
 	}
 	el.value = el.value.substring(0,size);
 }
