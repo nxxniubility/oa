@@ -47,22 +47,41 @@ class AllotController extends BaseController {
                     $specify_days[$_days_k] = strtotime($_days_v);
                 }
                 if(!in_array(strtotime(date('Y-m-d')), $specify_days)){
-                    $this->success('今天不在指定允许日期');exit();
-                }
-            }elseif(!empty($allot['holiday'])){
-                //是否有节假日限制？
-                $holiday = explode(',', $allot['holiday']);
-                $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd'));
-                if($get_holiday['code']==0){
-                    if(!in_array($get_holiday['data'], $holiday)){
-                        $this->success('今天不在允许节假日限制');exit();
+                    if((!empty($allot['holiday']))){
+                        //是否有节假日限制？
+                        $holiday = explode(',', $allot['holiday']);
+                        $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd'));
+                        if($get_holiday['code']==0){
+                            if(in_array($get_holiday['data'], $holiday)){
+                                $this->success('今天不在允许节假日限制');exit();
+                            }
+                        }
+                    }
+                    if(!empty($allot['week_text']) && $allot['week_text']!=0){
+                        //是否有星期限制？
+                        $week_text = explode(',', $allot['week_text']);
+                        if(!in_array(date('N'), $week_text)){
+                            $this->success('今天不在允许星期内');exit();
+                        }
                     }
                 }
-            }elseif(!empty($allot['week_text']) && $allot['week_text']!=0){
-                //是否有星期限制？
-                $week_text = explode(',', $allot['week_text']);
-                if(!in_array(date('N'), $week_text)){
-                    $this->success('今天不在允许星期内');exit();
+            }else{
+                if((!empty($allot['holiday']))){
+                    //是否有节假日限制？
+                    $holiday = explode(',', $allot['holiday']);
+                    $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd'));
+                    if($get_holiday['code']==0){
+                        if(in_array($get_holiday['data'], $holiday)){
+                            $this->success('今天不在允许节假日限制');exit();
+                        }
+                    }
+                }
+                if(!empty($allot['week_text']) && $allot['week_text']!=0){
+                    //是否有星期限制？
+                    $week_text = explode(',', $allot['week_text']);
+                    if(!in_array(date('N'), $week_text)){
+                        $this->success('今天不在允许星期内');exit();
+                    }
                 }
             }
 

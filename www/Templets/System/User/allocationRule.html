@@ -152,12 +152,12 @@
                 </div>
             </div>
             <div class="nsRow clearfix">
-                <div class="nsLeft"><i>&#42</i>节日限制:</div>
+                <div class="nsLeft">开启节日限制:</div>
                 <div class="nsRight clearfix">
                     <div class="holiday_box fl">
-                        <div data-value="0">工作日</div>
-                        <div data-value="1">休息日</div>
-                        <div data-value="2">节假日</div>
+                        <!--<div data-value="0">工作日</div>-->
+                        <!--<div data-value="1">休息日</div>-->
+                        <div data-value="2">关闭</div>
                     </div>
                     <input type="hidden" name="holiday" value="" autocomplete="off">
                 </div>
@@ -374,10 +374,7 @@
             }
         });
         $('.nsSubmit').click(function(){
-            if( $(':input[name="holiday"]').val().length==0 ){
-                layer.msg('必须选择假日限制', {icon:2});
-                return false;
-            }else if( $(':input[name="week_text"]').val().length==0 ){
+            if( $(':input[name="week_text"]').val().length==0 ){
                 layer.msg('必须选择启用星期', {icon:2});
                 return false;
             };
