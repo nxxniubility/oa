@@ -46,25 +46,45 @@ class RecoverController extends BaseController {
                 foreach($specify_days as $_days_k=>$_days_v){
                     $specify_days[$_days_k] = strtotime($_days_v);
                 }
-                if(!in_array(strtotime(date('Y-m-d')), $specify_days)){
-                    $this->success('今天不在指定允许日期');exit();
-                }
-            }elseif(!empty($abandon['holiday'])){
-                //是否有节假日限制？
-                $holiday = explode(',', $abandon['holiday']);
-                $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd'));
-                if($get_holiday['code']==0){
-                    if(!in_array($get_holiday['data'], $holiday)){
-                        $this->success('今天不在允许节假日限制');exit();
+                if(!in_array(strtotime(date('Y-m-d',strtotime('-1 day'))), $specify_days)){
+                    if(!empty($abandon['holiday'])){
+                        //是否有节假日限制？
+                        $holiday = explode(',', $abandon['holiday']);
+                        $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd',strtotime('-1 day')));
+                        if($get_holiday['code']==0){
+                            if(in_array($get_holiday['data'], $holiday)){
+                                $this->success('今天不在允许节假日限制');exit();
+                            }
+                        }
+                    }
+                    if(!empty($abandon['week_text']) && $abandon['week_text']!=0){
+                        //是否有星期限制？
+                        $week_text = explode(',', $abandon['week_text']);
+                        if(!in_array(date('N',strtotime('-1 day')), $week_text)){
+                            $this->success('今天不在允许星期内');exit();
+                        }
                     }
                 }
-            }elseif(!empty($abandon['week_text']) && $abandon['week_text']!=0){
-                //是否有星期限制？
-                $week_text = explode(',', $abandon['week_text']);
-                if(!in_array(date('N'), $week_text)){
-                    $this->success('今天不在允许星期内');exit();
+            }else{
+                if(!empty($abandon['holiday'])){
+                    //是否有节假日限制？
+                    $holiday = explode(',', $abandon['holiday']);
+                    $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd',strtotime('-1 day')));
+                    if($get_holiday['code']==0){
+                        if(in_array($get_holiday['data'], $holiday)){
+                            $this->success('今天不在允许节假日限制');exit();
+                        }
+                    }
+                }
+                if(!empty($abandon['week_text']) && $abandon['week_text']!=0){
+                    //是否有星期限制？
+                    $week_text = explode(',', $abandon['week_text']);
+                    if(!in_array(date('N',strtotime('-1 day')), $week_text)){
+                        $this->success('今天不在允许星期内');exit();
+                    }
                 }
             }
+
             //查找相应渠道
             $channelArr = $Arrayhelps->subFinds($channels,$abandon['channel_id'],"channel_id","pid");
             $abandonChannel = array();

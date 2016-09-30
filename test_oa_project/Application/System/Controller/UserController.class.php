@@ -1039,7 +1039,6 @@ class UserController extends SystemController
     | @author zgt
     */
     public function abandonList() {
-        print_r(date());
         if (IS_POST) {
             $request = I('post.');
             if ($request['type'] == 'del') {

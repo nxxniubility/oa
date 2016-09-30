@@ -294,9 +294,9 @@ function holiday(){
 	$(document).on('click', '.holiday_box div', function(){
 		var _this = $(this);
 		if(_this.hasClass('cur')){
-			_this.removeClass('cur');
+			_this.removeClass('cur').text('关闭');
 		}else {
-			_this.addClass('cur');
+			_this.addClass('cur').text('开启');
 		};
         var _week_text = '';
         if($('.holiday_box .cur').length>0){
