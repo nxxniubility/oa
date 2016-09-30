@@ -730,19 +730,18 @@
                                     <div class="wrBox2">
                                         <div class="wrTriangle"></div>
                                         <div class="wrBox2Top">
-                                            <div class="call-info">
-                                                <span>{$v.system_realname}</span>
+                                            <div class="call-info clearfix">
+                                                <span class="operating-staff">{$v.system_realname}</span>
                                                 <span>{$v.call_time_ymd}</span>
-                                                <span class="call-status">{$v.callee_cause}</span>
                                             </div>
                                             <div class="call-address clearfix">
-                                                <a href="{$v.call_mp3}" target="_blank">
-                                                    <img src="__PUBLIC__/images/play- recording.png" alt="播放录音">
-                                                </a>
-                                                <span>录音时长{$v.call_length}秒</span>
-                                                <a href="{$v.call_mp3}" target="_blank">
-                                                    <input type="button" class="play-btn" value="播放">
-                                                </a>
+                                            	<div class="call-customer fl">拨出号码：13838382388</div>
+                                            	<div class="call-customercont fl">
+                                            		<span class="fl">{$v.callee_cause}</span>
+	                                                <a href="{$v.call_mp3}" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a>
+	                                                <span>录音时长{$v.call_length}秒</span>
+	                                                <a href="{$v.call_mp3}" target="_blank"><input type="button" class="play-btn" value="播放"></a>
+                                            	</div>
                                             </div>
                                         </div>
                                     </div>
