@@ -38,6 +38,9 @@
 .setContList .wNin { width: 15%; text-indent: 20px;}
 .setContList .wTen { width: 5.6%;}
 .setContList .wEve { width: 8%;}
+.setContList .wEle { width: 6%;}
+.setContList .wTwe { width: 6%;}
+
 .setContList dl.on dd.wNin { color: #53b567;}
 .setContList .proSelect { display: inline-block; width: 40px; height: 40px;}
 .setContList .proSelect i { display: inline-block; width: 12px; height: 6px; margin-left: 6px; background: url(../images/newSys_icon-01.png) no-repeat; background-position: 0 -60px;}
@@ -91,4 +94,7 @@
 .pageJump { margin: 0;}
 
 /**/
-.edui-default .edui-toolbar { line-height: normal;}
+.edui-default .edui-toolbar {line-height:normal;}
+/*0930*/
+.otherIcon li span.set-status {height:18px;background-position:0 -410px;}
+.otherIcon li:hover span.set-status {background-position:0 -429px;}

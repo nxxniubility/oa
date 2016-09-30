@@ -275,3 +275,39 @@ $('.edit-recover-btn').on('click', function() {
         layer.closeAll();           // 关闭
     });
 });*/
+
+
+//  指定日期初始化
+$(".specified-date").asDatepicker({
+    mode: 'multiple', 
+    calendars: 1, 
+});
+
+//  指定日期
+holiday();
+function holiday(){
+	$(document).on('click', '.holiday_box div', function(){
+		var _this = $(this);
+		if(_this.hasClass('cur')){
+			_this.removeClass('cur');
+		}else {
+			_this.addClass('cur');
+		};
+        var _week_text = '';
+        if($('.holiday_box .cur').length>0){
+            $('.holiday_box .cur').each(function(){
+                if(_week_text==''){
+                    _week_text = $(this).attr('data-value');
+                }else{
+                    _week_text += ','+$(this).attr('data-value');
+                };
+            });
+            if(_week_text!=''){
+                $(':input[name="holiday"]').val(_week_text);
+            };
+        }else{
+            $(':input[name="holiday"]').val('');
+        }
+	});
+		
+}
