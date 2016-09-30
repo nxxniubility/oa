@@ -112,7 +112,7 @@
 .newSelect { width: 470px; height: 30px; border: 1px solid #ccc; color: #555;}
 
 /*0922*/
-.week_box {height:30px;border-right:1px solid #ccc;overflow:hidden;}
+.week_box {float:left;height:30px;border-right:1px solid #ccc;overflow:hidden;}
 .week_box div {float:left;width:auto;height:28px;line-height:28px;padding:0 18px;font-size:14px;color:#555;text-align:center;border:1px solid #ccc;border-right:none;background:#f7f7f7;cursor:pointer;}
 .week_box div.cur {color:#fff;background:#53b567;}
 
@@ -132,6 +132,6 @@
 /*0930*/
 .nsRight .specified-date, .nsRight2 .specified-date {display:block;width:468px;height:28px;line-height:28px;color:#696969;border:1px solid #ccc;background:#fff;}
 .calendar-icon {display:none;}
-.holiday_box {height:30px;border-right:1px solid #ccc;overflow:hidden;}
+.holiday_box {float:left;height:30px;border-right:1px solid #ccc;overflow:hidden;}
 .holiday_box div {float:left;width:auto;height:28px;line-height:28px;padding:0 18px;font-size:14px;color:#555;text-align:center;border:1px solid #ccc;border-right:none;background:#f7f7f7;cursor:pointer;}
 .holiday_box div.cur {color:#fff;background:#53b567;}
