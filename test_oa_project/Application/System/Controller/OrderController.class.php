@@ -479,8 +479,8 @@ class OrderController extends SystemController
                 if (!$request['pid']) {
                     $request['pid'] = 0;
                 }
-                if (!$request['dname']) {
-                    $this->ajaxReturn(1,'请填写优惠名称');
+                if (!$request['dname'] || $request['dname'] == 0) {
+                    $this->ajaxReturn(1,'请输入优惠名称');
                 }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
                     $this->ajaxReturn(2,'不能包含特殊字符');
                 }
