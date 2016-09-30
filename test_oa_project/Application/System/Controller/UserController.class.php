@@ -869,6 +869,10 @@ class UserController extends SystemController
                 $reflag = D('User')->allocationDel($request['user_allocation_id']);
                 if ($reflag !== false) $this->ajaxReturn(0, '分配规则删除成功');
                 else $this->ajaxReturn(1, '删除失败');
+            }elseif($request['type'] == 'start'){
+                $reflag = D('User')->allocationStart($request['user_allocation_id'],$request['start']);
+                if ($reflag !== false) $this->ajaxReturn(0, '操作成功');
+                else $this->ajaxReturn(1, '操作失败');
             }
         }
         $re_page = I('get.page', 1);
@@ -1041,6 +1045,11 @@ class UserController extends SystemController
                 $reflag = D('User')->abandonEdit($where, $request['user_abandon_id']);
                 if ($reflag !== false) $this->ajaxReturn(0, '回收规则删除成功');
                 else $this->ajaxReturn(1, '删除失败');
+            }elseif($request['type'] == 'start'){
+                $where['start'] = $request['start'];
+                $reflag = D('User')->abandonEdit($where, $request['user_abandon_id']);
+                if ($reflag !== false) $this->ajaxReturn(0, '操作成功');
+                else $this->ajaxReturn(1, '操作失败');
             }
         }
         $re_page = I('get.page', 1);

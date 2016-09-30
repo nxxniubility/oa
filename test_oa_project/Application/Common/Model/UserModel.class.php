@@ -936,13 +936,28 @@ class UserModel extends SystemModel
     }
 
     /*
-    * 修改分配规则
+    * 删除分配规则
     * @author zgt
     * @return array('code'=>'','msg'=>'','data'=>'');
     */
     public function allocationDel($id){
         $where['user_allocation_id'] = $id;
         $data['status'] = 0;
+        $result = M('user_allocation')->where($where)->save($data);
+        if($result!==false){
+            return true;
+        }
+        return false;
+    }
+
+    /*
+    * 修改启动分配规则
+    * @author zgt
+    * @return array('code'=>'','msg'=>'','data'=>'');
+    */
+    public function allocationStart($id,$start){
+        $where['user_allocation_id'] = $id;
+        $data['start'] = $start;
         $result = M('user_allocation')->where($where)->save($data);
         if($result!==false){
             return true;
