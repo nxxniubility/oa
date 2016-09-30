@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
     <title>系统首页-{$siteinfo.sitename}</title>
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/asDatepicker/css/asDatepicker.css">
     <link rel="stylesheet" href="__PUBLIC__/css/addaNewRule.css?v=20160923">
 </head>
 <body>
@@ -122,14 +123,14 @@
                 </div>
             </div>
             <div class="nsRow clearfix">
-                <div class="nsLeft">指定日期:</div>
-                <div class="nsRight clearfix">
-
+                <div class="nsLeft2">指定日期:</div>
+                <div class="nsRight2 clearfix">
+					<input type="text" name="specify_days" class="specified-date" readonly="readonly">
                 </div>
             </div>
             <div class="nsRow clearfix">
-                <div class="nsLeft"><i>&#42</i>节日限制:</div>
-                <div class="nsRight clearfix">
+                <div class="nsLeft2"><i>&#42</i>节日限制:</div>
+                <div class="nsRight2 clearfix">
                     <div class="holiday_box fl">
                         <div data-value="0">工作日</div>
                         <div data-value="1">休息日</div>
@@ -214,38 +215,9 @@
 </div>
 <!-- 选择部门 E -->
 
-<!-- 选择星期限制 S -->
-<!--<div class="week-recover">
-    <div class="nsTop clearfix">
-        <span>选择星期</span>
-        <div class="nsClose"></div>
-    </div>
-    <div class="nsCont">
-        <form method="post" action="#">
-        	<div class="week_box">
-        		<table cellpadding="0" cellspacing="0" id="recover_table">
-                    <tr>
-                        <th>选中</th>
-                        <th>星期</th>
-                    </tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="1" autocomplete="off"></td><td>星期一</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="2" autocomplete="off"></td><td>星期二</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="3" autocomplete="off"></td><td>星期三</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="4" autocomplete="off"></td><td>星期四</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="5" autocomplete="off"></td><td>星期五</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="6" autocomplete="off"></td><td>星期六</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="7" autocomplete="off"></td><td>星期日</td></tr>
-                </table>
-        	</div>
-        </form>
-        <input type="button" class="recover_confirm" value="确定">
-    </div>
-</div>-->
-<!-- 选择星期限制 E -->
-
-
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/asDatepicker/dist/jquery-asDatepicker.js"></script>
 <script src="__PUBLIC__/js/addaNewRule.js?v=20160923"></script>
 <script src="__PUBLIC__/js/common_ajax.js"></script>
 <script>

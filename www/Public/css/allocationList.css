@@ -29,7 +29,7 @@
 .setContList dl.setTit .wOne, .setContList dl .wOne { text-indent: 16px;}
 .setContList .wOne { width: 6.4%;}
 .setContList .wTwo { width: 10%;}
-.setContList .wThr { width: 12%;}
+.setContList .wThr { width: 6%;}
 .setContList .wFou { width: 6%;}
 .setContList .wFiv { width: 10%;text-indent: 10px;}
 .setContList .wSix { width: 8%;}
@@ -39,7 +39,6 @@
 .setContList .wTen { width: 5.6%;}
 .setContList .wEve { width: 8%;}
 .setContList .wEle { width: 6%;}
-.setContList .wTwe { width: 6%;}
 
 .setContList dl.on dd.wNin { color: #53b567;}
 .setContList .proSelect { display: inline-block; width: 40px; height: 40px;}
