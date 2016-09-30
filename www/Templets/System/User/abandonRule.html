@@ -310,7 +310,10 @@
         });
 
         $('.nsSubmit').click(function(){
-            if( $(':input[name="week_text"]').val().length==0 ){
+            if( $(':input[name="holiday"]').val().length==0 ){
+                layer.msg('必须选择假日限制', {icon:2});
+                return false;
+            }else if( $(':input[name="week_text"]').val().length==0 ){
                 layer.msg('必须选择启用星期', {icon:2});
                 return false;
             };

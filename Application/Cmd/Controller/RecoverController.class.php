@@ -49,9 +49,8 @@ class RecoverController extends BaseController {
                 if(!in_array(strtotime(date('Y-m-d')), $specify_days)){
                     $this->success('今天不在指定允许日期');exit();
                 }
-            }
-            //是否有节假日限制？
-            if(!empty($abandon['holiday'])){
+            }elseif(!empty($abandon['holiday'])){
+                //是否有节假日限制？
                 $holiday = explode(',', $abandon['holiday']);
                 $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd'));
                 if($get_holiday['code']==0){
@@ -59,9 +58,8 @@ class RecoverController extends BaseController {
                         $this->success('今天不在允许节假日限制');exit();
                     }
                 }
-            }
-            //是否有星期限制？
-            if(!empty($abandon['week_text']) && $abandon['week_text']!=0){
+            }elseif(!empty($abandon['week_text']) && $abandon['week_text']!=0){
+                //是否有星期限制？
                 $week_text = explode(',', $abandon['week_text']);
                 if(!in_array(date('N'), $week_text)){
                     $this->success('今天不在允许星期内');exit();
