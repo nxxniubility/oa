@@ -261,12 +261,13 @@
 <script src="__PUBLIC__/js/addaNewRule.js?v=20160923"></script>
 <script src="__PUBLIC__/js/common_ajax.js"></script>
 <script>
+    var holiday = "{$data['allocationAll']['holiday']}";
+    var week_text = "{$data['allocationAll']['week_text']}";
+    var specify_days = "{$data['allocationAll']['specify_days']}";
     $(function(){
         <if condition="!empty($data['abandonAll']['zone_id'])">
                 $('.zone_btn'+{$data['abandonAll']['zone_id']}).trigger('click');
         </if>
-        var holiday = "{$data['abandonAll']['holiday']}";
-        var week_text = "{$data['abandonAll']['week_text']}";
         //初始化
         if(holiday!=0 && holiday!=''){
             holiday = holiday.split(',');

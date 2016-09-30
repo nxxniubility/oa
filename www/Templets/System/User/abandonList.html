@@ -41,7 +41,7 @@
                 </dl>
 
                 <foreach name="data['abandonList']['data']" item="v">
-                    <dl class="clearfix">
+                    <dl class="clearfix {:($v['start']==1)?'':'disabled'}">
                         <dd class="wOne">{$v.user_abandon_id}</dd>
                         <dd class="wTwo">{$v.abandonname}</dd>
                         <dd class="wEig">开始时间</dd>
@@ -130,7 +130,7 @@
             btn: ['确定','取消'] //按钮
         }, function(){
             var data = {
-                user_allocation_id : num,
+                user_abandon_id : num,
                 type : 'start',
                 start: _type_num
             };
