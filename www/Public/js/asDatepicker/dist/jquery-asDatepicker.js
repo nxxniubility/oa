@@ -119,9 +119,9 @@
     };
 
     Plugin.localize('en', {
-        days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-        daysShort: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
-        months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        days: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        daysShort: ["日", "一", "二", "三", "四", "五", "六", "日"],
+        months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
         monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         buttons: ['Cancel', 'Save']
     });
