@@ -39,6 +39,27 @@ class AllotController extends BaseController {
             $userApplyArr[] = $v['user_id'];
         }
         foreach($allots as $topkey => $allot){
+            //是否有指定日期
+            if(!empty($allot['specify_days'])){
+                //转化时间戳匹配  防止一些浏览器时间格式不一致
+                $specify_days = explode(',', $allot['specify_days']);
+                foreach($specify_days as $_days_k=>$_days_v){
+                    $specify_days[$_days_k] = strtotime($_days_v);
+                }
+                if(!in_array(strtotime(date('Y-m-d')), $specify_days)){
+                    $this->success('今天不在指定允许日期');exit();
+                }
+            }
+            //是否有节假日限制？
+            if(!empty($allot['holiday'])){
+                $holiday = explode(',', $allot['holiday']);
+                $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd'));
+                if($get_holiday['code']==0){
+                    if(!in_array($get_holiday['data'], $holiday)){
+                        $this->success('今天不在允许节假日限制');exit();
+                    }
+                }
+            }
             //是否有星期限制？
             if(!empty($allot['week_text']) && $allot['week_text']!=0){
                 $week_text = explode(',', $allot['week_text']);

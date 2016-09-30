@@ -146,7 +146,7 @@
                 </div>
             </div>
             <div class="nsRow clearfix">
-                <div class="nsLeft"><i>&#42</i>指定日期:</div>
+                <div class="nsLeft">指定日期:</div>
                 <div class="nsRight clearfix">
 					<input type="text" name="specify_days" class="specified-date" readonly="readonly">
                 </div>
@@ -155,9 +155,9 @@
                 <div class="nsLeft"><i>&#42</i>节日限制:</div>
                 <div class="nsRight clearfix">
                     <div class="holiday_box fl">
-                        <div data-value="1">工作日</div>
+                        <div data-value="0">工作日</div>
+                        <div data-value="1">休息日</div>
                         <div data-value="2">节假日</div>
-                        <div data-value="3">休息日</div>
                     </div>
                     <input type="hidden" name="holiday" value="" autocomplete="off">
                 </div>
@@ -388,6 +388,8 @@
                 allocation_roles:$(':input[name="role_id"]').val(),
                 system_user_ids:$(':input[name="system_user_id"]').val(),
                 zone_id:$(':input[name="zone_id"]').val(),
+                specify_days:$(':input[name="specify_days"]').val(),
+                holiday:$(':input[name="holiday"]').val(),
                 week_text:$(':input[name="week_text"]').val()
             };
             common_ajax(data);

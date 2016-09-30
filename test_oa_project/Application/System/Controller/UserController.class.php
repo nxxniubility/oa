@@ -13,6 +13,7 @@ use Common\Controller\ProidController;
 use Common\Controller\UserController as UserMain;
 use Common\Controller\ZoneController;
 use Api\Controller\UserController as ApiUser;
+use Common\Service\ApiService;
 use Common\Service\UserService;
 
 class UserController extends SystemController
@@ -1038,6 +1039,7 @@ class UserController extends SystemController
     | @author zgt
     */
     public function abandonList() {
+        print_r(date());
         if (IS_POST) {
             $request = I('post.');
             if ($request['type'] == 'del') {

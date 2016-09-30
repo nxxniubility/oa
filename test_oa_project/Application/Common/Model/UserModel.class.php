@@ -746,6 +746,8 @@ class UserModel extends SystemModel
                 channelname,
                 week_text,
                 start,
+                'specify_days',
+                'holiday',
                 {$DB_PREFIX}user_abandon.zone_id,
                 name as zonename"
             )
@@ -821,6 +823,8 @@ class UserModel extends SystemModel
                 channelname,
                 weighttype,
                 start,
+                'specify_days',
+                'holiday',
                 name"
             )
             ->where($where)
