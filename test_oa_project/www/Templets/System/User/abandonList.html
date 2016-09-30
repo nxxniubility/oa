@@ -30,6 +30,8 @@
                 <dl class="setTit clearfix">
                     <dt class="wOne">规则&nbsp;ID</dt>
                     <dt class="wTwo">回收规则名称</dt>
+                    <dt class="wEig">开始时间</dt>
+                    <dt class="wNin">间隔时间</dt>
                     <dt class="wThr">所属区域</dt>
                     <dt class="wFou">渠道</dt>
                     <dt class="wFiv">分配职位</dt>
@@ -42,6 +44,8 @@
                     <dl class="clearfix">
                         <dd class="wOne">{$v.user_abandon_id}</dd>
                         <dd class="wTwo">{$v.abandonname}</dd>
+                        <dd class="wEig">开始时间</dd>
+                    	<dd class="wNin">间隔时间</dd>
                         <dd class="wThr">{$v.zonename}</dd>
                         <dd class="wFou">{$v.channelnames}</dd>
                         <dd class="wFiv">{$v.rolenames}</dd>
@@ -63,12 +67,12 @@
                                         </li>
                                         <if condition="$v['start'] eq 1">
                                             <li class="status" onclick="setStart('{$v.user_allocation_id}','{$v.start}');">
-                                                <span class="setEdit"></span>
-                                                <em>关闭</em>
+                                                <span class="set-status"></span>
+                                                <em>禁用</em>
                                             </li>
                                             <else/>
                                             <li class="status" onclick="setStart('{$v.user_allocation_id}','{$v.start}');">
-                                                <span class="setEdit"></span>
+                                                <span class="set-status"></span>
                                                 <em>开启</em>
                                             </li>
                                         </if>

@@ -30,12 +30,14 @@
 .setContList dl .wOne { text-indent: 26px;}
 .setContList .wOne { width: 8%;}
 .setContList .wTwo { width: 15%;}
-.setContList .wThr { width: 13%;}
-.setContList .wFou { width: 15%;}
+.setContList .wThr { width: 10%;}
+.setContList .wFou { width: 12%;}
 .setContList .wFiv { width: 16%;}
-.setContList .wSix { width: 16%;}
-.setContList .wSev { width: 9%;}
-.setContList .wEig { width: 8%;}
+.setContList .wSix { width: 14%;}
+.setContList .wSev { width: 4%;}
+.setContList .wEig { width: 6%;}
+.setContList .wNin { width: 6%;}
+
 .setContList dl.on dd.wSix { color: #53b567;}
 .setContList .proSelect { display: inline-block; width: 40px; height: 40px;}
 .setContList .proSelect i { display: inline-block; width: 12px; height: 6px; margin-left: 6px; background: url(../images/newSys_icon-01.png) no-repeat; background-position: 0 -60px;}
@@ -89,3 +91,8 @@
 
 /*============================================ 黄金分割线  ============================================*/
 .pageJump { margin: 0;}
+
+/*0930*/
+.setContList dl.disabled {background: #ebebeb;}
+.otherIcon li span.set-status {height:18px;background-position:0 -410px;}
+.otherIcon li:hover span.set-status {background-position:0 -429px;}
