@@ -542,7 +542,6 @@ function channelBar(navName,values,num){
     $('#'+_chartnav).find('.bar'+num).highcharts({
         chart: {
             width:columnWidth,
-            height:450,
             style:{
                 zIndex:1000
             },
@@ -589,11 +588,10 @@ function channelBar(navName,values,num){
 function channelPie(values,num){
     var _chartnav=$('.chart_tab .cur').attr('data-value'),
         faWidth = $('.chart_main').width(),
-        pieWidth = faWidth*0.38;
+        pieWidth = faWidth*0.42;
     $('#'+_chartnav).find('.pie'+num).highcharts({
         chart: {
             width:pieWidth,
-            height:300,
             className:'channel_pie',
             plotBackgroundColor: null,
             plotBorderWidth: 0,
