@@ -639,8 +639,17 @@ class UserController extends ApiBaseController
     */
     public function netease()
     {
-        $param = I('param.');
-        D('CallLogs')->editData(array('call_mp3'=>12334),$param['session']);
+        $param = json_decode($GLOBALS['HTTP_RAW_POST_DATA']);
+        $callArr = C('NETEASE.CALL_STATUS');
+        $legs = $param->legs;
+        $_edit_data = array(
+            'call_mp3' => $param->recordUrl,
+            'call_length' => $param->durationSec,
+            'call_status' => 1,
+            'caller_cause'=>$callArr[$legs[0]->hangCause],
+            'callee_cause'=>$callArr[$legs[1]->hangCause]
+        );
+        D('CallLogs')->editData($_edit_data,$param->session);
     }
 
 }

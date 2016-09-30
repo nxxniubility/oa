@@ -66,6 +66,17 @@
                                         <span class="setEdit"></span>
                                         <em>修改</em>
                                     </li>
+                                    <if condition="$v['start'] eq 1">
+                                        <li class="status" >
+                                            <span class="setEdit"></span>
+                                            <em>关闭</em>
+                                        </li>
+                                        <else/>
+                                        <li class="status" >
+                                            <span class="setEdit"></span>
+                                            <em>开启</em>
+                                        </li>
+                                    </if>
                                     <li class="edit" onclick="setDel('{$v.user_allocation_id}');">
                                         <span class="setDel"></span>
                                         <em>删除</em>

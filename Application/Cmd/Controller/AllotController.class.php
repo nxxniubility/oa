@@ -26,7 +26,7 @@ class AllotController extends BaseController {
         $DataService = new DataService();
         if(empty($allocation_id)){
             //获取分配规则
-            $allots = D('UserAllocation')->where(array('status'=>1))->order('sort asc')->select();
+            $allots = D('UserAllocation')->where(array('status'=>1,'start'=>1))->order('sort asc')->select();
         }else{
             //获取分配规则
             $allots = D('UserAllocation')->where(array('user_allocation_id'=>$allocation_id))->order('sort asc')->select();

@@ -164,7 +164,6 @@ class UserController extends SystemController
                 $request['system_user_id'] = $this->system_user_id;
                 $ApiUser = new ApiUser();
                 $reflag = $ApiUser->editUser($request);
-                $reflag = Array (json_decode($reflag));
                 if($reflag['code']==0){
                     if(!empty($request['remark'])){
                         $_request['user_id'] = $user_id;
@@ -411,13 +410,21 @@ class UserController extends SystemController
         if($param['type']=='getcall'){
             $reflag = $UserService->getCall();
             //返回数据操作状态
-            if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
+            if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg'], $reflag['data']);
+            else  $this->ajaxReturn(1, $reflag['msg'], $reflag['data']);
+        }elseif($param['type']=='calltel'){
+            //只拨固定电话
+            $param['system_user_id'] = $this->system_user_id;
+            $reflag = $UserService->callUser($param,2);
+            //返回数据操作状态
+            if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg'], $reflag['data']);
             else  $this->ajaxReturn(1, $reflag['msg'], $reflag['data']);
         }elseif($param['type']=='callphone'){
+            //拨打电话
             $param['system_user_id'] = $this->system_user_id;
             $reflag = $UserService->callUser($param);
             //返回数据操作状态
-            if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
+            if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg'], $reflag['data']);
             else  $this->ajaxReturn(1, $reflag['msg'], $reflag['data']);
         }
     }

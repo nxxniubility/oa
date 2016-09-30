@@ -659,10 +659,10 @@ class UserService extends BaseService
     |--------------------------------------------------------------------------
     | 专线电话 呼叫客户
     |--------------------------------------------------------------------------
-    | user_id:客户 system_user_id：操作人
+    | user_id:客户 system_user_id：操作人  $type=2:只拨固话
     | @author zgt
     */
-    public function callUser($param)
+    public function callUser($param,$type=1)
     {
         //必要参数
         if(empty($param['user_id'])) return array('code'=>201,'msg'=>'参数异常');
@@ -674,23 +674,27 @@ class UserService extends BaseService
         //获取操作人手机号码
         $re_data_sys = D('SystemUser')->getFind(array('system_user_id'=>$param['system_user_id']), 'username');
         $mobile_caller = decryptPhone($re_data_sys['username'],C('PHONE_CODE_KEY'));
-        if(!empty($re_data['username'])){
+        if(!empty($re_data['username']) && $type==1){
             $mobile_callee = decryptPhone($re_data['username'],C('PHONE_CODE_KEY'));
-            $re_flag = $NeteaseService->startcall($mobile_caller,$mobile_callee);
-            if($re_flag['code']==0){
-                $_add_data = array(
-                    'call_key' => $re_flag['data'],
-                    'user_id' => $param['user_id'],
-                    'system_user_id' => $param['system_user_id'],
-                    'call_caller' => $mobile_caller,
-                    'call_callee' => $mobile_callee,
-                    'call_time' => time()
-                );
-                session('call_phone',$re_flag['data']);
-                D('CallLogs')->addData($_add_data);
-            }
-            return array('code'=>$re_flag['code'],'msg'=>$re_flag['msg'],'data'=>$re_flag['data']);
+        }elseif(!empty($re_data['tel'])){
+            $mobile_callee = str_replace('-','',$re_data['tel']);
+        }else{
+            return array('code'=>204,'msg'=>'该客户无可拨通电话');
         }
+        $re_flag = $NeteaseService->startcall($mobile_caller,$mobile_callee);
+        if($re_flag['code']==0){
+            $_add_data = array(
+                'call_key' => $re_flag['data'],
+                'user_id' => $param['user_id'],
+                'system_user_id' => $param['system_user_id'],
+                'call_caller' => $mobile_caller,
+                'call_callee' => $mobile_callee,
+                'call_time' => time()
+            );
+            session('call_phone',$re_flag['data']);
+            D('CallLogs')->addData($_add_data);
+        }
+        return array('code'=>$re_flag['code'],'msg'=>$re_flag['msg'],'data'=>$re_flag['data']);
     }
 
     /*
@@ -702,29 +706,12 @@ class UserService extends BaseService
     */
     public function getCall()
     {
-        $callArr = array(
-            'CALL_REJECTED'=>'呼叫被拒绝',
-            'NO_ANSWER'=>'呼叫未应答',
-            'NONE'=>'呼叫失败',
-            'NORMAL_CLEARING'=>'呼叫正常',
-            'NORMAL_TEMPORARY_FAILURE'=>'呼叫线路超时',
-            'NORMAL_UNSPECIFIED'=>'一般是线路不通',
-            'NO_USER_RESPONSE'=>'呼叫未应答超时',
-            'RECOVERY_ON_TIMER_EXPIRE'=>'媒体超时',
-            'UNALLOCATED_NUMBER'=>'线路不通',
-            'USER_BUSY'=>'用户占线繁忙',
-        );
         $call_key = session('call_phone');
         $re_flag = D('Netease','Service')->queryBySession($call_key);
         if($re_flag['data']->status=='SUCCESS'){
-            $_edit_data = array(
-                'call_mp3' => $re_flag['data']->recordUrl,
-                'call_length' => $re_flag['data']->durationSec,
-                'call_status' => 1,
-                'call_cause'=>$callArr[$re_flag['data']->legs[1]->hangCause]
-            );
-            D('CallLogs')->editData($_edit_data,$re_flag['data']->session);
-            return array('code'=>0,'msg'=>'通话结束');
+            $redata = $this->getCallList(array('call_key'=>$call_key,'rank'=>2));
+            if(empty($redata['data'][0])) return array('code'=>1,'msg'=>'通话中');
+            return array('code'=>0,'msg'=>'通话结束','data'=>$redata['data'][0]);
         }
         return array('code'=>1,'msg'=>'通话中');
     }
@@ -740,8 +727,10 @@ class UserService extends BaseService
     {
         $param['rank'] =  !empty($param['rank'])?$param['rank']:1;
         if($param['rank']==1) $_where['system_user_id'] = $param['system_user_id'];
-        $_where['user_id'] = $param['user_id'];
+        $_where['user_id'] = !empty($param['user_id'])?$param['user_id']:null;
+        $_where['call_key'] = !empty($param['call_key'])?$param['call_key']:null;
         $_where['call_status'] = 1;
+        $_where = array_filter($_where);
         $result = D('CallLogs')->getList($_where);
         foreach($result as $k=>$v){
             $info = D('SystemUser','Service')->getListCache(array('system_user_id'=>$v['system_user_id']));
