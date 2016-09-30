@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>系统首页-{$siteinfo.sitename}</title>
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/asDatepicker/css/asDatepicker.css">
     <link rel="stylesheet" href="__PUBLIC__/css/addaNewRule.css?v=20160923">
 </head>
 <body>
@@ -159,7 +160,7 @@
             <div class="nsRow clearfix">
                 <div class="nsLeft">指定日期:</div>
                 <div class="nsRight clearfix">
-
+					<input type="text" name="specify_days" class="specified-date" readonly="readonly">
                 </div>
             </div>
             <div class="nsRow clearfix">
@@ -317,6 +318,7 @@
 
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/asDatepicker/dist/jquery-asDatepicker.js"></script>
 <script src="__PUBLIC__/js/addaNewRule.js?v=20160923"></script>
 <script src="__PUBLIC__/js/common_ajax.js"></script>
 <script>

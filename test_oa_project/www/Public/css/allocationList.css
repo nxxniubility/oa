@@ -96,5 +96,6 @@
 /**/
 .edui-default .edui-toolbar {line-height:normal;}
 /*0930*/
+.setContList dl.disabled {background: #ebebeb;}
 .otherIcon li span.set-status {height:18px;background-position:0 -410px;}
 .otherIcon li:hover span.set-status {background-position:0 -429px;}
