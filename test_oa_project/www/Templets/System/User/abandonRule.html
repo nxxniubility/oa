@@ -123,6 +123,11 @@
                 </div>
             </div>
             <div class="nsRow clearfix">
+                <div class="nsLeft">指定日期:</div>
+                <div class="nsRight clearfix">
+                    <input type="text" name="specify_days" class="specified-date" readonly="readonly">
+                </div>
+            <div class="nsRow clearfix">
                 <div class="nsLeft2">指定日期:</div>
                 <div class="nsRight2 clearfix">
 					<input type="text" name="specify_days" class="specified-date" readonly="readonly">
@@ -221,6 +226,7 @@
 <script src="__PUBLIC__/js/addaNewRule.js?v=20160923"></script>
 <script src="__PUBLIC__/js/common_ajax.js"></script>
 <script>
+    var specify_days = "";
     $(function(){
         //选择启动星期
         $('.recover_confirm').click(function(){

@@ -280,8 +280,13 @@ $('.edit-recover-btn').on('click', function() {
 //  指定日期初始化
 $(".specified-date").asDatepicker({
     mode: 'multiple', 
-    calendars: 1, 
+    calendars: 1,
 });
+
+
+setTimeout(function(){
+    $(':input[name="specify_days"]').val(specify_days);
+},1000);
 
 //  指定日期
 holiday();

@@ -40,7 +40,7 @@
                     <dt class="wTen">操作</dt>
                 </dl>
                 <foreach name="data['allocationList']['data']" item="v">
-                <dl class="clearfix">
+                <dl class="clearfix {:($v['start']==1)?'':'disabled'}">
                     <dd class="wOne">{$v.user_allocation_id}</dd>
                     <dd class="wTwo">{$v.allocationname}</dd>
                     <dd class="wThr">{$v.startnum}天</dd>
@@ -52,7 +52,7 @@
                     <dd class="wEve">{:empty($v['week_text'])?'无':$v['week_text']}</dd>
                     <dd class="wEig">{$v.sort}</dd>
                     <dd class="wNin">{:date('Y-m-d H:i:s',$v['createtime'])}</dd>
-                    <dd class="wTen">
+                    <dd class="wTen" >
                         <a href="javascript:;" class="proSelect"><i></i></a>
                         <div class="otherOperation">
                             <div class="triangle"></div>
