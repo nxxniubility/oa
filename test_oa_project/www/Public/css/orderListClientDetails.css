@@ -377,11 +377,12 @@ a.b-radio-checked {background-position: -14px 0px;}
 .listRight#call-cont li i {background-position: 0 -12px;}
 .listRight#call-cont li .wrBox2 .wrTriangle {background: url(../images/adWithReview_01-03.png) no-repeat 0 0;}
 .listRight#call-cont li .wrBox2 .wrBox2Top {position:relative;height:auto;background:#efefef;}
-.listRight#call-cont li .wrBox2 .wrBox2Top .call-info .operating-staff, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address .call-customer {width:200px;margin-right:15px;text-indent:22px;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-info span.operating-staff, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address .call-customer {width:200px;margin-right:15px;text-indent:22px;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-info {height:40px;line-height:40px;color:#53b567;}
-.listRight#call-cont li .wrBox2 .wrBox2Top .call-info span {float:left;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-info span {float:left;width:120px;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address {height:auto;line-height:1.8;padding:10px 40px 10px 0;color:#333;background:#efefef;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address .call-customer {height:32px;line-height:32px;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-address .call-customercont span.call-status {width:120px;margin-right:0;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address a, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address span {float:left;line-height:32px;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address a img {display:block;width:32px;height:32px;margin:0 10px;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address a .play-btn {padding:4px 15px;color:#696969;cursor:pointer;}
