@@ -731,7 +731,7 @@ class UserService extends BaseService
         $_where['call_key'] = !empty($param['call_key'])?$param['call_key']:null;
         $_where['call_status'] = 1;
         $_where = array_filter($_where);
-        $result = D('CallLogs')->getList($_where);
+        $result = D('CallLogs')->getList($_where,null,'call_time DESC');
         foreach($result as $k=>$v){
             $info = D('SystemUser','Service')->getListCache(array('system_user_id'=>$v['system_user_id']));
             $result[$k]['system_realname'] = $info['data']['realname'];

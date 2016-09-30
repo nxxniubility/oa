@@ -67,12 +67,12 @@
                                         <em>修改</em>
                                     </li>
                                     <if condition="$v['start'] eq 1">
-                                        <li class="status" >
+                                        <li class="status" onclick="setStart('{$v.user_allocation_id}','{$v.start}');">
                                             <span class="setEdit"></span>
                                             <em>关闭</em>
                                         </li>
                                         <else/>
-                                        <li class="status" >
+                                        <li class="status" onclick="setStart('{$v.user_allocation_id}','{$v.start}');">
                                             <span class="setEdit"></span>
                                             <em>开启</em>
                                         </li>
@@ -115,6 +115,26 @@
                 ,icon:7
                 ,closeBtn:0
             });
+        }, function(){});
+    }
+    //启用/关闭 规则
+    function setStart(num,type){
+        if(type==1){
+            var _title = '您确定要关闭该规则吗？';
+            var _type_num = 0;
+        }else{
+            var _title = '您确定要启用该规则吗？';
+            var _type_num = 1;
+        }
+        layer.confirm(_title, {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            var data = {
+                user_allocation_id : num,
+                type : 'start',
+                start: _type_num
+            };
+            common_ajax(data,'','reload');
         }, function(){});
     }
     //删除规则
