@@ -28,7 +28,7 @@ class RecoverController extends BaseController {
         if(!empty($abandon_id)){
             $abandons = $UserAbandonDB->getAbandonList(array('user_abandon_id'=>$abandon_id));
         }else{
-            $abandons = $UserAbandonDB->getAbandonList(array('status'=>1));
+            $abandons = $UserAbandonDB->getAbandonList(array('status'=>1,'start'=>1));
         }
         
         //获取所有渠道

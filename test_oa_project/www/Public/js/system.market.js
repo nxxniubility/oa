@@ -578,14 +578,7 @@ function channelBar(navName,values,num){
         },
 		plotOptions: {
 			column: {
-				stacking: 'normal',
-				dataLabels: {
-					enabled: true,
-					color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-					style: {
-						textShadow: '0 0 3px black'
-					}
-				}
+				stacking: 'normal'
 			}
 		},
         series:values
@@ -637,25 +630,28 @@ function channelPie(values,num){
 function daytime(){
 	var startime = $(':input[name="startime"]').val();
 	var endtime = $(':input[name="endtime"]').val();
-	if(DateDiff(startime,endtime)>62){
+	if(!DateDiff(startime,endtime)){
+		layer.msg('开始日期不能大于结束日期', {icon:2});return false;
+	}else if(DateDiff(startime,endtime)>62){
 		layer.msg('日期选择区间不能大于62天', {icon:2});return false;
 	}
 }
+//换算时间区间天数
 function  DateDiff(sDate1,  sDate2){    //sDate1和sDate2是2006-12-18格式
 	var  aDate,  oDate1,  oDate2,  iDays
-	//IS IE?
-	if(navigator.userAgent.indexOf("MSIE 8.0")>0) {
+	aDate  =  sDate1.split("/")
+	if(aDate.length<3){
 		aDate  =  sDate1.split("-")
-	}else{
-		aDate  =  sDate1.split("/")
 	}
 	oDate1  =  new  Date(aDate[1]  +  '/'  +  aDate[2]  +  '/'  +  aDate[0])    //转换为12/18/2006格式
-	if(navigator.userAgent.indexOf("MSIE 8.0")>0) {
+	aDate  =  sDate2.split("/")
+	if(aDate.length<3){
 		aDate  =  sDate2.split("-")
-	}else{
-		aDate  =  sDate2.split("/")
 	}
 	oDate2  =  new  Date(aDate[1]  +  '/'  +  aDate[2]  +  '/'  +  aDate[0])
+	if(Math.abs(oDate1)>Math.abs(oDate2)){
+		return false;
+	}
 	iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24)    //把相差的毫秒数转换为天数
 	return  iDays + 1
 }

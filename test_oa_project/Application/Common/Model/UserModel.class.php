@@ -10,6 +10,7 @@
 namespace Common\Model;
 
 use Common\Model\SystemModel;
+use Common\Service\DataService;
 
 class UserModel extends SystemModel
 {
@@ -744,6 +745,7 @@ class UserModel extends SystemModel
                 {$DB_PREFIX}user_abandon.channel_id,
                 channelname,
                 week_text,
+                start,
                 {$DB_PREFIX}user_abandon.zone_id,
                 name as zonename"
             )
@@ -818,6 +820,7 @@ class UserModel extends SystemModel
                 {$DB_PREFIX}user_allocation.createtime,
                 channelname,
                 weighttype,
+                start,
                 name"
             )
             ->where($where)
@@ -1836,6 +1839,13 @@ class UserModel extends SystemModel
             $system = M('system_user')->field('system_user_id,zone_id')->where(array('system_user_id'=>$tosystem_user_id))->find();
             $flag_user_save = M('user')->where(array('user_id'=>$user_id))->save(array('zone_id'=>$system['zone_id'],'visittime'=>time(),'lastvisit' => time()));
             if($flag_engaged_save!==fasle && $flag_user_save!=false){
+                //添加数据记录
+                $dataLog['operattype'] = 12;
+                $dataLog['operator_user_id'] = $system_user_id;
+                $dataLog['user_id'] = $user_id;
+                $dataLog['logtime'] = time();
+                $DataService = new DataService();
+                $DataService->addDataLogs($dataLog);
                 M('user')->commit();
                 return  array('code'=>0,'msg'=>'分配到访客户成功');
             }else{
