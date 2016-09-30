@@ -168,4 +168,4 @@
 /*0926*/
 .returnBox .raRow, .receivablesBox .reRow {height:auto;}
 .returnBox .raRefundInp, .receivablesBox .receivablesInp, .returnBox .selectbox, .receivablesBox .selectbox {margin-bottom:0;}
-.returnBox .raRow .sum p, .receivablesBox .reRow .sum p {line-height:25px;font-size:12px;color:#ff0000;text-align:left;}
+.returnBox .raRow .sum p, .receivablesBox .reRow .sum p {width:100%;line-height:25px;font-size:12px;color:#ff0000;text-align:left;}
