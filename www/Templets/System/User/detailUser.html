@@ -35,7 +35,9 @@
                 <!-- 待联系 待跟进-->
                 <if condition="($data['userInfo']['status']==20 || $data['userInfo']['status']==30) &&  !empty($data['isSelf'])">
                     <if condition="!empty($access_list['CALLUSER'])">
-                        <a href="javascript:;" class="return btn_phone " data-value=""><span><i></i></span>网络电话</a>
+                        <if condition="!empty($data['userInfo']['username']) || !empty($data['userInfo']['tel'])">
+                            <a href="javascript:;" class="return btn_phone " data-value=""><span><i></i></span>网络电话</a>
+                        </if>
                     </if>
                     <a href="javascript:;" class="return btn_mark {:$data['userInfo']['mark']==2?'active':''}" data-value="2">重点</a>
                     <a href="javascript:;" class="return btn_mark mr10 {:$data['userInfo']['mark']==1?'active':''}" data-value="1">普通</a>
@@ -50,7 +52,9 @@
                     </if>
                 <elseif condition="($data['userInfo']['status']==70) && !empty($data['isSelf'])" />
                     <if condition="!empty($access_list['CALLUSER'])">
-                        <a href="javascript:;" class="return btn_phone " data-value=""><span><i></i></span>网络电话</a>
+                        <if condition="!empty($data['userInfo']['username']) || !empty($data['userInfo']['tel'])">
+                            <a href="javascript:;" class="return btn_phone " data-value=""><span><i></i></span>网络电话</a>
+                        </if>
                     </if>
                     <a href="javascript:;" class="return btn_mark {:$data['userInfo']['mark']==2?'active':''}" data-value="2">重点</a>
                     <a href="javascript:;" class="return btn_mark mr10 {:$data['userInfo']['mark']==1?'active':''}" data-value="1">普通</a>
@@ -1178,7 +1182,7 @@
         });
         //呼叫电话
         $('.btn_phone').click(function(){
-            var in_call='';
+            var in_call='',call_key=0;
             var data = {
                 type : 'callphone',
                 user_id : $(':input[name="temp_user_id"]').val()
@@ -1202,18 +1206,19 @@
                 function _hintCall(redata){
                     if(redata.code==0){
                         clearInterval(in_call);
-                        if(redata.data.callee_cause=='呼叫正常'){
+                        if(redata.data.callee_cause=='呼叫正常' && call_key==0){
                             call_end();
                         }else{
                             layer.confirm('客户手机拨打失败，请确认是否继续拨打客户固定电话.', {icon:7,title:'警告'},function(index){
                                 //  确定继续拨打固化
+                                layer.closeAll();
                                 layer.msg('正在拨打客户固定电话中...', {icon:6,time:3000});
+                                call_key++;
                                 var data = {
                                     type : 'calltel',
                                     user_id : $(':input[name="temp_user_id"]').val()
                                 };
                                 common_ajax2(data, "{:U('System/User/callUser')}", 'no',_callPhone);
-                                layer.close(index);
                             });
                         }
                     }

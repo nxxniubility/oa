@@ -30,13 +30,13 @@
 					</dl>
 					
 					<foreach name = "discountList" item = "v1">			
-					<dl class="secondaryDiscountRow clearfix" data-value="{$v1['discount_id']}--{$v1['dname']}--{$v1['dmoney']}--{$v1['remark']}--{$v1['repeat']}--{$v1['pid']}--{$v1['type']}">
-						<dd class="wOne regionSequence clearfix">{$v1['discount_id']}</dd>
-						<dd class="wTwo">{$v1['dname']}</dd>
-						<dd class="wThr">{$v1['dmoney']}</dd>
-						<dd class="wFou">{$v1['remark']}</dd>
-						<dd class="wFiv">{$v1['repeat']}</dd>
-						<dd class="wSix">{$v1['typeName']}</dd>
+					<dl class="secondaryDiscountRow clearfix" data-value="{$v1['discount_id']}-#-{$v1['dname']}-#-{$v1['dmoney']}-#-{$v1['remark']}-#-{$v1['repeat']}-#-{$v1['pid']}-#-{$v1['type']}">
+						<dd class="wOne regionSequence clearfix">{$v1['discount_id']}&nbsp;</dd>
+						<dd class="wTwo">{$v1['dname']}&nbsp;</dd>
+						<dd class="wThr">{$v1['dmoney']}&nbsp;</dd>
+						<dd class="wFou">{$v1['remark']}&nbsp;</dd>
+						<dd class="wFiv">{$v1['repeat']}&nbsp;</dd>
+						<dd class="wSix">{$v1['typeName']}&nbsp;</dd>
 						<dd class="wSev szOperation clearfix"  >
 							<a href="javascript:;" class="regionSelect"><i></i></a>
 							<div class="otherOperation">
@@ -233,7 +233,7 @@
 		        });
 		        $('.editPreferential').click(function() {  
 		        	var editdata = $(this).parents('.secondaryDiscountRow').attr('data-value');
-		        	editdata = editdata.split('--');
+		        	editdata = editdata.split('-#-');
 		        	$.each(editdata,function(k,v){
 		        		if(k==4){
 		        			$(':input[name="edit_repeat"]').val(v);
