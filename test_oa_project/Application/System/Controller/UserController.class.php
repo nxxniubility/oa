@@ -1131,7 +1131,7 @@ class UserController extends SystemController
         if (IS_POST) {
             $request = I('post.');
             if (empty($request['abandonname'])) $this->ajaxReturn(1, '名称不能为空', '', 'abandonname');
-            if (empty($request['callbacknum'])) $this->ajaxReturn(1, '要求回访次数不能为空', '', 'callbacknum');
+            if ($request['callbacknum'] == "") $this->ajaxReturn(1, '要求回访次数不能为空', '', 'callbacknum');
             if (empty($request['unsatisfieddays'])) $this->ajaxReturn(1, '未达到要求保护天数不能为空', '', 'unsatisfieddays');
             if (empty($request['attaindays'])) $this->ajaxReturn(1, '达到要求保护天数不能为空', '', 'attaindays');
             if (empty($request['zone_id'])) $this->ajaxReturn(1, '区域不能为空');

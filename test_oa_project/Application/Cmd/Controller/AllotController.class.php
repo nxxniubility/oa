@@ -304,11 +304,11 @@ class AllotController extends BaseController {
                     $callbackDataAdd['nexttime'] = $nowtime;
                     D('UserCallback')->add($callbackDataAdd);
                     //添加数据记录
-                    $dataLog['operattype'] = '2';
-                    $dataLog['operator_user_id'] = 0;
-                    $dataLog['user_id'] = $arrvalue1;
-                    $dataLog['logtime'] = time();
-                    $DataService->addDataLogs($dataLog);
+//                    $dataLog['operattype'] = '2';
+//                    $dataLog['operator_user_id'] = 0;
+//                    $dataLog['user_id'] = $arrvalue1;
+//                    $dataLog['logtime'] = time();
+//                    $DataService->addDataLogs($dataLog);
                 }
                 
                 foreach($allotvalue['allotnumchannel'] as $channelkey => $channelvalue){

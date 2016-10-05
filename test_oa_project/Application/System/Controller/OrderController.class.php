@@ -470,6 +470,9 @@ class OrderController extends SystemController
                 if (strlen($save['dname'])>40) {
                     $this->ajaxReturn(3,'优惠名称不得超过40个字符');
                 }
+                if (!$save['remark']) {
+                    $this->ajaxReturn(4,'请填写优惠详情');
+                }
                 $update = D("DiscountParent")->where("discount_parent_id = $discount_parent_id")->save($save);
                 if ($update === false || $update<0) {
                     $this->ajaxReturn(1,'修改优惠类型失败');
@@ -494,6 +497,9 @@ class OrderController extends SystemController
                 }
                 if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
                     $this->ajaxReturn(3,"请输入正确的优惠金额");
+                }
+                if (!$request['remark']) {
+                    $this->ajaxReturn(4,'请填写优惠详情');
                 }
                 $update = D("Discount")->where("discount_id = $request[discount_id]")->save($request);
                 if ($update === false) {
