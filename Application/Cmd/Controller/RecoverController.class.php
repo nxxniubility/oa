@@ -162,11 +162,11 @@ class RecoverController extends BaseController {
                     $callbackDataAdd['nexttime'] = $nowtime;
                     D('UserCallback')->add($callbackDataAdd);
                     //添加数据记录
-                    $dataLog['operattype'] = '7';
-                    $dataLog['operator_user_id'] = 0;
-                    $dataLog['user_id'] = $value['user_id'];
-                    $dataLog['logtime'] = time();
-                    $DataService->addDataLogs($dataLog);
+//                    $dataLog['operattype'] = '7';
+//                    $dataLog['operator_user_id'] = 0;
+//                    $dataLog['user_id'] = $value['user_id'];
+//                    $dataLog['logtime'] = time();
+//                    $DataService->addDataLogs($dataLog);
                 }
             }
             

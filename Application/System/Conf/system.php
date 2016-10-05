@@ -5,5 +5,5 @@ return array (
   'ADMIN_EDUCATIONAL_ROLE' => '32',
   'ADMIN_SERVICE_ROLE' => 2,
   'ADMIN_USER_MAX_DISCOUNT' => '3000',
-  'SMSHINT_USER' => '160203,1',
+  'SMSHINT_USER' => '160203',
 );
