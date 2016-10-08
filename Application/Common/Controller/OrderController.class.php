@@ -511,15 +511,8 @@ class OrderController extends BaseController
     |--------------------------------------------------------------------------
     | @author nxx
     */
-    public function outputOrderList($requestP)
+    public function outputOrderList($orderList)
     {
-        if (!$requestP['zone_id']) {
-            $sysUser = D("SystemUser")->where("system_user_id = $requestP[system_user_id]")->find();
-            $requestP['zone_id'] = $sysUser['zone_id'];
-        }
-        unset($requestP['system_user_id']);
-        $result = $this->getList($requestP, '', '0,1000');
-        $orderList = $result['data'];
         foreach ($orderList as $key => $order) {
             $userInfo = D("User")->where("user_id = $order[user_id]")->find();
             $channel = D("Channel")->where("channel_id = $userInfo[channel_id]")->find();
