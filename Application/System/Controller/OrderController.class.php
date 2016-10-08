@@ -464,8 +464,8 @@ class OrderController extends SystemController
     {
         if (IS_POST) {
             $request = I("post.");
-            if (strlen($request['remark'])>60) {
-                $this->ajaxReturn(5,'优惠名称不得超过20个字');
+            if (strlen($request['remark'])>90) {
+                $this->ajaxReturn(5,'优惠详情不得超过30个字');
             }
             if ($request['sign'] == 10) {
                 $discount_parent_id = $request['discount_parent_id'];
