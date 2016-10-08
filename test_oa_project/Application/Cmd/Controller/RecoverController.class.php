@@ -53,7 +53,7 @@ class RecoverController extends BaseController {
                         $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd',strtotime('-1 day')));
                         if($get_holiday['code']==0){
                             if(in_array($get_holiday['data'], $holiday)){
-                                $this->success('今天不在允许节假日限制');exit();
+                                $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$abandon['abandonname'];continue;
                             }
                         }
                     }
@@ -61,7 +61,7 @@ class RecoverController extends BaseController {
                         //是否有星期限制？
                         $week_text = explode(',', $abandon['week_text']);
                         if(!in_array(date('N',strtotime('-1 day')), $week_text)){
-                            $this->success('今天不在允许星期内');exit();
+                            $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$abandon['abandonname'];continue;
                         }
                     }
                 }
@@ -72,7 +72,7 @@ class RecoverController extends BaseController {
                     $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd',strtotime('-1 day')));
                     if($get_holiday['code']==0){
                         if(in_array($get_holiday['data'], $holiday)){
-                            $this->success('今天不在允许节假日限制');exit();
+                            $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$abandon['abandonname'];continue;
                         }
                     }
                 }
@@ -80,11 +80,10 @@ class RecoverController extends BaseController {
                     //是否有星期限制？
                     $week_text = explode(',', $abandon['week_text']);
                     if(!in_array(date('N',strtotime('-1 day')), $week_text)){
-                        $this->success('今天不在允许星期内');exit();
+                        $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$abandon['abandonname'];continue;
                     }
                 }
             }
-
             //查找相应渠道
             $channelArr = $Arrayhelps->subFinds($channels,$abandon['channel_id'],"channel_id","pid");
             $abandonChannel = array();
@@ -110,7 +109,7 @@ class RecoverController extends BaseController {
             
             $abandonUser = D('RoleUser')->field("system_user_id,realname")->where($roleUserWhere)->join($systemUserJoin)->select();
             if(empty($abandonUser)){
-                $this->success('找不到需要分配的员工');exit();
+                $falg_msg[] =  '失败原因:找不到需要分配的员工，'.'规则名称:'.$abandon['abandonname'];continue;
             }
             $abandonUserArr =array();
             foreach($abandonUser as $zbandon_k => $zbandon_v){
@@ -162,20 +161,20 @@ class RecoverController extends BaseController {
                     $callbackDataAdd['nexttime'] = $nowtime;
                     D('UserCallback')->add($callbackDataAdd);
                     //添加数据记录
-//                    $dataLog['operattype'] = '7';
-//                    $dataLog['operator_user_id'] = 0;
-//                    $dataLog['user_id'] = $value['user_id'];
-//                    $dataLog['logtime'] = time();
-//                    $DataService->addDataLogs($dataLog);
+                    $dataLog['operattype'] = '7';
+                    $dataLog['operator_user_id'] = 0;
+                    $dataLog['user_id'] = $value['user_id'];
+                    $dataLog['logtime'] = time();
+                    $DataService->addDataLogs($dataLog);
                 }
             }
-            
-            if(!empty($abandon_id)){
-                if($result !== false){
-                    $this->success('已成功回收'.$result.'条数据');
-                }else{
-                    $this->error('回收失败 ');
-                }    
+            $falg_msg[] = '已成功回收:'.$result.'条数据，'.'规则名称:'.$abandon['abandonname'];
+        }
+        if(!empty($abandon_id)){
+            $this->success($falg_msg[0]);
+        }elseif(!empty($falg_msg)){
+            foreach($falg_msg as $msg_v){
+                echo $msg_v.'<br/>';
             }
         }
     }

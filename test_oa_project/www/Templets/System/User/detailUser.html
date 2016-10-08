@@ -713,13 +713,13 @@
             <!-- 通话记录 start -->
             <div class="content">
                 <div class="listRight" id="call-cont">
-                    <ul class="clearfix">
+                    <ul class="clearfix" id="call_body">
                         <foreach name="data['call_List']" item="v">
                             <li>
                                 <div class="list-l">
                                     <if condition="!empty($v['system_face'])">
                                         <img src="{$v['system_face']}">
-                                        <elseif condition="!empty($v['system_sex']) eq 2"/>
+                                        <elseif condition="$v['system_sex'] eq 2"/>
                                         <img src="/Public/images/personalInfo_01-01.jpg">
                                         <else/>
                                         <img src="/Public/images/personalInfo_01-02.jpg">
@@ -735,13 +735,15 @@
                                                 <span>{$v.call_time_ymd}</span>
                                             </div>
                                             <div class="call-address clearfix">
-                                            	<div class="call-customer fl">拨出号码：13838382388</div>
+                                            	<div class="call-customer fl">拨出号码：{$v.call_callee}</div>
                                             	<div class="call-customercont fl">
                                             		<span class="call-status fl">{$v.callee_cause}</span>
-	                                                <a href="{$v.call_mp3}" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a>
-	                                                <span>录音时长{$v.call_length}秒</span>
-	                                                <a href="{$v.call_mp3}" target="_blank"><input type="button" class="play-btn" value="播放"></a>
-                                            	</div>
+                                                    <if condition="!empty($v['call_length'])">
+                                                        <a href="{$v.call_mp3}" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a>
+                                                        <span>录音时长{$v.call_length}秒</span>
+                                                        <a href="{$v.call_mp3}" target="_blank"><input type="button" class="play-btn" value="播放"></a>
+                                                    </if>
+	                                            </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1178,7 +1180,7 @@
         });
         //呼叫电话
         $('.btn_phone').click(function(){
-            var in_call='',call_key=0;
+            var in_call='',call_key= 0,is_tel="{$data['userInfo']['tel']}";
             var data = {
                 type : 'callphone',
                 user_id : $(':input[name="temp_user_id"]').val()
@@ -1202,9 +1204,9 @@
                 function _hintCall(redata){
                     if(redata.code==0){
                         clearInterval(in_call);
-                        if(redata.data.callee_cause=='呼叫正常' && call_key==0){
+                        if(redata.data.callee_cause=='呼叫正常'){
                             call_end();
-                        }else{
+                        }else if(call_key==0 && is_tel!='' && redata.data.call_callee!=is_tel.replace('-','')){
                             layer.confirm('客户手机拨打失败，请确认是否继续拨打客户固定电话.', {icon:7,title:'警告'},function(index){
                                 //  确定继续拨打固化
                                 layer.closeAll();
@@ -1216,7 +1218,10 @@
                                 };
                                 common_ajax2(data, "{:U('System/User/callUser')}", 'no',_callPhone);
                             });
+                        }else{
+                            call_end();
                         }
+                        addCallBox(redata.data);
                     }
                 }
             }
@@ -1438,6 +1443,25 @@
             }
         };
     };
+    function addCallBox(data){
+         var _html =
+        '<li><div class="list-l">';
+            if(data.system_face!='' && data.system_face!=null){
+               _html+='<img src="'+data.system_face+'">';
+            }else if(data.system_sex==2){
+               _html+='<img src="/Public/images/personalInfo_01-01.jpg">';
+            }else{
+               _html+='<img src="/Public/images/personalInfo_01-02.jpg">';
+            }
+        _html+='</div> <div class="list-r"> <i></i> <div class="wrBox2"> <div class="wrTriangle"></div> <div class="wrBox2Top"> <div class="call-info clearfix"> <span class="operating-staff">'+data.system_realname+'</span> <span>'+data.call_time_ymd+'</span> </div> <div class="call-address clearfix"> <div class="call-customer fl">拨出号码：'+data.call_callee+'</div> <div class="call-customercont fl"> <span class="call-status fl">'+data.callee_cause+'</span>';
+
+        if(data.call_length!=0){
+            _html+='<a href="'+data.call_mp3+'" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a> <span>录音时长'+data.call_length+'秒</span> <a href="'+data.call_mp3+'" target="_blank"><input type="button" class="play-btn" value="播放"></a>';
+        }
+        _html+='</div> </div> </div> </div></div></li>';
+
+        $('#call_body').prepend(_html);
+    }
 </script>
 </body>
 </html>

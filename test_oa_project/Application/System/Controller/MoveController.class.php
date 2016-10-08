@@ -1712,6 +1712,7 @@ class MoveController extends BaseController
     }
 
     public function getUserMobileCity(){
+        set_time_limit(0);
         $count = I('count');
         if(empty($count)){
             $count =  M('user','zl_','DB_CONFIG1')->where(array('phonevest'=>array('exp','is null')))->count();
@@ -1745,7 +1746,7 @@ class MoveController extends BaseController
                 }
             }
             F('getUserRepeat',$log);
-//            $this->redirect('/System/Move/getUserRepeat',array('p' =>$p+1,'count' => $count));
+            $this->redirect('/System/Move/getUserMobileCity',array('p' =>$p+1,'count' => $count));
         }
     }
 

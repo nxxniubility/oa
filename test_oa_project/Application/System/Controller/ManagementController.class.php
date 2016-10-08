@@ -15,12 +15,14 @@ class ManagementController extends SystemController
     */
     public function configuration()
     {
-
-        $redis = new \Redis();
-        $redis->connect('localhost', '6379');
+//        $redis = new \Redis();
+//        $redis->connect('localhost', '6379');
 //        $data = D('User')->limit('0,5000')->select();
 
-
+        $con = file_get_contents("file:///C:/Users/Administrator/AppData/Roaming/Foxmail7/Temp-6824-20161008173633/resume.html");
+        $pattern= "~<strong.*?>(.*)?</strong>~";
+        preg_match_all($pattern,$con,$match);
+        print_r($match);exit();
         //获取配置-config
         $data = loadconfig('config',APP_PATH.'System/Conf/');
         //超级管理员
