@@ -19,10 +19,6 @@ class ManagementController extends SystemController
 //        $redis->connect('localhost', '6379');
 //        $data = D('User')->limit('0,5000')->select();
 
-        $con = file_get_contents("file:///C:/Users/Administrator/AppData/Roaming/Foxmail7/Temp-6824-20161008173633/resume.html");
-        $pattern= "~<strong.*?>(.*)?</strong>~";
-        preg_match_all($pattern,$con,$match);
-        print_r($match);exit();
         //获取配置-config
         $data = loadconfig('config',APP_PATH.'System/Conf/');
         //超级管理员
@@ -72,9 +68,43 @@ class ManagementController extends SystemController
     */
     public function cahceList()
     {
-        $data['path_Cache'] = $this->getpath('Cache');
-        $data['path_Data'] = $this->getpath('Data');
+        $data['path_Data'] = $this->getpath('Runtime/Data');
+        $data['path_Cache'] = $this->getpath('Runtime/Cache');
+        $this->assign('data', $data);
+        $this->display();
+    }
 
+    /*
+   |--------------------------------------------------------------------------
+   | 定时程序日志管理
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function cmdLogList()
+    {
+        if(IS_POST){
+            $path = I('post.path');
+            //过滤
+            $path = str_replace('..','.',$path);
+            $redata = file_get_contents('../'.$path);
+            if($redata!==false){
+                $this->ajaxReturn('0', '获取成功',$redata);
+            }
+            $this->ajaxReturn(1, '获取失败');
+        }
+//        print_r($this->getpath('Shell/log/allot'));exit;
+        $data['path_log']['allot'][] = array(
+            'name'=>'allot',
+            'type'=>'dir',
+            'path'=>'Shell/log/allot',
+            'children'=>$this->getpath('Shell/log/allot')
+        );
+        $data['path_log']['recover'][] = array(
+            'name'=>'recover',
+            'type'=>'dir',
+            'path'=>'Shell/log/recover',
+            'children'=>$this->getpath('Shell/log/recover')
+        );
         $this->assign('data', $data);
         $this->display();
     }
@@ -83,17 +113,23 @@ class ManagementController extends SystemController
      * 获取文件目录
      * @author zgt
      */
-    protected function getpath($path,$data=null){
+    protected function getpath($path,$data=null,$default_fath='../'){
         if($data===null){
             $data = array();
         }
-        $fileArr = scandir(RUNTIME_PATH.$path);
+        $path = str_replace('..','.',$path);
+        $fileArr = scandir($default_fath.$path);
         foreach($fileArr as $k=>$v){
             if($v!='.' && $v!='..'){
-                if(is_dir(RUNTIME_PATH.$path.'/'.$v)){
-                    $dirArr = scandir($path.'/'.$v);
+                if(is_dir($default_fath.$path.'/'.$v)){
+                    $dirArr = scandir($default_fath.$path.'/'.$v);
                     $dirArr = $this->getpath($path.'/'.$v,$dirArr);
-                    $data[$k] = array('name'=>$v, 'type'=>'dir', 'path'=>$path.'/'.$v,'children'=>$dirArr);
+                    foreach($data as $k2=>$v2){
+                        if($v2==$v){
+                            unset($data[$k2]);
+                        }
+                    }
+                    $data[] = array('name'=>$v, 'type'=>'dir', 'path'=>$path.'/'.$v,'children'=>$dirArr);
                 }else{
                     $data[] = array('name'=>$v, 'type'=>'file', 'path'=>$path.'/'.$v);
                     unset($data[$k]);
