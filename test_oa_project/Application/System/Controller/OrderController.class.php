@@ -297,8 +297,18 @@ class OrderController extends SystemController
                         }
                     }
                 }
+
                 $requestP['system_user_id'] = $system_user_id;
-                return $orderMainController->outputOrderList($requestP);
+                if (!$requestP['zone_id']) {
+                    $requestP['zone_id'] = $this->system_user['zone_id'];
+                }
+                unset($requestP['system_user_id']);
+                $result = $orderMainController->getList($requestP, '', '0,1000');
+                $orderList = $result['data'];
+                if(!$orderList){
+                    $this->error('暂无相关订单数据可供导出!');
+                }
+                return $orderMainController->outputOrderList($orderList);
             }
 
         }
