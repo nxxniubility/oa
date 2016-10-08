@@ -388,7 +388,7 @@ class OrderController extends SystemController
     {
         if (IS_POST) {
             $request = I("post.");
-            if (!$request['dname']) {
+            if (!$request['dname'] && $request['dname']>0) {
                 $this->ajaxReturn(1,'请填写优惠名称');
             }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
                 $this->ajaxReturn(2,'不能包含特殊字符');
@@ -433,7 +433,7 @@ class OrderController extends SystemController
             if (!$request['pid']) {
                 $request['pid'] = 0;
             }
-            if (!$request['dname']) {
+            if (!$request['dname'] && $request['dname']>0) {
                 $this->ajaxReturn(1,'请填写优惠分类名称');
             }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
                 $this->ajaxReturn(2,'不能包含特殊字符');
@@ -472,7 +472,7 @@ class OrderController extends SystemController
                 $save['dname'] = $request['dname'];
                 $save['remark'] = $request['remark'];
                 $save['type'] = $request['type'];
-                if (!$save['dname']) {
+                if (!$save['dname'] && $save['dname']>0) {
                     $this->ajaxReturn(1,'请填写优惠名称');
                 }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$save['dname'])){
                     $this->ajaxReturn(2,'不能包含特殊字符');
@@ -493,7 +493,7 @@ class OrderController extends SystemController
                     $request['pid'] = 0;
                 }
                 if (!$request['dname'] && $request['dname'] > 0) {
-                    $this->ajaxReturn(1,'请输入优惠名称.');
+                    $this->ajaxReturn(1,'请输入优惠名称');
                 }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
                     $this->ajaxReturn(2,'不能包含特殊字符');
                 }
