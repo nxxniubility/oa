@@ -444,7 +444,7 @@ class OrderController extends SystemController
             if (!$request['remark']) {
                 $this->ajaxReturn(4,'请填写优惠详情');
             }
-            if (strlen($request['remark'])>60) {
+            if (strlen($request['remark'])>90) {
                 $this->ajaxReturn(5,'优惠详情不得超过30个字');
             }
             $orderMain = new OrderMainController();
