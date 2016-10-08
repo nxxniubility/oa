@@ -48,7 +48,8 @@ class NeteaseService extends BaseService
         if($reData->code==200){
             return array('code'=>0,'msg'=>'呼叫成功','data'=>$reData->obj->session);
         }else{
-            return array('code'=>$reData->code,'msg'=>'呼叫失败:'.$reData->msg);
+            $new_msg = str_replace('caller','号码',str_replace('in another','正在', str_replace('conversation','通话中',$reData->msg)));
+            return array('code'=>$reData->code,'msg'=>'呼叫失败:'.$new_msg);
         }
     }
 

@@ -922,7 +922,7 @@ class UserController extends SystemController
                 $where['role_id'] = $request['role_id'];
                 $where[C('DB_PREFIX').'system_user.usertype'] = array('NEQ', 10);
                 //员工列表
-                $reflag = D('SystemUser')->getSystemUserAll($where,'','0,80');
+                $reflag = D('SystemUser','Controller')->getListCache($where,'','0,80');
                 
                 if ($reflag['data'] !== false) $this->ajaxReturn(0, '获取成功', $reflag['data']);
                 else $this->ajaxReturn(1);
@@ -970,7 +970,7 @@ class UserController extends SystemController
                 $where['role_id'] = $request['role_id'];
                 $where[C('DB_PREFIX').'system_user.usertype'] = array('NEQ', 10);
                 //员工列表
-                $reflag = D('SystemUser')->getSystemUserAll($where,'','0,80');
+                $reflag = D('SystemUser','Controller')->getListCache($where,'','0,80');
                 if ($reflag['data'] !== false) $this->ajaxReturn(0, '获取成功', $reflag['data']);
                 else $this->ajaxReturn(1);
             }else{

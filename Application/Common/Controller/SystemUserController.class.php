@@ -205,7 +205,7 @@ class SystemUserController extends BaseController
             if(!empty($where['role_id'])){
                 $in_flag = false;
                 foreach($v['roles'] as $k2=>$v2){
-                    if($v2['role_id']==$where['role_id'] ){
+                    if( in_array($v2['role_id'],explode(',', $where['role_id']))){
                         $in_flag = true;
                     }
                 }

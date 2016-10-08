@@ -61,7 +61,7 @@ class MailController extends BaseController {
             //获取邮件的头部信息
             $headerinfo = $this->mail_obj->get_imap_header($i);
             //删除已经阅读的邮件
-            if(!($this->mail_obj->isUnread($headerinfo))) { 
+            if(!($this->mail_obj->isUnread($headerinfo))) {
                 $header_info = $this->mail_obj->get_header_info($headerinfo);
                 $this->delete_mail($i);
                 $this->msg .= '邮件已读'."\r\n";
@@ -99,12 +99,12 @@ class MailController extends BaseController {
 				$site="_zhaopin";
 			}
             if(stripos($subject,'ganji.com') !== false) {
-				$pattern = $this->pattern('_ganji');	
+				$pattern = $this->pattern('_ganji');
 				$site="_ganji";
 			}
             if(stripos($subject,'chinahr.com') !== false) {
-				$pattern = $this->pattern('_chinahr'); 
-				$site="_chinahr";   
+				$pattern = $this->pattern('_chinahr');
+				$site="_chinahr";
 			}
             if(!$pattern) {
                 $this->delete_mail($i); 
@@ -168,11 +168,10 @@ class MailController extends BaseController {
      * 删除邮件
      */
     public function delete_mail($i) {
-		
         if($this->is_del) {
-            if(!$this->mail_obj->delete($i)) { 
+            if(!$this->mail_obj->delete($i)) {
                 //删除失败，标记成已读
-                $this->mail_obj->mail_mark_read($i); 
+                $this->mail_obj->mail_mark_read($i);
             }
         }
     }
@@ -186,7 +185,7 @@ class MailController extends BaseController {
         $array['_58']['channel_id'] = 26;
 
         $array['_51job'] = array();
-        $array['_51job']['nickname'] = "~<strong>(.*)?</strong>~";
+        $array['_51job']['nickname'] = "~<strong.*?>(.*)?</strong>~";
         $array['_51job']['channel_id'] = 29;
 		
 
@@ -213,7 +212,6 @@ class MailController extends BaseController {
      * 根据匹配规则提取字段信息
      */
     private function get_data($subject,$nick_name_pattern,$site) {
-		
     	$zl_user = $zl_user_info = array();
 		$username=$this->get_mobile($subject);
     	$zl_user['username'] =encryptPhone($username,C('PHONE_CODE_KEY'));
