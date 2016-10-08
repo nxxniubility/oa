@@ -53,7 +53,7 @@ class RecoverController extends BaseController {
                         $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd',strtotime('-1 day')));
                         if($get_holiday['code']==0){
                             if(in_array($get_holiday['data'], $holiday)){
-                                $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$abandon['abandonname'];continue;
+                                $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
                             }
                         }
                     }
@@ -61,7 +61,7 @@ class RecoverController extends BaseController {
                         //是否有星期限制？
                         $week_text = explode(',', $abandon['week_text']);
                         if(!in_array(date('N',strtotime('-1 day')), $week_text)){
-                            $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$abandon['abandonname'];continue;
+                            $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
                         }
                     }
                 }
@@ -72,7 +72,7 @@ class RecoverController extends BaseController {
                     $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd',strtotime('-1 day')));
                     if($get_holiday['code']==0){
                         if(in_array($get_holiday['data'], $holiday)){
-                            $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$abandon['abandonname'];continue;
+                            $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
                         }
                     }
                 }
@@ -80,7 +80,7 @@ class RecoverController extends BaseController {
                     //是否有星期限制？
                     $week_text = explode(',', $abandon['week_text']);
                     if(!in_array(date('N',strtotime('-1 day')), $week_text)){
-                        $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$abandon['abandonname'];continue;
+                        $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
                     }
                 }
             }
@@ -161,14 +161,14 @@ class RecoverController extends BaseController {
                     $callbackDataAdd['nexttime'] = $nowtime;
                     D('UserCallback')->add($callbackDataAdd);
                     //添加数据记录
-                    $dataLog['operattype'] = '7';
-                    $dataLog['operator_user_id'] = 0;
-                    $dataLog['user_id'] = $value['user_id'];
-                    $dataLog['logtime'] = time();
-                    $DataService->addDataLogs($dataLog);
+//                    $dataLog['operattype'] = '7';
+//                    $dataLog['operator_user_id'] = 0;
+//                    $dataLog['user_id'] = $value['user_id'];
+//                    $dataLog['logtime'] = time();
+//                    $DataService->addDataLogs($dataLog);
                 }
             }
-            $falg_msg[] = '已成功回收:'.$result.'条数据，'.'规则名称:'.$abandon['abandonname'];
+            $falg_msg[] = '已成功回收:'.$result.'条数据，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');
         }
         if(!empty($abandon_id)){
             $this->success($falg_msg[0]);
