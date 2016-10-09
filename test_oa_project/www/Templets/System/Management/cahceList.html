@@ -128,7 +128,7 @@
                 <dt class="wFou"></dt>
             </dl>
             <foreach name = "data['path_Cache']" item="v" key="k">
-                <if condition = "$k EGT 2">
+                <if condition = "$k EGT 0">
                     <dl class="oneRegions clearfix libody">
                         <dd class="wOne regionSequence clearfix">
                             <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
@@ -157,7 +157,7 @@
                     </dl>
                     <!-- controller-->
                     <foreach name = "v['children']" item = "v2" key="k2">
-                        <if condition = "$k2 EGT 2">
+                        <if condition = "$k2 EGT 0">
                             <dl class="secondaryZoneRow dn clearfix libody parent_{$k}">
                                 <dd class="wOne regionSequence clearfix">
                                     <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
@@ -187,7 +187,7 @@
                         </if>
                         <!-- function-->
                         <foreach name = "v2['children']" item="v3" key="k3">
-                            <if condition = "$k3 EGT 2">
+                            <if condition = "$k3 EGT 0">
                                 <dl class="threeRegionsRow dn clearfix libody parent_1{$k2}">
                                     <dd class="wOne regionSequence clearfix">
                                         <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">

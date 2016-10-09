@@ -4,6 +4,7 @@ namespace System\Controller;
 use Common\Controller\SystemController;
 use Common\Controller\SystemUserController;
 use Common\Controller\OrderController as OrderMainController;
+use Common\Service\UserService;
 
 class ManagementController extends SystemController
 {
@@ -59,6 +60,7 @@ class ManagementController extends SystemController
         $this->ajaxReturn(1, '配置修改失败');
     }
 
+    protected  $data;
 
     /*
     |--------------------------------------------------------------------------
@@ -68,6 +70,9 @@ class ManagementController extends SystemController
     */
     public function cahceList()
     {
+        $UserService = new UserService();
+        $UserService->data=$data;
+        $UserService->addUser();
         $data['path_Data'] = $this->getpath('Runtime/Data');
         $data['path_Cache'] = $this->getpath('Runtime/Cache');
         $this->assign('data', $data);
