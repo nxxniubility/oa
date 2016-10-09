@@ -1699,6 +1699,10 @@ class MoveController extends BaseController
 
     public function getCallback()
     {
+//       $temp = M('user_callback','zl_','DB_CONFIG1')->field('callbacktime')->where(array('callbacktime'=>array('EGT','1476007200'),'remark'=>'系统分配','callbacktype'=>30))->save(array('callbacktime'=>array('exp','callbacktime+2')));
+//
+//        print_r($temp);
+//        exit;
         set_time_limit(3000);
         $temp_users = F('temp_user_systemuser');
 //        $roles = array(160282,160225,114375,160255,99739,160240,30,160242);
@@ -1706,12 +1710,13 @@ class MoveController extends BaseController
 //            $temp = M('user_callback','zl_','DB_CONFIG1')->field('system_user_id,user_id')->where(array('user_id'=>$v,'callbacktime'=>array('EGT','1475942400'),'remark'=>'系统超时回收'))->find();
 //            $temp_user_systemuser[] = array('user_id'=>$v,'system_user_id'=>$temp['system_user_id']);
 //        }
+        $temp_flag = array();
         foreach($temp_users as $v){
             //是否有申请转入中？
             $apply = M('user_apply','zl_','DB_CONFIG1')->where(array('status'=>10,'user_id'=>$v['user_id']))->find();
             if(empty($apply)){
                 //是否为带跟进 带联系 回库状态
-                $is_user = M('user_apply','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id'],'status'=>array('IN','20,30,160')))->find();
+                $is_user = M('user','zl_','DB_CONFIG1')->field('callbacknum,user_id,status')->where(array('user_id'=>$v['user_id'],'status'=>array('IN','20,30,160')))->find();
                 if(!empty($is_user)){
                     //添加回访记录
                     $add_ab = array(
@@ -1733,20 +1738,21 @@ class MoveController extends BaseController
                     );
                     M('user_callback','zl_','DB_CONFIG1')->add($add_all);
                     //恢复数据
-                    $save_user['status'] = 20;
-                    $save_user['mark'] = 1;
-                    $save_user['nextvisit'] = time();
-                    $save_user['attitude_id'] = 0;
-                    $save_user['callbacknum'] = 0;
-                    $save_user['lastvisit'] = time();
-                    $save_user['allocationtime'] = time();
-                    $save_user['updatetime'] = time();
-                    $save_user['system_user_id'] = $v['tosystem_user_id'];
-                    $save_user['updateuser_id'] = $v['tosystem_user_id'];
-                    M('user_apply','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->save($save_user);
+                    if($is_user['status']==160){
+                        if($is_user['callbacknum']>0){
+                            $save_user['status'] = 30;
+                        }else{
+                            $save_user['status'] = 20;
+                        }
+                    }
+                    $save_user['system_user_id'] = $v['system_user_id'];
+                    $save_user['updateuser_id'] = $v['system_user_id'];
+                    M('user','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->save($save_user);
+                    $temp_flag[] = $v['user_id'];
                 }
             }
         }
+        F('user_flag',$temp_flag);
         exit;
 
 
