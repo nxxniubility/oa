@@ -627,7 +627,7 @@ function channelPie(values,num){
 	        verticalAlign: 'bottom'
 	    },
 	    tooltip: {
-	        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	        pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
 	    },
 	    credits: {enabled:false},
 	    exporting: { enabled:false},
@@ -637,7 +637,7 @@ function channelPie(values,num){
 	            cursor: 'pointer',
 	            dataLabels: {
 	                enabled: true,
-	                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+	                format: '<b>{point.name}</b>: {point.percentage:.2f} %'
 	            }
 	        }
 	    },
