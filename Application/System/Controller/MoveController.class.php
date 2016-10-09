@@ -1697,22 +1697,34 @@ class MoveController extends BaseController
 //        }
     }
 
-    protected function getRoleIds($role_id)
+    public function getCallback()
     {
-        $reList = M('RoleUser','zl_','DB_CONFIG1')
-            ->field('user_id')
-            ->group("user_id")->Distinct(true)
-            ->where(array('role_id'=>$role_id))
-            ->select();
-        $systemUserArr = array();
+        set_time_limit(3000);
+        $temp_users = F('temp_users2');
+//        $reList = M('user_callback','zl_','DB_CONFIG1')
+//            ->field('user_id,system_user_id')
+//            ->group("user_id")->Distinct(true)
+//            ->where(array('callbacktime'=>array('EGT','1475942400'),'remark'=>'系统超时回收'))
+//            ->select();
+        $temp_users2 = array();
+        $roles = array(160282,160225,114375,160255,99739,160240,30,160242);
+        F('temp_users2',$temp_users2);
+        print_r(F('temp_users2'));exit;
+        $temp_users = array();
         foreach($reList as $v){
-            $systemUserArr[] = $v['user_id'];
+            $info = M('user','zl_','DB_CONFIG1')->field('user_id,system_user_id')->where(array('user_id'=>$v['user_id'],'status'=>160,'callbacknum'=>array('EGT',1)))->find();
+            if(!empty($info)){
+                $apply = M('user_apply','zl_','DB_CONFIG1')->where(array('status'=>10,'user_id'=>$v['user_id']))->find();
+                if(empty($apply)){
+                    M('user_apply','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->save(array('status'=>'30'));
+                    $temp_users[] = $v['user_id'];
+                }
+            }
         }
-        return $systemUserArr;
+        F('temp_users',$temp_users);
     }
 
     public function getUserMobileCity(){
-        set_time_limit(0);
         $count = I('count');
         if(empty($count)){
             $count =  M('user','zl_','DB_CONFIG1')->where(array('phonevest'=>array('exp','is null')))->count();

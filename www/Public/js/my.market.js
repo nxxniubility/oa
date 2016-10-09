@@ -661,3 +661,24 @@ $(document).ready(function(){
 
     tab.width(wrap_width);
 });
+
+//排序
+$(document).on('click','.on_btn',function(){
+    var _num = $(this).parents('th').index();
+    $(this).parents('th').siblings('th').find('.on_btn').removeClass('sr_down').removeClass('sr_up');
+    if($(this).hasClass('sr_down')){
+        $(this).removeClass('sr_down').addClass('sr_up');
+        //排序
+        var sortTitle = $(this).parents('tr').siblings('.sr_li').sort(function(a, b) {
+            return parseInt($(b).children('td').eq(_num).text().replace(/\-/g,'')) - parseInt($(a).children('td').eq(_num).text().replace(/\-/g,''));
+        });
+    }else{
+        $(this).addClass('sr_down').removeClass('sr_up');
+        //排序
+        var sortTitle = $(this).parents('tr').siblings('.sr_li').sort(function(a, b) {
+            return parseInt($(a).children('td').eq(_num).text().replace(/\-/g,'')) - parseInt($(b).children('td').eq(_num).text().replace(/\-/g,''));
+        });
+    }
+    $(this).parents('tr').siblings('.sr_li').remove();
+    $(this).parents('table').append(sortTitle);
+});

@@ -671,9 +671,13 @@ class UserService extends BaseService
         if($re_data['system_user_id']!=$param['system_user_id']) return array('code'=>102,'msg'=>'您不是该客户所属人，无该操作权限！');
         //实例化接口
         $NeteaseService = new NeteaseService();
-        //获取操作人手机号码
-        $re_data_sys = D('SystemUser')->getFind(array('system_user_id'=>$param['system_user_id']), 'username');
-        $mobile_caller = decryptPhone($re_data_sys['username'],C('PHONE_CODE_KEY'));
+        //获取操作人启用号码 无则获取手机号码
+        $mobile_caller = D('CallNumber')->getFind(array('system_user_id'=>$param['system_user_id'],'number_start'=>1,'number_status'=>1),'number');
+        if(empty($mobile_caller)){
+            $re_data_sys = D('SystemUser')->getFind(array('system_user_id'=>$param['system_user_id']), 'username');
+            $mobile_caller = decryptPhone($re_data_sys['username'],C('PHONE_CODE_KEY'));
+        }
+        //呼叫客户号码  是否直接呼叫客户固话?
         if(!empty($re_data['username']) && $type==1){
             $mobile_callee = decryptPhone($re_data['username'],C('PHONE_CODE_KEY'));
         }elseif(!empty($re_data['tel'])){

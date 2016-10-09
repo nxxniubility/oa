@@ -168,6 +168,81 @@ class SystemUserService extends BaseService
         return array('code'=>'0', 'data'=>$systemUserAll['data']);
     }
 
+    /*
+	|--------------------------------------------------------------------------
+	| 获取员工 呼叫号码设置
+	|--------------------------------------------------------------------------
+	| @author zgt
+	*/
+    public function getCallNumber($where)
+    {
+        $where['status'] = 1;
+        $result = D('CallNumber')->getList($where,'call_number_id,number,number_type,number_start');
+        //返回数据与状态
+        return array('code'=>'0', 'data'=>$result);
+    }
+
+    /*
+	|--------------------------------------------------------------------------
+	| 添加员工 呼叫号码设置
+	|--------------------------------------------------------------------------
+	| @author zgt
+	*/
+    public function addCallNumber($data)
+    {
+        //实例验证类
+        $checkform = new \Org\Form\Checkform();
+        if($data['number_type']==1){
+            if(!$checkform->checkTel($data['number'])) return array('code'=>201,'msg'=>'固话码格式有误');
+        }else{
+            if(!$checkform->checkMobile($data['number'])) return array('code'=>202,'msg'=>'手机号码格式有误');
+        }
+        $result = D('CallNumber')->addData($data);
+        //返回数据与状态
+        return $result;
+    }
+
+    /*
+	|--------------------------------------------------------------------------
+	| 修改员工 呼叫号码设置
+	|--------------------------------------------------------------------------
+	| @author zgt
+	*/
+    public function editCallNumber($data)
+    {
+        //实例验证类
+        $checkform = new \Org\Form\Checkform();
+        if($data['number_type']==1){
+            if(!$checkform->checkTel($data['number'])) return array('code'=>201,'msg'=>'固话码格式有误');
+        }else{
+            if(!$checkform->checkMobile($data['number'])) return array('code'=>202,'msg'=>'手机号码格式有误');
+        }
+        $result = D('CallNumber')->editData($data,$data['call_number_id']);
+        //返回数据与状态
+        return $result;
+    }
+
+    /*
+	|--------------------------------------------------------------------------
+	| 启用员工 呼叫号码设置
+	|--------------------------------------------------------------------------
+	| @author zgt
+	*/
+    public function startCallNumber($data)
+    {
+        D()->startTrans();
+        $re_all = D('CallNumber')->where(array('system_user_id'=>$data['system_user_id']))->save(array('start'=>0));
+        $re_edit = D('CallNumber')->editData($data,$data['call_number_id']);
+        if($re_all!==false && $re_edit['code']==0){
+            D()->commit();
+            //返回数据与状态
+            return array('code'=>'0', 'data'=>$re_edit['data']);
+        }else{
+            D()->rollback();
+            //返回数据与状态
+            return array('code'=>'100', 'msg'=>'数据操作失败');
+        }
+    }
 
     /**
      * 参数过滤
