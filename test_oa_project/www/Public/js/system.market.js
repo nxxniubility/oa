@@ -140,12 +140,6 @@ function positionChoose(){
 			_role_ids = '',
 			_role_names = '';
 		
-		
-		//  子项控制全选按钮：全选与不全选
-		_checkbox.click(function(){
-			allChk();
-		});
-		
 		//  子项全选与不全选val赋值
 		_checkbox.each(function(){
 			if(_role_ids==''){
@@ -192,12 +186,18 @@ function positionChoose(){
 	});
 };
 
+//  子项控制全选按钮：全选与不全选
+$(document).ready(function(){
+	$('input[name="sale_inp"]').on('click', function(){
+		allChk();
+	});
+});
 //  各职位子项与职位总全选按钮关联
 function allChk(){ 
     var chknum = $('input[name="sale_inp"]').length;//选项总个数 
     var chk = 0; 
     $('input[name="sale_inp"]').each(function () {   
-        if($(this).prop("checked")==true){ 
+        if($(this).is(':checked')){ 
             chk++; 
         } 
     }); 
