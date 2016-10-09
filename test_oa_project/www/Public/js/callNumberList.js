@@ -17,10 +17,3 @@ $('.add_number').on('click', function(){
 	});
 });
 
-
-/*$('.call_del').on('click',function(){
-	layer.confirm('确定删除此号码?', {icon:1,title:'删除'}, function(){
-		
-		layer.close();
-	});
-});*/
