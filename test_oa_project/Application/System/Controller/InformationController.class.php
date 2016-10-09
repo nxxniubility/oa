@@ -135,13 +135,13 @@ class InformationController extends SystemController
             }elseif($request['type']=='edit'){
                 $reflag = D('SystemUser','Service')->editCallNumber($request);
             }elseif($request['type']=='del'){
-                $request['status'] = 0;
-                $reflag = D('SystemUser','Service')->editCallNumber($request);
+                $reflag = D('SystemUser','Service')->delCallNumber($request);
             }elseif($request['type']=='start'){
+                $request['number_start'] = 1;
                 $reflag = D('SystemUser','Service')->startCallNumber($request);
             }
             if($reflag['code']==0) $this->ajaxReturn(0, '操作成功');
-            else $this->ajaxReturn(1, '操作失败');
+            else $this->ajaxReturn(1, $reflag['msg']);
         }
         //获取数据
         $data['numberList'] = D('SystemUser','Service')->getCallNumber(array('system_user_id'=>$this->system_user_id));

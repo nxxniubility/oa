@@ -1700,16 +1700,56 @@ class MoveController extends BaseController
     public function getCallback()
     {
         set_time_limit(3000);
-        $temp_users = F('temp_users2');
-//        $reList = M('user_callback','zl_','DB_CONFIG1')
-//            ->field('user_id,system_user_id')
-//            ->group("user_id")->Distinct(true)
-//            ->where(array('callbacktime'=>array('EGT','1475942400'),'remark'=>'系统超时回收'))
-//            ->select();
-        $temp_users2 = array();
-        $roles = array(160282,160225,114375,160255,99739,160240,30,160242);
-        F('temp_users2',$temp_users2);
-        print_r(F('temp_users2'));exit;
+        $temp_users = F('temp_user_systemuser');
+//        $roles = array(160282,160225,114375,160255,99739,160240,30,160242);
+//        foreach($temp_users as $v){
+//            $temp = M('user_callback','zl_','DB_CONFIG1')->field('system_user_id,user_id')->where(array('user_id'=>$v,'callbacktime'=>array('EGT','1475942400'),'remark'=>'系统超时回收'))->find();
+//            $temp_user_systemuser[] = array('user_id'=>$v,'system_user_id'=>$temp['system_user_id']);
+//        }
+        foreach($temp_users as $v){
+            //是否有申请转入中？
+            $apply = M('user_apply','zl_','DB_CONFIG1')->where(array('status'=>10,'user_id'=>$v['user_id']))->find();
+            if(empty($apply)){
+                //是否为带跟进 带联系 回库状态
+                $is_user = M('user_apply','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id'],'status'=>array('IN','20,30,160')))->find();
+                if(!empty($is_user)){
+                    //添加回访记录
+                    $add_ab = array(
+                        'user_id'=>$v['user_id'],
+                        'system_user_id'=>$v['system_user_id'],
+                        'callbacktime'=>time(),
+                        'nexttime'=>time(),
+                        'remark'=>'系统回收',
+                        'callbacktype'=>31
+                    );
+                    M('user_callback','zl_','DB_CONFIG1')->add($add_ab);
+                    $add_all = array(
+                        'user_id'=>$v['user_id'],
+                        'system_user_id'=>$v['system_user_id'],
+                        'callbacktime'=>time(),
+                        'nexttime'=>time(),
+                        'remark'=>'系统分配',
+                        'callbacktype'=>30
+                    );
+                    M('user_callback','zl_','DB_CONFIG1')->add($add_all);
+                    //恢复数据
+                    $save_user['status'] = 20;
+                    $save_user['mark'] = 1;
+                    $save_user['nextvisit'] = time();
+                    $save_user['attitude_id'] = 0;
+                    $save_user['callbacknum'] = 0;
+                    $save_user['lastvisit'] = time();
+                    $save_user['allocationtime'] = time();
+                    $save_user['updatetime'] = time();
+                    $save_user['system_user_id'] = $v['tosystem_user_id'];
+                    $save_user['updateuser_id'] = $v['tosystem_user_id'];
+                    M('user_apply','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->save($save_user);
+                }
+            }
+        }
+        exit;
+
+
         $temp_users = array();
         foreach($reList as $v){
             $info = M('user','zl_','DB_CONFIG1')->field('user_id,system_user_id')->where(array('user_id'=>$v['user_id'],'status'=>160,'callbacknum'=>array('EGT',1)))->find();
