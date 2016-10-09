@@ -176,8 +176,12 @@ class SystemUserService extends BaseService
 	*/
     public function getCallNumber($where)
     {
-        $where['status'] = 1;
+        $where['number_status'] = 1;
         $result = D('CallNumber')->getList($where,'call_number_id,number,number_type,number_start');
+        foreach($result as $k=>$v){
+            $result[$k]['number_type_name'] = $v['number_type']==1?'固定电话':'手机号码';
+            $result[$k]['number_start_name'] = $v['number_start']==1?'已启用':'未启用';
+        }
         //返回数据与状态
         return array('code'=>'0', 'data'=>$result);
     }
@@ -190,6 +194,8 @@ class SystemUserService extends BaseService
 	*/
     public function addCallNumber($data)
     {
+        if(empty($data['number_type']))  return array('code'=>205,'msg'=>'类型不能为空');
+        if(empty($data['number']))  return array('code'=>206,'msg'=>'号码不能为空');
         //实例验证类
         $checkform = new \Org\Form\Checkform();
         if($data['number_type']==1){
@@ -210,6 +216,9 @@ class SystemUserService extends BaseService
 	*/
     public function editCallNumber($data)
     {
+        if(empty($data['number_type']))  return array('code'=>205,'msg'=>'类型不能为空');
+        if(empty($data['number']))  return array('code'=>206,'msg'=>'号码不能为空');
+        if(empty($data['call_number_id']))  return array('code'=>206,'msg'=>'参数异常');
         //实例验证类
         $checkform = new \Org\Form\Checkform();
         if($data['number_type']==1){
@@ -224,14 +233,30 @@ class SystemUserService extends BaseService
 
     /*
 	|--------------------------------------------------------------------------
+	| 修改员工 呼叫号码设置
+	|--------------------------------------------------------------------------
+	| @author zgt
+	*/
+    public function delCallNumber($data)
+    {
+        if(empty($data['call_number_id']))  return array('code'=>206,'msg'=>'参数异常');
+        $data_edit['number_status'] = 0;
+        $result = D('CallNumber')->editData($data_edit,$data['call_number_id']);
+        //返回数据与状态
+        return $result;
+    }
+
+    /*
+	|--------------------------------------------------------------------------
 	| 启用员工 呼叫号码设置
 	|--------------------------------------------------------------------------
 	| @author zgt
 	*/
     public function startCallNumber($data)
     {
+        if(empty($data['call_number_id']))  return array('code'=>206,'msg'=>'参数异常');
         D()->startTrans();
-        $re_all = D('CallNumber')->where(array('system_user_id'=>$data['system_user_id']))->save(array('start'=>0));
+        $re_all = D('CallNumber')->where(array('system_user_id'=>$data['system_user_id']))->save(array('number_start'=>0));
         $re_edit = D('CallNumber')->editData($data,$data['call_number_id']);
         if($re_all!==false && $re_edit['code']==0){
             D()->commit();

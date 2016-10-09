@@ -672,8 +672,14 @@ class UserService extends BaseService
         //实例化接口
         $NeteaseService = new NeteaseService();
         //获取操作人启用号码 无则获取手机号码
-        $mobile_caller = D('CallNumber')->getFind(array('system_user_id'=>$param['system_user_id'],'number_start'=>1,'number_status'=>1),'number');
-        if(empty($mobile_caller)){
+        $call_number = D('CallNumber')->getFind(array('system_user_id'=>$param['system_user_id'],'number_start'=>1,'number_status'=>1),'number,number_type');
+        if(!empty($call_number)){
+            if($call_number['number_type']==1){
+                $mobile_caller = str_replace('-','',$call_number['number']);
+            }else{
+                $mobile_caller = $call_number['number'];
+            }
+        }else{
             $re_data_sys = D('SystemUser')->getFind(array('system_user_id'=>$param['system_user_id']), 'username');
             $mobile_caller = decryptPhone($re_data_sys['username'],C('PHONE_CODE_KEY'));
         }

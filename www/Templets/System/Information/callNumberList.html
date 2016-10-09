@@ -26,51 +26,37 @@
 	        			<th>类型</th>
 	        			<th class="last_item">操作</th>
 	        		</tr>
-	        		<tr>
-		        		<td class="first_item">13838383200</td>
-	        			<td>手机</td>
-	        			<td class="clearfix">
-	        				<a href="javascript:;" class="call_enable">启用</a>
-	        				<a href="javascript:;" class="call_edit">修改</a>
-	        			</td>
-	        		</tr>
-	        		<tr>
-		        		<td class="first_item">13838383201</td>
-	        			<td>手机</td>
-	        			<td class="clearfix">
-	        				<a href="javascript:;" class="call_enable">启用</a>
-	        				<a href="javascript:;" class="call_edit">修改</a>
-	        			</td>
-	        		</tr>
-	        		<tr>
-		        		<td class="first_item">0755-38383100</td>
-	        			<td>固定电话</td>
-	        			<td class="clearfix">
-	        				<a href="javascript:;" class="call_disable">禁用</a>
-	        				<a href="javascript:;" class="call_edit">修改</a>
-	        				<a href="javascript:;" class="call_del">删除</a>
-	        			</td>
-	        		</tr>
+					<foreach name="data['numberList']['data']" item="v">
+						<tr data-id="{$v.call_number_id}" data-value="{$v.number}-#-{$v.number_type}">
+							<td class="first_item">{$v.number}</td>
+							<td>{$v.number_type_name}</td>
+							<td class="clearfix">
+								<a href="javascript:;" class="call_disable {:$v['number_start']==1?'call_stop':'call_start'}" data-start="{$v.number_start}">{$v.number_start_name}</a>
+								<a href="javascript:;" class="call_edit">修改</a>
+								<a href="javascript:;" class="call_del">删除</a>
+							</td>
+						</tr>
+					</foreach>
 	        	</table>
 	        </div>
 		</div>
-		
+
 		<!-- 添加号码 -->
 		<div class="call_addbox">
 			<div class="box_main">
 				<div class="rows clearfix">
 					<span>号码：</span>
 					<div class="box_right">
-						<input type="text" class="call_inp">
+						<input type="text" class="call_inp" name="number">
 					</div>
 				</div>
 				<div class="rows clearfix">
 					<span>类型：</span>
 					<div class="box_right">
-						<select>
+						<select name="number_type">
 							<option value="0" selected="selected">--请选择号码类型--</option>
-							<option value="1">手机</option>
-							<option value="2">固定电话</option>
+							<option value="1">固定电话</option>
+							<option value="2">手机号码</option>
 						</select>
 					</div>
 				</div>
@@ -80,9 +66,13 @@
 				</div>
 			</div>
 		</div>
-		
+		<input type="hidden" name="temp_id" autocomplete="off">
 		<script src="../../../Public/js/jquery-1.9.1.min.js"></script>
 		<script src="../../../Public/js/layer/layer.js"></script>
+		<script src="../../../Public/js/common_ajax.js"></script>
 		<script src="../../../Public/js/callNumberList.js"></script>
+		<script>
+
+		</script>
 	</body>
 </html>
