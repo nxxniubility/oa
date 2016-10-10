@@ -125,6 +125,7 @@ class VisitController extends SystemController
         }else{
             //获取参数 页码
             $request = I('get.');
+            $where[C('DB_PREFIX') . 'user.zone_id'] = $this->system_user['zone_id'];
             if(!empty($request['search'])){
                 $request['search'] = trim($request['search']);
                 if($request['keyname']=='username'){
@@ -132,6 +133,7 @@ class VisitController extends SystemController
                 }else{
                     $where[C('DB_PREFIX') .'user.'. $request['keyname']] = $request['search'];
                 }
+                $where[C('DB_PREFIX') . 'user.zone_id'] = null;
             }else{
 //                $where[C('DB_PREFIX') . 'user.attitude_id'] = 2;
 //                $where[C('DB_PREFIX') . 'user.visittime'] = array('NEQ',0);
@@ -140,13 +142,11 @@ class VisitController extends SystemController
                     $where[C('DB_PREFIX') . 'user.status'] = array('IN', array(20, 30));
                     unset($request['status']);
                 }
-                $where[C('DB_PREFIX') . 'user.zone_id'] = $this->system_user['zone_id'];
                 if(!empty($request['visittime'])){
                     $_time = explode('@', str_replace('/', '-', $request['visittime']));
-                    $where[C('DB_PREFIX') . 'user.visittime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1],'23:59'))), 'AND');
+                    $where[C('DB_PREFIX') . 'user.visittime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1].' 23:59'))), 'AND');
                 }
             }
-
             $re_page = isset($request['page']) ? $request['page'] : 1;
             unset($request['page']);
             //客户列表
