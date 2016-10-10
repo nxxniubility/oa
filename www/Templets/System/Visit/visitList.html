@@ -27,6 +27,9 @@
 			            <input type="text" class="afTime start" id="afTimeStar" value="{$data['request']['visittime_val'][0]}" placeholder="开始时间" readonly="readonly">
 			            <em>至</em>
 			            <input type="text" class="afTime end" id="afTimeEnd" value="{$data['request']['visittime_val'][1]}" data-url="{:U('System/Visit/visitList').'?visittime='}" placeholder="截止时间"  readonly="readonly">
+			            <!-- 确定/重置 -->
+			            <input type="button" class="visit_confirm" value="确定">
+			            <input type="button" class="visit_reset" value="重置">
 			        </div>
 				</div>
 				<div class="frame1">

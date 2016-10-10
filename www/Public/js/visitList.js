@@ -6,7 +6,7 @@ var choice=function(e,t){
         $(".frame,.frame1").slideToggle(t);
         
         //  实际到访时间
-	    setTimeout(function(){
+	    //setTimeout(function(){
 			$('#afTimeStar, #afTimeEnd').glDatePicker({
 			    onClick:function(el, cell, date, data) {
 			        el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
@@ -28,7 +28,7 @@ var choice=function(e,t){
 			        }
 			    },
 			});
-		},500);
+		//},500);
         
     });
 };
