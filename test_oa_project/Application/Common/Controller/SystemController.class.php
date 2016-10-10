@@ -37,17 +37,17 @@ class SystemController extends BaseController
         if(C('USER_AUTH_ON') && !in_array(MODULE_NAME, explode(',',C('NOT_AUTH_MODULE')))){
             if(!Rbac::AccessDecision()){
                 if(!session(C('USER_AUTH_KEY'))){
-                    $this->error('请重新登录', 1, C('USER_AUTH_GATEWAY'));
+                    $this->redirect('请重新登录', 1, C('USER_AUTH_GATEWAY'));
                 }
                 if(C('RBAC_ERROR_PAGE')){
-                    $this->error('暂无权限', 1);
+                    $this->redirect('暂无权限', 1);
                     //$this->redirect(C('RBAC_ERROR_PAGE'));
                 }
             }
             $systenUserMain = new SystemUserController();
             $result = $systenUserMain->proveToken($this->system_user_id);
             if ($result['code'] != 0) {
-                $this->error('请重新登录', 1, C('USER_AUTH_GATEWAY'));
+                $this->redirect('请重新登录', 1, C('USER_AUTH_GATEWAY'),0);
             }
             //当前Controller 权限列表
             $_access_list = $_SESSION['_ACCESS_LIST'];
@@ -65,7 +65,7 @@ class SystemController extends BaseController
      */
     public function isLogin(){
         if(!session(C('USER_AUTH_KEY'))){
-            $this->error('请重新登录', 1, C('USER_AUTH_GATEWAY'));
+            $this->redirect('请重新登录', 1, C('USER_AUTH_GATEWAY'),0);
         }
         $userInfo = $this->system_user;
         $this->assign('userinfo',$userInfo);
