@@ -13,16 +13,26 @@ class BaseController extends Controller {
     
     public function _initialize(){
     }
-    
+
     /**
      * 操作错误跳转的快捷方法
      * @author Echo
      */
-    protected function error($msg='error',$code=1,$data='') {
+    protected function redirect($msg='error',$code=1,$data='') {
         if(IS_AJAX) {
             $this->ajaxReturn($code,$msg,$data);
         }
-        parent::error($msg,$data);
+        parent::redirect($data);
+    }
+    /**
+     * 操作错误跳转的快捷方法
+     * @author Echo
+     */
+    protected function error($msg='error',$code=1,$data='',$time='3') {
+        if(IS_AJAX) {
+            $this->ajaxReturn($code,$msg,$data);
+        }
+        parent::error($msg,$data,$time);
     }
     /**
      * 操作成功跳转的快捷方法
