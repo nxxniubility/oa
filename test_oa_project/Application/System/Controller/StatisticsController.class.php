@@ -66,12 +66,50 @@ class StatisticsController extends SystemController
                                 $v1['redaddcount'] = 1;
                             }
                         }
+                        if ($v3['option_name'] == 'acceptcount') {
+                            if (($v1['acceptcount']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redacceptcount'] = 1;
+                                
+                            }elseif (($v1['acceptcount']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redacceptcount'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'switchcount') {
+                            if (($v1['switchcount']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redswitchcount'] = 1;
+                                
+                            }elseif (($v1['switchcount']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redswitchcount'] = 1;
+                            }
+                        }
                         if ($v3['option_name'] == 'restartcount') {
                             if (($v1['restartcount']>$v3['option_num']) && ($v3['option_warn']==2)) {
                                 $v1['redrestartcount'] = 1;
                                 
                             }elseif (($v1['restartcount']<$v3['option_num']) && ($v3['option_warn']==1)) {
                                 $v1['redrestartcount'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'recyclecount') {
+                            if (($v1['recyclecount']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redrecyclecount'] = 1;
+                                
+                            }elseif (($v1['recyclecount']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redrecyclecount'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'callbackcount') {
+                            if (($v1['callbackcount']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redcallbackcount'] = 1;
+                            }elseif (($v1['callbackcount']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redcallbackcount'] = 1;
+                            }
+                        }
+                        if ($v3['option_name'] == 'attitudecount') {
+                            if (($v1['attitudecount']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redattitudecount'] = 1;
+                            }elseif (($v1['attitudecount']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redattitudecount'] = 1;
                             }
                         }
                         if ($v3['option_name'] == 'visitcount') {
