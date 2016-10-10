@@ -9,7 +9,7 @@
 .topRight .addAccount:hover, .topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
 
 /*======================================== 黄金分割线 ========================================*/
-.viCondition { width: 100%; height: 30px; line-height: 30px; margin: 30px 0;}
+.viCondition {width:100%;height:auto;margin-top: 30px;}
 .viCondition span, .viCondition em, .viCondition input { float: left; line-height: 30px;}
 .viCondition span { margin-right: 12px; color: #333;}
 .viCondition .afTime { display: block; width: 158px; height: 28px; line-height: 28px; color: #a6a7a7; text-indent: 20px; border: 1px solid #ccc; background: #fff url(../images/datePicker.png) no-repeat 110px center; cursor: pointer;}
@@ -102,6 +102,39 @@
 #viTable {border:1px solid #e1e6eb;border-bottom:none;}
 #viTable tr.content_li {cursor:pointer;}
 
+/*1010*/
+/*筛选部分*/
+.p{position:relative;line-height:45px;width:auto;background-color:#f5f6fa;color:#9e9e9e;padding-left:15px;}
+
+.Filter{width:100%;border:1px solid #e1e6eb;border-top:none;box-sizing:border-box;padding-top:20px;}
+.frame{display: none;}
+.frame1{display:block;}
+.arrowFather{display: none;}
+.arrowFather1{display:block;}
+.Filter .frame .details{min-height: 30px;margin-bottom: 20px;}
+.Filter .frame .details .specialul{height: 51px;}
+.Filter .frame .details>span{float: left; width:160px; line-height: 30px; text-align: right;}
+.Filter .frame .details>ul{float: left; width:960px;overflow: hidden;}
+.Filter .frame .details>ul li { float: left; height: 30px; margin-bottom:20px;}
+.Filter .frame .details>ul li a{float: left; line-height: 30px; background-color: #eaeaea; text-align: center; width: 100px; margin-right: 10px; margin-bottom: 10px;}
+.Filter .frame .details>ul li a{color: #999;}
+.Filter .frame .details>ul li a:hover,.Filter .frame .details>ul li.active a{background-color: #53b567; color: #fff;}
+.Filter .frame .details>select{width: 320px; height: 30px;}
+.Filter .frame .details .confirmBtn {width:110px;height:30px;line-height:30px;margin-right:20px;color:#fff;text-align:center;border:none;background:#53b567;cursor:pointer;}
+.Filter .frame .details .confirmBtn:hover {color:#fff;border-color:#53b567;background:#4da45e;}
+.on_hover{background-color: #53b567 !important;color: #fff !important;}
+.Filter .frame1{overflow: hidden; margin-left: 50px; margin-right: 50px;}
+.Filter .frame1 ul{overflow: hidden}
+.Filter .frame1 li a{background-color: #53b567; color: #fff; float: left; line-height: 30px; padding: 2px 7px; text-align: center; margin-right: 10px; margin-bottom: 10px;}
+.arrowFather1{width: 100%;}
+.arrowFather{width: 100%;}
+.arrow, .arrow1{width: 150px; border:1px solid #e8e8e8; border-top-color: #fff; margin: -1px auto 0; padding: 5px 0; color: #6b6b6b; text-align: center; cursor: pointer;}
+.arrow span, .arrow1 span {float:none;}
+.arrow1 span:hover { color: #53b567;}
+.arrow i, .arrow1 i { display: inline-block; width: 10px; height: 4px; margin: 0 0 2px 5px; background: url(../images/c_saixuan.png) no-repeat;}
+.arrow1 i.showIcon { background-position: 0 0;}
+.arrow i.hideIcon { background-position: -15px 0;}
+.exact_query {float:left;display:block;height:30px;width:100%;margin:20px auto;}
 
 
 

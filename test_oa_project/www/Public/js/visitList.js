@@ -1,3 +1,39 @@
+/**********快速筛选**********/
+var choice=function(e,t){
+    t===undefined&&(t=900);
+    $(e).click(function(){
+        $(".arrowFather,.arrowFather1").toggle();
+        $(".frame,.frame1").slideToggle(t);
+        
+        //  实际到访时间
+	    setTimeout(function(){
+			$('#afTimeStar, #afTimeEnd').glDatePicker({
+			    onClick:function(el, cell, date, data) {
+			        el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
+			        if(el.hasClass("start")){
+			            var start_time=el.val();
+			            var end_time=el.siblings(".end").val();
+			            var url = el.siblings(".end").attr('data-url');
+			            if(end_time.length>0){
+			                location.href=url+start_time+'@'+end_time;
+			            }
+			        }else if(el.hasClass("end")){
+			            var start_time=el.siblings(".start").val();
+			            var end_time=el.val();
+			            if(!start_time){
+			                var myDate = new Date();
+			                start_time = myDate.getFullYear()+'/'+myDate.getMonth()+'/'+myDate.getDate();
+			            }
+			            location.href=el.attr('data-url')+start_time+'@'+end_time;
+			        }
+			    },
+			});
+		},500);
+        
+    });
+};
+choice(".arrowFather1,.arrowFather");
+
 //  重新分配 star
 $('#rnTable tr:last-child').find('td').css('borderBottom','none');
 //  重新分配 end
@@ -71,30 +107,6 @@ function otherSelectStatus() {
     $("[class^=select]").find("dd,.select_title3").hide();
     $("[class^=select]").find("dl").removeClass("zindex4");
 }
-
-//===================================================================
-//  实际到访时间
-$('#afTimeStar, #afTimeEnd').glDatePicker({
-    onClick:function(el, cell, date, data) {
-        el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
-        if(el.hasClass("start")){
-            var start_time=el.val();
-            var end_time=el.siblings(".end").val();
-            var url = el.siblings(".end").attr('data-url');
-            if(end_time.length>0){
-                location.href=url+start_time+'@'+end_time;
-            }
-        }else if(el.hasClass("end")){
-            var start_time=el.siblings(".start").val();
-            var end_time=el.val();
-            if(!start_time){
-                var myDate = new Date();
-                start_time = myDate.getFullYear()+'/'+myDate.getMonth()+'/'+myDate.getDate();
-            }
-            location.href=el.attr('data-url')+start_time+'@'+end_time;
-        }
-    },
-});
 
 //  双击打开详情
 $(document).on('dblclick',".content_li",function(){
