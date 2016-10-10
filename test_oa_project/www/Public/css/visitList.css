@@ -103,6 +103,8 @@
 #viTable tr.content_li {cursor:pointer;}
 
 /*1010*/
+/*其他*/
+.imCont {width:auto;}
 /*筛选部分*/
 .p{position:relative;line-height:45px;width:auto;background-color:#f5f6fa;color:#9e9e9e;padding-left:15px;}
 
@@ -135,6 +137,7 @@
 .arrow1 i.showIcon { background-position: 0 0;}
 .arrow i.hideIcon { background-position: -15px 0;}
 .exact_query {float:left;display:block;height:30px;width:100%;margin:20px auto;}
+
 
 
 
