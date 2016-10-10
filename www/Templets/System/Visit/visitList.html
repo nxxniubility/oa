@@ -19,12 +19,33 @@
             </div>
         </div>
         <div class="viCondition clearfix">
-            <span>实际到访时间：</span>
-            <input type="text" class="afTime start" id="afTimeStar" value="{$data['request']['visittime_val'][0]}" placeholder="开始时间" readonly="readonly">
-            <em>至</em>
-            <input type="text" class="afTime end" id="afTimeEnd" value="{$data['request']['visittime_val'][1]}" data-url="{:U('System/Visit/visitList').'?visittime='}" placeholder="截止时间"  readonly="readonly">
-
-            <form action="{:U('System/Visit/visitList')}" method="get" onsubmit="layer.load(2);">
+        	<div class="p clearfix">快速筛选:</div>
+        	<div class="Filter">
+	            <div class="frame">
+	                <div class="details">
+			            <span>实际到访时间：</span>
+			            <input type="text" class="afTime start" id="afTimeStar" value="{$data['request']['visittime_val'][0]}" placeholder="开始时间" readonly="readonly">
+			            <em>至</em>
+			            <input type="text" class="afTime end" id="afTimeEnd" value="{$data['request']['visittime_val'][1]}" data-url="{:U('System/Visit/visitList').'?visittime='}" placeholder="截止时间"  readonly="readonly">
+			        </div>
+				</div>
+				<div class="frame1">
+	                <ul></ul>
+	            </div>
+			</div>
+			<div class="arrowFather1">
+	            <div class="arrow1">
+	            	<span>展开筛选</span>
+	            	<i class="showIcon"></i>
+	            </div>
+	        </div>
+	        <div class="arrowFather">
+	            <div class="arrow">
+	            	<span>收起筛选</span>
+	            	<i class="hideIcon"></i>
+	            </div>
+	        </div>
+            <form class="exact_query" action="{:U('System/Visit/visitList')}" method="get" onsubmit="layer.load(2);">
             	<select class="visSelect" name="keyname">
             		<option value="username" {:$data['request']['keyname']=='username'?'selected="selected"':''} >手机号码</option>
             		<option value="qq" {:$data['request']['keyname']=='qq'?'selected="selected"':''}>QQ</option>
