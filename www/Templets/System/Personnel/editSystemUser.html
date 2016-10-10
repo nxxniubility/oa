@@ -58,10 +58,12 @@
                             <div class="select_title l">修改所属区域</div>
                             <div class="arrow r"></div>
                             </dt>
-                            <dd class="fxDone" data-level="{$data['zoneAll']['level']}" data-value="{$data['zoneAll']['zone_id']}">{$data['zoneAll']['name']}</dd>
+                            <dd class="fxDone" data-level="{$data.zoneAll.level}" data-value="{$data.zoneAll.zone_id}">{$data.zoneAll.name}</dd>
                             <foreach name="data['zoneAll']['children']" item="v" key="k">
                                 <dd class="fxDone" data-level="{$v.level}" data-value="{$v.zone_id}">{$v.name}</dd>
-
+                                <!--<foreach name="v['children']" item="v2" key="k2">-->
+                                <!--<dd class="fxDone" data-level="{$v2.level}" data-value="{$v2.zone_id}">{$v2.name}</dd>-->
+                                <!--</foreach>-->
                             </foreach>
                         </dl>
                     </div>
@@ -116,13 +118,13 @@
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>入职时间:</div>
                 <div class="nsRight">
-                    <input type="text" class="afTime" id="afBirthday" name="entrytime" readonly="readonly" value="{:($data['SystemUserInfo']['entrytime']!=0)?date('Y/m/d',$data['SystemUserInfo']['entrytime']):''}" placeholder="请选择日期">
+                    <input type="text" class="afTime" id="afBirthday" name="entrytime" value="{:($data['SystemUserInfo']['entrytime']!=0)?date('Y/m/d',$data['SystemUserInfo']['entrytime']):''}" placeholder="请选择日期">
                 </div>
             </div>
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>转正时间:</div>
                 <div class="nsRight">
-                    <input type="text" class="afTime" id="afBirthday2" name="straightime" readonly="readonly" value="{:($data['SystemUserInfo']['straightime']!=0)?date('Y/m/d',$data['SystemUserInfo']['straightime']):''}" placeholder="请选择日期">
+                    <input type="text" class="afTime" id="afBirthday2" name="straightime" value="{:($data['SystemUserInfo']['straightime']!=0)?date('Y/m/d',$data['SystemUserInfo']['straightime']):''}" placeholder="请选择日期">
                 </div>
             </div>
             <div class="nsRow clearfix">
@@ -156,7 +158,7 @@
                 </dl>
             </div>
             <input type="text" class="nsSelectSearch l" name="nsSelectSearch">
-            <input type="submit" class="nsSearchSubmit l" value="搜索">
+            <input type="submit" class="nsSearchSubmit l">
         </div>
         <div class="nsDeparMiddle">
             <dl class="nsTit clearfix department_title">
@@ -204,11 +206,6 @@
         $('.nsDetermine').click(function(){
             var role_id = '';
             var role_name = ''
-            var chenum = $(':input[name="nsChk"]:checked').length;
-            if(chenum>3){
-                layer.msg('职位多选不能多于3个', {icon:2});
-                return false;
-            }
             for(var i=0;i<$(':input[name="nsChk"]:checked').length;i++){
                 if(i==0){
                     role_id += $(':input[name="nsChk"]:checked').eq(i).val();
@@ -220,7 +217,6 @@
             }
             $(':input[name="role_id"]').val(role_id);
             $(':input[name="role_name"]').val(role_name);
-            layer.closeAll();
         });
         //搜索职位相关-检索
         $('.nsSearchSubmit').click(function(){

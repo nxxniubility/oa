@@ -193,11 +193,14 @@
 <script>
     $(function(){
         //数据提交
-       $('.newDispostSub').click(function(){
+        $('.newDispostSub').click(function(){
            var temp_user = $(':input[name="temp_user"]').val();
            var temp_system = $(':input[name="temp_system"]').val();
            subtn(temp_user,temp_system);
-       });
+        });
+        $('.nonCenterBtn').click(function(){
+            $("#popup4").colorbox.close();
+        });
         //  重新分配 star
         $('.getsystembtn').on('click', function(){
             getSystemList();

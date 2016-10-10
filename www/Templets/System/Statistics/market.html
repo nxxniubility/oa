@@ -39,10 +39,10 @@
 										<foreach name="v['children']" item="v2" key="k2">
 											<div class="show_city_cont active">
 												<div class="section">
-													<span id="zone_{$v2.zone_id}" data-value="{$v2.zone_id}">{$v2.name}</span>
+													<span id="zone_{$v2.zone_id}" data-level="{$v2.level}" data-value="{$v2.zone_id}">{$v2.name}</span>
 													<ul class="city_partition clearfix">
 														<foreach name="v2.children" item="v3" key="k3">
-															<li><a href="javascript:;" id="zone_{$v3.zone_id}" data-value="{$v3.zone_id}">{$v3.name}</a></li>
+															<li><a href="javascript:;" data-level="{$v3.level}" id="zone_{$v3.zone_id}" data-value="{$v3.zone_id}">{$v3.name}</a></li>
 														</foreach>
 													</ul>
 												</div>
@@ -770,5 +770,14 @@
 		<script src="__PUBLIC__/js/highcharts/highcharts.js"></script>
 		<script src="__PUBLIC__/js/highcharts/modules/exporting.js"></script>
 		<script src="__PUBLIC__/js/system.market.js?v=20160927"></script>
+		<script>
+			var my_id = "{$data.my_zone_id}";
+			if($('#zone_'+my_id).attr('data-level')==3){
+//				$('#zone_'+my_id).hide().next().hide();
+			}else if($('#zone_'+my_id).attr('data-level')==4){
+				$('.seach_city_show').find('span[data-level="3"]').attr('data-value','');
+				$('#zone_'+my_id).parents('li').siblings().hide();
+			}
+		</script>
 	</body>
 </html>

@@ -766,25 +766,41 @@ class SystemUserController extends BaseController
         $channeList = $channelMain->getList();
         $channelList = $channeList['data']['data'];
         $newChannelArr = array();
-        foreach($channelList as $k=>$v){
+        foreach ($channelList as $k => $v) {
             $newChannelArr[$v['channelname']][] = $v['channel_id'];
-            if(!empty($v['children'])){
-                foreach($v['children'] as $k2=>$v2){
+            if (!empty($v['children'])) {
+                foreach ($v['children'] as $k2 => $v2) {
                     $newChannelArr[$v['channelname']][] = $v2['channel_id'];
                 }
             }
         }
+//        foreach ($systemList as $key => $sysUser) {
+//            $i=0;
+//            foreach($newChannelArr as $k2=>$v2){
+//                $systemList[$key]['count'][$i]['channelname'] = $k2;
+//                $where['channel_id'] = array('IN',$v2);
+//                $where['system_user_id'] = $sysUser['system_user_id'];
+//                $where['date'] = date('Ymd');
+//                $countA = D('UserAllocationLogs')->where($where)->sum('infoqualitya');
+//                $countB = D('UserAllocationLogs')->where($where)->sum('infoqualityb');
+//                $countC = D('UserAllocationLogs')->where($where)->sum('infoqualityc');
+//                $countD = D('UserAllocationLogs')->where($where)->sum('infoqualityd');
+//                $systemList[$key]['count'][$i]['countA'] = (!empty($countA))?$countA:0;
+//                $systemList[$key]['count'][$i]['countB'] = (!empty($countB))?$countB:0;
+//                $systemList[$key]['count'][$i]['countC'] = (!empty($countC))?$countC:0;
+//                $systemList[$key]['count'][$i]['countD'] = (!empty($countD))?$countD:0;
+//                $i++;
+//            }
+//        }
         foreach ($systemList as $key => $sysUser) {
             $i=0;
             foreach($newChannelArr as $k2=>$v2){
                 $systemList[$key]['count'][$i]['channelname'] = $k2;
                 $where['channel_id'] = array('IN',$v2);
-                $where['system_user_id'] = $sysUser['system_user_id'];
-                $where['date'] = date('Ymd');
-                $countA = D('UserAllocationLogs')->where($where)->sum('infoqualitya');
-                $countB = D('UserAllocationLogs')->where($where)->sum('infoqualityb');
-                $countC = D('UserAllocationLogs')->where($where)->sum('infoqualityc');
-                $countD = D('UserAllocationLogs')->where($where)->sum('infoqualityd');
+                $countA = D('DataLogs')->where(array('infoquality'=>1,'system_user_id'=>$sysUser['system_user_id'],'channel_id'=>$where['channel_id'],'operattype'=>array('IN','1,2,3'),'logtime'=>array('EGT',strtotime(date('Y-m-d'))) ))->count();
+                $countB = D('DataLogs')->where(array('infoquality'=>2,'system_user_id'=>$sysUser['system_user_id'],'channel_id'=>$where['channel_id'],'operattype'=>array('IN','1,2,3'),'logtime'=>array('EGT',strtotime(date('Y-m-d'))) ))->count();
+                $countC = D('DataLogs')->where(array('infoquality'=>3,'system_user_id'=>$sysUser['system_user_id'],'channel_id'=>$where['channel_id'],'operattype'=>array('IN','1,2,3'),'logtime'=>array('EGT',strtotime(date('Y-m-d'))) ))->count();
+                $countD = D('DataLogs')->where(array('infoquality'=>4,'system_user_id'=>$sysUser['system_user_id'],'channel_id'=>$where['channel_id'],'operattype'=>array('IN','1,2,3'),'logtime'=>array('EGT',strtotime(date('Y-m-d'))) ))->count();
                 $systemList[$key]['count'][$i]['countA'] = (!empty($countA))?$countA:0;
                 $systemList[$key]['count'][$i]['countB'] = (!empty($countB))?$countB:0;
                 $systemList[$key]['count'][$i]['countC'] = (!empty($countC))?$countC:0;
@@ -792,6 +808,7 @@ class SystemUserController extends BaseController
                 $i++;
             }
         }
+
         return $systemList;
     }
 

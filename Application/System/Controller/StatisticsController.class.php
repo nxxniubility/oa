@@ -30,8 +30,9 @@ class StatisticsController extends SystemController
             $request['endtime'] = date('Y/m/d');
         }
         $where['daytime'] = $request['startime'].','.$request['endtime'];
-        $where['zone_id'] = $request['zone_id'];
+        $where['zone_id'] = $request['zone_id']?$request['zone_id']:$this->system_user['zone_id'];
         $where['role_id'] = $request['role_id'];
+        $data['my_zone_id'] = $this->system_user['zone_id'];
         //获取接口数据
         $data_market = $DataService->getDataMarket($where);
         $data['dataMarket'] = $data_market['data'];

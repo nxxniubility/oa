@@ -29,6 +29,13 @@ class RecoverController extends BaseController {
             $abandons = $UserAbandonDB->getAbandonList(array('user_abandon_id'=>$abandon_id));
         }else{
             $abandons = $UserAbandonDB->getAbandonList(array('status'=>1,'start'=>1));
+            //前两天是否节假日？ -- 自动回收保护期限
+            $get_holiday_auto = D('Api','Service')->getApiHoliday(date('Ymd',strtotime('-3 day')));
+            if($get_holiday_auto['code']==0){
+                if($get_holiday_auto['data']==2){
+                    echo  '失败原因:今天在节假日保护期限，停止规则进行自动回收！;'.'执行时间:'.date('Y-m-d H:i:s');exit();
+                }
+            }
         }
         
         //获取所有渠道
@@ -159,13 +166,14 @@ class RecoverController extends BaseController {
                     $callbackDataAdd['status'] = 1;
                     $callbackDataAdd['callbacktime'] = $nowtime;
                     $callbackDataAdd['nexttime'] = $nowtime;
+                    $callbackDataAdd['callbacktype'] = 31;
                     D('UserCallback')->add($callbackDataAdd);
                     //添加数据记录
-//                    $dataLog['operattype'] = '7';
-//                    $dataLog['operator_user_id'] = 0;
-//                    $dataLog['user_id'] = $value['user_id'];
-//                    $dataLog['logtime'] = time();
-//                    $DataService->addDataLogs($dataLog);
+                    $dataLog['operattype'] = '7';
+                    $dataLog['operator_user_id'] = 0;
+                    $dataLog['user_id'] = $value['user_id'];
+                    $dataLog['logtime'] = time();
+                    $DataService->addDataLogs($dataLog);
                 }
             }
             $falg_msg[] = '已成功回收:'.$result.'条数据，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');

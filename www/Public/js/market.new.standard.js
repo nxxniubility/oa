@@ -17,6 +17,8 @@ $(function(){
     });
     //提交 添加数据
     $('.list_confirm').click(function(){
+        var re = /^[0-9]+.[0-9]*$/;
+        var pattern=/[`~!@#\$%\^\&\*\(\)_\+<>\?:"\{\},\.\\\/;'\[\。\，\]]/im;
         var _standard_name = $(':input[name="standard_name"]').val();
         var _department_id = $(':input[name="department_id"]').val();
         var _standard_remark = $(':input[name="standard_remark"]').val();
@@ -26,8 +28,10 @@ $(function(){
             _option_warn = '';
         if($('.standard_list').children('li').length==0){
             layer.msg('请添加规则内容',{icon:2});return false;
-        }else if(_standard_name.length==0){
+        }else if(trim(_standard_name).length==0){
             layer.msg('请添加标准名称',{icon:2});return false;
+        }else if(pattern.test(_standard_name)){
+            layer.msg('标准名称不能含有特殊字符',{icon:2});return false;
         }else if(_department_id==0){
             layer.msg('请选择部门',{icon:2});return false;
         };
@@ -35,10 +39,13 @@ $(function(){
             _option_name = $(this).attr('class');
             _option_num = $(this).find(':input[name="option_num"]').val();
             _option_warn = $(this).find(':input[name="than_'+_option_name+'"]:checked').val();
-            if(_option_num.length>6 || _option_num.length==0){
-                layer.msg('标准数值不能为空且不能大于6为数字',{icon:2});
+            if(!re.test(_option_num) || trim(_option_num).length==0){
+                layer.msg('标准数值不能为空且标准数值只能是正整数！',{icon:2});
                 _option_objs = '';return false;
-            };
+            }else if(_option_num.length>6 ){
+                layer.msg('不能大于6位数字！',{icon:2});
+                _option_objs = '';return false;
+            }
             _option_objs.push({
                 'option_name':_option_name,
                 'option_num':_option_num,
@@ -77,3 +84,9 @@ function getLiBody(id, name){
         $('.standard_list .'+id).find('label').eq(1).attr('for', 'higher_than_'+id).children('input').attr('id', 'higher_than_'+id).attr('name', 'than_'+id);
     };
 };
+//删除左右两端的空格
+function trim(str){
+    if(str.length>0){
+        return str.replace(/(^\s*)|(\s*$)/g, "");
+    }
+}
