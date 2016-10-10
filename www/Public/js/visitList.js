@@ -15,8 +15,11 @@ var choice=function(e,t){
 			            var end_time=el.siblings(".end").val();
 			            var url = el.siblings(".end").attr('data-url');
 			            if(end_time.length>0){
-			                location.href=url+start_time+'@'+end_time;
-			            }
+                            $(':input[name="visittime"]').val(start_time+'@'+end_time);
+			                //location.href=url+start_time+'@'+end_time;
+			            }else{
+                            $(':input[name="visittime"]').val(start_time+'@');
+                        }
 			        }else if(el.hasClass("end")){
 			            var start_time=el.siblings(".start").val();
 			            var end_time=el.val();
@@ -24,7 +27,8 @@ var choice=function(e,t){
 			                var myDate = new Date();
 			                start_time = myDate.getFullYear()+'/'+myDate.getMonth()+'/'+myDate.getDate();
 			            }
-			            location.href=el.attr('data-url')+start_time+'@'+end_time;
+                        $(':input[name="visittime"]').val(start_time+'@'+end_time);
+			            //location.href=el.attr('data-url')+start_time+'@'+end_time;
 			        }
 			    },
 			});
