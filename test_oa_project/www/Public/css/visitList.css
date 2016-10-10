@@ -105,6 +105,14 @@
 /*1010*/
 /*其他*/
 .imCont {width:auto;}
+/*.visit_confirm, .visit_reset {width:98px;height:30px;line-height:30px;}*/
+
+.visit_confirm, .visit_reset {width:100px;height:30px;line-height:30px;margin-right:20px;text-align:center;border:none;cursor:pointer;}
+.visit_confirm {color:#fff;background:#53b567;}
+.visit_reset {color:#333;background:#dbdbdb;}
+.visit_confirm:hover {background:#4da45e;}
+.visit_reset:hover {background:#c8c8c8;}
+
 /*筛选部分*/
 .p{position:relative;line-height:45px;width:auto;background-color:#f5f6fa;color:#9e9e9e;padding-left:15px;}
 
@@ -130,7 +138,7 @@
 .Filter .frame1 li a{background-color: #53b567; color: #fff; float: left; line-height: 30px; padding: 2px 7px; text-align: center; margin-right: 10px; margin-bottom: 10px;}
 .arrowFather1{width: 100%;}
 .arrowFather{width: 100%;}
-.arrow, .arrow1{width: 150px; border:1px solid #e8e8e8; border-top-color: #fff; margin: -1px auto 0; padding: 5px 0; color: #6b6b6b; text-align: center; cursor: pointer;}
+.arrow, .arrow1{width:150px;border:1px solid #e8e8e8; border-top-color: #fff; margin: -1px auto 0; color: #6b6b6b; text-align: center; cursor: pointer;}
 .arrow span, .arrow1 span {float:none;}
 .arrow1 span:hover { color: #53b567;}
 .arrow i, .arrow1 i { display: inline-block; width: 10px; height: 4px; margin: 0 0 2px 5px; background: url(../images/c_saixuan.png) no-repeat;}
