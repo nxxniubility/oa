@@ -70,9 +70,6 @@ class ManagementController extends SystemController
     */
     public function cahceList()
     {
-        $UserService = new UserService();
-        $UserService->data=$data;
-        $UserService->addUser();
         $data['path_Data'] = $this->getpath('Runtime/Data');
         $data['path_Cache'] = $this->getpath('Runtime/Cache');
         $this->assign('data', $data);
@@ -155,9 +152,9 @@ class ManagementController extends SystemController
         //获取数据
         $data = I("post.");
         if($data['level']=='dir'){
-            $reflag = $this->deldir(RUNTIME_PATH.$data['path']);
+            $reflag = $this->deldir('../'.$data['path']);
         }else{
-            $reflag = unlink(RUNTIME_PATH.$data['path']);
+            $reflag = unlink('../'.$data['path']);
         }
         if($reflag!==false){
             $this->ajaxReturn('0', '缓存删除成功');

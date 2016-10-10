@@ -472,6 +472,8 @@ class DataService extends BaseService
         if(empty($where['standard_name'])) return array('code'=>201,'msg'=>'名称不能为空');
         if(empty($where['department_id'])) return array('code'=>202,'msg'=>'部门ID不能为空');
         if(empty($where['option_objs'])) return array('code'=>202,'msg'=>'规则内容不能为空');
+        $is_department = D('MarketStandard')->getFind(array('standard_id'=>array('NEQ',$where['standard_id']),'department_id'=>$where['department_id']));
+        if(!empty($is_department))return array('code'=>100,'msg'=>'该部门合格标准已存在，无法重复添加！');
         $_standard_id = $where['standard_id'];
         $_standard_data['standard_name'] = $where['standard_name'];
         $_standard_data['department_id'] = $where['department_id'];

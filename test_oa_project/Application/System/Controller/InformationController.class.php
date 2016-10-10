@@ -137,7 +137,6 @@ class InformationController extends SystemController
             }elseif($request['type']=='del'){
                 $reflag = D('SystemUser','Service')->delCallNumber($request);
             }elseif($request['type']=='start'){
-                $request['number_start'] = 1;
                 $reflag = D('SystemUser','Service')->startCallNumber($request);
             }
             if($reflag['code']==0) $this->ajaxReturn(0, '操作成功');

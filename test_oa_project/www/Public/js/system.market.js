@@ -54,14 +54,16 @@ function centralAssignment(){
 //  城市赋值
 function cityAssignment(){
 	$(document).on('click', '.show_city_cont span', function(){
-	var coreTxt = $.trim($(this).text()),
-		cityShow = $(this).closest('.seach_city_show'),
-		finalZone = $(this).closest('.search_region');
-	
-		finalZone.find('.city_title em').text(coreTxt);
-		cityShow.addClass('dn');
-		mask.hide();
-		$(':input[name="zone_id"]').val($(this).attr('data-value'));
+		if($(this).attr('data-value')!=''){
+			var coreTxt = $.trim($(this).text()),
+				cityShow = $(this).closest('.seach_city_show'),
+				finalZone = $(this).closest('.search_region');
+
+			finalZone.find('.city_title em').text(coreTxt);
+			cityShow.addClass('dn');
+			mask.hide();
+			$(':input[name="zone_id"]').val($(this).attr('data-value'));
+		};
 	});
 }
 

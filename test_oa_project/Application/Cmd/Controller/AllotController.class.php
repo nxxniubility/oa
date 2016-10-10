@@ -296,40 +296,41 @@ class AllotController extends BaseController {
                 foreach ($arrIds as $arrkey1 => $arrvalue1){
                     $callbackDataAdd = array();
                     $callbackDataAdd['user_id'] = $arrvalue1;
-                    $callbackDataAdd['system_user_id'] = $allotvalue['system_user_id'];
+                    $callbackDataAdd['system_user_id'] = 0;
                     $callbackDataAdd['remark'] = '系统分配';
                     $callbackDataAdd['status'] = 1;
                     $callbackDataAdd['callbacktime'] = $nowtime;
                     $callbackDataAdd['nexttime'] = $nowtime;
+                    $callbackDataAdd['callbacktype'] = 30;
                     D('UserCallback')->add($callbackDataAdd);
                     //添加数据记录
-//                    $dataLog['operattype'] = '2';
-//                    $dataLog['operator_user_id'] = 0;
-//                    $dataLog['user_id'] = $arrvalue1;
-//                    $dataLog['logtime'] = time();
-//                    $DataService->addDataLogs($dataLog);
+                    $dataLog['operattype'] = '2';
+                    $dataLog['operator_user_id'] = 0;
+                    $dataLog['user_id'] = $arrvalue1;
+                    $dataLog['logtime'] = time();
+                    $DataService->addDataLogs($dataLog);
                 }
                 
-                foreach($allotvalue['allotnumchannel'] as $channelkey => $channelvalue){
-                    $logsdata['channel_id'] = $channelkey;
-                    $logsdata['infoqualitya']  = empty($channelvalue['1']) ? 0 : $channelvalue['1'];
-                    $logsdata['infoqualityb']  =  empty($channelvalue['2']) ? 0 : $channelvalue['2'];
-                    $logsdata['infoqualityc']  =  empty($channelvalue['3']) ? 0 : $channelvalue['3'];
-                    $logsdata['infoqualityd']  =  empty($channelvalue['4']) ? 0 : $channelvalue['4'];
-                    $logsdata['date'] = $dateYMD;
-                    $logsdata['system_user_id'] = $allotvalue['system_user_id'];
-            
-                    $log = $zl_user_allocation_logsdb->where(array('channel_id'=>$logsdata['channel_id'],'date'=>$dateYMD,'system_user_id'=>$allotvalue['system_user_id']))->find();
-                    if(!empty($log)){
-                        $log['infoqualitya'] += $logsdata['infoqualitya'];
-                        $log['infoqualityb'] += $logsdata['infoqualityb'];
-                        $log['infoqualityc'] += $logsdata['infoqualityc'];
-                        $log['infoqualityd'] += $logsdata['infoqualityd'];
-                        $zl_user_allocation_logsdb->save($log);
-                    }else{
-                        $zl_user_allocation_logsdb->add($logsdata);
-                    }
-                }
+//                foreach($allotvalue['allotnumchannel'] as $channelkey => $channelvalue){
+//                    $logsdata['channel_id'] = $channelkey;
+//                    $logsdata['infoqualitya']  = empty($channelvalue['1']) ? 0 : $channelvalue['1'];
+//                    $logsdata['infoqualityb']  =  empty($channelvalue['2']) ? 0 : $channelvalue['2'];
+//                    $logsdata['infoqualityc']  =  empty($channelvalue['3']) ? 0 : $channelvalue['3'];
+//                    $logsdata['infoqualityd']  =  empty($channelvalue['4']) ? 0 : $channelvalue['4'];
+//                    $logsdata['date'] = $dateYMD;
+//                    $logsdata['system_user_id'] = $allotvalue['system_user_id'];
+//
+//                    $log = $zl_user_allocation_logsdb->where(array('channel_id'=>$logsdata['channel_id'],'date'=>$dateYMD,'system_user_id'=>$allotvalue['system_user_id']))->find();
+//                    if(!empty($log)){
+//                        $log['infoqualitya'] += $logsdata['infoqualitya'];
+//                        $log['infoqualityb'] += $logsdata['infoqualityb'];
+//                        $log['infoqualityc'] += $logsdata['infoqualityc'];
+//                        $log['infoqualityd'] += $logsdata['infoqualityd'];
+//                        $zl_user_allocation_logsdb->save($log);
+//                    }else{
+//                        $zl_user_allocation_logsdb->add($logsdata);
+//                    }
+//                }
             }
             $falg_msg[] = '分配成功:'.$result.'条数据/每人，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');
         }
