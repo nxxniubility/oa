@@ -147,6 +147,13 @@ class StatisticsController extends SystemController
                                 $v1['redconversionratio'] = 1;
                             }
                         }
+                        if ($v3['option_name'] == 'chargebackratio') {
+                            if (($v1['chargebackratio']>$v3['option_num']) && ($v3['option_warn']==2)) {
+                                $v1['redchargebackratio'] = 1;
+                            }elseif (($v1['chargebackratio']<$v3['option_num']) && ($v3['option_warn']==1)) {
+                                $v1['redchargebackratio'] = 1;
+                            }
+                        }
                         if ($v3['option_name'] == 'totalratio') {
                             if (($v1['totalratio']>$v3['option_num']) && ($v3['option_warn']==2)) {
                                 $v1['redtotalratio'] = 1;
