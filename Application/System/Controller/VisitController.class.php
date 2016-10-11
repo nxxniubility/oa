@@ -133,7 +133,7 @@ class VisitController extends SystemController
                 }else{
                     $where[C('DB_PREFIX') .'user.'. $request['keyname']] = $request['search'];
                 }
-                $where[C('DB_PREFIX') . 'user.zone_id'] = null;
+                unset($where[C('DB_PREFIX') . 'user.zone_id']);
             }else{
 //                $where[C('DB_PREFIX') . 'user.attitude_id'] = 2;
 //                $where[C('DB_PREFIX') . 'user.visittime'] = array('NEQ',0);
@@ -144,7 +144,7 @@ class VisitController extends SystemController
                 }
                 if(!empty($request['visittime'])){
                     $_time = explode('@', str_replace('/', '-', $request['visittime']));
-                    $where[C('DB_PREFIX') . 'user.visittime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1].' 23:59'))), 'AND');
+                    $where[C('DB_PREFIX') . 'user.visittime'] = array(array('EGT', ($_time[0]==''?1: ($_time[0]== 'time' ? time() : strtotime($_time[0])) )), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1].' 23:59'))), 'AND');
                 }
             }
             $re_page = isset($request['page']) ? $request['page'] : 1;

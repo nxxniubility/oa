@@ -1,270 +1,407 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
-    <title>系统首页-{$siteinfo.sitename}</title>
-    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
-    <link rel="stylesheet" href="__PUBLIC__/js/layer/skin/layer.css">
-    <link rel="stylesheet" href="__PUBLIC__/css/regionlManagement.css">
-</head>
-<body>
-<div class="wrapBox">
-    <div class="regionCont">
-        <div class="regionContTop clearfix">
-            <div class="topTit l"><span class="masterList">节点管理</span></div>
-            <div class="topRight r clearfix">
-                <!--<a href="javascript:;" class="node_btn create">添加节点</a>-->
-            </div>
-        </div>
-        <div class="regionContMiddle">
-            <dl class="regionTit  clearfix">
-                <dt class="wOne regionSequence clearfix">
-                    <span>排序</span>
-                    <i class="oergList"></i>
-                </dt>
-                <dt class="wTwo regionSequence clearfix">
-                    <span>ID</span>
-                    <i class="oergList"></i>
-                </dt>
-                <dt class="wThr">节点名称</dt>
-                <dt class="wFou">操作</dt>
-            </dl>
-
-            <foreach name = "nodeList[1][children]" item="v" key="k">
-                <dl class="oneRegions clearfix">
-                    <dd class="wOne regionSequence clearfix">
-                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-                    </dd>
-                    <dd class="wTwo regionSequence clearfix">{$v.id}</dd>
-                    <dd class="wThr">{$v.name}({$v.title})</dd>
-                    <dd class="wFou osOperation clearfix">
-                        <a href="javascript:;" class="regionSelect"><i></i></a>
-                        <div class="otherOperation">
-                            <div class="triangle"></div>
-                            <div class="otherIcon" data-id="{$v.id}" data-level="2">
-                                <ul>
-                                    <li class="node_btn create">
-                                        <a href="javascript:;">
-                                            <span class="add"></span>
-                                            <em>添加控制器</em>
-                                        </a>
-                                    </li>
-                                    <li class="node_btn edit">
-                                        <a href="javascript:;">
-                                            <span class="modify"></span>
-                                            <em>修改</em>
-                                        </a>
-                                    </li>
-                                    <li class="del_node_subtn">
-                                        <a href="javascript:;">
-                                            <span class="delete"></span>
-                                            <em>删除</em>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                    </dd>
-                </dl>
-                <!-- controller-->
-                    <foreach name = "v['children']" item = "v2">
-                        <dl class="secondaryZoneRow clearfix  ">
-                            <dd class="wOne regionSequence clearfix">
-                                <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-                            </dd>
-                            <dd class="wTwo regionSequence clearfix">{$v2.id}</dd>
-                            <dd class="wThr szName" data-name="{$v2.name}" data-title="{$v2.title}" data-display="{$v2.display}"><span {:$v2['display']==3?'style="color:green"':''}>{$v2.name}({$v2.title})</span></dd>
-                            <dd class="wFou szOperation clearfix">
-                                <a href="javascript:;" class="regionSelect"><i></i></a>
-                                <div class="otherOperation">
-                                    <div class="triangle"></div>
-                                    <div class="otherIcon" data-id="{$v2.id}"  data-level="3">
-                                        <ul>
-                                            <li class="node_btn create">
-                                                <a href="javascript:;">
-                                                    <span class="add"></span>
-                                                    <em>添加方法</em>
-                                                </a>
-                                            </li>
-                                            <li class="node_btn edit">
-                                                <a href="javascript:;">
-                                                    <span class="modify"></span>
-                                                    <em>修改</em>
-                                                </a>
-                                            </li>
-                                            <li class="del_node_subtn">
-                                                <a href="javascript:;">
-                                                    <span class="delete"></span>
-                                                    <em>删除</em>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <if condition = "!empty($v2['children'])">
-                                    <span class="switchBtnShow" title="展开"  node-id="{$v2.id}" ><i></i></span>
-                                </if>
-                            </dd>
-                        </dl>
-                            <!-- function-->
-                            <foreach name = "v2['children']" item="v3">
-                                <dl class="threeRegionsRow dn clearfix  parent_{$v2.id}">
-                                    <dd class="wOne regionSequence clearfix">
-                                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-                                    </dd>
-                                    <dd class="wTwo regionSequence clearfix">{$v3.id}</dd>
-                                    <dd class="wThr trName" data-name="{$v3.name}" data-title="{$v3.title}" data-display="{$v3.display}"><span {:$v3['display']==3?'style="color:green"':''}>{$v3.name}({$v3.title})</span></dd>
-                                    <dd class="wFou trOperation clearfix"  >
-                                        <a href="javascript:;" class="regionSelect"><i></i></a>
-                                        <div class="otherOperation">
-                                            <div class="triangle"></div>
-                                            <div class="otherIcon" data-id="{$v3.id}" data-level="4">
-                                                <ul>
-                                                    <li class="node_btn edit">
-                                                        <a href="javascript:;">
-                                                            <span class="modify"></span>
-                                                            <em>修改</em>
-                                                        </a>
-                                                    </li>
-                                                    <li class="del_node_subtn">
-                                                        <a href="javascript:;">
-                                                            <span class="delete"></span>
-                                                            <em>删除</em>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <if condition="!empty($v3['children'])">
-                                            <span class="switchBtnShow" title="展开"  zone-id="{$v3.id}" ><i></i></span>
-                                        </if>
-                                    </dd>
-                                </dl>
-                            </foreach>
-                    </foreach>
-            </foreach>
-        </div>
-    </div>
-</div>
-<input type="hidden" name="temp_id" autocomplete="off">
-<input type="hidden" name="temp_pid" autocomplete="off">
-<input type="hidden" name="temp_type" autocomplete="off">
-<input type="hidden" name="temp_level" autocomplete="off">
-
-<!-- 弹窗(弹窗名字可修改) S  -->
-<div class="zidingyi_box">
-
-	<div class="z_rows clearfix">
-		<span><i>*</i>节点名称：</span>
-		<input type="text" class="z_inp"  name="node_title">
-	</div>
-    <div class="z_rows clearfix">
-        <span><i>*</i>节点方法名：</span>
-        <input type="text" class="z_inp" name="node_name">
-    </div>
-    <div class="z_rows clearfix">
-        <span><i>*</i>导航显示：</span>
-        <label class="showNav"><input name="node_display" type="radio" value="3" checked="checked"/>显示 </label>
-        <label><input name="node_display" type="radio" value="1" />隐藏 </label>
-    </div>
-	<div class="z_rows clearfix">
-		<span><i>*</i>节点排序：</span>
-		<input type="text" class="z_inp" name="node_sort" value="0">
-	</div>
-	<div class="z_rows txt_center mt35 clearfix">
-		<input type="button" value="确定" class="z_confirm node_subtn" >
-		<input type="button" value="取消" class="z_cancel" >
-	</div>
-</div>
-<!-- 弹窗(弹窗名字可修改) E  -->
-
-<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-<script src="__PUBLIC__/js/layer/layer.js"></script>
-<script src="__PUBLIC__/js/nodeList.js"></script>
-<script src="__PUBLIC__/js/common_ajax.js"></script>
-<script>
-$(function(){
-    var create_node_href = "{:U('System/Node/createnode')}";
-    var edit_node_href = "{:U('System/Node/editnode')}";
-    var del_node_href = "{:U('System/Node/delnode')}";
-    //显示弹窗
-    $('.node_btn').click(function(){
-        var id = $(this).parents('.otherIcon').attr('data-id');
-        var level = $(this).parents('.otherIcon').attr('data-level');
-        $(':input[name="temp_id"]').val(id);
-        $(':input[name="temp_level"]').val(level);
-
-        if($(this).hasClass('create')){
-            $(':input[name="temp_type"]').val('create');
-            var title = '添加节点';
-        }else{
-            $(':input[name="temp_type"]').val('edit');
-            var title = '修改节点';
-            var info = $(this).parents('.wFou').siblings('.wThr');
-            $(':input[name="node_name"]').val(info.attr('data-name'));
-            $(':input[name="node_title"]').val(info.attr('data-title'));
-            $(':input[name="node_display"][value="'+info.attr('data-display')+'"]').attr("checked",true);
-        }
-        layer.open({
-            type: 1,					//  页面层
-            title: title,			//	显示标题栏
-            area: ['404px','366px'],
-            shade: .6,					//	遮罩
-            time: 0,					//  关闭自动关闭
-            shadeClose: false,			//	遮罩控制关闭层
-            closeBtn: false,			//	不显示关闭按钮
-            shift: 1,					//	出现动画
-            content: $(".zidingyi_box") 	//  加载主体内容
-        });
-        $('.z_cancel').on('click',function(){
-            layer.closeAll(); 		// 关闭
-        });
-    });
-    //提交
-    $('.node_subtn').click(function(){
-        var type = $(':input[name="temp_type"]').val();
-        var level = $(':input[name="temp_level"]').val();
-        if(type=='create'){
-            var data = {
-                pid : $(':input[name="temp_id"]').val(),
-                name : $(':input[name="node_name"]').val(),
-                title : $(':input[name="node_title"]').val(),
-                display : $(':input[name="node_display"]:checked').val(),
-                level : level
-            };
-            common_ajax2(data, create_node_href, 'reload');
-        }else if(type=='edit'){
-            var data = {
-                id : $(':input[name="temp_id"]').val(),
-                name : $(':input[name="node_name"]').val(),
-                title : $(':input[name="node_title"]').val(),
-                display : $(':input[name="node_display"]:checked').val(),
-            };
-            common_ajax2(data, edit_node_href, 'reload');
-        }
-    });
-    //删除 提交
-    $('.del_node_subtn').click(function(){
-        var id = $(this).parents('.otherIcon').attr('data-id');
-        layer.confirm('确定要删除该节点？', {
-            btn: ['确定','取消'] //按钮
-        }, function(){
-            var data = {
-                id : id
-            };
-            common_ajax2(data, del_node_href, 'reload');
-        }, function(){});
-    })
-});
-
-
-</script>
-
-
-
-
-
-</body>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+	    <title>系统首页-{$siteinfo.sitename}</title>
+	    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+	    <link rel="stylesheet" href="__PUBLIC__/js/layer/skin/layer.css">
+	    <link rel="stylesheet" href="__PUBLIC__/css/system.node.css">
+	</head>
+	<body>
+		<div class="wrapBox">
+		    <div class="regionCont">
+		        <div class="regionContTop clearfix">
+		            <div class="topTit l"><span class="masterList">节点管理</span></div>
+		            <div class="topRight r clearfix">
+		            </div>
+		        </div>
+		        
+		        <!--<table cellpadding="0" cellspacing="0" id="nodeTable">
+		        	<tr>
+		        		<th class="firItem">
+		        			<span>ID</span>
+		                    <i class="oergList"></i>
+		        		</th>
+		        		<th>节点名称</th>
+		        		<th>操作</th>
+		        	</tr>
+		        	<foreach name = "nodeList[1][children]" item="v" key="k">
+		        		<tr>
+		        			<td class="firItem">{$v.id}</td>
+		        			<td>{$v.name}({$v.title})</td>
+		        			<td class="osOperation">
+		        				<a href="javascript:;" class="regionSelect"><i></i></a>
+		                        <div class="otherOperation">
+		                            <div class="triangle"></div>
+		                            <div class="otherIcon" data-id="{$v.id}" data-level="2">
+		                                <ul>
+		                                    <li class="node_btn create">
+		                                        <a href="javascript:;">
+		                                            <span class="add"></span>
+		                                            <em>添加控制器</em>
+		                                        </a>
+		                                    </li>
+		                                    <li class="node_btn edit">
+		                                        <a href="javascript:;">
+		                                            <span class="modify"></span>
+		                                            <em>修改</em>
+		                                        </a>
+		                                    </li>
+		                                    <li class="del_node_subtn">
+		                                        <a href="javascript:;">
+		                                            <span class="delete"></span>
+		                                            <em>删除</em>
+		                                        </a>
+		                                    </li>
+		                                </ul>
+		                            </div>
+		                        </div>
+		        			</td>
+		        		</tr>
+		        		
+		        			<!-- controller 
+		        			<foreach name = "v['children']" item = "v2">
+		        				<tr>
+				        			<td class="firItem">{$v2.id}</td>
+				        			<td data-name="{$v2.name}" data-title="{$v2.title}" data-display="{$v2.display}"><span {:$v2['display']==3?'style="color:green"':''}>{$v2.name}({$v2.title})</span></td>
+				        			<td class="osOperation">
+				        				<a href="javascript:;" class="regionSelect"><i></i></a>
+				                        <div class="otherOperation">
+				                            <div class="triangle"></div>
+				                            <div class="otherIcon" data-id="{$v2.id}"  data-level="3">
+				                                <ul>
+				                                    <li class="node_btn create">
+				                                        <a href="javascript:;">
+				                                            <span class="add"></span>
+				                                            <em>添加控制器</em>
+				                                        </a>
+				                                    </li>
+				                                    <li class="node_btn edit">
+				                                        <a href="javascript:;">
+				                                            <span class="modify"></span>
+				                                            <em>修改</em>
+				                                        </a>
+				                                    </li>
+				                                    <li class="del_node_subtn">
+				                                        <a href="javascript:;">
+				                                            <span class="delete"></span>
+				                                            <em>删除</em>
+				                                        </a>
+				                                    </li>
+				                                </ul>
+				                            </div>
+				                        </div>
+				        			</td>
+				        		</tr>
+				        			<!-- function 
+		                            <foreach name = "v2['children']" item="v3">
+		                            	<tr>
+		                            		<th class="firItem">{$v3.id}</th>
+		                            		<th data-name="{$v3.name}" data-title="{$v3.title}" data-display="{$v3.display}"><span {:$v3['display']==3?'style="color:green"':''}>{$v3.name}({$v3.title})</span></th>
+		                            		<th class="trOperation">
+		                            			<a href="javascript:;" class="regionSelect"><i></i></a>
+		                                        <div class="otherOperation">
+		                                            <div class="triangle"></div>
+		                                            <div class="otherIcon" data-id="{$v3.id}" data-level="4">
+		                                                <ul>
+		                                                    <li class="node_btn edit">
+		                                                        <a href="javascript:;">
+		                                                            <span class="modify"></span>
+		                                                            <em>修改</em>
+		                                                        </a>
+		                                                    </li>
+		                                                    <li class="del_node_subtn">
+		                                                        <a href="javascript:;">
+		                                                            <span class="delete"></span>
+		                                                            <em>删除</em>
+		                                                        </a>
+		                                                    </li>
+		                                                </ul>
+		                                            </div>
+		                                        </div>
+		                                        <if condition="!empty($v3['children'])">
+		                                            <span class="switchBtnShow" title="展开"  zone-id="{$v3.id}" ><i></i></span>
+		                                        </if>
+		                            		</th>
+		                            	</tr>
+		                                <dl class="threeRegionsRow dn clearfix  parent_{$v2.id}">
+		                                    <dd class="wOne regionSequence clearfix">
+		                                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+		                                    </dd>
+		                                    <dd class="wTwo regionSequence clearfix">{$v3.id}</dd>
+		                                    <dd class="wThr trName" data-name="{$v3.name}" data-title="{$v3.title}" data-display="{$v3.display}"><span {:$v3['display']==3?'style="color:green"':''}>{$v3.name}({$v3.title})</span></dd>
+		                                    <dd class="wFou trOperation clearfix"  >
+		                                        <a href="javascript:;" class="regionSelect"><i></i></a>
+		                                        <div class="otherOperation">
+		                                            <div class="triangle"></div>
+		                                            <div class="otherIcon" data-id="{$v3.id}" data-level="4">
+		                                                <ul>
+		                                                    <li class="node_btn edit">
+		                                                        <a href="javascript:;">
+		                                                            <span class="modify"></span>
+		                                                            <em>修改</em>
+		                                                        </a>
+		                                                    </li>
+		                                                    <li class="del_node_subtn">
+		                                                        <a href="javascript:;">
+		                                                            <span class="delete"></span>
+		                                                            <em>删除</em>
+		                                                        </a>
+		                                                    </li>
+		                                                </ul>
+		                                            </div>
+		                                        </div>
+		                                        <if condition="!empty($v3['children'])">
+		                                            <span class="switchBtnShow" title="展开"  zone-id="{$v3.id}" ><i></i></span>
+		                                        </if>
+		                                    </dd>
+		                                </dl>
+		                            </foreach>
+		        			</foreach>
+		        	</foreach>
+		        </table>-->
+		        
+		        <div class="regionContMiddle">
+		            <dl class="regionTit  clearfix">
+		                <dt class="wOne regionSequence clearfix">
+		                    <span>排序</span>
+		                    <i class="oergList"></i>
+		                </dt>
+		                <dt class="wTwo regionSequence clearfix">
+		                    <span>ID</span>
+		                    <i class="oergList"></i>
+		                </dt>
+		                <dt class="wThr">节点名称</dt>
+		                <dt class="wFou">操作</dt>
+		            </dl>
+		
+		            <foreach name = "nodeList[1][children]" item="v" key="k">
+		                <dl class="oneRegions clearfix">
+		                    <dd class="wOne regionSequence clearfix">
+		                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+		                    </dd>
+		                    <dd class="wTwo regionSequence clearfix">{$v.id}</dd>
+		                    <dd class="wThr">{$v.name}({$v.title})</dd>
+		                    <dd class="wFou osOperation clearfix">
+		                        <a href="javascript:;" class="regionSelect"><i></i></a>
+		                        <div class="otherOperation">
+		                            <div class="triangle"></div>
+		                            <div class="otherIcon" data-id="{$v.id}" data-level="2">
+		                                <ul>
+		                                    <li class="node_btn create">
+		                                        <a href="javascript:;">
+		                                            <span class="add"></span>
+		                                            <em>添加控制器</em>
+		                                        </a>
+		                                    </li>
+		                                    <li class="node_btn edit">
+		                                        <a href="javascript:;">
+		                                            <span class="modify"></span>
+		                                            <em>修改</em>
+		                                        </a>
+		                                    </li>
+		                                    <li class="del_node_subtn">
+		                                        <a href="javascript:;">
+		                                            <span class="delete"></span>
+		                                            <em>删除</em>
+		                                        </a>
+		                                    </li>
+		                                </ul>
+		                            </div>
+		                        </div>
+		
+		                    </dd>
+		                </dl>
+		                <!--controller-->
+		                    <foreach name = "v['children']" item = "v2">
+		                        <dl class="secondaryZoneRow clearfix  ">
+		                            <dd class="wOne regionSequence clearfix">
+		                                <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+		                            </dd>
+		                            <dd class="wTwo regionSequence clearfix">{$v2.id}</dd>
+		                            <dd class="wThr szName" data-name="{$v2.name}" data-title="{$v2.title}" data-display="{$v2.display}"><span {:$v2['display']==3?'style="color:green"':''}>{$v2.name}({$v2.title})</span></dd>
+		                            <dd class="wFou szOperation clearfix">
+		                                <a href="javascript:;" class="regionSelect"><i></i></a>
+		                                <div class="otherOperation">
+		                                    <div class="triangle"></div>
+		                                    <div class="otherIcon" data-id="{$v2.id}"  data-level="3">
+		                                        <ul>
+		                                            <li class="node_btn create">
+		                                                <a href="javascript:;">
+		                                                    <span class="add"></span>
+		                                                    <em>添加方法</em>
+		                                                </a>
+		                                            </li>
+		                                            <li class="node_btn edit">
+		                                                <a href="javascript:;">
+		                                                    <span class="modify"></span>
+		                                                    <em>修改</em>
+		                                                </a>
+		                                            </li>
+		                                            <li class="del_node_subtn">
+		                                                <a href="javascript:;">
+		                                                    <span class="delete"></span>
+		                                                    <em>删除</em>
+		                                                </a>
+		                                            </li>
+		                                        </ul>
+		                                    </div>
+		                                </div>
+		                                <if condition = "!empty($v2['children'])">
+		                                    <span class="switchBtnShow" title="展开"  node-id="{$v2.id}" ><i></i></span>
+		                                </if>
+		                            </dd>
+		                        </dl>
+		                            <!--function-->
+		                            <foreach name = "v2['children']" item="v3">
+		                                <dl class="threeRegionsRow dn clearfix  parent_{$v2.id}">
+		                                    <dd class="wOne regionSequence clearfix">
+		                                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+		                                    </dd>
+		                                    <dd class="wTwo regionSequence clearfix">{$v3.id}</dd>
+		                                    <dd class="wThr trName" data-name="{$v3.name}" data-title="{$v3.title}" data-display="{$v3.display}"><span {:$v3['display']==3?'style="color:green"':''}>{$v3.name}({$v3.title})</span></dd>
+		                                    <dd class="wFou trOperation clearfix"  >
+		                                        <a href="javascript:;" class="regionSelect"><i></i></a>
+		                                        <div class="otherOperation">
+		                                            <div class="triangle"></div>
+		                                            <div class="otherIcon" data-id="{$v3.id}" data-level="4">
+		                                                <ul>
+		                                                    <li class="node_btn edit">
+		                                                        <a href="javascript:;">
+		                                                            <span class="modify"></span>
+		                                                            <em>修改</em>
+		                                                        </a>
+		                                                    </li>
+		                                                    <li class="del_node_subtn">
+		                                                        <a href="javascript:;">
+		                                                            <span class="delete"></span>
+		                                                            <em>删除</em>
+		                                                        </a>
+		                                                    </li>
+		                                                </ul>
+		                                            </div>
+		                                        </div>
+		                                        <if condition="!empty($v3['children'])">
+		                                            <span class="switchBtnShow" title="展开"  zone-id="{$v3.id}" ><i></i></span>
+		                                        </if>
+		                                    </dd>
+		                                </dl>
+		                            </foreach>
+		                    </foreach>
+		            </foreach>
+		        </div>
+		    </div>
+		</div>
+		<input type="hidden" name="temp_id" autocomplete="off">
+		<input type="hidden" name="temp_pid" autocomplete="off">
+		<input type="hidden" name="temp_type" autocomplete="off">
+		<input type="hidden" name="temp_level" autocomplete="off">
+		
+		<!-- 弹窗 S  -->
+		<div class="node_box">
+			<div class="z_rows clearfix">
+				<span><i>*</i>节点名称：</span>
+				<input type="text" class="z_inp"  name="node_title">
+			</div>
+		    <div class="z_rows clearfix">
+		        <span><i>*</i>节点方法名：</span>
+		        <input type="text" class="z_inp" name="node_name">
+		    </div>
+		    <div class="z_rows clearfix">
+		        <span><i>*</i>导航显示：</span>
+		        <label class="showNav"><input name="node_display" type="radio" value="3" checked="checked"/>显示 </label>
+		        <label><input name="node_display" type="radio" value="1" />隐藏 </label>
+		    </div>
+			<div class="z_rows clearfix">
+				<span><i>*</i>节点排序：</span>
+				<input type="text" class="z_inp" name="node_sort" value="0">
+			</div>
+			<div class="z_rows txt_center mt35 clearfix">
+				<input type="button" value="确定" class="z_confirm node_subtn" >
+				<input type="button" value="取消" class="z_cancel" >
+			</div>
+		</div>
+		<!-- 弹窗 E  -->
+		
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/nodeList.js"></script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+		<script>
+			$(function(){
+			    var create_node_href = "{:U('System/Node/createnode')}";
+			    var edit_node_href = "{:U('System/Node/editnode')}";
+			    var del_node_href = "{:U('System/Node/delnode')}";
+			    //显示弹窗
+			    $('.node_btn').click(function(){
+			        var id = $(this).parents('.otherIcon').attr('data-id');
+			        var level = $(this).parents('.otherIcon').attr('data-level');
+			        $(':input[name="temp_id"]').val(id);
+			        $(':input[name="temp_level"]').val(level);
+			
+			        if($(this).hasClass('create')){
+			            $(':input[name="temp_type"]').val('create');
+			            var title = '添加节点';
+			        }else{
+			            $(':input[name="temp_type"]').val('edit');
+			            var title = '修改节点';
+			            var info = $(this).parents('.wFou').siblings('.wThr');
+			            $(':input[name="node_name"]').val(info.attr('data-name'));
+			            $(':input[name="node_title"]').val(info.attr('data-title'));
+			            $(':input[name="node_display"][value="'+info.attr('data-display')+'"]').attr("checked",true);
+			        }
+			        layer.open({
+			            type: 1,					//  页面层
+			            title: title,			//	显示标题栏
+			            area: ['404px','366px'],
+			            shade: .6,					//	遮罩
+			            time: 0,					//  关闭自动关闭
+			            shadeClose: false,			//	遮罩控制关闭层
+			            closeBtn: false,			//	不显示关闭按钮
+			            shift: 1,					//	出现动画
+			            content: $(".node_box") 	//  加载主体内容
+			        });
+			        $('.z_cancel').on('click',function(){
+			            layer.closeAll(); 		// 关闭
+			        });
+			    });
+			    //提交
+			    $('.node_subtn').click(function(){
+			        var type = $(':input[name="temp_type"]').val();
+			        var level = $(':input[name="temp_level"]').val();
+			        if(type=='create'){
+			            var data = {
+			                pid : $(':input[name="temp_id"]').val(),
+			                name : $(':input[name="node_name"]').val(),
+			                title : $(':input[name="node_title"]').val(),
+			                display : $(':input[name="node_display"]:checked').val(),
+			                level : level
+			            };
+			            common_ajax2(data, create_node_href, 'reload');
+			        }else if(type=='edit'){
+			            var data = {
+			                id : $(':input[name="temp_id"]').val(),
+			                name : $(':input[name="node_name"]').val(),
+			                title : $(':input[name="node_title"]').val(),
+			                display : $(':input[name="node_display"]:checked').val(),
+			            };
+			            common_ajax2(data, edit_node_href, 'reload');
+			        }
+			    });
+			    //删除 提交
+			    $('.del_node_subtn').click(function(){
+			        var id = $(this).parents('.otherIcon').attr('data-id');
+			        layer.confirm('确定要删除该节点？', {
+			            btn: ['确定','取消'] //按钮
+			        }, function(){
+			            var data = {
+			                id : id
+			            };
+			            common_ajax2(data, del_node_href, 'reload');
+			        }, function(){});
+			    })
+			});
+		</script>
+	</body>
 </html>

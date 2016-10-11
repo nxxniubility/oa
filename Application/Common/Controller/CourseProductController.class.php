@@ -19,8 +19,9 @@ class CourseProductController extends BaseController
             $courseAll = D('CourseProduct')->where(array('status'=>1))->select();
             F('Cache/Promote/courseProduct', $courseAll);
         }
-
-        return array('code'=>0, 'data'=>$courseAll);
+        $courseList['data'] = $courseAll;
+        $courseList = $this->disposeArray($courseList, 'course_product_id desc');
+        return array('code'=>0, 'data'=>$courseList['data']);
     }
 
     /*

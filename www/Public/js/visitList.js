@@ -12,7 +12,7 @@ var choice=function(e,t){
 			        el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
 			        if(el.hasClass("start")){
 			            var start_time=el.val();
-			            var end_time=el.siblings(".end").val();
+			            var end_time=$('#afTimeEnd').val();
 			            var url = el.siblings(".end").attr('data-url');
 			            if(end_time.length>0){
                             $(':input[name="visittime"]').val(start_time+'@'+end_time);
@@ -21,12 +21,12 @@ var choice=function(e,t){
                             $(':input[name="visittime"]').val(start_time+'@');
                         }
 			        }else if(el.hasClass("end")){
-			            var start_time=el.siblings(".start").val();
+			            var start_time=$('#afTimeStar').val();
 			            var end_time=el.val();
-			            if(!start_time){
-			                var myDate = new Date();
-			                start_time = myDate.getFullYear()+'/'+myDate.getMonth()+'/'+myDate.getDate();
-			            }
+			            //if(!start_time){
+			            //    var myDate = new Date();
+			            //    start_time = myDate.getFullYear()+'/'+myDate.getMonth()+'/'+myDate.getDate();
+			            //}
                         $(':input[name="visittime"]').val(start_time+'@'+end_time);
 			            //location.href=el.attr('data-url')+start_time+'@'+end_time;
 			        }
@@ -36,6 +36,9 @@ var choice=function(e,t){
         
     });
 };
+$('.visit_reset').click(function(){
+    $(':input[name="visittime"],#afTimeStar,#afTimeEnd').val('');
+});
 choice(".arrowFather1,.arrowFather");
 
 //  重新分配 star
