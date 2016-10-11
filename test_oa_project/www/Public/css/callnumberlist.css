@@ -21,7 +21,6 @@
 #numbeer_list th.last_item {text-indent:8px;}
 #numbeer_list td {color:#696969;}
 #numbeer_list td a {float:left;width:43px;height:43px;line-height:43px;text-align:center;color:#333;}
-#numbeer_list td a:hover {color:#53b567;}
 #numbeer_list td a.call_enable, #numbeer_list td a.call_disable, #numbeer_list td a.call_edit {margin-right:15px;}
 #numbeer_list tr.for_head th {background: #f5f6fa;}
 #numbeer_list tr:hover td {background: #f5f6fa;}
@@ -43,3 +42,8 @@
 .call_addbox .rows .btn_cancel:hover {background:#c8c8c8;}
 
 .layui-layer-btn {text-align:center !important;}
+
+/**/
+.fir_tips {color:#ff0000;}
+#numbeer_list tr.curr th, #numbeer_list tr.curr td {background:#ddd;}
+#numbeer_list tr.curr th, #numbeer_list tr.curr td, #numbeer_list tr.curr a {color:#ccc;}
