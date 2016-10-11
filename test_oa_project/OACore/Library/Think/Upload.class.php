@@ -182,7 +182,7 @@ class Upload {
             if(false == $savename){
                 continue;
             } else {
-                $file['savename'] = $savename;
+                $file['savename'] = date('His').'-'.$savename;
             }
 
             /* 检测并创建子目录 */
@@ -192,7 +192,7 @@ class Upload {
             } else {
                 $file['savepath'] = $this->savePath . $subpath;
             }
-
+            
             /* 对图像文件进行严格检测 */
             $ext = strtolower($file['ext']);
             if(in_array($ext, array('gif','jpg','jpeg','bmp','png','swf'))) {
@@ -379,7 +379,6 @@ class Upload {
 
         /* 文件保存后缀，支持强制更改文件后缀 */
         $ext = empty($this->config['saveExt']) ? $file['ext'] : $this->saveExt;
-
         return $savename . '.' . $ext;
     }
 
