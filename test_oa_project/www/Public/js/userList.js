@@ -27,11 +27,15 @@ $(function(){
     });
     //创建订单
     $(document).on('click', '#reserve_submit', function(){
-        if($(':input[name="reserve_subscription"]').val().length>8){
+        var re = /^[0-9]*$/;
+        if($(':input[name="reserve_subscription"]').val().length==0){
+            layer.msg('订金不能为空', {icon:2});
+            return false;
+        }else if($(':input[name="reserve_subscription"]').val().length>8){
             layer.msg('订金不能大于8位数', {icon:2});
             return false;
-        }else if(!chkInt($(':input[name="reserve_subscription"]').val())){
-            layer.msg('订金不能输入数字以外的字符', {icon:2});
+        }else if(!re.test($(':input[name="reserve_subscription"]').val())){
+            layer.msg('订金只能为正整数！',{icon:2});
             return false;
         }
         var data = {
@@ -444,3 +448,9 @@ function getSystemUser(page,type){
     };
 };
 
+//删除左右两端的空格
+function trim(str){
+    if(str.length>0){
+        return str.replace(/(^\s*)|(\s*$)/g, "");
+    }
+}
