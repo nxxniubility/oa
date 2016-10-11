@@ -19,7 +19,7 @@
 #numbeer_list th.first_item, #numbeer_list td.first_item {text-indent:39px;}
 #numbeer_list th {font-weight:700;color:#999;}
 #numbeer_list th.last_item {text-indent:8px;}
-#numbeer_list td {color:#696969;}
+#numbeer_list td {color:#333;}
 #numbeer_list td a {float:left;width:43px;height:43px;line-height:43px;text-align:center;color:#333;}
 #numbeer_list td a.call_enable, #numbeer_list td a.call_disable, #numbeer_list td a.call_edit {margin-right:15px;}
 #numbeer_list tr.for_head th {background: #f5f6fa;}
@@ -46,4 +46,4 @@
 /**/
 .fir_tips {color:#ff0000;}
 #numbeer_list tr.curr th, #numbeer_list tr.curr td {background:#ddd;}
-#numbeer_list tr.curr th, #numbeer_list tr.curr td, #numbeer_list tr.curr a {color:#ccc;}
+#numbeer_list tr.curr th, #numbeer_list tr.curr td, #numbeer_list tr.curr a {color:#767676;}
