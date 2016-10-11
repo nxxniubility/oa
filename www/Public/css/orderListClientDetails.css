@@ -414,7 +414,7 @@ a.b-radio-checked {background-position: -14px 0px;}
 .listRight#call-cont li {min-height:123px;}
 .listRight#call-cont li img {top:-25px;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-info span.operating-staff, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address .call-customer {width:300px;}
-.listRight#call-cont li .wrBox2 .wrBox2Top .call-info span {width:auto;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-info span, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address .call-customercont span.call-status {width:auto;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address {padding:0 40px 0 0;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address.pd10 {padding-bottom:10px;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address a, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address span {text-indent:initial;}
