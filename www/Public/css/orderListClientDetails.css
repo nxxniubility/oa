@@ -413,7 +413,8 @@ a.b-radio-checked {background-position: -14px 0px;}
 /*1011*/
 .listRight#call-cont li {min-height:123px;}
 .listRight#call-cont li img {top:-25px;}
-.listRight#call-cont li .wrBox2 .wrBox2Top .call-info span.operating-staff, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address .call-customer {width:250px;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-info span.operating-staff, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address .call-customer {width:300px;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-info span {width:auto;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-address {padding:0 40px 0 0;}
+.listRight#call-cont li .wrBox2 .wrBox2Top .call-address.pd10 {padding-bottom:10px;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address a, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address span {text-indent:initial;}
-.listRight#call-cont li .wrBox2 .wrBox2Top .call-address a img {margin:0 20px 0 22px;}

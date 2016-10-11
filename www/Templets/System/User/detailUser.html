@@ -736,19 +736,19 @@
                                             </div>
                                             <div class="call-address clearfix">
                                             	<div class="call-customer fl">客户号码：{$v.call_callee}</div>
-                                            	<div class="call-customercont fl" style="width: 176px;">
-                                            		<span class="call-status fl" style="width: 176px;">接听状态：{$v.callee_cause}</span>
+                                            	<div class="call-customercont fl">
+                                            		<span class="call-status fl">接听状态：{$v.callee_cause}</span>
 	                                            </div>
                                             </div>
-                                            <div class="call-address clearfix">
+                                            <div class="call-address pd10 clearfix">
                                             	<div class="call-customer fl">
-                                                    通话录音：
+                                                    <em class="fl">通话录音：</em>
                                             		<if condition="!empty($v['call_length'])">
                                                         <a href="{$v.call_mp3}" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a>
                                                         <span>时长{$v.call_length}秒</span>
                                                         <a href="{$v.call_mp3}" target="_blank"><input type="button" class="play-btn" value="播放"></a>
                                                     <else/>
-                                                        无录音
+                                                                                                    无录音
                                                     </if>
                                             	</div>
                                             	<span class="fl">拨打时间：{$v.call_time_ymd}</span>
