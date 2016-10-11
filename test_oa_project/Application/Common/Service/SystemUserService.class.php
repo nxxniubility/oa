@@ -177,10 +177,10 @@ class SystemUserService extends BaseService
     public function getCallNumber($where)
     {
         $where['number_status'] = 1;
-        $result = D('CallNumber')->getList($where,'call_number_id,number,number_type,number_start');
+        $result = D('CallNumber')->getList($where,'call_number_id,number,number_type,number_start','number_start desc');
         foreach($result as $k=>$v){
             $result[$k]['number_type_name'] = $v['number_type']==1?'固定电话':'手机号码';
-            $result[$k]['number_start_name'] = $v['number_start']==1?'已启用':'未启用';
+            $result[$k]['number_start_name'] = $v['number_start']==1?'禁用':'启用';
         }
         //返回数据与状态
         return array('code'=>'0', 'data'=>$result);
@@ -199,7 +199,7 @@ class SystemUserService extends BaseService
         //实例验证类
         $checkform = new \Org\Form\Checkform();
         if($data['number_type']==1){
-            if(!$checkform->checkTel($data['number'])) return array('code'=>201,'msg'=>'固话码格式有误');
+            if(!$checkform->checkTel($data['number'])) return array('code'=>201,'msg'=>'固话码格式有误,格式必需是：区号-号码！');
         }else{
             if(!$checkform->checkMobile($data['number'])) return array('code'=>202,'msg'=>'手机号码格式有误');
         }
@@ -222,7 +222,7 @@ class SystemUserService extends BaseService
         //实例验证类
         $checkform = new \Org\Form\Checkform();
         if($data['number_type']==1){
-            if(!$checkform->checkTel($data['number'])) return array('code'=>201,'msg'=>'固话码格式有误');
+            if(!$checkform->checkTel($data['number'])) return array('code'=>201,'msg'=>'固话码格式有误,格式必需是：区号-号码！');
         }else{
             if(!$checkform->checkMobile($data['number'])) return array('code'=>202,'msg'=>'手机号码格式有误');
         }

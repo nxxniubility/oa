@@ -18,7 +18,7 @@ class BaseController extends Controller {
      * 操作错误跳转的快捷方法
      * @author Echo
      */
-    protected function redirect($msg='error',$code=1,$data='') {
+    protected function redirect($data,$msg='',$code=1) {
         if(IS_AJAX) {
             $this->ajaxReturn($code,$msg,$data);
         }

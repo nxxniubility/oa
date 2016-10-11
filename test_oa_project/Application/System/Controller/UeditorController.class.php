@@ -4,7 +4,14 @@ use Common\Controller\BaseController;
 use \Org\Util\Tool;
 
 class UeditorController extends BaseController{
-    
+	public function _initialize()
+	{
+		parent::_initialize();
+		if(!session(C('USER_AUTH_KEY'))){
+			$this->redirect(C('USER_AUTH_GATEWAY'), '请重新登录');
+		}
+	}
+
 	private $ueditor_config=array(
 	
 		/*Oss配置参数*/
@@ -106,10 +113,6 @@ class UeditorController extends BaseController{
 		) /* 列出的文件类型 */
 	
 	);
-    public function _initialize(){
-        parent::_initialize();
-		
-    }
      /**
      * 员工管理
      */
@@ -117,9 +120,8 @@ class UeditorController extends BaseController{
        
 	    date_default_timezone_set("Asia/chongqing");
 		error_reporting(E_ERROR);
-		header("Content-Type: text/html; charset=utf-8");	
-			
-		$action = $_GET['action'];		
+		header("Content-Type: text/html; charset=utf-8");
+		$action = remove_xss($_GET['action']);
 		$oss_policy=$this->getOssSign('system_dir/images/');
 		$this->ueditor_config["useOss"]=1;		
 		$this->ueditor_config["additionalParams"]=array(
