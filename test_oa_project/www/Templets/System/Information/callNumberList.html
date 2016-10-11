@@ -28,7 +28,7 @@
 	        			<th class="last_item">操作</th>
 	        		</tr>
 					<foreach name="data['numberList']['data']" item="v">
-						<tr data-id="{$v.call_number_id}" data-value="{$v.number}-#-{$v.number_type}">
+						<tr data-id="{$v.call_number_id}" data-value="{$v.number}-#-{$v.number_type}" {:$v['number_start']!=1?'class="curr"':''}>
 							<td class="first_item">{$v.number}</td>
 							<td>{$v.number_type_name}</td>
 							<td class="clearfix">

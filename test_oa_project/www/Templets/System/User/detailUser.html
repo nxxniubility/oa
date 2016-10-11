@@ -732,23 +732,26 @@
                                         <div class="wrBox2Top">
                                             <div class="call-info clearfix">
                                                 <span class="operating-staff">员工姓名：{$v.system_realname}</span>
-                                                <span>电话：13838384238</span>
+                                                <span>拨出电话：13838384238</span>
                                             </div>
                                             <div class="call-address clearfix">
                                             	<div class="call-customer fl">客户号码：{$v.call_callee}</div>
-                                            	<div class="call-customercont fl">
-                                            		<span class="call-status fl">{$v.callee_cause}</span>
+                                            	<div class="call-customercont fl" style="width: 176px;">
+                                            		<span class="call-status fl" style="width: 176px;">接听状态：{$v.callee_cause}</span>
 	                                            </div>
                                             </div>
                                             <div class="call-address clearfix">
                                             	<div class="call-customer fl">
+                                                    通话录音：
                                             		<if condition="!empty($v['call_length'])">
                                                         <a href="{$v.call_mp3}" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a>
-                                                        <span>录音时长{$v.call_length}秒</span>
+                                                        <span>时长{$v.call_length}秒</span>
                                                         <a href="{$v.call_mp3}" target="_blank"><input type="button" class="play-btn" value="播放"></a>
+                                                    <else/>
+                                                        无录音
                                                     </if>
                                             	</div>
-                                            	<span class="fl">{$v.call_time_ymd}</span>
+                                            	<span class="fl">拨打时间：{$v.call_time_ymd}</span>
                                             </div>
                                         </div>
                                     </div>
