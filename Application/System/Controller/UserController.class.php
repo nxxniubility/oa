@@ -1616,13 +1616,12 @@ class UserController extends SystemController
             $setpagesInfo = $res['msg'];
             if (!empty($_FILES['file'])) {
                 $exts = array('xls', 'xlsx');
-                $rootPath = './Public/';
-                $savePath = 'User/';
+                $rootPath = './Uploads/File';
+                $savePath = '/ImportUser/';
                 $uploadFile = $this->uploadFile($exts, $rootPath, $savePath);
                 $filename = $rootPath . $uploadFile['file']['savepath'] . $uploadFile['file']['savename'];
             }         
             $datas = importExecl($filename);
-            unlink($filename);         
             foreach ($datas as $key => $data) {
                 array_unique($data);
             }
@@ -1766,16 +1765,13 @@ class UserController extends SystemController
             $res = $proidMain->getSetPages($setPages);
             $setpagesInfo = $res['msg'];
             if (!empty($_FILES['file'])) {
-                //$exts = array('zip', 'xls', 'xlsx');
                 $exts = array('xls', 'xlsx');
-                $rootPath = './Public/';
-                $savePath = 'User/';
+                $rootPath = './Uploads/File';
+                $savePath = '/ImportLibraryUser/';
                 $uploadFile = $this->uploadFile($exts, $rootPath, $savePath);
                 $filename = $rootPath . $uploadFile['file']['savepath'] . $uploadFile['file']['savename'];
-            }
+            }         
             $datas = importExecl($filename);
-            unlink($filename);
-
             foreach ($datas as $key => $data) {
                 array_unique($data);
             }
