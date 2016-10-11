@@ -16,6 +16,7 @@ class ManagementController extends SystemController
     */
     public function configuration()
     {
+        print_r(phoneVest('15814043738'));
 //        $redis = new \Redis();
 //        $redis->connect('localhost', '6379');
 //        $data = D('User')->limit('0,5000')->select();

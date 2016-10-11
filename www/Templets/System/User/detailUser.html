@@ -732,7 +732,7 @@
                                         <div class="wrBox2Top">
                                             <div class="call-info clearfix">
                                                 <span class="operating-staff">员工姓名：{$v.system_realname}</span>
-                                                <span>拨出电话：13838384238</span>
+                                                <span>拨出电话：{$v.call_caller}</span>
                                             </div>
                                             <div class="call-address clearfix">
                                             	<div class="call-customer fl">客户号码：{$v.call_callee}</div>
@@ -743,7 +743,7 @@
                                             <div class="call-address pd10 clearfix">
                                             	<div class="call-customer fl">
                                                     <em class="fl">通话录音：</em>
-                                            		<if condition="!empty($v['call_length'])">
+                                            		<if condition="empty($v['call_length'])">
                                                         <a href="{$v.call_mp3}" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a>
                                                         <span>时长{$v.call_length}秒</span>
                                                         <a href="{$v.call_mp3}" target="_blank"><input type="button" class="play-btn" value="播放"></a>
@@ -1077,6 +1077,37 @@
         </div>
     </div>
 </div>
+<duv class="dn" id="call_box">
+    <li>
+        <div class="list-l add_face">
+
+        </div>
+        <div class="list-r">
+            <i></i>
+            <div class="wrBox2">
+                <div class="wrTriangle"></div>
+                <div class="wrBox2Top">
+                    <div class="call-info clearfix">
+                        <span class="operating-staff add_system_realname">员工姓名：</span>
+                        <span class="add_call_caller">拨出电话：</span>
+                    </div>
+                    <div class="call-address clearfix">
+                        <div class="call-customer fl add_call_callee">客户号码：</div>
+                        <div class="call-customercont fl">
+                            <span class="call-status fl add_callee_cause">接听状态：</span>
+                        </div>
+                    </div>
+                    <div class="call-address pd10 clearfix">
+                        <div class="call-customer fl add_call_mp3">
+                            <em class="fl">通话录音：</em>
+                        </div>
+                        <span class="fl add_call_time">拨打时间：</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</duv>
 <!-- 放弃 E -->
 <input type="hidden" name="temp_user_id" value="{$data['userInfo']['user_id']}" autocomplete="off">
 
@@ -1451,24 +1482,39 @@
             }
         };
     };
+    //动态添加通话记录
     function addCallBox(data){
-         var _html =
-        '<li><div class="list-l">';
-            if(data.system_face!='' && data.system_face!=null){
-               _html+='<img src="'+data.system_face+'">';
-            }else if(data.system_sex==2){
-               _html+='<img src="/Public/images/personalInfo_01-01.jpg">';
-            }else{
-               _html+='<img src="/Public/images/personalInfo_01-02.jpg">';
-            }
-        _html+='</div> <div class="list-r"> <i></i> <div class="wrBox2"> <div class="wrTriangle"></div> <div class="wrBox2Top"> <div class="call-info clearfix"> <span class="operating-staff">'+data.system_realname+'</span> <span>'+data.call_time_ymd+'</span> </div> <div class="call-address clearfix"> <div class="call-customer fl">拨出号码：'+data.call_callee+'</div> <div class="call-customercont fl"> <span class="call-status fl">'+data.callee_cause+'</span>';
-
-        if(data.call_length!=0){
-            _html+='<a href="'+data.call_mp3+'" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a> <span>录音时长'+data.call_length+'秒</span> <a href="'+data.call_mp3+'" target="_blank"><input type="button" class="play-btn" value="播放"></a>';
+        var _face;
+        var _call_mp3;
+        var _system_realname = data.system_realname;
+        var _call_caller = data.call_caller;
+        var _call_callee = data.call_callee;
+        var _callee_cause = data.callee_cause;
+        var _call_time = data.call_time_ymd;
+        if(data.system_face!='' && data.system_face!=null){
+            _face = '<img src="'+data.system_face+'">';
+        }else if(data.system_sex==2){
+            _face='<img src="/Public/images/personalInfo_01-01.jpg">';
+        }else{
+            _face='<img src="/Public/images/personalInfo_01-02.jpg">';
         }
-        _html+='</div> </div> </div> </div></div></li>';
+        //录音
+        if(data.call_length!=0){
+            _call_mp3 = '<a href="'+data.call_mp3+'" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a> <span>录音时长'+data.call_length+'秒</span> <a href="'+data.call_mp3+'" target="_blank"><input type="button" class="play-btn" value="播放"></a>';
+        }else{
+            _call_mp3 = '无录音';
+        }
+        var _old_box = $('#call_box li').clone();
+        $('#call_box li').find('.add_face').html(_face);
+        $('#call_box li').find('.add_call_mp3').html( $('#call_box li').find('.add_call_mp3').html()+ _call_mp3);
+        $('#call_box li').find('.add_system_realname').html( $('#call_box li').find('.add_system_realname').html()+ _system_realname);
+        $('#call_box li').find('.add_call_caller').html( $('#call_box li').find('.add_call_caller').html()+ _call_caller);
+        $('#call_box li').find('.add_call_callee').html( $('#call_box li').find('.add_call_callee').html()+ _call_callee);
+        $('#call_box li').find('.add_callee_cause').html( $('#call_box li').find('.add_callee_cause').html()+ _callee_cause);
+        $('#call_box li').find('.add_call_time').html( $('#call_box li').find('.add_call_time').html()+ _call_time);
 
-        $('#call_body').prepend(_html);
+        $('#call_body').prepend($('#call_box li').clone());
+        $('#call_box').html(_old_box);
     }
 </script>
 </body>

@@ -744,7 +744,7 @@ class UserService extends BaseService
         $result = D('CallLogs')->getList($_where,null,'call_time DESC');
         foreach($result as $k=>$v){
             $info = D('SystemUser','Service')->getListCache(array('system_user_id'=>$v['system_user_id']));
-            $result[$k]['system_realname'] = $info['data']['realname'];
+            $result[$k]['system_realname'] = str_replace($info['data']['sign'].'-',' ',$info['data']['realname']);
             $result[$k]['system_face'] = $info['data']['face'];
             $result[$k]['system_sex'] = $info['data']['sex'];
             $result[$k]['call_time_ymd'] = date('Y-m-d H:i', $v['call_time']);
