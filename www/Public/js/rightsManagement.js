@@ -100,7 +100,7 @@ $('.selectPermissions').on('click', function() {
     };
     $(':input[name="role_id"]').val($(this).attr('sid'));
     $.ajax({
-        url:'',
+        url:window.location.href,
         type:'post',
         dataType:'json',
         data:data,
