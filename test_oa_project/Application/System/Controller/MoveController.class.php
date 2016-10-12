@@ -1697,10 +1697,74 @@ class MoveController extends BaseController
 //        }
     }
 
+    public function getOldUserList()
+    {
+        $where1['system_user_id'] = 4;
+        $where1['remark'] = '系统超时回收';
+        $where1['callbacktime'] = array(array('egt',1475164800),array('lt',1476201600),'AND');
+        $temp = M('user_callback','zl_','DB_CONFIG1')->field('user_id,callbacktime')->order('callbacktime asc')->where($where1)->select();
+        foreach($temp as $k=>$v){
+            $info = M('user','zl_','DB_CONFIG1')->field('system_user_id,username,status')->where(array('user_id'=>$v['user_id']))->find();
+            $realname = M('SystemUser','zl_','DB_CONFIG1')->field('realname')->where(array('system_user_id'=>$info['system_user_id']))->find();
+            echo ($k+1).'、手机号码：'.decryptPhone($info['username'],  C('PHONE_CODE_KEY')).'，回收时间'.date('Y-m-d H:i',$v['callbacktime']).'，状态：'.($info['status']==20?'待联系':($info['status']==30?'待联系':'回库')).',所属人：'.$realname['realname'].'<br/>';
+        }
+    }
+
+
     public function getCallback()
     {
-//       $temp = M('user_callback','zl_','DB_CONFIG1')->field('callbacktime')->where(array('callbacktime'=>array('EGT','1476007200'),'remark'=>'系统分配','callbacktype'=>30))->save(array('callbacktime'=>array('exp','callbacktime+2')));
-//
+        exit();
+        $list = F('temp_list');
+        print_r($list);
+        foreach($list as $k=>$v){
+            $add_all = array(
+                'user_id'=>$v['user_id'],
+                'system_user_id'=>4,
+                'callbacktime'=>time(),
+                'nexttime'=>time(),
+                'remark'=>'系统分配',
+                'callbacktype'=>30
+            );
+            M('user_callback','zl_','DB_CONFIG1')->add($add_all);
+            $save['status'] = 30;
+            $save['lastvisit'] = time();
+            $save['nextvisit'] = time();
+            M('user','zl_','DB_CONFIG1')->field('user_id,status')->where(array('user_id'=>$v['user_id'],'status'=>160))->save($save);
+        }
+        exit();
+//        $temp_users = F('temp_users');
+//        foreach($temp_users as $v){
+//            $where2['user_id'] = $v;
+//            $where2['callbacktime'] = array('egt',1475964000);
+//            $temp2 = M('user_callback','zl_','DB_CONFIG1')->field('user_id')->where($where2)->find();
+//            if(empty($temp2)){
+//                $arr[] = $v;
+//            }
+//        }
+//        F('temp_users3', $arr);
+//        print_r($arr);exit();
+        $where1['system_user_id'] = 4;
+        $where1['remark'] = '系统超时回收';
+        $where1['callbacktime'] = array(array('egt',1475942400),array('lt',1475964000),'AND');
+        $temp = M('user_callback','zl_','DB_CONFIG1')->field('user_id')->where($where1)->select();
+
+        $where2['system_user_id'] = 4;
+        $where2['remark'] = '系统分配';
+        $where2['callbacktime'] = array(array('egt',1475964000),array('lt',1476014400),'AND');
+        $temp2 = M('user_callback','zl_','DB_CONFIG1')->field('user_id')->where($where2)->select();
+        foreach($temp2 as $k => $v){
+            $n_arr[] = $v['user_id'];
+        }
+        $arr = array();
+        foreach($temp as $v){
+            if(!in_array($v['user_id'],$n_arr)){
+                $arr[] =  $v['user_id'];
+            }
+        }
+        $list = M('user','zl_','DB_CONFIG1')->field('user_id,status')->where(array('user_id'=>array('in',$arr)))->select();
+        print_r($list);
+        F('temp_list', $list);
+        exit();
 //        print_r($temp);
 //        exit;
         set_time_limit(3000);
@@ -1762,7 +1826,7 @@ class MoveController extends BaseController
             if(!empty($info)){
                 $apply = M('user_apply','zl_','DB_CONFIG1')->where(array('status'=>10,'user_id'=>$v['user_id']))->find();
                 if(empty($apply)){
-                    M('user_apply','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->save(array('status'=>'30'));
+                    M('user','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->save(array('status'=>'30'));
                     $temp_users[] = $v['user_id'];
                 }
             }
@@ -1771,6 +1835,7 @@ class MoveController extends BaseController
     }
 
     public function getUserMobileCity(){
+        set_time_limit(300);
         $count = I('count');
         if(empty($count)){
             $count =  M('user','zl_','DB_CONFIG1')->where(array('phonevest'=>array('exp','is null')))->count();
@@ -1784,6 +1849,7 @@ class MoveController extends BaseController
             F('getUserRepeat',$log);
         }
         $checkform = new \Org\Form\Checkform();
+        echo $count.'<br/>';
         if($p<=ceil($count/500)){
             $user =  M('user','zl_','DB_CONFIG1')->field('username,user_id')->where(array('phonevest'=>array('exp','is null')))->order('user_id desc')->limit((($p-1)*500).',500')->select();
 
@@ -1803,8 +1869,9 @@ class MoveController extends BaseController
 
                 }
             }
-            F('getUserRepeat',$log);
-            $this->redirect('/System/Move/getUserMobileCity',array('p' =>$p+1,'count' => $count));
+            echo $count;exit;
+//            F('getUserRepeat',$log);
+//            $this->redirect('/System/Move/getUserMobileCity',array('p' =>$p+1,'count' => $count));
         }
     }
 
