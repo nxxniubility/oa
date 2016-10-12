@@ -1,6 +1,8 @@
 //初始化-职位
 if(market_zone_id!=''){
-    $('.city_title em').text($('#zone_'+market_zone_id).text());
+    if($('#zone_'+market_zone_id).text().length>0){
+        $('.city_title em').text($('#zone_'+market_zone_id).text());
+    }
 };
 if(market_role_id!=''){
     var temp_role_id = market_role_id.split(',');

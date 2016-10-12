@@ -27,10 +27,10 @@ class StatisticsController extends SystemController
             $request['startime'] = date('Y/m/d', strtotime('-7 day'));
         }
         if(empty($request['endtime'])){
-            $request['endtime'] = date('Y/m/d');
+            $request['endtime'] = date('Y/m/d', strtotime('-1 day'));
         }
         $where['daytime'] = $request['startime'].','.$request['endtime'];
-        $where['zone_id'] = $request['zone_id']?$request['zone_id']:$this->system_user['zone_id'];
+        $where['zone_id'] = $request['zone_id'] = $request['zone_id']?$request['zone_id']:$this->system_user['zone_id'];
         $where['role_id'] = $request['role_id'];
         $data['my_zone_id'] = $this->system_user['zone_id'];
         //获取接口数据
@@ -191,7 +191,7 @@ class StatisticsController extends SystemController
             $request['startime'] = date('Y/m/d', strtotime('-7 day'));
         }
         if(empty($request['endtime'])){
-            $request['endtime'] = date('Y/m/d');
+            $request['endtime'] = date('Y/m/d', strtotime('-1 day'));
         }
         $where['system_user_id'] = $request['system_user_id'];
         $where['daytime'] = $request['startime'].','.$request['endtime'];
