@@ -152,33 +152,33 @@ function decryptPhone($data, $key)
  */
 function phoneVest($phone)
 {
-//    $str ='http://apis.juhe.cn/mobile/get?key=192a474a94f5f0176cd5cf1c5d43c34f&phone='.$phone;
-//    $output = file_get_contents($str);
-//    $output = json_decode($output,true);
-//    if($output['resultcode']==200){
-//        $result = $output['result'];
-//    }else{
-//        $result = '';
-//    }
-//    return $result;
-    $ch = curl_init();
-    $url = 'http://apis.baidu.com/apistore/mobilenumber/mobilenumber?phone='.$phone;
-    $header = array(
-        'apikey: '.C('API_STORE_KEY'),
-    );
-    // 添加apikey到header
-    curl_setopt($ch, CURLOPT_HTTPHEADER  , $header);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    // 执行HTTP请求
-    curl_setopt($ch , CURLOPT_URL , $url);
-    $res = curl_exec($ch);
-    $res = json_decode($res);
-    if($res->errNum==0){
-        $result = (array) $res->retData;
+    $str ='http://apis.juhe.cn/mobile/get?key=192a474a94f5f0176cd5cf1c5d43c34f&phone='.$phone;
+    $output = file_get_contents($str);
+    $output = json_decode($output,true);
+    if($output['resultcode']==200){
+        $result = $output['result'];
     }else{
         $result = '';
     }
     return $result;
+//    $ch = curl_init();
+//    $url = 'http://apis.baidu.com/apistore/mobilenumber/mobilenumber?phone='.$phone;
+//    $header = array(
+//        'apikey: '.C('API_STORE_KEY'),
+//    );
+//    // 添加apikey到header
+//    curl_setopt($ch, CURLOPT_HTTPHEADER  , $header);
+//    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//    // 执行HTTP请求
+//    curl_setopt($ch , CURLOPT_URL , $url);
+//    $res = curl_exec($ch);
+//    $res = json_decode($res);
+//    if($res->errNum==0){
+//        $result = (array) $res->retData;
+//    }else{
+//        $result = '';
+//    }
+//    return $result;
 }
 
 /*配置文件写入*/
