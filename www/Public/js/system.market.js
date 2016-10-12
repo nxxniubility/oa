@@ -235,7 +235,7 @@ $(document).ready(function(){
 			selectableDateRange: [
 	            {
 	            	from: new Date(1990, 1, 1) ,
-	            	to: new Date(my_date.getFullYear(), my_date.getMonth(), my_date.getDate())
+	            	to: new Date(my_date.getFullYear(), my_date.getMonth(), my_date.getDate()-1)
 	            }
 	        ]
 		});
@@ -243,9 +243,17 @@ $(document).ready(function(){
 });
 // 结束时间
 $(document).ready(function(){
-	var _daytime = market_daytime.split(',');
+	var _daytime = market_daytime.split(','),
+		my_date = new Date();
 	setTimeout(function(){
-		$(".endtime").val(_daytime[1]).glDatePicker({});
+		$(".endtime").val(_daytime[1]).glDatePicker({
+			selectableDateRange: [
+	            {
+	            	from: new Date(1990, 1, 1) ,
+	            	to: new Date(my_date.getFullYear(), my_date.getMonth(), my_date.getDate()-1)
+	            }
+	        ]
+		});
     },500)
 });
 
