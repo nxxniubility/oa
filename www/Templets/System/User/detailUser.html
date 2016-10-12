@@ -35,7 +35,7 @@
                 <!-- 待联系 待跟进-->
                 <if condition="($data['userInfo']['status']==20 || $data['userInfo']['status']==30) &&  !empty($data['isSelf'])">
                     <if condition="!empty($access_list['CALLUSER'])">
-                            <a href="javascript:;" class="return btn_phone " data-value=""><span><i></i></span>网络电话</a>
+                        <a href="javascript:;" class="return btn_phone " data-value=""><span><i></i></span>网络电话</a>
                     </if>
                     <a href="javascript:;" class="return btn_mark {:$data['userInfo']['mark']==2?'active':''}" data-value="2">重点</a>
                     <a href="javascript:;" class="return btn_mark mr10 {:$data['userInfo']['mark']==1?'active':''}" data-value="1">普通</a>
@@ -50,7 +50,7 @@
                     </if>
                 <elseif condition="($data['userInfo']['status']==70) && !empty($data['isSelf'])" />
                     <if condition="!empty($access_list['CALLUSER'])">
-                            <a href="javascript:;" class="return btn_phone " data-value=""><span><i></i></span>网络电话</a>
+                        <a href="javascript:;" class="return btn_phone " data-value=""><span><i></i></span>网络电话</a>
                     </if>
                     <a href="javascript:;" class="return btn_mark {:$data['userInfo']['mark']==2?'active':''}" data-value="2">重点</a>
                     <a href="javascript:;" class="return btn_mark mr10 {:$data['userInfo']['mark']==1?'active':''}" data-value="1">普通</a>
@@ -1219,6 +1219,7 @@
         });
         //呼叫电话
         $('.btn_phone').click(function(){
+            layer.msg('网络电话功能暂未开放！',{icon:2});return false;
             var in_call='',call_key= 0,is_tel="{$data['userInfo']['tel']}";
             var data = {
                 type : 'callphone',
