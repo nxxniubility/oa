@@ -88,7 +88,7 @@ class UserController extends BaseController
             "{$this->DB_PREFIX}system_user.realname as system_realname",
             "A.system_user_id as updateuser_id",
             "A.realname as updateuser_realname",
-            "B.system_user_id as createuser_id",
+            "B.system_user_id as editUser_id",
             "B.realname as createuser_realname"
         );
         $where[$this->DB_PREFIX.'user.user_id'] = $user_id;

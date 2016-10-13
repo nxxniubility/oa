@@ -127,12 +127,12 @@ class PersonnelController extends SystemController {
             if( isset($type) && $type=='del' ){
                 if(empty($departmentname_id)) $this->ajaxReturn(1, '部门ID不能为空', '', 'departmentname_id');
                 $requery_data['status'] = 0;
-                $requery_data['departmentname_id'] = $departmentname_id;
+                $requery_data['department_id'] = $departmentname_id;
                 $departmentMain = new DepartmentMain();
                 $result = $departmentMain->edit($requery_data);
                 //删除部门
                 if(empty($result)) $this->ajaxReturn(1, '数据删除失败');
-                else $this->success('删除部门成功', 0, U('System/Personnel/department'));
+                else $this->ajaxReturn('0','删除部门成功',U('System/Personnel/department'));
             }else if( isset($type) && $type=='sort' ){
                 $sort_data = I('post.sort_data','');
                 if(empty($sort_data)) $this->ajaxReturn(1, '请输入要修改的排序值');

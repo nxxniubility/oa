@@ -743,7 +743,7 @@
                                             <div class="call-address pd10 clearfix">
                                             	<div class="call-customer fl">
                                                     <em class="fl">通话录音：</em>
-                                            		<if condition="empty($v['call_length'])">
+                                            		<if condition="!empty($v['call_length'])">
                                                         <a href="{$v.call_mp3}" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a>
                                                         <span>时长{$v.call_length}秒</span>
                                                         <a href="{$v.call_mp3}" target="_blank"><input type="button" class="play-btn" value="播放"></a>

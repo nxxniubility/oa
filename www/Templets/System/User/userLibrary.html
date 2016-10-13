@@ -884,8 +884,8 @@
     //获取员工列表
     function getsystem(){
         var system_id = "{$data['request']['system_user_id']}";
-        var html = '<option value="0" >--全部所属人--</option>';
-        var html_create = '<option value="0" >--全部创建人--</option>';
+        var html = '<option value="0" >--全部员工--</option>';
+        var html_create = '<option value="0" >--全部员工--</option>';
         var zone_id = $(':input[name="zone_sele"]').val();
         var role_id = $(':input[name="role_sele"]').val();
         $(':input[name="system_sele"]').empty().append(html).siblings('a').show();
