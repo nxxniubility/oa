@@ -200,7 +200,11 @@ class StatisticsController extends SystemController
         $result = $DataService->getDataMarket($where);
         $dataMarket = $result['data'];
         $dataMarket['daytime'] = $where['daytime'];
-        $request['daytime'] = $request['startime'].','.$request['endtime'];
+        if($request['endtime']==date('Y/m/d')){
+            $request['daytime'] = $request['startime'].','.$request['endtime'].' '.date('H:i:s');
+        }else{
+            $request['daytime'] = $request['startime'].','.$request['endtime'];
+        }
         $data['request'] = $request;
         $this->assign('dataMarket', $dataMarket);
         $this->assign('systemUserInfo', $systemUserInfo);
