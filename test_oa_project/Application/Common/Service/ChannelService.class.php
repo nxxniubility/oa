@@ -148,7 +148,7 @@ class ChannelService extends BaseService
         if( F('Cache/channel') ) {
             $channe_list = F('Cache/channel');
         }else{
-            $channe_list = $this->getList();
+            $channe_list = $this->_getChannelList();
             F('Cache/channel', $channe_list);
         }
         foreach($channe_list['data'] as $k=>$v){
@@ -170,7 +170,7 @@ class ChannelService extends BaseService
         if( F('Cache/channel') ) {
             $channe_list = F('Cache/channel');
         }else{
-            $channe_list = $this->getList();
+            $channe_list = $this->_getChannelList();
             F('Cache/channel', $channe_list);
         }
         //数组分级

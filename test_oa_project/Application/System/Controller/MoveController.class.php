@@ -1365,6 +1365,58 @@ class MoveController extends BaseController
    }
 
 
+    public function rollUser(){
+        exit;
+//        $where['system_user_id'] = 14;
+//        $where['status'] = 160;
+//        $where['channel_id'] = array('IN','1,4,5,1420,1421,4856,4995,5133,1000003');
+//        $list = M('user','zl_','DB_CONFIG1')->where($where)->select();
+        $list = F('20161014-rolluser');
+        foreach($list as $v){
+            //是否有申请转入中？
+            $apply = M('user_apply','zl_','DB_CONFIG1')->where(array('status'=>10,'user_id'=>$v['user_id']))->find();
+            if(empty($apply)){
+                $save_user['status'] = 20;
+                $save_user['mark'] = 1;
+                $save_user['nextvisit'] = time();
+                $save_user['attitude_id'] = 0;
+                $save_user['callbacknum'] = 0;
+                $save_user['lastvisit'] = time();
+                $save_user['allocationtime'] = time();
+                $save_user['system_user_id'] = 3;
+                $save_user['updateuser_id'] = 3;
+                $save_user['updatetime'] = time();
+                M('user','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->save($save_user);
+                //添加回访记录
+                $add_ab = array(
+                    'user_id'=>$v['user_id'],
+                    'system_user_id'=>$v['system_user_id'],
+                    'callbacktime'=>time(),
+                    'nexttime'=>time(),
+                    'remark'=>'系统分配',
+                    'callbacktype'=>30
+                );
+                M('user_callback','zl_','DB_CONFIG1')->add($add_ab);
+                $arr[] = $v['user_id'];
+            }
+        }
+         F('20161014-rolluser',$arr);
+        print_r(count($arr));
+    }
+
+    public function delUser(){
+        exit;
+//        $where['system_user_id'] = 160255;
+//        $where['status'] = 160;
+//        $where['createtime'] = array('EGT',strtotime(date('Y-m-d')));
+//        $list = M('user','zl_','DB_CONFIG1')->where($where)->select();
+        $list = F('20161014-deluser');
+        foreach($list as $k=>$v){
+            $arr[] = M('user','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->delete();
+            M('user_info','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->delete();
+        }
+        print_r(count($arr));
+    }
 
     public function migrationFee()
     {
