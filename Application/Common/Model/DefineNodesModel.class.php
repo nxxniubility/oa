@@ -1,53 +1,94 @@
 <?php
 
 namespace Common\Model;
+use Common\Model\BaseModel;
 
-class DefineNodesModel extends   SystemModel{
-
-    protected   $defineNodeDb;
-
-   public function  _initialize(){
-   }
-
-    /**删除用户的所有默认节点
-     * @author cq
-     * @param $system_user_id
-     * @return mixed
-     */
-    public function delDefineNodes($system_user_id){
-        return $this->where(array('system_user_id'=>$system_user_id))->delete();
-    }
-
-    /**
-     * 添加新定义的节点
-     * @author  cq
-     * @param  $system_user_id
-     * @param  $data
-     * @return mixed
-     */
-    public  function addDefineNode($system_user_id, $data){
-
-        return  $this->where(array('system_user_id'=>$system_user_id))->data($data)->add();
-    }
-    
-    /**
-     * 获取用户默认的节点\
-     * @author cq
-     * @param $user_id 用户id
-     * @param $role_id 角色id
-     */
-    public  function  getUserDefaultNodes($user_id, $role_id){
-         $userDefaultNodes = D('DefineNodes')->where(array('system_user_id' => $user_id, 'role_id' => $role_id))
-                ->join('LEFT JOIN zl_node on zl_node.id = zl_define_nodes.node_id')->order('zl_define_nodes.sort ASC')->select();
-
-        return $userDefaultNodes;
+class DefineNodesModel extends BaseModel
+{
+    protected $_id='system_user_id';
+    public function _initialize(){
+        parent::_initialize();
     }
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | 获取单条记录
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getFind($where=null, $field='*', $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->find();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取列表
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getList($where=null, $field='*', $order=null, $limit=null, $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->order($order)->limit($limit)->select();
+    }
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | 获取总数
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getCount($where=null, $join=null)
+    {
+        return $this->where($where)->join($join)->count();
+    }
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | 添加
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function addData($data)
+    {
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
+        }else{
+            $re_id =  $this->add($data);
+            return array('code'=>0,'data'=>$re_id);
+        }
+    }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 修改
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function editData($data,$id)
+    {
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
+        }else{
+            $re_flag =  $this->where(array($this->_id=>$id))->save($data);
+            return array('code'=>0,'data'=>$re_flag);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 删除
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function delData($id)
+    {
+        return $this->where(array($this->_id=>$id))->delete();
+    }
 
 }

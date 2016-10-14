@@ -21,8 +21,7 @@ class ChannelController extends SystemController
     public function channelList()
     {
         //获取数据
-        $channelController = new ChannelMain();
-        $channelList = $channelController->getList();
+        $channelList = D('Channel','Service')->getChannelList();
         $channelList = $channelList['data']['data'];
         //模版赋值
         $this->assign('channelList', $channelList);
@@ -38,9 +37,7 @@ class ChannelController extends SystemController
         //获取数据
         $data = I("post.");
         //执行操作
-        $channelController = new ChannelMain();
-        $data['operator_id'] = $this->system_user_id;
-        $reflag = $channelController->create_channel($data);
+        $reflag = D('Channel','Service')->addChannel($data);
         if($reflag['code']==0){
             $this->ajaxReturn('0', '渠道添加成功');
         }
@@ -56,8 +53,7 @@ class ChannelController extends SystemController
         //获取数据
         $data = I("post.");
         //执行操作
-        $channelController = new ChannelMain();
-        $reflag = $channelController->edit_channel($data);
+        $reflag = D('Channel','Service')->editChannel($data);
         if($reflag['code']==0){
             $this->ajaxReturn('0', '渠道修改成功');
         }
@@ -73,9 +69,7 @@ class ChannelController extends SystemController
         //获取数据
         $data = I("post.");
         //执行操作
-        $channelController = new ChannelMain();
-        $data['status'] = 0;
-        $reflag = $channelController->edit_channel($data);
+        $reflag = D('Channel','Service')->delChannel($data);
         if($reflag['code']==0){
             $this->ajaxReturn('0', '渠道删除成功');
         }

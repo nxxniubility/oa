@@ -1,6 +1,9 @@
 <IfModule mod_rewrite.c>
- RewriteEngine on
- RewriteCond %{REQUEST_FILENAME} !-d
- RewriteCond %{REQUEST_FILENAME} !-f
- RewriteRule ^(.*)$ index.php?s=$1 [QSA,PT,L]
+    Options +FollowSymlinks
+    RewriteEngine On
+	RewriteCond %{HTTP_HOST} ^didazp.com [NC]
+	RewriteRule ^(.*)$ http://www.didazp.com/$1 [L,R=301]
+    RewriteCond %{REQUEST_FILENAME} !-d 
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(.*)$ index.php?s=$1 [QSA,PT,L]
 </IfModule>

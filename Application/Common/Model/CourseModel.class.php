@@ -1,90 +1,99 @@
 <?php
-/*
-|--------------------------------------------------------------------------
-| 课程表模型
-|--------------------------------------------------------------------------
-| createtime：2016-05-03
-| updatetime：2016-05-03
-| updatename：zgt
-*/
+
 namespace Common\Model;
+use Common\Model\BaseModel;
 
-use Common\Model\SystemModel;
-
-class CourseModel extends SystemModel
+class CourseModel extends BaseModel
 {
-    protected $courseDb;
+    protected $_id='course_id';
+    public function _initialize(){
+        parent::_initialize();
+    }
 
-    public function _initialize()
+    //自动验证
+    protected $_validate = array(
+        array('coursename', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
+        array('coursename', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
+        array('description', '0,250', array('code'=>'203','msg'=>'简介不能大于250字符！'), 0, 'length'),
+        array('body', '0,350', array('code'=>'203','msg'=>'内容不能大于350字符！'), 0, 'length'),
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取单条记录
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getFind($where=null, $field='*', $join=null)
     {
+        return $this->field($field)->where($where)->join($join)->find();
     }
 
     /*
-     * 获取所有课程表-缓存
-     * @author zgt
-     * @return array
-     */
-    public function getAllCourse()
+    |--------------------------------------------------------------------------
+    | 获取列表
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getList($where=null, $field='*', $order=null, $limit=null, $join=null)
     {
-        if (F('Cache/Promote/course')) {
-            $courseAll = F('Cache/Promote/course');
-        } else {
-            $courseAll = $this->order('sortrank DESC')->select();
-            F('Cache/Promote/course', $courseAll);
-        }
-
-        return $courseAll;
+        return $this->field($field)->where($where)->join($join)->order($order)->limit($limit)->select();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 获取总数
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getCount($where=null, $join=null)
+    {
+        return $this->where($where)->join($join)->count();
+    }
 
     /*
-     * 获取指定课程表-缓存
-     * @author nxx
-     * @return array
-     */
-    public function getCourse($course_id)
+    |--------------------------------------------------------------------------
+    | 添加
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function addData($data)
     {
-
-        if( F('Cache/Promote/course') ){
-            $courseAll = F('Cache/Promote/course');
-            foreach ($courseAll as $key => $course) {
-                if ($course_id == $course['course_id']) {
-                    return $course['coursename'];
-                }
-            }
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
         }else{
-            $course = $this
-                ->where("course_id = $course_id")
-                ->find();
-            $courseAll = $this->order('sortrank DESC')->select();
-            F('Cache/Promote/course', $courseAll);
+            $re_id =  $this->add($data);
+            return array('code'=>0,'data'=>$re_id);
         }
-        return $course['coursename'];
     }
+
     /*
-     * 获取指定课程表-缓存
-     * @author nxx
-     * @return array
-     */
-    public function getCourseInfo($course_id)
+    |--------------------------------------------------------------------------
+    | 修改
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function editData($data,$id)
     {
-
-        if( F('Cache/Promote/course') ){
-            $courseAll = F('Cache/Promote/course');
-            foreach ($courseAll as $key => $course) {
-                if ($course_id == $course['course_id']) {
-                    return $course;
-                }
-            }
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
         }else{
-            $course = $this
-                ->where("course_id = $course_id")
-                ->find();
-            $courseAll = $this->order('sortrank DESC')->select();
-            F('Cache/Promote/course', $courseAll);
+            $re_flag =  $this->where(array($this->_id=>$id))->save($data);
+            return array('code'=>0,'data'=>$re_flag);
         }
-        return $course;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 删除
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function delData($id)
+    {
+        return $this->where(array($this->_id=>$id))->delete();
+    }
 
 }

@@ -87,11 +87,11 @@
                 <div class="selectbox l">
                     <dl class="select">
                         <dt>
-                            <div class="select_title l">{:$data['systemUserInfo']['educationname']?$data['systemUserInfo']['educationname']:'请选择学历'}</div>
+                            <div class="select_title l">{:$data['systemUserInfo']['education_name']?$data['systemUserInfo']['education_name']:'请选择学历'}</div>
                             <div class="arrow r"></div>
                         </dt>
                         <foreach name="data['educationAll']" item="v" key="k" >
-                            <dd class="fxDone" data-value="{$v.education_id}">{$v.educationname}</dd>
+                            <dd class="fxDone" data-value="{$k}">{$v}</dd>
                         </foreach>
                     </dl>
                     <input type="hidden" name="education_id" value="{$data['systemUserInfo']['education_id']}">
@@ -114,7 +114,7 @@
         <div class="afRow clearfix">
             <div class="afRowLeft"><i>&#42</i>手机号码:</div>
             <div class="afRowRight">
-                <input type="text" class="afInp afUnreadable" value="{:decryptPhone($data['systemUserInfo']['username'], C('PHONE_CODE_KEY'))}" disabled="disabled">
+                <input type="text" class="afInp afUnreadable" value="{$data['systemUserInfo']['username']}" disabled="disabled">
             </div>
         </div>
         <div class="afRow clearfix">

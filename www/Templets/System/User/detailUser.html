@@ -220,7 +220,7 @@
                     <div class="addRow clearfix">
                         <div class="contenCol">
                             <div class="contenColLeft">状态&nbsp;:&nbsp;</div>
-                            <div class="contenColRight" id="user_status">{:$data['USER_STATUS'][$data['userInfo']['status']]['text']}</div>
+                            <div class="contenColRight" id="user_status">{:$data['USER_STATUS'][$data['userInfo']['status']]}</div>
                         </div>
                         <if condition="($data['userInfo']['status']!=160 || $data['userInfo']['status']!=180)">
                             <div class="contenCol">
@@ -284,12 +284,12 @@
                                 <if condition="($data['userInfo']['status']==20 || $data['userInfo']['status']==30) && !empty($data['isSelf'])">
                                     <select name="learningtype">
                                     <option value="0" selected="selected">请选择学习平台</option>
-                                        <foreach name="data['learningtype']" item="v" key="k">
-                                            <option value="{$v.num}" {:$data['userInfo']['learningtype']==$v['num']?'selected="selected"':''}>{$v.text}</option>
+                                        <foreach name="data['LEARNINGTYPE']" item="v" key="k">
+                                            <option value="{$k}" {:$data['userInfo']['learningtype']==$k?'selected="selected"':''}>{$v}</option>
                                         </foreach>
                                     </select>
                                 <else />
-                                    <div class="contenColRight">{:$data['userInfo']['learningtype']?$data['USER_LEARNINGTYPE'][$data['userInfo']['learningtype']]['text']:'泽林'}</div>
+                                    <div class="contenColRight">{:$data['userInfo']['learningtype']?$data['LEARNINGTYPE'][$data['userInfo']['learningtype']]:'泽林'}</div>
                                 </if>
                             </div>
                         </div>
@@ -303,7 +303,7 @@
                         </div>
                         <div class="contenCol">
                             <div class="contenColLeft">跟进结果&nbsp;:&nbsp;</div>
-                            <div class="contenColRight">{:($data['userInfo']['attitude_id']!=0 )?$data['USER_ATTITUDE'][$data['userInfo']['attitude_id']]['text']:'--'}</div>
+                            <div class="contenColRight">{:($data['userInfo']['attitude_id']!=0 )?$data['ATTITUDE'][$data['userInfo']['attitude_id']]:'--'}</div>
                         </div>
                         <if condition="$data['userInfo']['attitude_id'] eq 2">
                             <div class="contenCol">
@@ -425,15 +425,13 @@
                                     <select name="education_id">
                                         <option value="0" {:$data['userInfo']['education_id']==0?'selected="selected"':''}>未知</option>
                                         <foreach name="data['educationAll']" item="v" key="k" >
-                                            <option value="{$v.education_id}" {:$data['userInfo']['education_id']==$v['education_id']?'selected="selected"':''}>{$v.educationname}</option>
+                                            <option value="{$k}" {:$data['userInfo']['education_id']==$k?'selected="selected"':''}>{$v}</option>
                                         </foreach>
                                     </select>
                                 <else />
-                                    <foreach name="data['educationAll']" item="v" key="k" >
-                                        <if condition="($data['userInfo']['education_id'] eq $v['education_id'])">
-                                            <div class="contenColRight auto">{$v.educationname}</div>
-                                        </if>
-                                    </foreach>
+                                    <if condition="($data['userInfo']['education_id'] eq $k)">
+                                        <div class="contenColRight auto">{$data['educationAll'][$data['userInfo']['education_id']]}</div>
+                                    </if>
                                 </if>
                             </div>
                         </div>
@@ -605,8 +603,8 @@
                         	<div class="reWay clearfix">
                         		<span class="reTit"><em>*</em>回访方式：</span>
 	                        	<ol class="clearfix" id="waytype">
-                                    <foreach name="data['callback']" item="v" key="k">
-                                        <li data-value="{$v.num}">{$v.text}</li>
+                                    <foreach name="data['CALLBACK']" item="v" key="k">
+                                        <li data-value="{$k}">{$v}</li>
                                     </foreach>
 	                        	</ol>
                         	</div>
@@ -614,9 +612,9 @@
                         	<div class="results clearfix">
                         		<span class="reTit"><em>*</em>跟进结果：</span>
 	                        	<ol class="clearfix" id="attitude_id">
-                                    <foreach name="data['attitude']" item="v" key="k">
-                                        <if condition="$v['num'] NEQ 10">
-                                            <li data-value="{$v.num}">{$v.text}</li>
+                                    <foreach name="data['ATTITUDE']" item="v" key="k">
+                                        <if condition="$k NEQ 10">
+                                            <li data-value="{$k}">{$v}</li>
                                         </if>
                                     </foreach>
 	                        	</ol>
@@ -669,11 +667,11 @@
 	                                    <div class="wrBox2Tit">
 	                                        <div>{$v.realname}</div>
 	                                        <div>{:date('Y-m-d H:i:s', $v['callbacktime'])}</div>
-	                                        <div>{:$data['USER_CALLBACK'][$v['waytype']]['text']}回访</div>
+	                                        <div>{:$data['CALLBACK'][$v['waytype']]}回访</div>
 	                                    </div>
 	                                    <div class="wrBox2Cont">
 	                                        <div class="wrReason">
-	                                            <p class="backTitle">{:$data['USER_ATTITUDE'][$v['attitude_id']]['text']}</p>
+	                                            <p class="backTitle">{:$data['ATTITUDE'][$v['attitude_id']]}</p>
 	                                            <div class="backCon">{:htmlspecialchars_decode($v['remark'])}</div>
 	                                            <if condition="$v['nexttime'] neq 0">
 	                                            <p class="backTime">{:$v['attitude_id']==2?'承诺到访':'下次回访'}时间：{:date('Y-m-d H:i:s', $v['nexttime'])}</p>
@@ -872,8 +870,8 @@
             <div class="alRowLeft"><i>&#42</i>回访方式:</div>
             <div class="alRowRight" style="width: 360px;">
                 <select name="recover_waytype">
-                    <foreach name="data['callback']" item="v" key="k">
-                        <option value="{$v.num}">{$v.text}</option>
+                    <foreach name="data['CALLBACK']" item="v" key="k">
+                        <option value="{$k}">{$v}</option>
                     </foreach>
                 </select>
             </div>
@@ -882,9 +880,9 @@
             <div class="alRowLeft"><i>&#42</i>跟进结果 :</div>
             <div class="alRowRight" style="width: 360px;">
                 <select name="recover_attitude_id" autocomplete="off">
-                    <foreach name="data['attitude']" item="v" key="k">
+                    <foreach name="data['ATTITUDE']" item="v" key="k">
                         <!--<if condition="($v['num'] GT 2 && $v['num'] NEQ 10)">-->
-                            <option value="{$v.num}">{$v.text}</option>
+                            <option value="{$k}">{$v}</option>
                         <!--</if>-->
                     </foreach>
                 </select>
@@ -1055,9 +1053,9 @@
             <div class="alRowRight" style="width: 360px;">
                 <select name="abandon_attitude_id">
                     <option value="0" selected="selected">请选择放弃原因</option>
-                    <foreach name="data['attitude']" item="v" key="k">
-                        <if condition="($v['num'] GT 2 && $v['num'] NEQ 10)">
-                            <option value="{$v.num}">{$v.text}</option>
+                    <foreach name="data['ATTITUDE']" item="v" key="k">
+                        <if condition="($k GT 2 && $k NEQ 10)">
+                            <option value="{$k}">{$v}</option>
                         </if>
                     </foreach>
                 </select>
@@ -1388,10 +1386,10 @@
         var data = {
             type : 'getFeeLogs'
         };
-        common_ajax2(data, "{:U('System/User/detailUser',array('id'=>$data['user_id']))}", 'no', getHtml);
+        common_ajax2(data, "{:U('System/User/detailUser',array('id'=>$data['user_id']))}", 'no', getHtml, 1);
         function getHtml(reflag){
             if(reflag.code==0){
-                var setHtml = '';
+                var setHtml = '';console.log(reflag.data);
                 $.each(reflag.data, function(k, v){
                     if(v.status==30 || v.status==40 || v.status==50) {
                         setHtml += '<li class="green">';
@@ -1455,7 +1453,7 @@
         var data = {
             type : 'getSmsLogs'
         };
-        common_ajax2(data, window.location.href, 'no', getSmsHtml);
+        common_ajax2(data, window.location.href, 'no', getSmsHtml,1);
         function getSmsHtml(reflag){
             $('#msgCont').children('ul').empty();
             if(reflag.code==0){

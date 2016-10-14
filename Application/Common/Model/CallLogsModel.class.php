@@ -5,7 +5,7 @@ use Common\Model\BaseModel;
 
 class CallLogsModel extends BaseModel
 {
-    protected $key_id='call_key';
+    protected $key_id='call_logs_id';
     public function _initialize(){
         parent::_initialize();
     }
@@ -46,18 +46,19 @@ class CallLogsModel extends BaseModel
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | 添加
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
+   |--------------------------------------------------------------------------
+   | 添加
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
     public function addData($data)
     {
         // 如果创建失败 表示验证没有通过 输出错误提示信息
         if (!$this->create($data)){
             return $this->getError();
         }else{
-            return $this->add($data);
+            $re_id =  $this->add($data);
+            return array('code'=>0,'data'=>$re_id);
         }
     }
 
@@ -73,7 +74,8 @@ class CallLogsModel extends BaseModel
         if (!$this->create($data)){
             return $this->getError();
         }else{
-            return $this->where(array($this->key_id=>$id))->save($data);
+            $re_flag =  $this->where(array($this->key_id=>$id))->save($data);
+            return array('code'=>0,'data'=>$re_flag);
         }
     }
 

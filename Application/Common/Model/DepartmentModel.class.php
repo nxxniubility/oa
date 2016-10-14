@@ -1,102 +1,98 @@
 <?php
-/*
-|--------------------------------------------------------------------------
-| 部门数据表
-|--------------------------------------------------------------------------
-| createtime：2016-04-14
-| updatetime：2016-04-14
-| updatename：zgt
-*/
+
 namespace Common\Model;
-use Common\Model\SystemModel;
+use Common\Model\BaseModel;
 
-class DepartmentModel extends SystemModel{
-
-    protected $departmentDb;
-
+class DepartmentModel extends BaseModel
+{
+    protected $_id='department_id';
     public function _initialize(){
-
+        parent::_initialize();
     }
 
-    /**
-     * 获取所有部门-缓存
-     * @author zgt
-     * @return array
-     */
-    public function getAllDepartment($order='sort desc',$page=null,$where=array('status'=>1)){
-        if( F('Cache/Personnel/department') ){
-            $departmentAll = F('Cache/Personnel/department');
+    //自动验证
+    protected $_validate = array(
+        array('departmentname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
+        array('departmentname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length')
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取单条记录
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getFind($where=null, $field='*', $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->find();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取列表
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getList($where=null, $field='*', $order=null, $limit=null, $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->order($order)->limit($limit)->select();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取总数
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getCount($where=null, $join=null)
+    {
+        return $this->where($where)->join($join)->count();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 添加
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function addData($data)
+    {
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
         }else{
-            $departmentAll['data'] = $this->order('department_id asc')->select();
-            $departmentAll['count'] = $this->count();
-            F('Cache/Personnel/department', $departmentAll);
+            $re_id =  $this->add($data);
+            return array('code'=>0,'data'=>$re_id);
         }
-        $departmentAll = $this->disposeArray($departmentAll, $order, $page, $where);
-        return $departmentAll;
     }
 
-    /**
-     * 添加部门---清除缓存
-     * @author zgt
-     * @return array
-     */
-    public function addDepartment($data){
-        $result = $this->field('departmentname,pid,sort')->data($data)->add();
-        //插入数据成功执行清除缓存
-        if ($result!==false){
-            $data['pages_id'] = $result;
-            if (F('Cache/Personnel/department')) {
-                $data['department_id'] = $result;
-                $data['status'] = 1;
-                $cahceAll = F('Cache/Personnel/department');
-                $cahceAll['data'][] = $data;
-                F('Cache/Personnel/department', $cahceAll);
-            }
-            return $result;
+    /*
+    |--------------------------------------------------------------------------
+    | 修改
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function editData($data,$id)
+    {
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
+        }else{
+            $re_flag =  $this->where(array($this->_id=>$id))->save($data);
+            return array('code'=>0,'data'=>$re_flag);
         }
-        return false;
     }
 
-    /**
-     * 修改部门---清除缓存
-     * @author zgt
-     * @return array
-     */
-    public function editDepartment($department_id,$data){
-        $result = $this->where("department_id=$department_id")->save($data);
-        //更新数据成功执行清除缓存
-        if ($result!==false){
-            if (F('Cache/Personnel/department')) {
-                $newInfo = $this->where("department_id=$department_id")->find();
-                $cahceAll = F('Cache/Personnel/department');
-                foreach($cahceAll['data'] as $k=>$v){
-                    if($v['department_id'] == $department_id){
-                        $cahceAll['data'][$k] = $newInfo;
-                    }
-                }
-                F('Cache/Personnel/department', $cahceAll);
-            }
-            return true;
-        }
-        return false;
+    /*
+    |--------------------------------------------------------------------------
+    | 删除
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function delData($id)
+    {
+        return $this->where(array($this->_id=>$id))->delete();
     }
 
-    /**
-     * 获取单个部门详情
-     * @author zgt
-     * @return array
-     */
-    public function getDepartment($department_id){
-        if (F('Cache/Personnel/department')) {
-            $departmentAll = F('Cache/Personnel/department');
-            foreach($departmentAll['data'] as $k=>$v){
-                if($v['department_id']==$department_id){
-                    $getDepartment = $v;
-                }
-            }
-        } else {
-            $getDepartment = $this->where(array('department_id'=>$department_id))->find();
-        }
-        return $getDepartment;
-    }
 }

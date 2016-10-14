@@ -1,8 +1,6 @@
 <?php
 namespace Cmd\Controller;
 use Common\Controller\BaseController;
-use Common\Service\DataService;
-
 class RecoverController extends BaseController {
 
     /*
@@ -23,19 +21,16 @@ class RecoverController extends BaseController {
 
     //调用回收规则
     protected function aband($abandon_id=""){
-        $DataService = new DataService();
+        
+        $week = date('w');
+        $noAband = array(1);
+        if(in_array($week,$noAband)) exit();//星期天和周一不回收数据
+        
         $UserAbandonDB = D('UserAbandon');
         if(!empty($abandon_id)){
             $abandons = $UserAbandonDB->getAbandonList(array('user_abandon_id'=>$abandon_id));
         }else{
-            $abandons = $UserAbandonDB->getAbandonList(array('status'=>1,'start'=>1));
-            //前两天是否节假日？ -- 自动回收保护期限
-            $get_holiday_auto = D('Api','Service')->getApiHoliday(date('Ymd',strtotime('-2 day')));
-            if($get_holiday_auto['code']==0){
-                if($get_holiday_auto['data']==2){
-                    echo  '失败原因:今天在节假日保护期限，停止规则进行自动回收！;'.'执行时间:'.date('Y-m-d H:i:s');exit();
-                }
-            }
+            $abandons = $UserAbandonDB->getAbandonList(array('status'=>1));
         }
         
         //获取所有渠道
@@ -46,50 +41,11 @@ class RecoverController extends BaseController {
         $zone = $zonedb->field('zone_id,parentid')->where(array('status'=>1))->select();
         
         foreach($abandons as $k => $abandon){
-            $time_now = time();
-            //是否有指定日期
-            if(!empty($abandon['specify_days'])){
-                //转化时间戳匹配  防止一些浏览器时间格式不一致
-                $specify_days = explode(',', $abandon['specify_days']);
-                foreach($specify_days as $_days_k=>$_days_v){
-                    $specify_days[$_days_k] = strtotime($_days_v);
-                }
-                if(!in_array(strtotime(date('Y-m-d',$time_now)), $specify_days)){
-                    if(!empty($abandon['holiday'])){
-                        //是否有节假日限制？
-                        $holiday = explode(',', $abandon['holiday']);
-                        $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd',$time_now));
-                        if($get_holiday['code']==0){
-                            if(in_array($get_holiday['data'], $holiday)){
-                                $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
-                            }
-                        }
-                    }
-                    if(!empty($abandon['week_text']) && $abandon['week_text']!=0){
-                        //是否有星期限制？
-                        $week_text = explode(',', $abandon['week_text']);
-                        if(!in_array(date('N',$time_now), $week_text)){
-                            $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
-                        }
-                    }
-                }
-            }else{
-                if(!empty($abandon['holiday'])){
-                    //是否有节假日限制？
-                    $holiday = explode(',', $abandon['holiday']);
-                    $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd',$time_now));
-                    if($get_holiday['code']==0){
-                        if(in_array($get_holiday['data'], $holiday)){
-                            $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
-                        }
-                    }
-                }
-                if(!empty($abandon['week_text']) && $abandon['week_text']!=0){
-                    //是否有星期限制？
-                    $week_text = explode(',', $abandon['week_text']);
-                    if(!in_array(date('N',$time_now), $week_text)){
-                        $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
-                    }
+            //是否有星期限制？
+            if(!empty($abandon['week_text']) && $abandon['week_text']!=0){
+                $week_text = explode(',', $abandon['week_text']);
+                if(!in_array(date('N'), $week_text)){
+                    $this->success('今天不在允许星期内');exit();
                 }
             }
             //查找相应渠道
@@ -116,9 +72,7 @@ class RecoverController extends BaseController {
             $systemUserJoin = "left join zl_system_user on zl_role_user.user_id=zl_system_user.system_user_id";
             
             $abandonUser = D('RoleUser')->field("system_user_id,realname")->where($roleUserWhere)->join($systemUserJoin)->select();
-            if(empty($abandonUser)){
-                $falg_msg[] =  '失败原因:找不到需要分配的员工，'.'规则名称:'.$abandon['abandonname'];continue;
-            }
+            
             $abandonUserArr =array();
             foreach($abandonUser as $zbandon_k => $zbandon_v){
                 $abandonUserArr[] = $zbandon_v['system_user_id'];
@@ -126,14 +80,14 @@ class RecoverController extends BaseController {
             $where = array();
             $where1 = array();
             $map = array();
-
+            
             $where['callbacknum'] = array('LT',$abandon['callbacknum']);
-            $lastvisit = $nowtime - (($abandon['unsatisfieddays'] * 86400) - 3600);//2016-10-13 回收保护期减1小时
+            $lastvisit = $nowtime - ($abandon['unsatisfieddays'] * 86400);
             $where['lastvisit'] = array('LT',$lastvisit);
             $where['_logic'] = 'and';
             
             $where1['callbacknum'] = array('EGT',$abandon['callbacknum']);
-            $lastvisit1 = $nowtime - (($abandon['attaindays'] * 86400) - 3600);//2016-10-13 回收保护期减1小时
+            $lastvisit1 = $nowtime - ($abandon['attaindays'] * 86400);
             $where1['lastvisit'] = array('LT',$lastvisit1);
             
             $map['_complex'][] = $where;
@@ -160,31 +114,23 @@ class RecoverController extends BaseController {
             $result = D('User')->where($map)->save($data);
             
             if($result){
-                $time_now_log = $time_now;
                 foreach($user as $key => $value){
                     $callbackDataAdd['user_id'] = $value['user_id'];
                     $callbackDataAdd['system_user_id'] = $value['system_user_id'];
                     $callbackDataAdd['remark'] = '系统超时回收';
                     $callbackDataAdd['status'] = 1;
-                    $callbackDataAdd['callbacktime'] = $time_now_log;
-                    $callbackDataAdd['nexttime'] = $time_now_log;
-                    $callbackDataAdd['callbacktype'] = 31;
+                    $callbackDataAdd['callbacktime'] = $nowtime;
+                    $callbackDataAdd['nexttime'] = $nowtime;
                     D('UserCallback')->add($callbackDataAdd);
-                    //添加数据记录
-                    $dataLog['operattype'] = '7';
-                    $dataLog['operator_user_id'] = 0;
-                    $dataLog['user_id'] = $value['user_id'];
-                    $dataLog['logtime'] = $time_now_log;
-                    $DataService->addDataLogs($dataLog);
                 }
             }
-            $falg_msg[] = '已成功回收:'.$result.'条数据，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');
-        }
-        if(!empty($abandon_id)){
-            $this->success($falg_msg[0]);
-        }elseif(!empty($falg_msg)){
-            foreach($falg_msg as $msg_v){
-                echo $msg_v.'<br/>';
+            
+            if(!empty($abandon_id)){
+                if($result !== false){
+                    $this->success('已成功回收'.$result.'条数据');
+                }else{
+                    $this->error('回收失败 ');
+                }    
             }
         }
     }

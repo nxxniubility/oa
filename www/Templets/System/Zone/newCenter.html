@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>系统首页-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
-		<link rel="stylesheet" href="__PUBLIC__/css/newCenter.css">	
+		<link rel="stylesheet" href="__PUBLIC__/css/newCenter.css">
 	</head>
 	<body>
 		<div class="wrapBox">
@@ -19,83 +19,81 @@
 					</div>
 				</div>
 				<div class="newMiddle">
+					<div class="newRows clearfix">
+						<div class="newRowsLeft"><i>&#42</i>中心名称:</div>
+						<div class="newRowsRight">
+							<input type="text" class="newInp" name="name" value="">
+						</div>
+					</div>
+					<div class="newRows clearfix">
+						<div class="newRowsLeft"><i>&#42</i>隶属区域:</div>
+						<div class="newRowsRight">
+						<?php if(!empty($zone)){ ?>
+					        <div class="select_title l" value="{$zone['name']}">{$zone['name']}</div>
+						<?php }else{ ?>
+						<div class="selectbox l">
+		                <dl class="select">
+		                    <dt>
+		                        <div class="select_title l">请选择大区</div>
+		                        <div class="arrow r"></div>
+		                    </dt>
+		                    <foreach name = "zoneList['children']" item = "v1">
+		                    	<foreach name = "v1['children']" item = "v2">
+		                    		<if condition = "$v1['level'] eq 1">
+		                    				<dd class="fxDone submitcity" data-value="{$v2['zone_id']}" >{$v2['name']}</dd>
+		                    		</if>
+		                    	</foreach>
+							</foreach>
+			            </dl>
+			            </div>
+		                <div class="selectbox l">
+		                    <dl class="select" style="display: none;">
+		                        <dt id="cityname" >
+		                            <div class="select_title l">请选择城市</div>
+		                            <div class="arrow r"></div>
+		                        </dt>
 
-						<div class="newRows clearfix">
-							<div class="newRowsLeft"><i>&#42</i>中心名称:</div>
-							<div class="newRowsRight">
-								<input type="text" class="newInp" name="name" value="">
-							</div>
+		                    </dl>
+		                    <input type="hidden" name="zone_id">
+		                </div>
+		                <?php } ?>
 						</div>
-						<div class="newRows clearfix">
-							<div class="newRowsLeft"><i>&#42</i>隶属区域:</div>
-							<div class="newRowsRight">
-							<?php if(!empty($zone)){ ?>
-						        <div class="select_title l" value="{$zone['name']}">{$zone['name']}</div>
-							<?php }else{ ?>
-								<div class="selectbox l">
-			                        <dl class="select">
-			                            <dt>
-			                                <div class="select_title l">请选择大区</div>
-			                                <div class="arrow r"></div>
-			                            </dt>
-			                            <foreach name = "zoneList['children']" item = "v1">				
-			                            	<foreach name = "v1['children']" item = "v2">
-			                            		<if condition = "$v1['level'] eq 1">
-			                            		<dd class="fxDone submitcity" data-value="{$v2['zone_id']}" >{$v2['name']}</dd>
-			                            		</if>
-			                            	</foreach>
-										</foreach>
-			                        </dl>
-			                    </div>
-			                    <div class="selectbox l">
-			                        <dl class="select" style="display: none;">
-			                            <dt id="cityname" >
-			                                <div class="select_title l">请选择城市</div>
-			                                <div class="arrow r"></div>
-			                            </dt>
-			                            
-			                        </dl>
-			                        <input type="hidden" name="zone_id">
-			                    </div>
-			                    <?php } ?>
-							</div>
+					</div>
+					<div class="newRows clearfix">
+						<div class="newRowsLeft">详情地址:</div>
+						<div class="newRowsRight">
+							<input type="text" class="newInp" name="address" value="">
 						</div>
-						<div class="newRows clearfix">
-							<div class="newRowsLeft">详情地址:</div>
-							<div class="newRowsRight">
-								<input type="text" class="newInp" name="address" value="">
-							</div>
+					</div>
+					<div class="newRows clearfix">
+						<div class="newRowsLeft">联系电话:</div>
+						<div class="newRowsRight">
+							<input type="tel" class="newInp" name="tel" value="">
 						</div>
-						<div class="newRows clearfix">
-							<div class="newRowsLeft">联系电话:</div>
-							<div class="newRowsRight">
-								<input type="tel" class="newInp" name="tel" value="">
-							</div>
+					</div>
+					<div class="newRows clearfix">
+						<div class="newRowsLeft">电子邮箱:</div>
+						<div class="newRowsRight">
+							<input type="email" class="newInp" name="email" value="">
 						</div>
-						<div class="newRows clearfix">
-							<div class="newRowsLeft">电子邮箱:</div>
-							<div class="newRowsRight">
-								<input type="email" class="newInp" name="email" value="">
-							</div>
+					</div>
+					<div class="newRows clearfix">
+						<div class="newRowsLeft">区域简介:</div>
+						<div class="newRowsRight">
+							<textarea class="newTxt" name="abstract" value=""></textarea>
 						</div>
-						<div class="newRows clearfix">
-							<div class="newRowsLeft">区域简介:</div>
-							<div class="newRowsRight">
-								<textarea class="newTxt" name="abstract" value=""></textarea>
-							</div>
+					</div>
+					<div class="newRows clearfix">
+						<div class="newRowsLeft">&nbsp;</div>
+						<div class="newRowsRight">
+							<input type="submit" class="newAreaSubmit" value="提交">
 						</div>
-						<div class="newRows clearfix">
-							<div class="newRowsLeft">&nbsp;</div>
-							<div class="newRowsRight">
-								<input type="submit" class="newAreaSubmit" value="提交">
-							</div>
-						</div>
-
+					</div>
 				</div>
 			</div>
 		</div>
-		
-		
+
+
 		<Zelin:js  src="jquery-1.9.1.min,newArea,addPermissions,common_ajax"  />
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script type="text/javascript">
@@ -109,11 +107,11 @@
 		                tel:$(':input[name="tel"]').val(),
 		                email:$(':input[name="email"]').val(),
 		                abstract:$(':input[name="abstract"]').val()
-		                
+
 		            };
 		            common_ajax(data);
 		        });
-		        
+
 		         $('.submitcity').click(function() {
 		            //获取node_id
 		           var zone_id = $(this).attr('data-value');
@@ -129,7 +127,7 @@
 		           		success:function(redata){
 		           			if(redata.code==0){
 		           				var str = '';
-		           				$.each(redata.data.children,function(n,value) {  
+		           				$.each(redata.data.children,function(n,value) {
 		           					str+='<dd class="fxDone citycontet" data-value="'+value.zone_id+'" >'+value.name+'</dd>';
 		           				});
 		           				$('#cityname').after(str);
