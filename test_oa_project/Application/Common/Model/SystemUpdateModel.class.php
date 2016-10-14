@@ -9,23 +9,9 @@
 namespace Common\Model;
 
 
+use Common\Model\SystemModel;
 class SystemUpdateModel extends SystemModel
 {
-
-    protected $systemUpdateDb;
-
-    /* public function _initialize()
-     {
-         $this->systemUserDb = M('system_user');
-     }*/
-
-    /** 初始化
-     * @author cq
-     */
-    public  function  _initialize(){
-
-        $this->systemUpdateDb = M('system_update');
-    }
 
     /**
      *获取所有的系统更新信息
@@ -47,8 +33,8 @@ class SystemUpdateModel extends SystemModel
             "{$DB_PREFIX}system_user.realname"
         );
         $john = 'LEFT JOIN  __SYSTEM_USER__ ON  __SYSTEM_UPDATE__.system_user_id =  __SYSTEM_USER__.system_user_id';
-        $sysUpdateData['data'] =  $this->systemUpdateDb->field($field)->where($where)->join($john)->order($order)->limit($limit)->select();
-        $sysUpdateData['count'] =  $this->systemUpdateDb->field($field)->where($where)->join($john)->count();
+        $sysUpdateData['data'] =  $this->field($field)->where($where)->join($john)->order($order)->limit($limit)->select();
+        $sysUpdateData['count'] =  $this->field($field)->where($where)->join($john)->count();
         return  $sysUpdateData;
 
     }

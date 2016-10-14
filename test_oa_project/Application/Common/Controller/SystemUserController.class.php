@@ -179,6 +179,7 @@ class SystemUserController extends BaseController
     public function getListCache($where, $order=null, $limit=null, $type=null)
     {
         $where = array_filter($where);
+        $where['usertype'] = !empty($where['usertype'])?$where['usertype']:10;
         if(F('Cache/Personnel/system_list') && empty($where['realname'])){
             $systemUserAll = F('Cache/Personnel/system_list');
         }else{
