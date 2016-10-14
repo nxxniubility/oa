@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/rightsManagement.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/jquery.treetable.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/jquery.treetable.theme.default.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/regionlManagement.css">
+    <style>
+        .pdl_20{ padding-left: 20px; }
+        .titlew{ width: 112px; }
+        .tar{ text-align: right }
+        .wTwo{ width: 855px !important;  }
+    </style>
+</head>
+<body>
+<div class="wrapBox">
+    <div class="regionCont">
+        <div class="regionContTop clearfix">
+            <div class="topTit l"><span class="masterList">系统配置</span></div>
+        </div>
+        <div class="rightsMiddle">
+            <dl class="regionTit  clearfix">
+                <dt class="titlew pdl_20"><span>系统基础</span></dt>
+                <dt class="wTwo"></dt>
+                <dt class="wThr"></dt>
+            </dl>
+            <dl class="clearfix">
+                <dd class="titlew tar pdl_20">是否需要认证：</dd>
+                <dd class="wTwo role_id">{:$data['USER_AUTH_ON']==1?'已开启':'未开启'}</dd>
+                <dd class="wThr" data-value="USER_AUTH_ON"><a href="javascript:;" style="color: #8D8D8D"><s>修改</s></a></dd>
+            </dl>
+            <dl class="clearfix">
+                <dd class="titlew tar pdl_20">认证类型：</dd>
+                <dd class="wTwo role_id">{:$data['USER_AUTH_TYPE']==1?'Session':'实时验证'}</dd>
+                <dd class="wThr" data-value="USER_AUTH_TYPE"><a href="javascript:;" style="color: #8D8D8D"><s>修改</s></a></dd>
+            </dl>
+            <dl class="clearfix">
+                <dd class="titlew tar pdl_20">无需权限认证操作：</dd>
+                <dd class="wTwo role_id">{$data.NOT_AUTH_ACTION}</dd>
+                <dd class="wThr" data-value="NOT_AUTH_ACTION"><a href="javascript:;" style="color: #8D8D8D"><s>修改</s></a></dd>
+            </dl>
+            <dl class="clearfix">
+                <dd class="titlew tar pdl_20">认证网关：</dd>
+                <dd class="wTwo role_id">{$data.USER_AUTH_GATEWAY}</dd>
+                <dd class="wThr" data-value="USER_AUTH_GATEWAY"><a href="javascript:;" style="color: #8D8D8D"><s>修改</s></a></dd>
+            </dl>
+        </div>
+        <div class="rightsMiddle">
+            <dl class="regionTit  clearfix">
+                <dt class="titlew pdl_20"><span>功能配置</span></dt>
+                <dt class="wTwo"></dt>
+                <dt class="wThr"></dt>
+            </dl>
+            <dl class="clearfix">
+                <dd class="titlew tar pdl_20">超级管理员配置：</dd>
+                <dd class="wTwo role_id">{$data.ADMIN_SUPER_ROLE}</dd>
+                <dd class="wThr" data-value="ADMIN_SUPER_ROLE"><a href="javascript:;" style="color: #8D8D8D"><s>修改</s></a></dd>
+            </dl>
+            <dl class="clearfix">
+                <dd class="titlew tar pdl_20">短信告警额外接收：</dd>
+                <dd class="wTwo role_id">{$data.SMSHINT_USER}</dd>
+                <dd class="wThr"><a href="javascript:;" class="editval_btn" data-value="system" data-key="SMSHINT_USER" style="color: #53b567">修改</a></dd>
+            </dl>
+            <dl class="clearfix">
+                <dd class="titlew tar pdl_20">销售ID配置：</dd>
+                <dd class="wTwo role_id">{$data.ADMIN_MARKET_ROLE}</dd>
+                <dd class="wThr"><a href="javascript:;" class="editval_btn" data-value="system" data-key="ADMIN_MARKET_ROLE" style="color: #53b567">修改</a></dd>
+            </dl>
+            <dl class="clearfix">
+                <dd class="titlew tar pdl_20">教务ID配置：</dd>
+                <dd class="wTwo role_id">{$data.ADMIN_EDUCATIONAL_ROLE}</dd>
+                <dd class="wThr"><a href="javascript:;" class="editval_btn" data-value="system" data-key="ADMIN_EDUCATIONAL_ROLE" style="color: #53b567">修改</a></dd>
+            </dl>
+            <dl class="clearfix">
+                <dd class="titlew tar pdl_20">订单优惠金额上限：</dd>
+                <dd class="wTwo role_id">{$data.ADMIN_USER_MAX_DISCOUNT}</dd>
+                <dd class="wThr"><a href="javascript:;" class="editval_btn" data-value="system" data-key="ADMIN_USER_MAX_DISCOUNT" style="color: #53b567">修改</a></dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/layer/extend/layer.ext.js"></script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+
+<script>
+    var edit_config_href = "{:U('System/Management/editConfig')}";
+    $('.editval_btn').click(function(){
+        var title = $(this).parent().siblings('.titlew').text();
+        var value = $(this).parent().siblings('.wTwo').text();
+        var type = $(this).attr('data-value');
+        var keyid = $(this).attr('data-key');
+        layer.prompt({
+            title: title,
+            value: value,
+        }, function(pass){
+            var data = {
+                keyid : keyid,
+                value : pass,
+                type : type
+            };
+            common_ajax2(data, edit_config_href, 'reload');
+        });
+    });
+</script>
+</body>
+</html>

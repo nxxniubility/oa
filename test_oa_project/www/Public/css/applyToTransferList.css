@@ -1,0 +1,71 @@
+.clearfix:after, .clearfix:before { display: table; content: " ";}
+.clearfix:after { clear: both;}
+/**/
+.wrapBox { padding: 0 20px; background: #fff; overflow: hidden;}
+.imCont { width: 1130px; margin-bottom: 80px;}
+.imContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.imContTop .topTit { line-height: 14px; padding: 20px 0; color: #53b567; border-bottom: 2px solid #53b567; cursor: default;}
+.topRight { height: 55px; font-size: 0;}
+.topRight .addAccount, .topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .addAccount:hover, .topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
+
+/*=================================== 黄金分割线 ===================================*/
+.atMiddle { width: 100%; margin: 20px auto;}
+
+.atTopSearch { margin-bottom: 20px;}
+.filtersBox { height: auto; overflow: hidden;}
+.filtersBox p { width: 100%; height: 45px; line-height: 45px; font-size: 12px; color: #999; text-align: left; text-indent: 15px; background: #f5f6fa;}
+.filtersBox .atBoxDes { width: 1128px; height: 112px; border: 1px solid #e1e6eb; border-top: none; background: #fff;}
+.filtersBox .atBoxDes .boxRow { margin-bottom: 10px; margin-left: 14px;}
+.filtersBox .atBoxDes .boxRow span { float: left; line-height: 30px; margin-right: 10px; color: #333;}
+.filtersBox .atBoxDes .boxRow span.oneSp, .filtersBox .atBoxDes .listOne { margin-top: 20px;}
+.filtersBox .atBoxDes ul { float: left;}
+.filtersBox .atBoxDes li { float: left; width: 100px; height: 30px; line-height: 30px; margin-right: 10px; color: #333; text-align: center; background: #eaeaea; cursor: pointer;}
+.atBoxDes .listOne li.oneCurr, .atBoxDes .listTwo li.twoCurr { color: #fff; background: #53b567;}
+.atBoxDes .timeBox { position: relative; float: left; width: 360px; height: auto; visibility: hidden;}
+.atBoxDes .timeBox .afTime { float: left; display: block; width: 158px; height: 28px; line-height: 28px; color: #a6a7a7; text-indent: 20px; border: 1px solid #53b567; background: #fff url(../images/datePicker.png) no-repeat 110px center; cursor: pointer;}
+.atBoxDes .timeBox span { float: left; height: 30px; margin: 0 14px; color: #393939;}
+
+.atKeyword { margin: 20px auto;}
+.atSearchSelect, .atSearchInp, .atSearchBtn { float: left; font-size: 12px;}
+.atSearchSelect, .atSearchInp { margin-right: 20px; text-indent: 15px; color: #555; border: 1px solid #ccc; background: #fff;}
+.atSearchSelect { width: 138px; height: 30px; line-height: 30px;}
+.atSearchInp { width: 178px; height: 28px; line-height: 28px;}
+.atSearchBtn { width: 66px; height: 30px; line-height: 30px; color: #fff; border: none; background: #53b567; cursor: pointer;}
+
+.atList { position: relative; width: 100%; border: 1px solid #e1e6eb;}
+.atList dl { font-size: 0; border-bottom: 1px solid #e1e6eb;}
+.atList dl.setTit { background: #f5f6fa;}
+.atList dl.on { background: #ebebeb;}
+.atList dt, .atList dd { display: inline-block; line-height: 43px; font-size: 12px;}
+.atList dt { color: #999;}
+.atList dd, .atList dd a { color: #696969;}
+.atList dd a { display: block;}
+
+.atList .wOne { width: 6%; text-indent: 22px;}
+.atList .wTwo { width: 11%;}
+.atList .wThr { width: 9.6%;}
+.atList .wFou { width: 9%;}
+.atList .wFiv { width: 10.1%;}
+.atList .wSix { width: 4.9%;}
+.atList .wSev { width: 13.6%;}
+.atList .wEig { width: 6.9%;}
+.atList .wNin { width: 13.2%;}
+.atList .wTen { width: 8.1%;}
+.atList .wEle { width: 7.4%;}
+.atList .atInpCheck { width: 14px; height: 14px; vertical-align: middle;}
+.atList .wEle, .atList .wEle a { color: #53b567;}
+.atList .setTit .wEle { color: #999;}
+
+.feOptions2 { background: #f5f6fa;}
+.collegaPage { width: 100%; margin: 0; padding: 13px 0; border: 1px solid #e1e6eb; border-top: none; background: #f5f6fa;}
+.batchDeletion { float: left; line-height: 32px;}
+.batchDeletion .bdCheck, .batchDeletion span { float: left;}
+.batchDeletion .bdCheck { width: 14px; height: 14px; margin-top: 8px; margin-left: 22px; vertical-align: middle;}
+.batchDeletion span { width: 88px; height: 28px; line-height: 28px; margin-left: 39px; font-size: 12px; font-family: "宋体"; color: #333; text-align: center; border: 1px solid #ccc; background: #fff; cursor: pointer;}
+.mr20 { padding-right: 20px;}
+.feLeft { float: left; padding-left: 22px; height: 30px;}
+.feLeft label { margin-right: 20px;}
+.feLeft label .feChk { width: 14px; height: 14px; margin-top: -2px; vertical-align: middle;}
+.feLeft label span { margin-left: 10px; font-size: 12px; color: #333;}
+.feLeft .feAssignment { width: 80px; height: 30px; line-height: 30px; font-size: 12px; color: #333; text-align: center; border: 1px solid #ddd; background: #fff; cursor: pointer;}

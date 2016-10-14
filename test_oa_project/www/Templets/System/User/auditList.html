@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/external.min.css">
+		<link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/auditTransferred.css">
+	</head>
+	<body>
+		<div class="wrapBox">
+			<div class="imCont">
+				<div class="imContTop clearfix">
+					<div class="topTit l">审核转入列表</div>
+					<div class="topRight r">
+					</div>
+				</div>
+				<div class="atMiddle">
+					<div class="atTopSearch">
+						<div class="filtersBox">
+							<p>筛选条件：</p>
+							<div class="atBoxDes">
+								<div class="boxRow clearfix">
+									<span class="oneSp">审核状态：</span>
+									<?php $request1 = $data['request']; unset($request1['status']);unset($request1['status']); ?>
+									<ul class="listOne clearfix">
+										<li {:$data['request']['status']==0?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request1)}&status=0'">全部</li>
+										<li {:$data['request']['status']==10?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request1)}&status=10'">待审核</li>
+										<li {:$data['request']['status']==20?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request1)}&status=20'">不通过</li>
+										<li {:$data['request']['status']==30?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request1)}&status=30'">通过</li>
+									</ul>
+								</div>
+								<div class="boxRow clearfix">
+									<span>申请时间：</span>
+									<?php unset($request['applytime']);unset($request['key_value']);$getapplytime = explode('@',$data['request']['applytime']); ?>
+									<ul class="listTwo clearfix">
+										<li {:$data['request']['applytime']==0?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime=0'">全部</li>
+										<li {:$data['request']['applytime']==(date('Y-m-d',time()).'@time')?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime={:(date('Y-m-d',time()).'@time')}'">今日申请</li>
+										<li {:$data['request']['applytime']==(date('Y-m-d',strtotime('-3 day')).'@time')?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime={:(date('Y-m-d',strtotime('-3 day')).'@time')}'">三日内申请</li>
+										<li {:$data['request']['applytime']==(date('Y-m-d',strtotime('-7 day')).'@time')?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime={:(date('Y-m-d',strtotime('-7 day')).'@time')}'">一周内申请</li>
+
+										<if condition="(!empty($data['request']['applytime']) && $getapplytime[0]!='time' && $getapplytime[1]!='time')">
+											<li class="clickli twoCurr">自定义时间段</li>
+											<li class="selectbox employeeStatus l start" style="display: block; visibility: visible;">
+												<input type="text" class="afTime" value="{$getapplytime[0]}" placeholder="开始时间"  readonly="readonly">
+											</li>
+											<li class="selectbox employeeStatus l end" style="display: block; visibility: visible;">
+												<input type="text" class="afTime endTiem" data-url="{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime=" value="{$getapplytime[1]}" placeholder="结束时间" autocomplete="off"  readonly="readonly">
+											</li>
+										<else />
+											<li class="clickli">自定义时间段</li>
+											<li class="selectbox employeeStatus l start">
+												<input type="text" class="afTime" value="" placeholder="开始时间" autocomplete="off"  readonly="readonly">
+											</li>
+											<li class="selectbox employeeStatus l end">
+												<input type="text" class="afTime endTiem" data-url="{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime=" value="" placeholder="结束时间" autocomplete="off"  readonly="readonly">
+											</li>
+										</if>
+
+									</ul>
+								</div>
+								<div class="boxRow clearfix">
+									<span>转入申请人：</span>
+									<?php $request3 = $data['request']; unset($request3['applytime']);unset($request3['key_value']); ?>
+									<select name="system_sele" >
+										<option value="{:U(\'System/User/auditList\').'?'.http_build_query($request3)}&system_user_id=0" {:$data['request']['system_user_id']==0?'selected="selected"':''}>--全部所属人--</option>
+										<foreach name="data['systemList']" item="v" key="k">
+											<option value="{:U(\'System/User/auditList\').'?'.http_build_query($request3)}&system_user_id={$v.system_user_id}" {:$data['request']['system_user_id']==$v['system_user_id']?'selected="selected"':''}>{$v.realname}</option>
+										</foreach>
+									</select>
+								</div>
+							</div>
+
+							<div class="atKeyword clearfix">
+								<form action="{:U('System/User/auditList')}" method="get">
+								<select class="atSearchSelect" name="key_name" >
+									<option value="qq" {:$data['request']['key_name']=='qq'?'selected="true"':''}>QQ</option>
+									<option value="username" {:$data['request']['key_name']=='username'?'selected="true"':''}>手机号码</option>
+									<option value="tel" {:$data['request']['key_name']=='tel'?'selected="true"':''}>固定电话</option>
+									<option value="realname" {:$data['request']['key_name']=='realname'?'selected="true"':''}>真实姓名</option>
+								</select>
+								<input type="text" class="atSearchInp" name="key_value" value="{$data['request']['key_value']}" placeholder="请输入关键词"/>
+								<input type="submit" class="atSearchBtn" value="搜索">
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="atList" id="atListBox">
+						<dl class="setTit clearfix">
+							<dt class="wOne">选中</dt>
+							<dt class="wTwo">真实姓名</dt>
+							<dt class="wThr">手机号码</dt>
+							<dt class="wEig mwO">qq</dt>
+							<dt class="wFiv mwS">固定电话</dt>
+							<dt class="wEig mwT">信息质量</dt>
+							<dt class="wSev mwO">原所属渠道</dt>
+							<dt class="wSev mwO">申请渠道</dt>
+							<dt class="wEig mwT">原所属人</dt>
+							<dt class="wEig mwT">申请者</dt>
+							<dt class="wThr" style="width: 127px;">申请时间</dt>
+							<dt class="wEig mwT">审核状态</dt>
+							<dt class="wEle">操作</dt>
+						</dl>
+						<foreach name="data['auditList']['data']" item="v" key="k">
+						<dl class="clearfix">
+							<dd class="wOne"><input type="checkbox" class="atInpCheck"></dd>
+							<dt class="wTwo">{$v.realname}</dt>
+							<dt class="wThr">{:decryptPhone($v['username'],C('PHONE_CODE_KEY'))}</dt>
+							<dt class="wEig mwO">{$v.qq}</dt>
+							<dt class="wFiv mwS">{$v.tel}</dt>
+							<dt class="wEig mwT">{:$data['USER_INFOQUALITY'][$v['infoquality']]}</dt>
+							<dt class="wSev mwO">{$v.affiliation_channelname}</dt>
+							<dt class="wSev mwO">{$v.apply_channelname}</dt>
+							<dt class="wEig mwT">{$v.affiliation_realname}</dt>
+							<dt class="wEig mwT">{$v.apply_realname}</dt>
+							<dt class="wThr" style="width: 127px;">{:date('Y-m-d H:i:s', $v['applytime'])}</dt>
+							<dt class="wEig mwT">{:$v['applystatus']==10?'待审核':($v['applystatus']==20?'不通过':'通过')}</dt>
+							<if condition="$v['applystatus'] neq 10">
+								<dd class="wEle"><a href="{:U('System/User/applyDetails',array('id'=>$v['user_apply_id']))}">查看</a></dd>
+							<else/>
+								<dd class="wEle"><a href="{:U('System/User/auditTransfer',array('id'=>$v['user_apply_id']))}">审核</a></dd>
+							</if>
+							<a  href="{:U('System/User/detailUser', array('id'=>$v['user_id'],'auditList'=>'1'))}"  class="detailLink" target="_blank">详情</a>
+						</dl>
+						</foreach>
+					</div>
+
+					<div class="collegaPage">
+						{$data['paging']}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
+    	<script src="__PUBLIC__/js/auditTransferred.js"></script>
+	</body>
+	<script>
+		$(function(){
+			//筛选渠道获取列表
+			$(':input[name="system_sele"]').change(function(){
+				location.href=$(':input[name="system_sele"]').val();
+			});
+		})
+	</script>
+</html>

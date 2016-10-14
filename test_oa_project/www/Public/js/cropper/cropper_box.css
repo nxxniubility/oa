@@ -1,0 +1,95 @@
+.cropperBoxOne {
+    height: 520px;
+	width:420px;
+}
+.cropperBoxOne, .deliverBoxTwo, .deliverBoxThr {
+    background: #fff none repeat scroll 0 0;
+    box-shadow: 5px 5px 15px #3a3a3a;
+    box-sizing: content-box;
+    display: none;
+    left: 50%;
+    overflow: visible;
+    position:absolute;
+    top: 50%;
+	
+    z-index: 10;
+}
+.cropperBoxOne .clearfix::after, .clearfix::before {
+    content: " ";
+    display: table;
+}
+.cropperBoxOne .clearfix::after {
+    clear: both;
+}
+.cropperBoxOne .clearfix::after,.cropperBoxOne .clearfix::before {
+    content: " ";
+    display: table;
+}
+.cropperBoxOne .do_tit {
+    background: #4DBD88 none repeat scroll 0 0;
+    height: 44px;
+    line-height: 44px;
+    width: 100%;
+}
+
+.cropperBoxOne .do_tit span{
+    color: #fff;
+    display: inline-block;
+    font-size: 18px;
+    text-indent: 1em;
+}
+.cropperBoxOne .do_tit i{
+    background: rgba(0, 0, 0, 0) url("./images/pd_09-01.png") no-repeat scroll 0 0;
+    cursor: pointer;
+    float: right;
+    height: 15px;
+    margin: 15px 15px 0 0;
+    width: 15px;
+}
+.cropperBoxOne .do_cont {
+    overflow: hidden;
+    width: 100%;
+}
+.cropperBoxOne .do_cont .do_cont_box {
+    color: #555;
+    padding: 30px;
+  
+}
+
+.cropperBoxOne .do_cont_box .do_container {    
+	width:360px;
+	height:360px;
+    margin-bottom: 10px;
+}
+
+.cropperBoxOne .do_cont_box .do_container  #cut_img{
+    color: #e46a4a;
+    font-size: 18px;
+	max-width:360px;
+	max-height:360px;
+}
+
+.cropperBoxOne .do_cont_box .do_btns {
+    text-align: center;
+    width: 100%;
+}
+
+.cropperBoxOne .do_cont_box .do_btns .do_confirm {
+    margin-top: 10px;
+}
+.cropperBoxOne .do_cont_box .do_btns .do_confirm,.cropperBoxOne .do_cont_box .do_btns .do_cancel {
+    background: #4DBD88 none repeat scroll 0 0;
+    border: medium none;
+    color: #fff;
+    display: inline-block;
+    font-size: 20px;
+    height: 37px;
+    line-height: 37px;
+    padding: 0 25px;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s ease-in 0s;
+}
+.cropperBoxOne .do_cont_box .do_btns .do_confirm,.cropperBoxOne .do_cont_box .do_btns .do_cancel{
+    margin-right: 20px;
+}

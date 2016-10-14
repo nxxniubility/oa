@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <Zelin:css   src="common,ClientList"/>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/ExportClient.css">
+</head>
+<body>
+<div class="wrapBox">
+    <div class="orgCont">
+        <div class="orgContTop clearfix">
+            <div class="topTit l"><span class="masterList">中心客户列表</span>
+            <span><em>&gt;</em>导出客户</span></div>
+            <div class="topRight r">
+                <a href="{:U('System/User/outputTemplateList/type/3')}" class="newDepartMent">设置导出模板</a>
+                <a href="{:U('System/User/userLibrary')}" class="return">返回</a>
+            </div>
+        </div>
+        <div class="Filter">
+            <div class="frame">
+                <form method="post" action="{:U('System/User/outputUser')}" id="form_tmp" target="upload" onsubmit="getpathdoc();">
+                    <div class="details">
+                        <span>选择导出客户模板：</span>
+                        <div class="inRowRight">
+                            <select class="imSelect" name="setpages_id"  autocomplete="off">
+                                <option selected="selected" value="">请选择导出模板</option>
+                                <foreach name = "setpagesList" item = "page">
+                                    <option value="{$page['setpages_id']}">{$page['pagesname']}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="details">
+                        <span>客户状态：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <li><a href="javascript:;" data-value="20">待联系</a></li>
+                            <li><a href="javascript:;" data-value="30">待跟进</a></li>
+                            <li><a href="javascript:;" data-value="70">交易</a></li>
+                            <li><a href="javascript:;" data-value="160">回库</a></li>
+                        </ul>
+                        <input type="hidden" name="status" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>信息质量：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <li><a href="javascript:;" data-value="1">A</a></li>
+                            <li><a href="javascript:;" data-value="2">B</a></li>
+                            <li><a href="javascript:;" data-value="3">C</a></li>
+                            <li><a href="javascript:;" data-value="4">D</a></li>
+                            
+                        </ul>
+                        <input type="hidden" name="infoquality" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>重点标记客户：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <li><a href="javascript:;" data-value="1">普通客户</a></li>
+                            <li><a href="javascript:;" data-value="2">重点客户</a></li>
+                           
+                        </ul>
+                         <input type="hidden" name="mark" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>最近跟进结果：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <foreach name="data['attitude']" item="v" key="k">
+                                <li><a href="javascript:;" data-value="{$v.num}">{$v.text}</a></li>
+                            </foreach>
+                           
+                        </ul>
+                         <input type="hidden" name="attitude_id" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>最近回访：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',time()).'@time'}">今日回访</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',strtotime('-1 day')).'@'.date('Y-m-d',strtotime('-1 day'))}">昨日回访</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',strtotime('-7 day')).'@time'}">一周内</a></li>
+                            <li class="clickli"><a href="javascript:;">自定义时间段</a></li>
+                            <li class="selectbox1 employeeStatus l start">
+                                <input type="text" class="afTime" value="" placeholder="开始时间" autocomplete="off">
+                            </li>
+                            <li class="selectbox1 employeeStatus l end">
+                                <input type="text" class="afTime endTiem" value="" placeholder="结束时间" autocomplete="off">
+                            </li>
+                            
+                        </ul>
+                        <input type="hidden" name="lastvisit" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>下次回访/承诺到访：</span>
+                        <ul class="secondCustom">
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <li><a href="javascript:;" data-value="6@{:date('Y-m-d',strtotime(date('Y-m-d',time()))).'@'.date('Y-m-d',strtotime('-1 day'))}">今日回访</a></li>
+                            <li><a href="javascript:;" data-value="{:'time@'.date('Y-m-d',strtotime('+1 day'))}">明内回访</a></li>
+                            <li><a href="javascript:;" data-value="{:'time@'.date('Y-m-d',strtotime('+3 day'))}">未来三日内</a></li>
+                            <li><a href="javascript:;" data-value="{:'time@'.date('Y-m-d',strtotime('+7 day'))}">未来一周内</a></li>
+                            <li class="clickli"><a href="javascript:;">自定义时间段</a></li>
+                            <li class="selectbox1 employeeStatus l start">
+                                <input type="text" class="afTime" value="" placeholder="开始时间" autocomplete="off">
+                            </li>
+                            <li class="selectbox1 employeeStatus l end">
+                                <input type="text" class="afTime endTiem" value="" placeholder="结束时间" autocomplete="off">
+                            </li>
+                            
+                        </ul>
+                        <input type="hidden" name="nextvisit" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>分配时间：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',time()).'@time'}">今日分配</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',strtotime('-1 day')).'@'.date('Y-m-d',strtotime('-1 day'))}">昨日分配</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',strtotime('-7 day')).'@time'}">一周内分配</a></li>
+                            <li class="clickli"><a href="javascript:;">自定义时间段</a></li>
+                            <li class="selectbox1 employeeStatus l start">
+                                <input type="text" class="afTime" value="" placeholder="开始时间" autocomplete="off">
+                            </li>
+                            <li class="selectbox1 employeeStatus l end">
+                                <input type="text" class="afTime endTiem"  value="" placeholder="结束时间" autocomplete="off">
+                            </li>
+                           
+                        </ul>
+                        <input type="hidden" name="allocationtime" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>出库时间：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',time()).'@time'}">今日出库</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',strtotime('-1 day')).'@'.date('Y-m-d',strtotime('-1 day'))}">昨日出库</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',strtotime('-7 day')).'@time'}">一周内出库</a></li>
+                            <li class="clickli"><a href="javascript:;">自定义时间段</a></li>
+                            <li class="selectbox1 employeeStatus l start">
+                                <input type="text" class="afTime" value="" placeholder="开始时间" autocomplete="off">
+                            </li>
+                            <li class="selectbox1 employeeStatus l end">
+                                <input type="text" class="afTime endTiem" value="" placeholder="结束时间" autocomplete="off">
+                            </li>
+                           
+                        </ul>
+                         <input type="hidden" name="updatetime" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>创建时间：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',time()).'@time'}">今日创建</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',strtotime('-1 day')).'@'.date('Y-m-d',strtotime('-1 day'))}">昨日创建</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',strtotime('-7 day')).'@time'}">一周内创建</a></li>
+                            <li class="clickli"><a href="javascript:;">自定义时间段</a></li>
+                            <li class="selectbox1 employeeStatus l start">
+                                <input type="text" class="afTime" value="" placeholder="开始时间" autocomplete="off">
+                            </li>
+                            <li class="selectbox1 employeeStatus l end">
+                                <input type="text" class="afTime endTiem" value="" placeholder="结束时间" autocomplete="off">
+                            </li>
+                            
+                        </ul>
+                        <input type="hidden" name="createtime" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>实际到访：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <li><a href="javascript:;" data-value="{:date('Y-m-d',time()).'@time'}">今日到访</a></li>
+                            <li><a href="javascript:;" data-value="{:'time@'.date('Y-m-d',strtotime('+3 day'))}">三日内到访</a></li>
+                            <li><a href="javascript:;" data-value="{:'time@'.date('Y-m-d',strtotime('-7 day'))}">一周内到访</a></li>
+                            <li class="clickli"><a href="javascript:;">自定义时间段</a></li>
+                            <li class="selectbox1 employeeStatus l start">
+                                <input type="text" class="afTime" value="" placeholder="开始时间" autocomplete="off">
+                            </li>
+                            <li class="selectbox1 employeeStatus l end">
+                                <input type="text" class="afTime endTiem" value="" placeholder="结束时间" autocomplete="off">
+                            </li>
+                            
+                        </ul>
+                        <input type="hidden" name="visittime" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>意向课程：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-vlaue="0"  class="on_hover">全部</a></li>
+                            <foreach name="data['courseAll']" item="v" key="k">
+                                <li><a href="javascript:;" data-vlaue="{$v.course_id}" >{$v.coursename}</a></li>
+                            </foreach>
+                            
+                        </ul>
+                        <input type="hidden" name="course_id" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>学习方式：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-vlaue="0" class="on_hover">全部</a></li>
+                            <foreach name="data['studytype']" item="v" key="k">
+                                <li><a href="javascript:;" data-vlaue="{$v.num}">{$v.text}</a></li>
+                            </foreach>
+                           
+                        </ul>
+                         <input type="hidden" name="studytype" autocomplete="off">
+                    </div>
+                    <div class="details">
+                        <span>学习平台：</span>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="on_hover">全部</a></li>
+                            <foreach name="data['learningtype']" item="v" key="k">
+                                <li><a href="javascript:;" data-value="{$v.num}">{$v.text}</a></li>
+                            </foreach>
+                             
+                        </ul>
+                        <input type="hidden" name="learningtype" autocomplete="off">
+                    </div>
+
+                    
+                    <div class="details">
+                    <span>渠道：</span>
+                        <select name="channel_id" autocomplete="off">
+                            <option value="">--全部渠道--</option>
+                            <foreach name="data['channel']['data']" item="v" key="k">
+                                <option value="{$v.channel_id}">{$v.channelname}</option>
+                                <if condition="!empty($v['children'])">
+                                    <foreach name = "v['children']" item = "v2">
+                                        <option value="{$v2.channel_id}">&nbsp;&nbsp;├─ {$v2['channelname']}</option>
+                                    </foreach>
+                                </if>
+                            </foreach>
+                        </select>
+                    </div>
+
+
+                    <div class="details" style="margin-top: 55px;">
+                        <div>
+                            <input type="submit" value="提交" id="succ"  class="outPutUserBtn"   />
+                        </div>
+                    </div>
+                    <p class="maxNum">最多只能导出3W条哦</p>
+                    <!--<div class="lostBox lostUser clearfix">
+                    	<i></i>
+                    	<p>抱歉，未找到<em>"13590493546"</em>的相关结果</p>
+                    </div>-->
+                     <!--<div class="lostBox missingData clearfix">
+                    	<i></i>
+                    	<p>抱歉，未查到您指定的数据</p>
+                    </div>-->
+                    <!--<div class="lostBox lostData clearfix">
+                    	<i></i>
+                    	<p>尚无数据，请尽快添加</p>
+                    </div>-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<iframe name="upload" id="upload" frameborder="0" style="display: none"></iframe>
+
+
+<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+<link rel="stylesheet" href="__PUBLIC__/js/pjax/css/nprogress.css">
+<script type="text/javascript" src="__PUBLIC__/js/pjax/js/jquery.pjax.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/pjax/js/nprogress.js"></script>
+<script src="__PUBLIC__/js/organization.js"></script>
+<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
+<Zelin:js  src="addFile,programList,outputUser" />
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+
+<script>
+    $('.details a').click(function() {       	
+        $(this).parent('li').parent('ul').siblings('input').val($(this).attr('data-value'));
+    })
+    function getpathdoc(){
+        layer.msg('正在导出数据，请耐心等待...',{icon:0,time: 0});
+        setTimeout(function(){
+            getpath();
+        },1000)
+        function getpath(){
+            $.ajax({
+                url:"{:U('System/User/outputUser')}",
+                dataType:'json',
+                type:'post',
+                data:{type:'succ'},
+                success:function(reflag){
+                    if(reflag.code==0){
+                        layer.closeAll();
+                        layer.msg(reflag.msg,{icon:1});
+                        location.href=reflag.data;
+                    }else if(reflag.code==4){
+                        layer.closeAll();
+                        layer.msg(reflag.msg,{icon:2});
+                    }else{
+                         getpath();
+                    }
+                }
+            })
+        }
+    }
+</script>
+</body>
+</html>

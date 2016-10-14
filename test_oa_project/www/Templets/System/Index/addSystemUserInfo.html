@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/addFile.css">
+</head>
+<body>
+<div class="w1000">
+    <div class="headPrompt">请完善以下信息，以便正常使用系统</div>
+    <div class="headSwitching clearfix">
+        <a href="javascript:;" class="afStepOne"></a>
+        <a href="javascript:;" class="afStepTwo"></a>
+    </div>
+    <form method="post" action="#">
+        <div class="afItem">
+            <div class="itTop clearfix">
+                <div class="topLeft"></div>
+                <span>基本信息</span>
+                <em></em>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>姓名:</div>
+                <div class="afRowRight">
+                    <input type="text" class="afInp afUnreadable" value="{$data['userInfo']['realname']}" disabled="disabled">
+                </div>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>性别:</div>
+                <div class="afRowRight sex clearfix">
+                    <label for="sexMan">
+                        <input type="radio" name="sex" class="afman" value="1" id="sexMan" <?php echo $data['userInfo']['sex']==1?'checked="checked"':''; ?>>
+                        <span>男</span>
+                    </label>
+                    <label for="sexWoman">
+                        <input type="radio" name="sex" class="afwoman" value="2" id="sexWoman"  <?php echo $data['userInfo']['sex']==2?'checked="checked"':''; ?>>
+                        <span>女</span>
+                    </label>
+                </div>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>生日:</div>
+                <div class="afRowRight">
+                    <input type="text" class="afTime" id="afBirthday" name="birthday" value="<?php echo isset($data['on_info']['birthday'])?$data['on_info']['birthday']:''; ?>" placeholder="请选择日期">
+                </div>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>婚姻状态:</div>
+                <div class="afRowRight maritalStatus clearfix">
+                    <label for="unmarried">
+                        <input type="radio" name="marital" class="afUnmarried" id="unmarried" value="0" <?php echo $data['on_info']['marital']==0?'checked="checked"':''; ?>>
+                        <span>未婚</span>
+                    </label>
+                    <label for="married">
+                        <input type="radio" name="marital" class="afMarried" id="married" value="1" <?php echo $data['on_info']['marital']==1?'checked="checked"':''; ?>>
+                        <span>已婚</span>
+                    </label>
+                    <label for="divorced">
+                        <input type="radio" name="marital" class="afDivorced" id="divorced" value="2" <?php echo $data['on_info']['marital']==2?'checked="checked"':''; ?>>
+                        <span>离异</span>
+                    </label>
+                </div>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>籍贯:</div>
+                <div class="afRowRight">
+                    <input type="text" class="afInp" name="nativeplace" value="<?php echo isset($data['on_info']['nativeplace'])?$data['on_info']['nativeplace']:''; ?>">
+                </div>
+            </div>
+        </div>
+        <div class="afItem">
+            <div class="itTop clearfix">
+                <div class="topLeft"></div>
+                <span>教育经历</span>
+                <em></em>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>学历:</div>
+                <div class="afRowRight clearfix">
+                    <div class="selectbox l">
+                        <dl class="select">
+                            <dt>
+                                <if condition="(isset($data['on_info']['education_id']))">
+                                    <foreach name="data['educationAll']" item="v" key="k" >
+                                        <if condition="($v['education_id'] eq $data['on_info']['education_id'])">
+                                            <div class="select_title l">{$v.educationname}</div>
+                                        </if>
+                                    </foreach>
+                                <else />
+                                    <div class="select_title l">请选择学历</div>
+                                </if>
+                                <div class="arrow r"></div>
+                            </dt>
+                            <foreach name="data['educationAll']" item="v" key="k" >
+                                <dd class="fxDone" data-value="{$v.education_id}">{$v.educationname}</dd>
+                            </foreach>
+                        </dl>
+                        <input type="hidden" name="education_id" value="<?php echo isset($data['on_info']['education_id'])?$data['on_info']['education_id']:''; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>毕业院校:</div>
+                <div class="afRowRight clearfix">
+                    <input type="text" class="afInp" name="school" value="<?php echo isset($data['on_info']['school'])?$data['on_info']['school']:''; ?>">
+                </div>
+            </div>
+        </div>
+        <div class="afItem">
+            <div class="itTop clearfix">
+                <div class="topLeft"></div>
+                <span>联系方式</span>
+                <em></em>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>手机号码:</div>
+                <div class="afRowRight">
+                    <input type="text" class="afInp afUnreadable" value="<?php echo decryptPhone($data['userInfo']['username'], C('PHONE_CODE_KEY')) ?>" disabled="disabled">
+                </div>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>电子邮箱:</div>
+                <div class="afRowRight">
+                    <input type="email" class="afInp" name="plivatemail" value="<?php echo isset($data['on_info']['plivatemail'])?$data['on_info']['plivatemail']:''; ?>">
+                </div>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>公司邮箱:</div>
+                <div class="afRowRight">
+                    <input type="text" class="afInp afUnreadable" value="{$data['userInfo']['email']}" disabled="disabled">
+                </div>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft">&nbsp;</div>
+                <div class="afRowRight">
+                    <a href="javascript:;" class="afNext">下一步</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<Zelin:js  src="jquery-1.9.1.min,common,addFile"  />
+<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script>
+    $(function(){
+        $('.afNext').click(function() {
+            var data = {
+                sex:$(':input[name="sex"]:checked').val(),
+                marital:$(':input[name="marital"]:checked').val(),
+                birthday:$(':input[name="birthday"]').val(),
+                nativeplace:$(':input[name="nativeplace"]').val(),
+                education_id:$(':input[name="education_id"]').val(),
+                school:$(':input[name="school"]').val(),
+                plivatemail:$(':input[name="plivatemail"]').val()
+            };
+            common_ajax(data);
+        });
+		$(".afTime").glDatePicker({
+            selectedDate: new Date(1990, 8, 5),
+            selectableYears:[50,0]
+        });
+
+    });
+</script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+</body>
+</html>

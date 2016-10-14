@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <Zelin:css  src="common,modificationFile"  />
+    <link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
+</head>
+<body>
+<div class="wrapBox" id="sUserIfoEditWrap">
+    <div class="viewFileCont">
+        <div class="vfContTop clearfix">
+            <div class="topTit l">
+                <span class="masterList">员工列表</span>
+                <span><em>&gt;</em>修改档案</span>
+            </div>
+            <div class="topRight r">
+                <a href="{$data['url_systemUser']}" class="return">返回</a>
+            </div>
+        </div>
+    </div>
+    <div class="afItem">
+        <div class="itTop clearfix">
+            <div class="topLeft"></div>
+            <span>基本信息</span>
+            <em></em>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>姓名:</div>
+            <div class="afRowRight">
+                <input type="text" class="afInp afUnreadable" value="{$data['systemUserInfo']['realname']}" disabled="disabled">
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>性别:</div>
+            <div class="afRowRight sex clearfix">
+                <label for="sexMan">
+                    <input type="radio" name="sex" class="afman" id="sexMan" value="1" {:$data['systemUserInfo']['sex']==1?'checked="checked"':''}>
+                    <span>男</span>
+                </label>
+                <label for="sexWoman">
+                    <input type="radio" name="sex" class="afwoman" id="sexWoman" value="2" {:$data['systemUserInfo']['sex']==2?'checked="checked"':''}>
+                    <span>女</span>
+                </label>
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>生日:</div>
+            <div class="afRowRight">
+                <input type="text" class="afTime" id="afBirthday" name="birthday" readonly="readonly" value="{:($data['systemUserInfo']['birthday']!=0)?date('Y-m-d',$data['systemUserInfo']['birthday']):''}" placeholder="2016/3/22">
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>婚姻状态:</div>
+            <div class="afRowRight maritalStatus clearfix">
+                <label for="unmarried">
+                    <input type="radio" name="marital" class="afUnmarried" id="unmarried" value="0" {:$data['systemUserInfo']['marital']==0?'checked="checked"':''}>
+                    <span>未婚</span>
+                </label>
+                <label for="married">
+                    <input type="radio" name="marital" class="afMarried" id="married" value="1" {:$data['systemUserInfo']['marital']==1?'checked="checked"':''}>
+                    <span>已婚</span>
+                </label>
+                <label for="divorced">
+                    <input type="radio" name="marital" class="afDivorced" id="divorced" value="2" {:$data['systemUserInfo']['marital']==2?'checked="checked"':''}>
+                    <span>离异</span>
+                </label>
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>籍贯:</div>
+            <div class="afRowRight">
+                <input type="text" class="afInp" name="nativeplace" value="{$data['systemUserInfo']['nativeplace']}">
+            </div>
+        </div>
+    </div>
+    <div class="afItem">
+        <div class="itTop clearfix">
+            <div class="topLeft"></div>
+            <span>教育经历</span>
+            <em></em>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>学历:</div>
+            <div class="afRowRight clearfix">
+                <div class="selectbox l">
+                    <dl class="select">
+                        <dt>
+                            <div class="select_title l">{:$data['systemUserInfo']['education_name']?$data['systemUserInfo']['education_name']:'请选择学历'}</div>
+                            <div class="arrow r"></div>
+                        </dt>
+                        <foreach name="data['educationAll']" item="v" key="k" >
+                            <dd class="fxDone" data-value="{$k}">{$v}</dd>
+                        </foreach>
+                    </dl>
+                    <input type="hidden" name="education_id" value="{$data['systemUserInfo']['education_id']}">
+                </div>
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>毕业院校:</div>
+            <div class="afRowRight clearfix">
+                <input type="text" class="afInp" name="school" value="{$data['systemUserInfo']['school']}">
+            </div>
+        </div>
+    </div>
+    <div class="afItem">
+        <div class="itTop clearfix">
+            <div class="topLeft"></div>
+            <span>联系方式</span>
+            <em></em>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>手机号码:</div>
+            <div class="afRowRight">
+                <input type="text" class="afInp afUnreadable" value="{$data['systemUserInfo']['username']}" disabled="disabled">
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>电子邮箱:</div>
+            <div class="afRowRight">
+                <input type="email" class="afInp" name="plivatemail" value="{$data['systemUserInfo']['plivatemail']}">
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>公司邮箱:</div>
+            <div class="afRowRight">
+                <input type="text" class="afInp afUnreadable" value="{$data['systemUserInfo']['email']}" disabled="disabled">
+            </div>
+        </div>
+    </div>
+    <div class="afItem">
+        <div class="itTop clearfix">
+            <div class="topLeft"></div>
+            <span>任职信息</span>
+            <em></em>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>所属部门及职位:</div>
+            <div class="afRowRight">
+                <input type="text" class="afInp afUnreadable" value="{$data['systemUserInfo']['role_names']}" disabled="disabled">
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>所属区域:</div>
+            <div class="afRowRight">
+                <input type="text" class="afInp afUnreadable" value="{$data['systemUserInfo']['zonename']}" disabled="disabled">
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>员工状态:</div>
+            <div class="afRowRight clearfix">
+                <div class="selectbox l">
+                    <dl class="select">
+                        <dt>
+                            <div class="select_title l">{:$data['systemUserStatus'][$data['systemUserInfo']['usertype']]['text']}</div>
+                            <div class="arrow r"></div>
+                        </dt>
+                        <foreach name="data['systemUserStatus']" item="v">
+                            <dd class="fxDone" data-value="{$v.num}" data-name="usertype">{$v.text}</dd>
+                        </foreach>
+                    </dl>
+                    <input type="hidden" value="{$data['systemUserInfo']['usertype']}" name="usertype">
+                </div>
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>入职时间:</div>
+            <div class="afRowRight">
+                <input type="text" class="afTime" id="afBirthday2" name="entrytime" readonly="readonly" value="{:($data['systemUserInfo']['entrytime']!=0)?date('Y-m-d',$data['systemUserInfo']['entrytime']):''}" placeholder="2016/3/22">
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>转正时间:</div>
+            <div class="afRowRight">
+                <input type="text" class="afTime" id="afBirthday3" name="straightime" readonly="readonly" value="{:($data['systemUserInfo']['straightime']!=0)?date('Y-m-d',$data['systemUserInfo']['straightime']):''}" placeholder="2016/6/22">
+            </div>
+        </div>
+    </div>
+    <div class="afItem">
+        <div class="itTop clearfix">
+            <div class="topLeft"></div>
+            <span>五险一金</span>
+            <em></em>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft">社保电脑号:</div>
+            <div class="afRowRight clearfix">
+                <input type="text" class="afInp l" name="socialsecurity" value="{$data['systemUserInfo']['socialsecurity']}">
+                <!--<span class="afNone l">暂无社保请填0</span>-->
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft">公积金账号:</div>
+            <div class="afRowRight clearfix">
+                <input type="text" class="afInp l" name="providentfund" value="{$data['systemUserInfo']['providentfund']}">
+                <!--<span class="afNone l">暂无公积金请填0</span>-->
+            </div>
+        </div>
+    </div>
+    <div class="afItem">
+        <div class="itTop clearfix">
+            <div class="topLeft"></div>
+            <span>其他信息</span>
+            <em></em>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft"><i>&#42</i>指纹编号:</div>
+            <div class="afRowRight">
+                <input type="text" class="afInp" name="check_id" value="{$data['systemUserInfo']['check_id']}">
+            </div>
+        </div>
+        <div class="afRow clearfix">
+            <div class="afRowLeft">备注:</div>
+            <div class="afRowRight">
+                <textarea class="afTxt" name="remark">{$data['systemUserInfo']['remark']}</textarea>
+            </div>
+        </div>
+
+        <div class="afRow clearfix">
+            <div class="afRowLeft">&nbsp;</div>
+            <div class="afRowRight clearfix">
+                <a href="{$data['url_systemUser']}" class="afPrev l">返回</a>
+                <input type="submit" class="afSubmit l" value="提交">
+            </div>
+        </div>
+    </div>
+</div>
+
+<Zelin:js  src="jquery-1.9.1.min,common,addFile"   />
+<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+
+<script>
+    $(function(){
+        $('.afSubmit').click(function() {
+            var data = {
+                sex:$(':input[name="sex"]:checked').val(),
+                marital:$(':input[name="marital"]:checked').val(),
+                birthday:$(':input[name="birthday"]').val(),
+                nativeplace:$(':input[name="nativeplace"]').val(),
+                education_id:$(':input[name="education_id"]').val(),
+                school:$(':input[name="school"]').val(),
+                plivatemail:$(':input[name="plivatemail"]').val(),
+                usertype:$(':input[name="usertype"]').val(),
+                entrytime:$(':input[name="entrytime"]').val(),
+                straightime:$(':input[name="straightime"]').val(),
+                socialsecurity:$(':input[name="socialsecurity"]').val(),
+                providentfund:$(':input[name="providentfund"]').val(),
+                check_id:$(':input[name="check_id"]').val(),
+                remark:$(':input[name="remark"]').val()
+            };
+            common_ajax(data);
+        });
+        
+        //  日期
+        $('#afBirthday').glDatePicker({
+            selectedDate: new Date(1990, 8, 5),
+            selectableYears:[50,0]
+        });
+        $('#afBirthday2, #afBirthday3').glDatePicker();
+    });
+</script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+
+</body>
+</html>

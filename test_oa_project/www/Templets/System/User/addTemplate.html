@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/imSetTemplate.css">
+	</head>
+	<body>
+		<div class="wrapBox">
+			<div class="proCont">
+				<div class="proContTop clearfix">
+					<div class="topTit l">
+						<span class="masterList">客户列表</span>
+						<span><em>&gt;</em>添加新模板</span>
+					</div>
+					<div class="topRight r">
+					<?php if($type == 2){ ?>
+						<a href="{:U('System/User/importTemplateList/type/2')}" class="return">返回</a>
+					<?php } elseif($type == 3) { ?>
+						<a href="{:U('System/User/outputTemplateList/type/3')}" class="return">返回</a>
+					<?php } ?>
+					</div>
+				</div>
+			</div>
+			<div class="improContMiddle">
+				<div class="proRow clearfix">
+					<div class="imLeft l"><i>&#42</i>模板名称:</div>
+					<div class="imRight l">
+						<input type="text" class="addProInp" name="pagesname" autocomplete="off">
+					</div>
+				</div>
+				<?php if($type == 2){ ?>
+				<div class="proRow clearfix">
+					<div class="imLeft l"><i>&#42</i>对应渠道:</div>
+					<div class="imRight l">
+						<select class="imSelect" name="channel_id" autocomplete="off">
+							<option selected="selected" value="">选择渠道</option>
+							<foreach name = "channelList['data']" item = "channel">
+								<optgroup label="{$channel['channelname']}"></optgroup>
+								<if condition="!empty($channel['children'])">
+									<foreach name = "channel['children']" item = "channel2">
+										<option value="{$channel2['channel_id']}">&nbsp;&nbsp;├─ {$channel2['channelname']}</option>
+									</foreach>
+								</if>
+							</foreach>
+						</select>
+					</div>
+				</div>
+				<div class="proRow clearfix">
+					<div class="imLeft l"><i>&#42</i>选择表头:</div>
+					<div class="imRight l">
+						<div class="headerBox">
+							<div class="div">
+								<div class="d1">
+									<p>输入值为Excel表中的列序字母<span>（双击删除）</span></p>
+									<ul class="ul1">	
+									</ul>
+								</div>
+							<div class="d2">
+								<p>单击选择标头项</p>
+								<ul class="ul2">
+									<li><a href="javascript:;" class="sign" data-value="realname">姓名</a></li>
+									<li><a href="javascript:;" class="sign" data-value="sex">性别</a></li>
+									<li><a href="javascript:;" class="sign" data-value="birthday">年龄</a></li>
+									<li><a href="javascript:;" class="sign" data-value="username">手机号码</a></li>
+									<li><a href="javascript:;" class="sign" data-value="tel">固定电话</a></li>
+									<li><a href="javascript:;" class="sign" data-value="qq">QQ</a></li>
+									<li><a href="javascript:;" class="sign" data-value="workyear">工作年限</a></li>
+									<li><a href="javascript:;" class="sign" data-value="school">学校</a></li>
+									<li><a href="javascript:;" class="sign" data-value="educationname">学历</a></li>
+									<li><a href="javascript:;" class="sign" data-value="major">专业</a></li>
+									<li><a href="javascript:;" class="sign" data-value="email">电子邮箱</a></li>
+									<li><a href="javascript:;" class="sign" data-value="course">意向课程</a></li>
+									<li><a href="javascript:;" class="sign" data-value="address">目前居住地</a></li>
+									<li><a href="javascript:;" class="sign" data-value="homeaddress">户口</a></li>
+									<li><a href="javascript:;" class="sign" data-value="postcode">邮编</a></li>
+									<li><a href="javascript:;" class="sign" data-value="lastposition">最近职位</a></li>
+									<li><a href="javascript:;" class="sign" data-value="lastcompany">最近公司</a></li>
+									<li><a href="javascript:;" class="sign" data-value="lastsalary">目前薪资</a></li>
+									<li><a href="javascript:;" class="sign" data-value="workstatus">求职状态</a></li>
+									<li><a href="javascript:;" class="sign" data-value="wantposition">应聘职位</a></li>
+									<li><a href="javascript:;" class="sign" data-value="wantsalary">期望薪资</a></li>
+									<li><a href="javascript:;" class="sign" data-value="englishstatus">英语水平</a></li>
+									<li><a href="javascript:;" class="sign" data-value="remark">备注</a></li>
+									<li><a href="javascript:;" class="sign" data-value="infoquality">信息质量</a></li>
+								</ul>
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>			
+				<?php } else{ ?>
+				<div class="proRow clearfix">
+					<div class="imLeft l"><i>&#42</i>选择表头:</div>
+					<div class="imRight l">
+						<div class="headerBox">
+							<div class="div">
+								<div class="d1">
+									<p>输入值为Excel表中的列序字母<span>（双击删除）</span></p>
+									<ul class="ul1">	
+									</ul>
+								</div>
+							<div class="d2">
+								<p>单击选择标头项</p>
+								<ul class="ul2">
+									<li><a href="javascript:;" class="sign" data-value="realname">姓名</a></li>
+									<li><a href="javascript:;" class="sign" data-value="infoquality">信息质量</a></li>
+									<li><a href="javascript:;" class="sign" data-value="username">手机号码</a></li>
+									<li><a href="javascript:;" class="sign" data-value="tel">固定电话</a></li>
+									<li><a href="javascript:;" class="sign" data-value="qq">QQ</a></li>
+									<li><a href="javascript:;" class="sign" data-value="email">电子邮箱</a></li>
+									<li><a href="javascript:;" class="sign" data-value="status">状态</a></li>
+									<li><a href="javascript:;" class="sign" data-value="weight">权重值</a></li>
+									<li><a href="javascript:;" class="sign" data-value="searchkey">搜索词</a></li>
+									<li><a href="javascript:;" class="sign" data-value="interviewurl">咨询地址</a></li>
+									<li><a href="javascript:;" class="sign" data-value="learningtype">学习平台</a></li>
+									<li><a href="javascript:;" class="sign" data-value="mark">重点/普通</a></li>
+									<li><a href="javascript:;" class="sign" data-value="course">意向课程</a></li>
+									<li><a href="javascript:;" class="sign" data-value="lastvisit">最后回访时间</a></li>
+									<li><a href="javascript:;" class="sign" data-value="nextvisit">下次回访时间</a></li>
+									<li><a href="javascript:;" class="sign" data-value="visittime">到访时间</a></li>
+									<li><a href="javascript:;" class="sign" data-value="attitude_id">跟进结果</a></li>
+									<li><a href="javascript:;" class="sign" data-value="remark">备注</a></li>
+									<li><a href="javascript:;" class="sign" data-value="allocationtime">分配时间</a></li>
+									<li><a href="javascript:;" class="sign" data-value="updatetime">更新时间</a></li>
+									<li><a href="javascript:;" class="sign" data-value="createtime">创建时间</a></li>
+									<li><a href="javascript:;" class="sign" data-value="reservetype">预报审核状态</a></li>
+									<li><a href="javascript:;" class="sign" data-value="channelname">渠道</a></li>
+									<li><a href="javascript:;" class="sign" data-value="systemusername">所属人</a></li>
+									<li><a href="javascript:;" class="sign" data-value="createname">创建人</a></li>
+									<li><a href="javascript:;" class="sign" data-value="updatename">出库人</a></li>
+								</ul>
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>	
+				
+				<?php } ?>
+				<div class="proRow clearfix">
+					<div class="imLeft l">&nbsp;</div>
+					<div class="newRight newFont l">
+						<input type="submit" class="setSubmit" value="提交">
+						<!--<a href="javascript:;" class="setCancel">取消</a>-->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		
+
+		
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/jquery.sortable.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script type="text/javascript">
+		   
+
+		$(function(){
+
+			var n=0;
+
+			$(".ul2").find("li").on("click",function(){
+
+				var color=$(this).css("backgroundColor");
+				//var dataValue = $(this).$(".ul2");
+				var dataValue=$(this).children().attr('data-value');
+
+				$(this).css("background-color","#53b567");
+				if($(this).css("backgroundColor")!=color){
+
+
+					$($(".ul1")[n]).wrap("<div class='big'></div>");
+
+					$($(".ul1")[n]).before("<input type='text' class='findname' data-value='"+dataValue+"'  value='A'>")
+
+					var clone=$(this).clone(true);
+
+					 clone.appendTo($($(".ul1")[n]))
+					 n++;
+
+					$(".d1").append("<ul class='ul1'></ul>")
+					
+				}
+				// $(".ul1").sortable()
+
+				$(".ul1").find("li").on("dblclick",function(){
+					var html=$(this).html();
+					$(".big").has($(this)).remove();
+
+					$.each($(".ul2 li"),function(i,n){
+
+						if($($(".ul2 li")[i]).html()==html) 
+							$($(".ul2 li")[i]).css("background-color","#eaeaea")
+
+					})
+					n=$(".ul1 li").length;
+				})
+			})
+			 //提交
+		        $('.setSubmit').click(function() {
+		        	var sign = '';
+		        	$('.findname').each(function(k,v) {
+		        		if(k==0){
+		        			sign = $(v).val()+'-'+$(v).attr('data-value');
+		        		}else{
+		        			sign += ','+$(v).val()+'-'+$(v).attr('data-value');
+		        		}
+		        	})
+		            var data = {
+		                pagesname:$(':input[name="pagesname"]').val(),
+		                channel_id:$(':input[name="channel_id"]').val(),
+		                sign:sign
+		            };
+		            common_ajax(data);
+		        });
+		})	
+
+		</script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+	</body>
+</html>

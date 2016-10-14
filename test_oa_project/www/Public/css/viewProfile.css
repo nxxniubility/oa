@@ -1,0 +1,34 @@
+/**/
+.wrapBox { width: 1130px; margin: 0 20px; background: #fff;}
+.viewFileCont { margin-bottom: 20px;}
+.vfContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.vfContTop .topTit { line-height: 14px; font-size: 0; cursor: default;}
+.vfContTop .topTit span { float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
+.vfContTop .topTit span.masterList { color: #53b567; border-bottom: 2px solid #53b567;}
+.vfContTop .topTit span em { margin: 0 4px;}
+.topRight { height: 55px; font-size: 0;}
+.topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
+
+/*=================================== 黄金分割线 ===================================*/
+.vfContMiddle { margin-top: 40px}
+.vfBox { margin-bottom: 40px; padding-left: 40px;}
+.vfBoxTop { height: 20px; margin-bottom: 40px;}
+.vfBoxTop .topLeft, .vfBoxTop span { float: left;}
+.vfBoxTop .topLeft {width:8px;height:15px;margin-top:5px;background:#53b567;}
+.vfBoxTop span {line-height:16px;margin-top:4px;padding:0 14px 0 10px;font-size:16px;color:#3b3a48;text-align:left;background:#fff;}
+.vfBoxTop em {display:block;width:100%;margin-top:12px;border-top:1px solid #efefef;}
+.vfBoxLeft, .vfBoxRight { float: left;width:525px;}
+.vfRow { margin-bottom: 17px; overflow: hidden;}
+.vfRowLeft, .vfRowRight, .vfRowLeft2, .vfRowRight2 { float: left;}
+.vfRowLeft { width: 38.1%; margin-right: 20px; color: #333; text-align: right;}
+.vfRowRight { width: 58%; color: #a6a7a7; text-align: left;}
+.vfRowLeft2 { width: 18.4%%; margin-right: 20px; color: #333; text-align: right;}
+.vfRowRight2 { width: 77.1%; color: #a6a7a7; text-align: left;}
+.vfRowRight2 p { display: block; max-width: 472px; line-height: 1.6; color: #a6a7a7; text-align: left;}
+
+/*0908*/
+.wrapBox#sUserDesWrap, .wrapBox#sUserDesWrap .vfRowRight {width:auto;}
+.wrapBox#sUserDesWrap .vfRowLeft {width:200px;}
+
+

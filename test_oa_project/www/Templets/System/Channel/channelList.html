@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/regionlManagement.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/nodeList.css">
+</head>
+<body>
+<div class="wrapBox">
+    <div class="regionCont">
+        <div class="regionContTop clearfix">
+            <div class="topTit l"><span class="masterList">渠道管理</span></div>
+            <div class="topRight r">
+                <a href="javascript:;" class="addZones create_btn" data-pid="0">添加渠道</a>
+            </div>
+        </div>
+        <div class="regionContMiddle">
+            <dl class="regionTit  clearfix">
+                <dt class="wOne regionSequence clearfix">
+                    <span>排序</span>
+                    <i class="oergList"></i>
+                </dt>
+                <dt class="wTwo regionSequence clearfix">
+                    <span>ID</span>
+                    <i class="oergList"></i>
+                </dt>
+                <dt class="wThr">节点名称</dt>
+                <dt class="wFou">操作</dt>
+            </dl>
+
+            <foreach name = "channelList" item="v" key="k">
+                <dl class="oneRegions clearfix">
+                    <dd class="wOne regionSequence clearfix">
+                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+                    </dd>
+                    <dd class="wTwo regionSequence clearfix">{$v.channel_id}</dd>
+                    <dd class="wThr">{$v.channelname}</dd>
+                    <dd class="wFou osOperation clearfix">
+                        <a href="javascript:;" class="regionSelect"><i></i></a>
+                        <div class="otherOperation">
+                            <div class="triangle"></div>
+                            <div class="otherIcon">
+                                <ul>
+                                    <li class="create_btn create" data-pid="{$v.channel_id}">
+                                        <a href="javascript:;" class="addZone">
+                                            <span class="addZone add"></span>
+                                            <em>添加下级渠道</em>
+                                        </a>
+                                    </li>
+                                    <li class="edit_btn" data-name="{$v.channelname}" data-id="{$v.channel_id}" data-sort="{$v.sort}" data-pid="{$v.pid}">
+                                        <a href="javascript:;">
+                                            <span class="modify"></span>
+                                            <em>修改</em>
+                                        </a>
+                                    </li>
+                                    <!--<li onclick="delZone('{$zoneList.zone_id}')">-->
+                                        <!--<a href="javascript:;">-->
+                                            <!--<span class="delete"></span>-->
+                                            <!--<em>删除</em>-->
+                                        <!--</a>-->
+                                    <!--</li>-->
+                                </ul>
+                            </div>
+                        </div>
+
+                    </dd>
+                </dl>
+                <!-- controller-->
+                <foreach name = "v['children']" item = "v2">
+                    <dl class="secondaryZoneRow clearfix  ">
+                        <dd class="wOne regionSequence clearfix">
+                            <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+                        </dd>
+                        <dd class="wTwo regionSequence clearfix">{$v2.channel_id}</dd>
+                        <dd class="wThr szName"><span>{$v2.channelname}</span></dd>
+                        <dd class="wFou szOperation clearfix">
+                            <a href="javascript:;" class="regionSelect"><i></i></a>
+                            <div class="otherOperation">
+                                <div class="triangle"></div>
+                                <div class="otherIcon">
+                                    <ul>
+                                        <li class="edit_btn" data-name="{$v2.channelname}" data-id="{$v2.channel_id}" data-sort="{$v2.sort}" data-pid="{$v2.pid}">
+                                            <a href="javascript:;">
+                                                <span class="modify"></span>
+                                                <em>修改</em>
+                                            </a>
+                                        </li>
+                                        <li class="del_btn" data-id="{$v2.channel_id}">
+                                            <a href="javascript:;">
+                                                <span class="delete"></span>
+                                                <em>删除</em>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <if condition = "!empty($v2['children'])">
+                                <span class="switchBtnShow" title="展开"  node-id="{$v2.id}" ><i></i></span>
+                            </if>
+                        </dd>
+                    </dl>
+
+                </foreach>
+            </foreach>
+        </div>
+    </div>
+</div>
+
+<!-- 弹窗(添加渠道) S  -->
+<div class="zidingyi_box create_box">
+
+    <div class="z_rows clearfix">
+        <span><i>*</i>渠道名称：</span>
+        <input type="text" class="z_inp"  name="ceate_name" onkeyup="chkLength(this,10)">
+    </div>
+    <div class="z_rows clearfix">
+        <span><i>*</i>渠道父级ID：</span>
+        <input type="text" class="z_inp" name="create_pid" value="0" autocomplete="off">
+    </div>
+    <div class="z_rows clearfix">
+        <span><i>*</i>渠道排序：</span>
+        <input type="text" class="z_inp" name="ceate_sort" value="0" autocomplete="off">
+    </div>
+    <div class="z_rows txt_center mt35 clearfix">
+        <input type="button" value="确定" class="z_confirm create_subtn">
+        <input type="button" value="取消" class="z_cancel" >
+    </div>
+</div>
+<!-- 弹窗(添加渠道) E  -->
+<!-- 弹窗(修改渠道) S  -->
+<div class="zidingyi_box edit_box" >
+
+    <div class="z_rows clearfix">
+        <span><i>*</i>渠道名称：</span>
+        <input type="text" class="z_inp"  name="edit_name" onkeyup="chkLength(this,10)">
+    </div>
+    <div class="z_rows clearfix">
+        <span><i>*</i>渠道父级ID：</span>
+        <input type="text" class="z_inp" name="edit_pid" value="0" autocomplete="off">
+    </div>
+    <div class="z_rows clearfix">
+        <span><i>*</i>渠道排序：</span>
+        <input type="text" class="z_inp" name="edit_sort" value="0" autocomplete="off">
+    </div>
+    <div class="z_rows txt_center mt35 clearfix">
+        <input type="button" value="确定" class="z_confirm edit_subtn">
+        <input type="button" value="取消" class="z_cancel" >
+    </div>
+</div>
+<!-- 弹窗(修改渠道) E  -->
+<input type="hidden" name="temp_id" autocomplete="off">
+
+
+<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/clannelList.js"></script>
+<script>
+    var create_channel_href = "{:U('System/Channel/createChannel')}";
+    var edit_channel_href = "{:U('System/Channel/editChannel')}";
+    var del_channel_href = "{:U('System/Channel/delChannel')}";
+    //添加窗口-----------------------------------------------
+    $('.create_btn').click(function(){
+        $(':input[name="create_pid"]').val($(this).attr('data-pid'));
+        layer.open({
+            type: 1,					//  页面层
+            title: '添加渠道',			//	显示标题栏
+            area: ['404px','auto'],
+            shade: .6,					//	遮罩
+            time: 0,					//  关闭自动关闭
+            shadeClose: false,			//	遮罩控制关闭层
+            closeBtn: false,			//	不显示关闭按钮
+            shift: 1,					//	出现动画
+            content: $(".create_box") 	//  加载主体内容
+        });
+        $('.z_cancel').on('click',function(){
+            layer.closeAll(); 		// 关闭
+        });
+    });
+    //添加提交
+    $('.create_subtn').click(function(){
+        var data = {
+            channelname : $(':input[name="ceate_name"]').val(),
+            pid : $(':input[name="create_pid"]').val(),
+            sort : $(':input[name="ceate_sort"]').val()
+        };
+        common_ajax2(data, create_channel_href, 'reload');
+    });
+    //修改窗口-----------------------------------------------
+    $('.edit_btn').click(function(){
+        $(':input[name="temp_id"]').val($(this).attr('data-id'));
+        $(':input[name="edit_name"]').val($(this).attr('data-name'));
+        $(':input[name="edit_pid"]').val($(this).attr('data-pid'));
+        $(':input[name="edit_sort"]').val($(this).attr('data-sort'));
+        layer.open({
+            type: 1,					//  页面层
+            title: '修改渠道',			//	显示标题栏
+            area: ['404px','auto'],
+            shade: .6,					//	遮罩
+            time: 0,					//  关闭自动关闭
+            shadeClose: false,			//	遮罩控制关闭层
+            closeBtn: false,			//	不显示关闭按钮
+            shift: 1,					//	出现动画
+            content: $(".edit_box") 	//  加载主体内容
+        });
+        $('.z_cancel').on('click',function(){
+            layer.closeAll(); 		// 关闭
+        });
+    });
+    //修改提交
+    $('.edit_subtn').click(function(){
+        var data = {
+            channel_id : $(':input[name="temp_id"]').val(),
+            channelname : $(':input[name="edit_name"]').val(),
+            pid : $(':input[name="edit_pid"]').val(),
+            sort : $(':input[name="edit_sort"]').val()
+        };
+        common_ajax2(data, edit_channel_href, 'reload');
+    });
+    //删除 提交-------------------------------------
+    $('.del_btn').click(function(){
+        var id = $(this).attr('data-id');
+        layer.confirm('确定要删除该渠道？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            var data = {
+                channel_id : id
+            };
+            common_ajax2(data, del_channel_href, 'reload');
+        }, function(){});
+    })
+
+</script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+</body>
+</html>

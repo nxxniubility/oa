@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/layer/layer.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/regionlManagement.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/nodeList.css">
+</head>
+<body>
+<div class="wrapBox">
+    <div class="regionCont">
+        <div class="regionContTop clearfix">
+            <div class="topTit l"><span class="masterList">缓存管理</span></div>
+            <div class="topRight r clearfix">
+            </div>
+        </div>
+        <div class="regionContMiddle">
+            <dl class="regionTit  clearfix">
+                <dt class="wOne regionSequence clearfix">
+                    <span>排序</span>
+                    <i class="oergList"></i>
+                </dt>
+                <dt class="wTwo regionSequence clearfix">
+                    缓存目录：Data/
+                </dt>
+                <dt class="wThr"></dt>
+                <dt class="wFou"></dt>
+            </dl>
+            <foreach name = "data['path_Data']" item="v" key="k">
+                <dl class="oneRegions clearfix libody">
+                    <dd class="wOne regionSequence clearfix">
+                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+                    </dd>
+                    <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
+                    <dd class="wThr">{$v.name}</dd>
+                    <dd class="wFou osOperation clearfix">
+                        <a href="javascript:;" class="regionSelect"><i></i></a>
+                        <div class="otherOperation">
+                            <div class="triangle"></div>
+                            <div class="otherIcon" data-value="{$v.path}" data-level="{$v.type}">
+                                <ul>
+                                    <li class="del_node_subtn">
+                                        <a href="javascript:;">
+                                            <span class="delete"></span>
+                                            <em>删除</em>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <if condition = "!empty($v['children'])">
+                            <span class="switchBtnShow" title="展开"  node-id="{$k}" ><i></i></span>
+                        </if>
+                    </dd>
+                </dl>
+                <!-- controller-->
+                <foreach name = "v['children']" item = "v2" key="k2">
+                    <dl class="secondaryZoneRow dn clearfix libody parent_{$k}">
+                        <dd class="wOne regionSequence clearfix">
+                            <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+                        </dd>
+                        <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
+                        <dd class="wThr szName"><span >{$v2.name}</span></dd>
+                        <dd class="wFou szOperation clearfix">
+                            <a href="javascript:;" class="regionSelect"><i></i></a>
+                            <div class="otherOperation">
+                                <div class="triangle"></div>
+                                <div class="otherIcon" data-value="{$v2.path}" data-level="{$v2.type}">
+                                    <ul>
+                                        <li class="del_node_subtn">
+                                            <a href="javascript:;">
+                                                <span class="delete"></span>
+                                                <em>删除</em>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <if condition = "!empty($v2['children'])">
+                                <span class="switchBtnShow" title="展开"  node-id="1{$k2}" ><i></i></span>
+                            </if>
+                        </dd>
+                    </dl>
+                    <!-- function-->
+                    <foreach name = "v2['children']" item="v3" key="k3">
+                        <dl class="threeRegionsRow dn clearfix libody parent_1{$k2}">
+                            <dd class="wOne regionSequence clearfix">
+                                <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+                            </dd>
+                            <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
+                            <dd class="wThr trName"><span>{$v3.name}</span></dd>
+                            <dd class="wFou trOperation clearfix"  >
+                                <a href="javascript:;" class="regionSelect"><i></i></a>
+                                <div class="otherOperation">
+                                    <div class="triangle"></div>
+                                    <div class="otherIcon" data-value="{$v2.path}/{$v3.name}" data-level="{$v3.type}">
+                                        <ul>
+                                            <li class="del_node_subtn">
+                                                <a href="javascript:;">
+                                                    <span class="delete"></span>
+                                                    <em>删除</em>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </dd>
+                        </dl>
+                    </foreach>
+                </foreach>
+            </foreach>
+        </div>
+
+
+        <div class="regionContMiddle">
+            <dl class="regionTit  clearfix">
+                <dt class="wOne regionSequence clearfix">
+                    <span>排序</span>
+                    <i class="oergList"></i>
+                </dt>
+                <dt class="wTwo regionSequence clearfix">
+                    缓存目录：Cache/
+                </dt>
+                <dt class="wThr"></dt>
+                <dt class="wFou"></dt>
+            </dl>
+            <foreach name = "data['path_Cache']" item="v" key="k">
+                <if condition = "$k EGT 0">
+                    <dl class="oneRegions clearfix libody">
+                        <dd class="wOne regionSequence clearfix">
+                            <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+                        </dd>
+                        <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
+                        <dd class="wThr">{$v.name}</dd>
+                        <dd class="wFou osOperation clearfix">
+                            <a href="javascript:;" class="regionSelect"><i></i></a>
+                            <div class="otherOperation">
+                                <div class="triangle"></div>
+                                <div class="otherIcon" data-value="{$v.path}" data-level="{$v.type}">
+                                    <ul>
+                                        <li class="del_node_subtn">
+                                            <a href="javascript:;">
+                                                <span class="delete"></span>
+                                                <em>删除</em>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <if condition = "!empty($v['children'])">
+                                <span class="switchBtnShow" title="展开"  node-id="{$k}" ><i></i></span>
+                            </if>
+                        </dd>
+                    </dl>
+                    <!-- controller-->
+                    <foreach name = "v['children']" item = "v2" key="k2">
+                        <if condition = "$k2 EGT 0">
+                            <dl class="secondaryZoneRow dn clearfix libody parent_{$k}">
+                                <dd class="wOne regionSequence clearfix">
+                                    <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+                                </dd>
+                                <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
+                                <dd class="wThr szName"><span >{$v2.name}</span></dd>
+                                <dd class="wFou szOperation clearfix">
+                                    <a href="javascript:;" class="regionSelect"><i></i></a>
+                                    <div class="otherOperation">
+                                        <div class="triangle"></div>
+                                        <div class="otherIcon" data-value="{$v2.path}" data-level="{$v2.type}">
+                                            <ul>
+                                                <li class="del_node_subtn">
+                                                    <a href="javascript:;">
+                                                        <span class="delete"></span>
+                                                        <em>删除</em>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <if condition = "!empty($v2['children'])">
+                                        <span class="switchBtnShow" title="展开"  node-id="1{$k2}" ><i></i></span>
+                                    </if>
+                                </dd>
+                            </dl>
+                        </if>
+                        <!-- function-->
+                        <foreach name = "v2['children']" item="v3" key="k3">
+                            <if condition = "$k3 EGT 0">
+                                <dl class="threeRegionsRow dn clearfix libody parent_1{$k2}">
+                                    <dd class="wOne regionSequence clearfix">
+                                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+                                    </dd>
+                                    <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
+                                    <dd class="wThr trName"><span>{$v3.name}</span></dd>
+                                    <dd class="wFou trOperation clearfix"  >
+                                        <a href="javascript:;" class="regionSelect"><i></i></a>
+                                        <div class="otherOperation">
+                                            <div class="triangle"></div>
+                                            <div class="otherIcon" data-value="{$v2.path}/{$v3.name}" data-level="{$v3.type}">
+                                                <ul>
+                                                    <li class="del_node_subtn">
+                                                        <a href="javascript:;">
+                                                            <span class="delete"></span>
+                                                            <em>删除</em>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </dd>
+                                </dl>
+                            </if>
+                        </foreach>
+                    </foreach>
+                </if>
+            </foreach>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/nodeList.js"></script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+<script>
+    $(function(){
+        var del_cache_href = "{:U('System/Management/delCahce')}";
+        //删除 提交
+        $('.del_node_subtn').click(function(){
+            var path = $(this).parents('.otherIcon').attr('data-value');
+            var level = $(this).parents('.otherIcon').attr('data-level');
+            var _obj = $(this);
+            layer.confirm('确定要删除该目录或文件？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                var data = {
+                    path : path,
+                    level:level
+                };
+                common_ajax2(data, del_cache_href, 'no', deldiv);
+                function deldiv(reflag){
+                    if(reflag.code==0){
+                        if($(_obj).parents('.otherOperation').siblings('.switchBtnShow').length>0){
+                            var pid = $(_obj).parents('.otherOperation').siblings('.switchBtnShow').attr('node-id');
+                            $(_obj).parents('.libody').siblings('.parent_'+pid).remove();
+                        }
+                        $(_obj).parents('.libody').remove();
+                        layer.closeAll();
+                        layer.msg(reflag.msg, {icon:1});
+                    }else{
+                        layer.msg(reflag.msg, {icon:2});
+                    };
+                };
+            }, function(){});
+        })
+    });
+
+
+</script>
+
+
+</body>
+</html>

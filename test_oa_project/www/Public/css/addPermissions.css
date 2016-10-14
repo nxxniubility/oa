@@ -1,0 +1,78 @@
+/**/
+.wrapBox { padding: 0 20px; background: #fff;}
+.addPerCont { width: 1130px; margin-bottom: 20px;}
+.addPerContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.addPerContTop .topTit { line-height: 14px; font-size: 0; cursor: default;}
+.addPerContTop .topTit span { float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
+.addPerContTop .topTit span.masterList { color: #53b567; border-bottom: 2px solid #53b567;}
+.addPerContTop .topTit span em { margin: 0 4px;}
+.topRight { height: 55px; font-size: 0;}
+.topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
+
+/*=================================== 黄金分割线 ===================================*/
+.addPerMiddle { margin-top: 40px;}
+.addPerRow { height: 30px; margin-bottom: 20px;}
+.addPerLeft, .addPerRight { float: left; line-height: 30px;}
+.addPerLeft { width: 10.6%; margin-right: 20px; color: #333; text-align: right;}
+.addPerLeft i { margin-right: 4px; color: #d00202;}
+.addPerRight { width: 87.6%; color: #555; text-align: left;}
+.addPerRight .addPerInp { display: block; width: 468px; height: 28px; line-height: 28px; text-align: left; text-indent: 10px; border: 1px solid #ccc; background: #fff;}
+.addPerRight .addPerInp:focus { border-color: #53b567;}
+.addPerRight .addPerInp.w118 { width: 118px; text-align: center; text-indent: 0;}
+.addPerRight .selectPermissions { display: block; width: 98px; height: 28px; line-height: 28px; font-size: 12px; text-align: center; border: 1px solid #ccc; background: #f7f7f7; cursor: pointer;}
+.addPerRight label { float: left; width: auto; height: 30px; line-height: 30px; margin-right: 35px; font-size: 0; cursor: pointer;}
+.addPerRight label span { margin-left: 9px; font-size: 12px;}
+.addPerRight .addPerRadio { width: 12px; height: 12px; margin-top: -9px; vertical-align: middle;}
+.addPerRight .addPerSubmit { display: block; width: 92px; height: 28px; height: 28px; margin-top: 20px; color: #fff; border: none; background: #53b567; cursor: pointer;}
+
+/*=================================== 黄金分割线：模拟select ===================================*/
+.select_title{ width: calc(100% - 30px); white-space: nowrap; word-break: keep-all; text-overflow: ellipsis; }
+.selectbox { position:relative; width: 470px; height:30px; line-height:30px; margin-right: 20px; font-size:12px;}
+.selectbox dl { position:absolute; width: 468px; color: #555; border:1px solid #ccc;}
+.selectbox dl.on { max-height: 150px; width: calc(100% + 10px); border:1px solid #53b567; overflow-y: auto; overflow-x: hidden;}
+.selectbox dl dt { padding-left:10px; cursor:pointer; overflow:hidden; border-bottom: none; background: #fff;}
+.selectbox dl dt.on { border-bottom:1px solid #53b567; background: #e6e6e6 none repeat scroll 0 0;}
+.selectbox dl dd{ position:relative; padding:0 10px; color: #555; border-bottom:1px solid #ccc;background:#fff none repeat scroll 0 0; cursor:pointer; z-index: 5;}
+.selectbox dl dd:last-child { border-bottom: none;}
+.selectbox dl dd.on{border-bottom:1px solid #53b567;}
+.selectbox dl dd:hover{ background: #eaedf1 none repeat scroll 0 0;}
+.selectbox .arrow { width: 30px; height: 28px; background:transparent url(../images/Descending.png) no-repeat center center;}
+.selectbox .arrow_on { background:transparent url(../images/Ascending.png) no-repeat center center;}
+.selectbox .ddoption { display:none; height:200px; border: medium none; overflow-y:scroll;}
+.fxDone { display: none;}
+
+/*=================================== 黄金分割线：选择权限 ===================================*/
+.competenceBox { position: relative; display: none; border: 8px solid #7a7a7a; background: #fff;}
+.addPerTop { height: 33px; line-height: 33px; padding: 0 13px; border-bottom: 1px solid #ccc;}
+.addPerTop span { float: left; font-weight: bold; color: #333;}
+.addPerTop .addPerClose { float: right; width: 33px; height: 33px; background: url(../images/addPer_01-01.png) no-repeat center center; cursor: pointer;}
+.boxMiddle { height: 450px; border-bottom: 1px solid #ccc; overflow-y: scroll;}
+.addSubmit { direction: block; width: 65px; height: 30px; line-height: 30px; margin: 24px 0 25px 30px; font-size: 12px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
+
+
+/*=================================== 黄金分割线：树列表 ===================================*/
+table.treetable { width: 100%; margin: 0; font-size: 12px; color: #333; border: none; border-bottom: 1px solid #ccc; background: #fff;}
+table.treetable tr { height: 40px;}
+table.treetable tbody tr td { border-bottom: 1px solid #ccc;}
+table.treetable span.indenter { padding-right: 15px;}
+table.treetable span.indenter a { vertical-align: middle;}
+table.treetable tbody tr td .addCheck { width: 15px; height: 15px; margin-right: 10px; vertical-align: middle;}
+table.treetable tbody tr td .addCheck:focus { border-color: #f1ca7f;}
+table.treetable tbody tr td .twoListsIcon,
+table.treetable tbody tr td .thrListsIcon,
+table.treetable tbody tr td .lastListsIcon { display: inline-block; height: 14px; margin-top: -2px; margin-right: 10px; vertical-align: middle; }
+table.treetable tbody tr td .twoListsIcon { width: 12px; background: url(../images/organization_02-01.png) no-repeat;}
+table.treetable tbody tr td .thrListsIcon { width: 33px; background: url(../images/organization_02-02.png) no-repeat;}
+table.treetable tbody tr td .lastListsIcon { width: 33px; background: url(../images/organization_02-03.png) no-repeat;}
+.table {margin-bottom: 5px;background: #d2d2d2;font-size: 12px;text-align: left;    font-family: "sim-sun", "Geneva", "Arial", "Helvetica", "sans-serif";}
+.table td{height: 24px;padding: 4px;}
+.table  tr { background: #fff;}
+
+/*0907*/
+.wrapBox#addPerWrap .addPerCont {width:auto;}
+.wrapBox#addPerWrap .addPerCont .addPerLeft {width:120px;}
+.wrapBox#addPerWrap .addPerCont .addPerRight {width:auto;}
+
+
+
