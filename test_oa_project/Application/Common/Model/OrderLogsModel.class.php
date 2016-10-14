@@ -1,53 +1,27 @@
 <?php
-
 namespace Common\Model;
-use Common\Model\BaseModel;
 
-class OrderLogsModel extends BaseModel
+use Common\Model\SystemModel;
+
+class OrderLogsModel extends SystemModel
 {
-    public function _initialize(){
-        parent::_initialize();
-    }
-
     /*
     |--------------------------------------------------------------------------
     | 获取记录列表
     |--------------------------------------------------------------------------
-    | @author nxx
+    | @author zgt
     */
-    public function getList($where=null, $field='*', $order='createime DESC', $limit=null, $join=null)
-    {
-        return $this->field($field)->where($where)->join($join)->order($order)->limit($limit)->select();
+    public function getList($where=null, $order='createime DESC', $field='*', $join=null){
+        return $this->field($field)->join($join)->where($where)->order($order)->select();
     }
 
     /*
     |--------------------------------------------------------------------------
     | 获取记录总数
     |--------------------------------------------------------------------------
-    | @author nxx
+    | @author zgt
     */
-    public function getCount($where=null, $join=null)
-    {
-        return $this->where($where)->join($join)->count();
+    public function getCount($where=null){
+        return $this->where($where)->count();
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 添加
-    |--------------------------------------------------------------------------
-    | @author nxx
-    */
-    public function addData($data)
-    {
-        // 如果创建失败 表示验证没有通过 输出错误提示信息
-        if (!$this->create($data)){
-            return $this->getError();
-        }else{
-            $re_id = $this->add($data);
-            return array('code'=>0,'data'=>$re_id);
-        }
-    }
-
-
-
 }

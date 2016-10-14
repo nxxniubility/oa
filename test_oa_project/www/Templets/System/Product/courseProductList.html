@@ -11,7 +11,7 @@
 		<div class="wrapBox" id="productWrap">
 		    <div class="regionCont">
 		        <div class="regionContTop clearfix">
-		            <div class="topTit l"><span class="masterList">产品线管理</span></div>
+		            <div class="topTit l"><span class="masterList">产品线列表</span></div>
 		            <div class="topRight r">
 		                <a href="javascript:;" class="addProduct create_btn" data-pid="0">添加产品</a>
 		            </div>
@@ -31,7 +31,7 @@
 		        			<td class="firItem">{$v.course_product_id}</td>
 		        			<td>{$v.productname}</td>
 		        			<td>{$v.description}</td>
-		        			<td>{:!empty($v['learningtype_name'])?$v['learningtype_name']:'--'; }</td>
+		        			<td>{:!empty($data['proList'][$v['productplatform']])?$data['proList'][$v['productplatform']]:'--'; }</td>
 		        			<td>{$v.price}</td>
 		        			<td class="osOperation">
 		        				<a href="javascript:;" class="proSelect"><i></i></a>
@@ -58,9 +58,7 @@
 		        		</tr>
 					</foreach>
 		        </table>
-				<div class="collegaPage" id="paging">
-					{$data['paging']}
-				</div>
+
 		    </div>
 		</div>
 		

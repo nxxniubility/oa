@@ -1,8 +1,10 @@
 <?php
 namespace System\Controller;
 use Common\Controller\SystemController;
+use Common\Controller\ProidController as ProidMain;
+use Common\Controller\CourseController as CourseMain;
+use Common\Controller\ChannelController as ChannelMain;
 class ProidController extends SystemController
-
 {
     /**
      * ****************************************************************
@@ -31,11 +33,9 @@ class ProidController extends SystemController
             $data['url_servicecode_id'] = U('System/Proid/servJsList').'?servicecode_id=asc';
         }
         //获取数据
-        $result = D('Proid', 'Service')->getOwnServicecode($own);
-        if ($result['code'] != 0) {
-            $this->ajaxReturn($result['code'], $result['msg']);
-        }
-        $data['servicecodeAll']['data'] = $result['data'];
+        $proidMain = new ProidMain();
+        $result = $proidMain->getOwnServicecode($own);
+        $data['servicecodeAll']['data'] = $result['msg'];
         $data['url_addServ'] = U('System/Proid/addServ');
         $data['url_editServ'] = U('System/Proid/editServ');
         $data['url_detailServ'] = U('System/Proid/detailServ');
@@ -50,18 +50,34 @@ class ProidController extends SystemController
      */
     public function addServ()
     {
+        $proidMain = new ProidMain();
         if(IS_POST){
             $requery = I('post.');
-            $result = D('Proid', 'Service')->addServicecode($requery);
+            if(empty($requery['title'])){
+                $this->ajaxReturn(1, '标题不能为空', '', 'title');
+            }
+            if(empty($requery['terminal_id'])){
+                $this->ajaxReturn(2, '请选择终端类型', '', 'terminal_id');
+            }
+            if(empty($requery['url'])){
+                $this->ajaxReturn(3, '链接不能为空', '', 'url');
+            }
+            if(empty($requery['servicecode'])){
+                $this->ajaxReturn(4, '客服代码不能为空', '', 'servicecode');
+            }
+            $requery['system_user_id'] = $this->system_user_id;
+            $result = $proidMain->addServicecode($requery);
+
+            //判断返回数据
             if($result['code'] != 0){
-                $this->ajaxReturn($result['code'], $result['msg']);
+                $this->ajaxReturn(5, $result['msg']);
             }else{
-                $this->ajaxReturn(0, '添加成功', U('System/Proid/servJsList'));
+                $this->success('添加成功', 0, U('System/Proid/servJsList'));
             }
         }else{
             //终端列表
-            $res = D('Proid', 'Service')->getAllTerminal();
-            $data['terminalAll'] = $res['data'];
+            $res = $proidMain->getAllTerminal();
+            $data['terminalAll'] = $res['msg'];
             $data['url_servJsList'] = U('System/Proid/servJsList');
             $this->assign('data', $data);
             $this->display();
@@ -75,25 +91,40 @@ class ProidController extends SystemController
     public function editServ()
     {
         $servicecode_id = I('get.serv_id',null);
+        if(!isset($servicecode_id)){
+            $this->error('非法请求!');
+        }
+        $proidMain = new ProidMain();
         if(IS_POST){
             $request = I('post.');
-            $result = D('Proid', 'Service')->editServicecode($request,$servicecode_id);
+            if(empty($request['title'])){
+                $this->ajaxReturn(1, '标题不能为空', '', 'title');
+            }
+            if(empty($request['terminal_id'])){
+                $this->ajaxReturn(2, '请选择终端类型', '', 'terminal_id');
+            }
+            if(empty($request['url'])){
+                $this->ajaxReturn(3, '链接不能为空', '', 'url');
+            }
+            if(empty($request['servicecode'])){
+                $this->ajaxReturn(4, '客服代码不能为空', '', 'servicecode');
+            }
+            $request['system_user_id'] = $this->system_user_id;
+            $result = $proidMain->editServicecode($request,$servicecode_id);
+            
             //判断返回数据
             if($result['code'] != 0){
-                $this->ajaxReturn(5, $result['msg']);
+                $this->ajaxReturn(5, '数据修改失败');
             }else{
-                $this->ajaxReturn(0, U('System/Proid/servJsList'));
+                $this->success('修改成功', 0, U('System/Proid/servJsList'));
             }
         }else{
             //终端列表
-            $res = D('Proid', 'Service')->getAllTerminal();
-            $data['terminalAll'] = $res['data'];
+            $res = $proidMain->getAllTerminal();
+            $data['terminalAll'] = $res['msg'];
             $data['url_servJsList'] = U('System/Proid/servJsList');
-            $servicecodeInfo = D('Proid', 'Service')->detailServicecode(array('servicecode_id'=>$servicecode_id));
-            if ($servicecodeInfo['code'] != 0) {
-                $this->ajaxReturn($servicecodeInfo['code'], $servicecodeInfo['msg']);
-            }
-            $data['Servicecode'] = $servicecodeInfo['data'];
+            $servicecodeInfo = $proidMain->detailServicecode($servicecode_id);
+            $data['Servicecode'] = $servicecodeInfo['msg'];
             $this->assign('data', $data);
             $this->display();
         }
@@ -105,15 +136,13 @@ class ProidController extends SystemController
      */
     public function detailServ()
     {
+        $proidMain = new ProidMain();
         $servicecode_id = I('get.serv_id',null);
         if(empty($servicecode_id)){
-            $this->ajaxReturn(301, '请求参数异常');
+            $this->ajaxReturn(1, '请求参数错误');
         }
-        $res = D('Proid', 'Service')->detailServicecode(array('servicecode_id'=>$servicecode_id));
-        if ($res['code'] != 0) {
-            $this->ajaxReturn($res['code'], $res['msg']);
-        }
-        $data['Servicecode'] = $res['data'];
+        $res = $proidMain->detailServicecode($servicecode_id);
+        $data['Servicecode'] = $res['msg'];
         $this->assign('data', $data);
         $this->display();
     }
@@ -124,16 +153,18 @@ class ProidController extends SystemController
      */
     public function delServ()
     {
+        $proidMain = new ProidMain();
         $servicecode_id = I('post.serv_id',null);
         if(empty($servicecode_id)){
             $this->ajaxReturn(1, '参数异常');
         }
-        $result = D('Proid', 'Service')->editServicecode($requery,$servicecode_id);
+        $requery['status'] = 0;
+        $result = $proidMain->editServicecode($requery,$servicecode_id);
         //判断返回数据
         if($result['code'] != 0){
             $this->ajaxReturn(2, $result['msg']);
         }
-        $this->ajaxReturn(0, '删除成功');
+        $this->success('删除成功', 0, U('System/Proid/servJsList'));
     }
 
 
@@ -145,6 +176,8 @@ class ProidController extends SystemController
      */
     public function pages()
     {
+        $proidMain = new ProidMain();
+        $courseMain = new CourseMain();
         //获取参数-过滤
         $request = I("get.");
         $re_page = isset($request['page'])?$request['page']:1;
@@ -158,23 +191,23 @@ class ProidController extends SystemController
         $request['status'] = 1;
         //模板列表
         $order = 'createtime desc';
-        $pages = D('Proid', 'Service')->getAllPages($order,$re_page.',12',$request);
+        $pages = $proidMain->getAllPages($order,$re_page.',12',$request);
         $data['pagesAll'] = $pages['msg'];
         foreach($data['pagesAll']['data'] as $k=>$v){
-            $remark = D('Proid', 'Service')->getPagesRemark($v['pages_id'],$this->system_user_id);
+            $remark = $proidMain->getPagesRemark($v['pages_id'],$this->system_user_id);
             if(!empty($remark)) {
                 $data['pagesAll']['data'][$k]['remark'] = $remark['msg']['remark'];
             }
         }
 
         //模板分类列表
-        $pagesType = D('Proid', 'Service')->getAllPagesType();
+        $pagesType = $proidMain->getAllPagesType();
         $data['pagesType'] = $pagesType['msg'];
         //课程列表
-        $courseAll = D('Course', 'Service')->getCourseList();
+        $courseAll = $courseMain->getAllCourse();
         $data['courseAll'] = $courseAll['data'];
         //终端列表
-        $terminalAll = D('Proid', 'Service')->getAllTerminal();
+        $terminalAll = $proidMain->getAllTerminal();
         $data['terminalAll'] = $terminalAll['msg'];
         //加载分页类
         $data['paging'] = $this->Paging($re_page,12,$data['pagesAll']['count'],$data['request']);
@@ -192,27 +225,46 @@ class ProidController extends SystemController
      */
     public function addPages()
     {
+        $proidMain = new ProidMain();
+        $courseMain = new CourseMain();
         if(IS_POST){
+            //获取参数 验证
             $request = I('post.');
-            $result = D('Proid', 'Service')->addPages($request);
+            $request['litpic'] = $request['image'];
+            if(empty($request['subject'])){
+                $this->ajaxReturn(1, '模板主题不能为空', '', 'subject');
+            }
+            if(empty($request['terminal_id'])){
+                $this->ajaxReturn(2, '请选择终端');
+            }
+            if(empty($request['pagestype_id'])){
+                $this->ajaxReturn(3, '请选择模板分类');
+            }
+            if(empty($request['course_id']) && $request['course_id']!=0){
+                $this->ajaxReturn(4, '请选择课程');
+            }
+            if(empty($request['image'])){
+                $this->ajaxReturn(5, '请上传图片');
+            }
+            $result = $proidMain->addPages($request);
             if($result['code'] != 0){
                 $this->ajaxReturn(6, '添加失败');
             }else{
-                $this->ajaxReturn(0,'专题页添加成功，可以添加导航，或者返回专题页列表',U('System/Proid/addPagesNav?pages_id='.$result['data']));
+                $this->ajaxReturn(0,'专题页添加成功，可以添加导航，或者返回专题页列表',U('System/Proid/addPagesNav?pages_id='.$result));
             }
         }else{
 
             //模板分类列表
-            $pagesType = D('Proid', 'Service')->getAllPagesType();
-            $data['pagesType'] = $pagesType['data'];
+            $pagesType = $proidMain->getAllPagesType();
+            $data['pagesType'] = $pagesType['msg'];
 
             //课程列表
-            $courseAll = D('Course', 'Service')->getCourseList();
+            $courseAll = $courseMain->getAllCourse();
             $data['courseAll'] = $courseAll['data'];
 
             //终端列表
-            $terminalAll = D('Proid', 'Service')->getAllTerminal();
-            $data['terminalAll'] = $terminalAll['data'];
+            $terminalAll = $proidMain->getAllTerminal();
+            $data['terminalAll'] = $terminalAll['msg'];
 
             $data['url_pages'] = U('System/Proid/pages');
             $data['url_disposTermin'] = U('System/Proid/disposTermin');
@@ -228,30 +280,32 @@ class ProidController extends SystemController
      */
     public function addPagesNav()
     {
+        $proidMain = new ProidMain();
+        $courseMain = new CourseMain();
         $pages_id = I('get.pages_id');
         if(IS_POST){
             $request = I('post.');
-            $result = D('Proid', 'Service')->createPagesNav($request['navs'],$pages_id);
+            $result = $proidMain->addPagesNav($request['navs'],$pages_id);
             if($result['code'] != 0){
                 $this->ajaxReturn(1, '添加失败');
             }else{
                 $this->ajaxReturn(0,'专题页导航添加成功', U('System/Proid/pages'));
             }
         }else{
-            $detail = D('Proid', 'Service')->getPagesNav($pages_id);
-            $data['detail'] = $detail['data'];
+            $detail = $proidMain->getPagesNav($pages_id);
+            $data['detail'] = $detail['msg'];
 
             //模板分类列表
-            $pagesType = D('Proid', 'Service')->getAllPagesType();
-            $data['pagesType'] = $pagesType['data'];
+            $pagesType = $proidMain->getAllPagesType();
+            $data['pagesType'] = $pagesType['msg'];
 
             //课程列表
-            $courseAll = D('Course', 'Service')->getCourseList();
+            $courseAll = $courseMain->getAllCourse();
             $data['courseAll'] = $courseAll['data'];
 
             //终端列表
-            $terminalAll = D('Proid', 'Service')->getAllTerminal();
-            $data['terminalAll'] = $terminalAll['data'];
+            $terminalAll = $proidMain->getAllTerminal();
+            $data['terminalAll'] = $terminalAll['msg'];
 
             $data['url_pages'] = U('System/Proid/pages');
             $data['pages_id'] = $pages_id;
@@ -266,6 +320,8 @@ class ProidController extends SystemController
      */
     public function editPages()
     {
+        $proidMain = new ProidMain();
+        $courseMain = new CourseMain();
         $pages_id = I('get.id');
         if( empty($pages_id) ){
             $this->error('非法请求！');
@@ -273,29 +329,44 @@ class ProidController extends SystemController
         if(IS_POST){
             //获取参数 验证
             $request = I('post.');
-            
-            $result = D('Proid', 'Service')->editPages($request,$pages_id);
+            $request['litpic'] = $request['image'];
+            if(empty($request['subject'])) {
+                $this->ajaxReturn(1, '模板主题不能为空', '', 'subject');
+            }
+            if(empty($request['terminal_id'])) {
+                $this->ajaxReturn(2, '请选择终端');
+            }
+            if(empty($request['pagestype_id'])) {
+                $this->ajaxReturn(3, '请选择模板分类');
+            }
+            if(empty($request['course_id']) && $request['course_id']!=0) {
+                $this->ajaxReturn(4, '请选择课程');
+            }
+            if(empty($request['image'])) {
+                $this->ajaxReturn(5, '请上传图片');
+            }
+            $result = $proidMain->editPages($request,$pages_id);
             if($result['code'] != 0) {
                 $this->ajaxReturn(6, $result['msg']);
             }else{
-                 $this->ajaxReturn(0, '专题页修改成功，可以修改导航，或者返回专题页列表', U('System/Proid/addPagesNav?pages_id='.$pages_id));
+                 $this->success('专题页修改成功，可以修改导航，或者返回专题页列表', 0, U('System/Proid/addPagesNav?pages_id='.$pages_id));
             }
         }else{
             //模板详情
-            $pagesInfo = D('Proid', 'Service')->getPagesInfo(array('pages_id'=>$pages_id));
-            $data['pagesInfo'] = $pagesInfo['data'];
+            $pagesInfo = $proidMain->getPagesInfo($pages_id);
+            $data['pagesInfo'] = $pagesInfo['msg'];
 
             //模板分类列表
-            $pagesType = D('Proid', 'Service')->getAllPagesType();
-            $data['pagesType'] = $pagesType['data'];
+            $pagesType = $proidMain->getAllPagesType();
+            $data['pagesType'] = $pagesType['msg'];
 
             //课程列表
-            $courseAll = $courseMain->getCourseList();
+            $courseAll = $courseMain->getAllCourse();
             $data['courseAll'] = $courseAll['data'];
 
             //终端列表
-            $terminalAll = D('Proid', 'Service')->getAllTerminal();
-            $data['terminalAll'] = $terminalAll['data'];
+            $terminalAll = $proidMain->getAllTerminal();
+            $data['terminalAll'] = $terminalAll['msg'];
 
             $data['url_pages'] = U('System/Proid/pages');
             $data['url_disposTermin'] = U('System/Proid/disposTermin');
@@ -312,26 +383,26 @@ class ProidController extends SystemController
      */
     public function detailPage()
     {
+        $proidMain = new ProidMain();
+        $channelMain = new ChannelMain();
         $pages_id = I('get.id');
         $channel_id = I('get.channel_id',null);
         $re_page = I('get.page',1);
         if( empty($pages_id) ){
-            $this->ajaxReturn(301, '非法请求');
+            $this->error('非法请求！');
         }
-        if(!empty($channel_id)){
-            $where[C('DB_PREFIX').'channel.channel_id'] = $channel_id;
-        }
+        if( !empty($channel_id) ) $where[C('DB_PREFIX').'channel.channel_id'] = $channel_id;
         //模板详情
-        $pageInfo = D('Proid', 'Service')->getPagesInfo($pages_id);
-        $data['pagesInfo'] = $pageInfo['data'];
+        $pageInfo = $proidMain->getPagesInfo($pages_id);
+        $data['pagesInfo'] = $pageInfo['msg'];
         //模板相关计划列表
-        $proList = D('Proid', 'Service')->getPagesPromote($pages_id, $where,(($re_page-1)*15).',15');
-        $data['promoteList'] = $proList['data'];
+        $proList = $proidMain->getPagesPromote($pages_id, $where,(($re_page-1)*15).',15');
+        $data['promoteList'] = $proList['msg'];
         //终端列表
-        $terminalAll = D('Proid', 'Service')->getAllTerminal();
-        $data['terminalAll'] = $terminalAll['data'];
+        $terminalAll = $proidMain->getAllTerminal();
+        $data['terminalAll'] = $terminalAll['msg'];
         //渠道列表
-        $channelList = D('Channel', 'Service')->getChannelList();
+        $channelList = $channelMain->getAllChannel();
         $data['channel'] = $channelList['data'];
         //加载分页类
         $data['paging'] = $this->Paging($re_page,15,$data['promoteList']['count'],array('id'=>$pages_id));
@@ -346,16 +417,17 @@ class ProidController extends SystemController
      * @author zgt
      */
     public function editPagesRemark(){
+        $proidMain = new ProidMain();
         if(IS_POST) {
             $pages_id = I('post.pages_id');
             $type = I('post.type',null);
             if( isset($type) && $type=='remark' ){
                 $request['remark'] = I('post.remark');
-                $result = D('Proid', 'Service')->addPagesRemark($request['remark'],$pages_id,$this->system_user_id);
+                $result = $proidMain->addPagesRemark($request['remark'],$pages_id,$this->system_user_id);
                 if($result['code'] != 0) {
-                    $this->ajaxReturn($result['code'], $result['msg']);
+                    $this->ajaxReturn(1, '备注修改失败');
                 } else{
-                     $this->ajaxReturn(0, '备注修改成功');
+                     $this->success('备注修改成功');
                 }
             }
         }
@@ -374,9 +446,9 @@ class ProidController extends SystemController
                 $request['status'] = 0;
                 $result = $proidMain ->editPages($request,$pages_id);
                 if($result['code'] != 0){
-                    $this->ajaxReturn($result['code'], $result['msg']);
+                    $this->ajaxReturn(1, '删除失败');
                 }else {
-                    $this->ajaxReturn(0, '删除成功');
+                    $this->success('删除成功');
                 }
             }
         }
@@ -403,12 +475,13 @@ class ProidController extends SystemController
             unset($request['key_name']);
             unset($request['key_val']);
 
-            $result= D('Proid', 'Service')->getAllPages($order,$re_page.',8',$request);
-            $pagesList = $result['data'];
-            if ($pagesList['code'] != 0) {
-                $this->ajaxReturn($pagesList['code'], $pagesList['msg']);
-            }
+            $result= $proidMain->getAllPages($order,$re_page.',8',$request);
+            $pagesList = $result['msg'];
             $pagesList['paging'] = $this->Paging($re_page,8,$pagesList['count'],'','javascript:pagesList(',1);
+            if (!$pagesList) {
+                $this->ajaxReturn(2, '模板获取失败');
+            }
+
             $this->ajaxReturn(0, '数据获取成功', $pagesList);
         }else{
             $order = 'createtime desc';
@@ -421,16 +494,16 @@ class ProidController extends SystemController
             unset($request['page']);
             unset($request['key_name']);
             unset($request['key_val']);
-            $result= D('Proid', 'Service')->getPagesList($request);
+            $result= $proidMain->getPagesList($request);
             if ($result['code'] != 0) {
-                $this->ajaxReturn($result['code'], '模板获取失败');
+                $this->ajaxReturn(2, '模板获取失败');
             }
-            $pagesList = $result['data'];
+            $pagesList = $result['msg'];
+            $systemuser_id = $this->system_user_id;
             foreach ($pagesList['data'] as $key => $value) {
-                $where['pages_id'] = $value['pages_id']
-                $remark = D('Proid', 'Service')->getRemark($where);
-                if ($remark['data']['remark']) {
-                    $pagesList['data'][$key]['remark'] = $remark['data']['remark'];
+                $remark = M("pages_remark")->where("system_user_id = $systemuser_id and pages_id = $value[pages_id]")->find();
+                if ($remark['remark']) {
+                    $pagesList['data'][$key]['remark'] = $remark['remark'];
                 }else{
                     $pagesList['data'][$key]['remark'] = '空';
                 }
@@ -446,48 +519,47 @@ class ProidController extends SystemController
      */
     public function disposTermin()
     {
+        $proidMain = new ProidMain();
         if(IS_POST) {
             $terminal_id = I('post.terminal_id');
             $type = I('post.type',null);
             if( isset($type) && $type=='del' ){
                 $request['status'] = 0;
-                $result = D('Proid', 'Service')->editTerminal($request,$terminal_id);
+                $result = $proidMain->editTerminal($request,$terminal_id);
                 if($result['code'] != 0){
-                    $this->ajaxReturn($result['code'], $result['msg']);
+                    $this->ajaxReturn(1, $result['msg']);
                 }else {
-                    $this->ajaxReturn(0, '删除成功');
+                    $this->success('删除成功', 0);
                 }
             }else if( isset($type) && $type=='addEdit' ){
                 $request['addTerminal'] = I('post.addTerminal');
                 $request['editTerminal'] = I('post.editTerminal');
-                if(empty($request['addTerminal']) && empty($request['editTerminal'])){
-                     $this->ajaxReturn(301, '未发现需要修改或添加内容');
-                }
-                $addFlag['code'] = 1;
+                if(empty($request['addTerminal']) && empty($request['editTerminal'])) $this->ajaxReturn(1, '未发现需要修改或添加内容');
+                $addFlag = true;
                 if(!empty($request['addTerminal'])){
                     $addTerminal = explode('@@',$request['addTerminal']);
                     foreach($addTerminal as $k=>$v){
                         if(!empty($v) && $addFlag){
                             $add_data['terminalname'] = $v;
-                            $addFlag = D('Proid', 'Service')->addTerminal($add_data);
+                            $addFlag = $proidMain->addTerminal($add_data);
                         }
                     }
                 }
-                $editFlag['code'] = 1;
+                $editFlag = true;
                 if(!empty($request['editTerminal'])){
                     $editTerminal = explode('@@',$request['editTerminal']);
                     foreach($editTerminal as $k=>$v){
                         if(!empty($v) && $editFlag!==false){
                             $new_v = explode('==',$v);
                             $edit_data['terminalname'] = $new_v[1];
-                            $editFlag = D('Proid', 'Service')->editTerminal($edit_data, $new_v[0]);
+                            $editFlag = $proidMain->editTerminal($edit_data, $new_v[0]);
                         }
                     }
                 }
                 if($editFlag['code']!=0 || $addFlag['code']!=0) {
                     $this->ajaxReturn(2, '操作失败');
                 }else {
-                    $this->ajaxReturn(0, '提交成功');
+                    $this->success('提交成功', 0);
                 }
                 
             }
@@ -500,16 +572,17 @@ class ProidController extends SystemController
      */
     public function dispostPagesType()
     {
+        $proidMain = new ProidMain();
         if(IS_POST) {
             $pagestype_id = I('post.pagestype_id');
             $type = I('post.type',null);
             if( $type=='del' ){
                 $request['status'] = 0;
-                $result = D('Proid', 'Service')->editPagesType($request,$pagestype_id);
+                $result = $proidMain->editPagesType($request,$pagestype_id);
                 if($result['code'] != 0){
-                    $this->ajaxReturn($result['code'], '删除失败');
+                    $this->ajaxReturn(1, '删除失败');
                 }else {
-                    $this->ajaxReturn(0, '删除成功');
+                    $this->success('删除成功', 0);
                 }
             }else if( $type=='addEdit' ){
                 $request['addPagesType'] = I('post.addPagesType');
@@ -517,7 +590,7 @@ class ProidController extends SystemController
                 if(empty($request['addPagesType']) && empty($request['editPagesType'])){
                     $this->ajaxReturn(1, '未发现需要修改或添加内容');
                 }
-                $addFlag['code'] = true;
+                $addFlag = true;
                 if(!empty($request['addPagesType'])){
                     $addPagesType = explode('@@',$request['addPagesType']);
                     foreach($addPagesType as $k=>$v){
@@ -525,11 +598,11 @@ class ProidController extends SystemController
                             $new_v = explode('==',$v);
                             $add_data['typename'] = $new_v[0];
                             $add_data['terminal_id'] = $new_v[1];
-                            $addFlag = D('Proid', 'Service')->addPagesType($add_data);
+                            $addFlag = $proidMain->addPagesType($add_data);
                         }
                     }
                 }
-                $editFlag['code'] = true;
+                $editFlag = true;
                 if(!empty($request['editPagesType'])){
                     $editPagesType = explode('@@',$request['editPagesType']);
                     foreach($editPagesType as $k=>$v){
@@ -537,14 +610,14 @@ class ProidController extends SystemController
                             $new_v = explode('==',$v);
                             $edit_data['typename'] = $new_v[1];
                             $add_data['terminal_id'] = $new_v[2];
-                            $editFlag = D('Proid', 'Service')->editPagesType($edit_data, $new_v[0]);
+                            $editFlag = $proidMain->editPagesType($edit_data, $new_v[0]);
                         }
                     }
                 }
                 if($editFlag['code'] != 0 || $addFlag['code'] != 0){
                     $this->ajaxReturn(1, '操作失败');
                 }else {
-                    $this->ajaxReturn(0, '提交成功');
+                    $this->success('提交成功', 0);
                 }
             }
         }
@@ -556,6 +629,7 @@ class ProidController extends SystemController
      */
     public function id()
     {
+        $proidMain = new ProidMain();
         $request = I("get.");
         unset($request['page']);
         foreach ($request as $key => $req) {
@@ -565,8 +639,8 @@ class ProidController extends SystemController
         }
         $pro['system_user_id'] = $this->system_user_id;
         $pro['status'] = 1;
-        $result = D('Proid', 'Service')->proidList($pro,'0,100');
-        $data['proList'] = $result['data'];
+        $result = $proidMain->proidList($pro,'0,100');
+        $data['proList'] = $result['msg'];
         foreach ($data['proList']['data'] as $key => $value) {
             $value['createtime'] = date('Y-m-d H:d:s', $value['createtime']);
             $data['proList']['data'][$key] = $value;
@@ -581,24 +655,27 @@ class ProidController extends SystemController
      */
     public function addPro()
     {
+        $proidMain = new ProidMain();
+        $channelMain = new ChannelMain();
         $pro['system_user_id'] = $this->system_user_id;
+
         $pc['terminal_id'] = 2;
         $pc['status'] = 1;
         $pc['system_user_id'] = $this->system_user_id;                             
-        $pcser = D('Proid', 'Service')->getOwnServicecode($pc);
+        $pcser = $proidMain->getOwnServicecode($pc);
         if ($pcser['code'] != 0) {
-            $this->ajaxReturn($pcser['code'], '么有PC客服代码');
+            $this->error('么有PC客服代码');
         }else{
-            $pcserviceList['data'] = $pcser['data'];
+            $pcserviceList['data'] = $pcser['msg'];
         }
         $m['status'] = 1;
         $m['terminal_id'] = 1;
         $m['system_user_id'] = $this->system_user_id;
-        $mser = D('Proid', 'Service')->getOwnServicecode($m);
+        $mser = $proidMain->getOwnServicecode($m);
         if ($mser['code'] != 0) {
-            $this->ajaxReturn($mser['code'], '么有移动客服代码');
+            $this->error('么有移动客服代码');
         }else{
-            $mserviceList['data'] = $mser['data'];
+            $mserviceList['data'] = $mser['msg'];
         }
         if(IS_POST) {              
             $proid['accountname'] = I("post.accountname");
@@ -607,25 +684,46 @@ class ProidController extends SystemController
             $proid['totalcode'] = I("post.totalcode");
             $proid['pcservice_id'] = I("post.pcservice_id");
             $proid['mservice_id'] = I("post.mservice_id");
-            
+            $proid['system_user_id'] = $this->system_user_id;
+
+            if (!$proid['accountname']) {
+                $this->ajaxReturn(1,'请填写账号名称');
+            }
+            if (!$proid['channel_id']) {
+                $this->ajaxReturn(2,'请选择渠道');
+            }
+            if (!$proid['domain']) {
+                $this->ajaxReturn(3,'请填写域名');
+            }else{
+                $test = '/[。]/';
+                if (preg_match($test, $proid['domain'])) {
+                    $this->ajaxReturn(3,'请填写正确的域名');
+                }
+            }
+            if (!$proid['totalcode']) {
+                $this->ajaxReturn(4,'请填写统计代码');
+            }
+            if (!$proid['pcservice_id'] || !$proid['mservice_id']) {
+                $this->ajaxReturn(5,'请选择PC客服代码或移动客服代码');
+            }
             $proid['pcoffcode'] = I("post.pcoffcode");
             $proid['moffcode'] = I("post.moffcode");
             $proid['remark'] = I("post.remark");
-            $result = D('Proid', 'Service')->createProid($proid);
+            $result = $proidMain->createProid($proid);
             if ($result['code'] != 0) {
                 $this->ajaxReturn($result['code'],$result['msg']);
             }
             $this->success('创建成功', 0, U('System/Proid/id'));
         }
 
-        $result = D('Channel', 'Service')->getChannelList();
+        $result = $channelMain->getAllChannel();
         $channelList = $result['data'];
         if (!$channelList) {
-            $this->ajaxReturn(301,'没有渠道可供选择');
+            $this->ajaxReturn(9,'没有渠道可供选择');
         }
         
-        $result = D('Proid', 'Service')->proidList($pro);
-        $proList = $result['data'];
+        $result = $proidMain->proidList($pro);
+        $proList = $result['msg'];
         $proList['channelList'] = $channelList;
         $this->assign('pcserviceList', $pcserviceList);
         $this->assign('mserviceList', $mserviceList);
@@ -641,9 +739,11 @@ class ProidController extends SystemController
      */
     public function editPro()
     {
+        $proidMain = new ProidMain();
+        $channelMain = new ChannelMain();
         $proid_id = I("get.proid_id");
         if (!$proid_id) {
-            $this->ajaxReturn(301, '参数丢失');
+            $this->error('参数丢失');
         }
         if(IS_POST) {
             $proid['proid_id'] = $proid_id;
@@ -655,36 +755,44 @@ class ProidController extends SystemController
             $proid['mservice_id'] = I("post.mservice_id");
             $proid['pcoffcode'] = I("post.pcoffcode");
             $proid['moffcode'] = I("post.moffcode");
+            $proid['system_user_id'] = $this->system_user_id;
             $proid['remark'] = I("post.remark");
-
-            $backInfo = D('Proid', 'Service')->editProid($proid);
-            if ($backInfo['code'] != 0) {
-                return array('code'=>304 , 'msg'=>'修改失败');
+            if (!$proid['channel_id']) {
+                $this->error('请选择渠道');
             }
-            $this->ajaxReturn(0, '修改成功', U('System/Proid/id'));
+            if (!$proid['pcservice_id'] || !$proid['mservice_id']) {
+                $this->error('请选择客服代码');
+            }
+            if (!$proid['domain']) {
+                $this->error('请填写域名');
+            }
+            $backInfo = $proidMain->editProid($proid);
+            if ($backInfo['code'] != 0) {
+                $this->error('修改失败');
+            }
+            $this->success('修改成功', 0, U('System/Proid/id'));
         }
-        $channelAll = D('Channel', 'Service')->getChannelList();
+        $channelAll = $channelMain->getAllChannel();
         $channelList = $channelAll['data'];
         if (!$channelList) {
-            $this->ajaxReturn($channelAll['code'], '没有渠道可供选择');
+            $this->error('没有渠道可供选择');
         }
-        $result = D('Proid', 'Service')->getProInfo(array('proid_id'=>$proid_id));
-        $proidInfo = $result['data'];
+        $result = $proidMain->getProInfo($proid_id);
+        $proidInfo = $result['msg'];
         $pc['terminal_id'] = 2;
         $pc['status'] = 1;
         $system_user_id = $this->system_user_id;
         $pc['system_user_id'] = $system_user_id;
-
         $m['status'] = 1;
         $m['terminal_id'] = 1;
-        $m['system_user_id'] = $system_user_id;
-
-        $pcser= D('Proid', 'Service')->getOwnServicecode($pc);
-        $pcserviceList['data']= $pcser['data'];
+        $m['system_user_id'] = $system_user_id;                          
+        
+        $pcser= $proidMain->getOwnServicecode($pc);
+        $pcserviceList['data']= $pcser['msg'];
         $pcserviceList['pcservice_id'] = $proidInfo['pcservice_id'];
         
-        $mser = D('Proid', 'Service')->getOwnServicecode($m);
-        $mserviceList['data']= $mser['data'];
+        $mser = $proidMain->getOwnServicecode($m);
+        $mserviceList['data']= $mser['msg'];
         $mserviceList['mservice_id'] = $proidInfo['mservice_id'];
         
         $proList['data'] = $proidInfo;
@@ -703,13 +811,17 @@ class ProidController extends SystemController
      */
     public function proidInfo()
     {   
+        $proidMain = new ProidMain();
         $proid_id = I("get.proid_id");
-        $proInfo = D('Proid', 'Service')->getProInfo(array('proid_id'=>$proid_id));
+        if (!$proid_id) {
+             $this->ajaxReturn(1,'访问存在异常');
+        }
+        $proInfo = $proidMain->getProInfo($proid_id);
         if ($proInfo['code'] != 0) {
-            $this->ajaxReturn($proInfo['code'],$proInfo['msg']);
+            $this->ajaxReturn(2,'账号数据不存在');
         }
         $this->assign('proid_id', $proid_id);
-        $this->assign('proInfo', $proInfo['data']);
+        $this->assign('proInfo', $proInfo['msg']);
         $this->display();
     }
 
@@ -721,12 +833,14 @@ class ProidController extends SystemController
     {
         $proidMain = new ProidMain();
         $proid_id = I('get.proid_id');
-        
+        if (!$proid_id) {
+            $this->ajaxReturn(1, '请选择要删除的账号');
+        }
         $backInfo = $proidMain->deleteProid($proid_id);
         if ($backInfo['code'] != 0) {
             $this->ajaxReturn(2, $backInfo['msg']);
         }
-        $this->ajaxReturn(0, '删除成功', U('System/Proid/id'));
+        $this->success('删除成功', 0, U('System/Proid/id'));
     }
 
     /**
@@ -735,9 +849,12 @@ class ProidController extends SystemController
      */
     public function index()
     {
-        $proid['proid_id'] = I("get.proid_id");    
+        $proidMain = new ProidMain();
+        $channelMain = new ChannelMain();
+        $proid_id = I("get.proid_id");    
+        $proid['proid_id'] = $proid_id;
         $re_page = I("get.page",1);
-        $promote['proid_id'] = $proid['proid_id'];
+        $promote['proid_id'] = $proid_id;
         $promote['status'] = 1;
         if (IS_POST) {
             $pro['pro_lev_id'] = I("post.pro_lev_id");
@@ -748,13 +865,13 @@ class ProidController extends SystemController
                     unset($pro[$key]);
                 }
                 if ($pro['pro_lev_id']) {
-                    $prolevList = D('Proid', 'Service')->getProLevPlanunitList($pro['pro_lev_id']);
-                    $result = D('Proid', 'Service')->getIdString($prolevList['data']);
-                    $idString = $result['data'];
+                    $prolevList = $proidMain->getProLevPlanunitList($pro['pro_lev_id']);
+                    $result = $proidMain->getIdString($prolevList['msg']);
+                    $idString = $result['msg'];
                     $promote['pro_lev_id'] = array("IN", $idString);
                 }
                 if (!$pro['key_name'] && $pro['key_val']) {
-                    $this->ajaxReturn(301, '请选择搜索类型');
+                    $this->error('请选择搜索类型');
                 }
                 if ($pro['key_name'] == 'promote_id') {
                     $promote['promote_id'] = $pro['key_val'];
@@ -763,15 +880,16 @@ class ProidController extends SystemController
                 }
             }
         }     
-        $promList = D('Proid', 'Service')->getPromoteList($promote,(($re_page-1)*15).',15');
+        $promList = $proidMain->getPromoteList($promote,(($re_page-1)*15).',15');
         //加载分页类
         $data['paging'] = $this->Paging($re_page,15,$data['promoteListAll']['count'],$proid);
         $data['proid_id'] = $proid['proid_id'];
-        $proidInfo = D('Proid', 'Service')->getProInfo(array('proid_id'=>$proid['proid_id']));
-        $this->assign('proid_id', $proid['proid_id']);    
-        $this->assign('promoteList', $promList['data']);  
+        $proidInfo = $proidMain->getProInfo($promote['proid_id']);
+        $this->assign('proid_id', $proid_id);    
+        $this->assign('promoteList', $promList['msg']);  
+
         $this->assign('data', $data);
-        $this->assign('proidInfo', $proidInfo['data']);
+        $this->assign('proidInfo', $proidInfo['msg']);
         $this->assign('urlDelPromote', U("System/Proid/delPro"));
         $this->display();
 
@@ -783,6 +901,7 @@ class ProidController extends SystemController
      */
     public function addPromote()
     {
+        $proidMain = new ProidMain();
         $promote['proid_id'] = I("get.proid_id");
         if (IS_POST) {
             $promote['plan'] = I("post.plan");
@@ -807,62 +926,64 @@ class ProidController extends SystemController
             if (!$promote['m_pages_id']) {
                 unset($promote['m_pages_id']);
             }
-            $proidInfo = D('Proid', 'Service')->getProInfo(array('proid_id'=>$promote['proid_id']));
+            $proidInfo = $proidMain->getProInfo($promote['proid_id']);
             if (!$promote['pcservice_id']) {
-                $promote['pcservice_id'] = $proidInfo['data']['pcservice_id'];
+                $promote['pcservice_id'] = $proidInfo['msg']['pcservice_id'];
             }
             if (!$promote['mservice_id']) {
-                $promote['mservice_id'] = $proidInfo['data']['mservice_id'];
+                $promote['mservice_id'] = $proidInfo['msg']['mservice_id'];
             }
             $prolev['proid_id'] = $promote['proid_id'];
             if ($promote['plan'] && $promote['planunit']) {
                 $prolev['name'] = $promote['plan'];
-                $proLevInfo = D('Proid', 'Service')->getProLevInfo($prolev);
+                $proLevInfo = $proidMain->getProLevInfo($prolev);
                 if ($proLevInfo['code'] != 0) {
-                    $result = D('Proid', 'Service')->createProLev($prolev);
+                    $result = $proidMain->createProLev($prolev);
                     $prolev['name'] = $promote['planunit'];
-                    $prolev['pid'] = $result['data'];
-                    $result = D('Proid', 'Service')->createProLev($prolev);
+                    $prolev['pid'] = $result['msg'];
+                    $result = $proidMain->createProLev($prolev);
                     $prolev['pid'] = 0; //重置pid为0
-                    $promote['pro_lev_id'] = $result['data'];
+                    $promote['pro_lev_id'] = $result['msg'];
                 }else{
                     $prolev['name'] = $promote['planunit'];
-                    $prolev['pid'] = $proLevInfo['data']['pro_lev_id'];
-                    $punitLevInfo = D('Proid', 'Service')->getProLevInfo($prolev);
+                    $prolev['pid'] = $proLevInfo['msg']['pro_lev_id'];
+                    $punitLevInfo = $proidMain->getProLevInfo($prolev);
                     if ($punitLevInfo['code'] == 0) {
-                        $promote['pro_lev_id'] = $punitLevInfo['data']['pro_lev_id'];
+                        $promote['pro_lev_id'] = $punitLevInfo['msg']['pro_lev_id'];
                     }else{
-                        $result = D('Proid', 'Service')->createProLev($prolev);
-                        $promote['pro_lev_id'] = $result['data'];
+                        $result = $proidMain->createProLev($prolev);
+                        $promote['pro_lev_id'] = $result['msg'];
                     }
                 }   
             }
-            $reback = D('Proid', 'Service')->createPromote($promote);
+            $reback = $proidMain->createPromote($promote);
             if($reback['code'] != 0) {
-                $this->ajaxReturn($reback['code'],'添加推广计划失败');
+                $this->ajaxReturn(4,'添加推广计划失败');
             }
-            $this->ajaxReturn(0, '添加计划成功', U('System/Proid/index', array('proid_id'=>$promote['proid_id'])));
+            $this->success('添加计划成功', 0, U('System/Proid/index', array('proid_id'=>$promote['proid_id'])));
         }
 
-        $proInfo = D('Proid', 'Service')->getProInfo(array('proid_id'=>$promote['proid_id']));
-        $pro['proidInfo'] = $proInfo['data'];
+        $proInfo = $proidMain->getProInfo($promote['proid_id']);
+        $pro['proidInfo'] = $proInfo['msg'];
+        $promote['system_user_id'] = $this->system_user_id;
+        $promote['status'] = 1;
         $re_page = isset($request['page'])?$request['page']:1;
-        $proInfos = D('Proid', 'Service')->getPromoteList($promote,(($re_page-1)*15).',15');
-        $pro['promoteList'] = $proInfos['data'];
+        $proInfos = $proidMain->getPromoteList($promote,(($re_page-1)*15).',15');
+        $pro['promoteList'] = $proInfos['msg'];
         $pc['terminal_id'] = 2;
         $pc['status'] = 1;
         $pc['system_user_id'] = $this->system_user_id;
         $m['status'] = 1;
         $m['terminal_id'] = 1;
         $m['system_user_id'] = $this->system_user_id;                              
-        $pcser = D('Proid', 'Service')->getOwnServicecode($pc);
-        $pro['pcServicecode']['data'] = $pcser['data'];
-        $mser = D('Proid', 'Service')->getOwnServicecode($m);
-        $pro['mServicecode']['data'] = $mser['data'];
-        $pcPagesTypeList = D('Proid', 'Service')->getPagesType($pc);
-        $pro['pcPagesTypeList'] = $pcPagesTypeList['data'];
-        $mPagesTypeList = D('Proid', 'Service')->getPagesType($m);
-        $pro['mPagesTypeList'] = $mPagesTypeList['data'];
+        $pcser = $proidMain->getOwnServicecode($pc);
+        $pro['pcServicecode']['data'] = $pcser['msg'];
+        $mser = $proidMain->getOwnServicecode($m);
+        $pro['mServicecode']['data'] = $mser['msg'];
+        $pcPagesTypeList = $proidMain->getPagesType($pc);
+        $pro['pcPagesTypeList'] = $pcPagesTypeList['msg'];
+        $mPagesTypeList = $proidMain->getPagesType($m);
+        $pro['mPagesTypeList'] = $mPagesTypeList['msg'];
         $this->assign('pro', $pro);
         $this->display();
 
@@ -901,9 +1022,9 @@ class ProidController extends SystemController
         $m['status'] = 1;
         $m['system_user_id'] = $this->system_user_id;
         $pcser = $proidMain->getOwnServicecode($pc);
-        $promoteInfo['pcServicecode']['data'] = $pcser['data'];
+        $promoteInfo['pcServicecode']['data'] = $pcser['msg'];
         $mser = $proidMain->getOwnServicecode($m);
-        $promoteInfo['mServicecode']['data'] = $mser['data'];
+        $promoteInfo['mServicecode']['data'] = $mser['msg'];
         $promoteInfo['pc_page']=D("Pages")->where(array('pages_id'=>$promoteInfo['pc_pages_id']))->getField('subject');
         $promoteInfo['m_page']=D("Pages")->where(array('pages_id'=>$promoteInfo['m_pages_id']))->getField('subject');
         $pcPagesTypeList = $proidMain->getPagesType($pc);
@@ -1211,7 +1332,7 @@ class ProidController extends SystemController
                         $promote['pcservice_id'] = $serviceInfo['servicecode_id'];
                     }else{
                         $pcser = $proidMain->addServicecode($servicecode);
-                        $pcservice_id = $pcser['data'];
+                        $pcservice_id = $pcser['msg'];
                         if ($pcservice_id) {
                             $promote['pcservice_id'] = $pcservice_id;
                         }
@@ -1228,7 +1349,7 @@ class ProidController extends SystemController
                         $promote['mservice_id'] = $serviceInfo['servicecode_id'];
                     }else{
                         $mser = $proidMain->addServicecode($servicecode);
-                        $mservice_id = $mser['data'];
+                        $mservice_id = $mser['msg'];
                         if ($mservice_id) {
                             $promote['mservice_id'] = $mservice_id;
                         }

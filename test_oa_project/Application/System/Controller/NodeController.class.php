@@ -21,8 +21,8 @@ class NodeController extends SystemController
     public function nodeList()
     {
         //获取数据
-        $nodeList = D('Node','Service')->getNodeList();
-        $nodeList = $nodeList['data']['data'];
+        $nodeController = new NodeMain();
+        $nodeList = $nodeController->getList();
         //模版赋值
         $this->assign('nodeList', $nodeList);
         $this->display();
@@ -37,7 +37,8 @@ class NodeController extends SystemController
         //获取数据
         $data = I("post.");
         //执行操作
-        $reflag = D('Node','Service')->addNode($data);
+        $nodeController = new NodeMain();
+        $reflag = $nodeController->create_node($data);
         if($reflag['code']==0){
             $this->ajaxReturn('0', '节点添加成功');
         }
@@ -53,8 +54,8 @@ class NodeController extends SystemController
         //获取数据
         $data = I("post.");
         //执行操作
-        $data['node_id'] = $data['id'];
-        $reflag = D('Node','Service')->editNode($data);
+        $nodeController = new NodeMain();
+        $reflag = $nodeController->edit_node($data);
         if($reflag['code']==0){
             $this->ajaxReturn('0', '节点修改成功');
         }
@@ -70,7 +71,8 @@ class NodeController extends SystemController
         //获取数据
         $data = I("post.");
         //执行操作
-        $reflag = D('Node','Service')->delNode($data);
+        $nodeController = new NodeMain();
+        $reflag = $nodeController->del_node($data);
         if($reflag['code']==0){
             $this->ajaxReturn('0', '节点删除成功');
         }

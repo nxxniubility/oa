@@ -29,7 +29,7 @@
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>手机号:</div>
                 <div class="nsRight">
-                    <input type="tel" class="nsInp" maxlength="11" name="username" value="{$data['SystemUserInfo']['username']}">
+                    <input type="tel" class="nsInp" maxlength="11" name="username" value="<?php echo decryptPhone($data['SystemUserInfo']['username'], C('PHONE_CODE_KEY')) ?>">
                 </div>
             </div>
             <div class="nsRow clearfix">
@@ -104,11 +104,11 @@
                     <div class="selectbox nsArea nsSta l">
                         <dl class="select typeselect">
                             <dt>
-                            <div class="select_title l">{$data['SystemUserInfo']['usertype_name']}</div>
+                            <div class="select_title l">{:$data['systemUserStatus'][$data['SystemUserInfo']['usertype']]['text']}</div>
                             <div class="arrow r"></div>
                             </dt>
-                            <foreach name="data['systemUserStatus']" item="v" key="k">
-                                <dd class="fxDone" data-value="{$k}" data-name="usertype">{$v}</dd>
+                            <foreach name="data['systemUserStatus']" item="v">
+                                <dd class="fxDone" data-value="{$v.num}" data-name="usertype">{$v.text}</dd>
                             </foreach>
                         </dl>
                         <input type="hidden" name="usertype" value="{$data['SystemUserInfo']['usertype']}">
@@ -171,7 +171,7 @@
                     <dd class="wNsOne">
                         <input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}" {:(in_array($v['id'],$data['is_roles']))?'checked="checked"':''}>
                     </dd>
-                    <dd class="wNsTwo">{$v.department_name}</dd>
+                    <dd class="wNsTwo">{$v.departmentname}</dd>
                     <dd class="wNsThr">{$v.name}</dd>
                 </dl>
             </foreach>
@@ -217,7 +217,6 @@
             }
             $(':input[name="role_id"]').val(role_id);
             $(':input[name="role_name"]').val(role_name);
-            layer.closeAll();
         });
         //搜索职位相关-检索
         $('.nsSearchSubmit').click(function(){

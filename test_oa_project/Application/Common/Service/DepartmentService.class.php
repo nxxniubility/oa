@@ -19,141 +19,45 @@ class DepartmentService extends BaseService
     }
 
     /*
-     |--------------------------------------------------------------------------
-     | 获取列表
-     |--------------------------------------------------------------------------
-     | @author zgt
-     | updata nxx
-     */
-    protected function _getDepartmentList()
-    {
-        $departmentAll['data'] = D('Department')->getList();
-        $departmentAll['count'] = D('Department')->getCount();
-        return $departmentAll;
-    }
-
-    /*
     |--------------------------------------------------------------------------
-    | 获取所有部门-文件缓存
+    | 获取所有部门-缓存
     |--------------------------------------------------------------------------
     | @author zgt
-    | updata nxx
     */
-    public function getDepartmentList($param)
+    public function getList($where=array('status'=>1),$order='sort desc',$page=null)
     {
-        $param['where']['status'] = 1;
-        $param['order'] = !empty($param['order'])?$param['order']:'sort desc';
-        $param['page'] = !empty($param['page'])?$param['page']:null;
-        if( F('Cache/department') ){
-            $departmentAll = F('Cache/department');
+        if( F('Cache/Personnel/department') ){
+            $departmentAll = F('Cache/Personnel/department');
         }else{
-            $departmentAll = $this->_getDepartmentList();
-            F('Cache/department', $departmentAll);
+            $departmentAll['data'] = D('department')->where(array('status'=>1))->order('department_id asc')->select();
+            $departmentAll['count'] = D('department')->count();
+            F('Cache/Personnel/department', $departmentAll);
         }
-        $departmentAll = $this->disposeArray($departmentAll,  $param['order'], $param['page'],  $param['where']);
+        $departmentAll = $this->disposeArray($departmentAll, $order, $page, $where);
         return array('code'=>0, 'data'=>$departmentAll);
     }
 
     /*
     |--------------------------------------------------------------------------
-    | 添加部门---更新文件缓存
+    | 获取区域详情-缓存
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function addDepartment($param)
+    public function getInfo($department_id)
     {
-        //必须参数
-        if(empty($param['departmentname'])) return array('code'=>300,'msg'=>'缺少部门名称');
-        $result = D('Department')->addData($param);
-        //插入数据成功执行清除缓存
-        if ($result['code']==0){
-            if (F('Cache/department')) {
-                $new_info = D('Department')->getFind(array("department_id"=>$result['data']));
-                $cahce_all = F('Cache/department');
-                $cahce_all['data'][] = $new_info;
-                $cahce_all['count'] =  $cahce_all['count']+1;
-                F('Cache/department', $cahce_all);
-            }
-        }
-        return $result;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 修改部门---更新文件缓存
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function editDepartment($param)
-    {
-        //必须参数
-        if(empty($param['department_id'])) return array('code'=>300,'msg'=>'缺少参数');
-        $result = D('Department')->editData($param,$param['department_id']);
-        //更新数据成功执行清除缓存
-        if ($result['code']==0){
-            if (F('Cache/department')) {
-                $new_info = D('Department')->getFind(array("department_id"=>$param['department_id']));
-                $cahce_all = F('Cache/department');
-                foreach($cahce_all['data'] as $k=>$v){
-                    if($v['department_id'] == $param['department_id']){
-                        $cahce_all['data'][$k] = $new_info;
-                    }
-                }
-                F('Cache/department', $cahce_all);
-            }
-        }
-        return $result;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 删除部门详情---更新文件缓存
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function delDepartment($param)
-    {
-        //必须参数
-        if(empty($param['department_id'])) return array('code'=>300,'msg'=>'参数异常');
-        $param['status'] = 0;
-        $result = D('Department')->editData($param,$param['department_id']);
-        //更新数据成功执行清除缓存
-        if ($result['code']==0){
-            if (F('Cache/department')) {
-                $new_info = D('Department')->getFind(array("department_id"=>$param['department_id']));
-                $cahce_all = F('Cache/department');
-                foreach($cahce_all['data'] as $k=>$v){
-                    if($v['department_id'] == $param['department_id']){
-                        $cahce_all['data'][$k] = $new_info;
-                    }
-                }
-                F('Cache/department', $cahce_all);
-            }
-        }
-        return $result;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 获取部门详情---更新文件缓存
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function getDepartmentInfo($param)
-    {
-        //必须参数
-        if(empty($param['department_id'])) return array('code'=>300,'msg'=>'参数异常');
-        if( F('Cache/department') ) {
-            $department_list = F('Cache/department');
+        if( F('Cache/Personnel/department') ){
+            $departmentList = F('Cache/Personnel/department');
         }else{
-            $department_list = $this->_getDepartmentList();
-            F('Cache/department', $department_list);
+            $departmentList = D('Department')->where("status=1")->select();
+            F('Cache/Personnel/department', $departmentList);
         }
-        foreach($department_list['data'] as $k=>$v){
-            if($v['department_id']==$param['department_id']){
-                $department_info = $v;
+        if(!empty($departmentList['data'])){
+            foreach($departmentList['data'] as $k=>$v){
+                if($v['department_id']==$department_id){
+                    $newZoneList = $v;
+                }
             }
         }
-        return array('code'=>'0', 'data'=>$department_info);
+        return array('code'=>0,'data'=>$newZoneList);
     }
 }

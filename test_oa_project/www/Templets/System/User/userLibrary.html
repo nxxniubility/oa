@@ -84,8 +84,8 @@
                     <span>最近跟进结果：</span>
                     <ul data-id="attitude_id">
                         <li><a href="javascript:;" data-value="0" {:$data['request']['attitude_id']==0?'class="on_hover"':''}>全部</a></li>
-                        <foreach name="data['USER_ATTITUDE']" item="v" key="k">
-                            <li><a href="javascript:;" data-value="{$k}" {:$data['request']['attitude_id']==$k?'class="on_hover"':''}>{$v}</a></li>
+                        <foreach name="data['attitude']" item="v" key="k">
+                            <li><a href="javascript:;" data-value="{$v.num}" {:$data['request']['attitude_id']==$v['num']?'class="on_hover"':''}>{$v.text}</a></li>
                         </foreach>
                     </ul>
                 </div>
@@ -206,8 +206,8 @@
                     <span>学习平台：</span>
                     <ul data-id="learningtype">
                         <li><a href="javascript:;" data-value="0" {:$data['request']['learningtype']==0?'class="on_hover"':''}>全部</a></li>
-                        <foreach name="data['LEARNINGTYPE']" item="v" key="k">
-                            <li><a href="javascript:;" data-value="{$k}" {:$data['request']['learningtype']==$k?'class="on_hover"':''}>{$v}</a></li>
+                        <foreach name="data['learningtype']" item="v" key="k">
+                            <li><a href="javascript:;" data-value="{$v.num}" {:$data['request']['learningtype']==$v['num']?'class="on_hover"':''}>{$v.text}</a></li>
                         </foreach>
                     </ul>
                 </div>
@@ -396,9 +396,9 @@
                             <td class="tr_content content_username">{:decryptPhone($v['username'],C('PHONE_CODE_KEY'))}{:$v['phonevest']?'('.$v['phonevest'].')':''}</td>
                             <td class="tr_content content_qq">{:$v['qq']?$v['qq']:'--'}</td>
                             <td class="tr_content content_tel">{:$v['tel']?$v['tel']:'--'}</td>
-                            <td class="tr_content content_infoquality">{$v.infoquality_name}</td>
+                            <td class="tr_content content_infoquality">{:$data['USER_INFOQUALITY'][$v['infoquality']]}</td>
                             <td class="tr_content content_channelname">{$v['channelnames']}</td>
-                            <td class="tr_content content_status">{$v.status_name}</td>
+                            <td class="tr_content content_status">{:$data['USER_STATUS'][$v['status']]['text']}</td>
                             <td class="tr_content content_system_user_id">{:$v['system_realname']?$v['system_realname']:'--'}</td>
                             <td class="tr_content content_updateuser_id">{:$v['updateuser_realname']}</td>
                             <td class="tr_content content_isvisittime">{:empty($v['visittime'])?'否':'是'}</td>
@@ -406,9 +406,9 @@
                             <td class="tr_content content_allocationtime">{:date('Y-m-d H:i',$v['allocationtime'])}</td>
                             <td class="tr_content content_lastvisit">{:($v['lastvisit']!=0)?date('Y-m-d H:i',$v['lastvisit']):'--'}</td>
                             <td class="tr_content content_nextvisit">{:($v['nextvisit']!=0)?date('Y-m-d H:i',$v['nextvisit']):'--'}</td>
-                            <td class="tr_content content_attitude_id">{:$v['attitude_name']?$v['attitude_name']:'--'}</td>
+                            <td class="tr_content content_attitude_id">{:$v['attitude_id']?$data['USER_ATTITUDE'][$v['attitude_id']]['text']:'--'}</td>
                             <td class="tr_content content_course_id">{:empty($v['course_id'])?'--':$data['course_status'][$v['course_id']]}</td>
-                            <td class="tr_content content_learningtype">{:$v['learningtype_name']?$v['learningtype_name']:'--'}</td>
+                            <td class="tr_content content_learningtype">{:empty($v['learningtype'])?'泽林':$data['learningtype'][$v['learningtype']]['text']}</td>
                             </tr>
                         </foreach>
                         </tbody>
@@ -904,7 +904,7 @@
                         }else{
                             var sel = '';
                         }
-                        html2+=' <option value="'+v.system_user_id+'" '+sel+'>'+v.sign_realname+'</option>';
+                        html2+=' <option value="'+v.system_user_id+'" '+sel+'>'+v.realname+'</option>';
                     });
                 }
                 if(html2!=''){

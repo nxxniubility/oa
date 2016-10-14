@@ -103,8 +103,8 @@
                             <div class="select_title l">选择员工状态</div>
                             <div class="arrow r"></div>
                             </dt>
-                            <foreach name="data['systemUserStatus']" item="v" key="k">
-                                <dd class="fxDone" data-value="{$k}" data-name="usertype">{$v}</dd>
+                            <foreach name="data['systemUserStatus']" item="v">
+                                <dd class="fxDone" data-value="{$v.num}" data-name="usertype">{$v.text}</dd>
                             </foreach>
                         </dl>
                         <input type="hidden" name="usertype" value="">
@@ -162,10 +162,10 @@
                 <dt class="wNsTwo">所属部门</dt>
                 <dt class="wNsThr">职位名称</dt>
             </dl>
-            <foreach name="data['roleAll']['data']" item="v" key="k">
+            <foreach name="data['roleAll'][data]" item="v" key="k">
                 <dl class="clearfix department_content">
                     <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}"></dd>
-                    <dd class="wNsTwo">{$v.department_name}</dd>
+                    <dd class="wNsTwo">{$v.departmentname}</dd>
                     <dd class="wNsThr">{$v.name}</dd>
                 </dl>
             </foreach>
@@ -211,7 +211,6 @@
             }
             $(':input[name="role_id"]').val(role_id);
             $(':input[name="role_name"]').val(role_name);
-            layer.closeAll();
         });
         //搜索职位相关-检索
         $('.nsSearchSubmit').click(function(){
