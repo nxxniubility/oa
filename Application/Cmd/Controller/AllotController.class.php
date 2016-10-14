@@ -1,6 +1,7 @@
 <?php
 namespace Cmd\Controller;
 use Common\Controller\BaseController;
+use Common\Service\DataService;
 use Org\Util\Date;
 class AllotController extends BaseController {
 
@@ -22,13 +23,10 @@ class AllotController extends BaseController {
     //分配规则
     protected function allot($allocation_id="")
     {
-        
-        $week = date('w');
-        $noAband = array(0);
-        if(in_array($week,$noAband)) exit();//星期天不分配数据
+        $DataService = new DataService();
         if(empty($allocation_id)){
             //获取分配规则
-            $allots = D('UserAllocation')->where(array('status'=>1))->order('sort asc')->select();
+            $allots = D('UserAllocation')->where(array('status'=>1,'start'=>1))->order('sort asc')->select();
         }else{
             //获取分配规则
             $allots = D('UserAllocation')->where(array('user_allocation_id'=>$allocation_id))->order('sort asc')->select();
@@ -40,20 +38,58 @@ class AllotController extends BaseController {
         foreach($userApply as $k => $v){
             $userApplyArr[] = $v['user_id'];
         }
-        
         foreach($allots as $topkey => $allot){
-            //是否有星期限制？
-            if(!empty($allot['week_text']) && $allot['week_text']!=0){
-                $week_text = explode(',', $allot['week_text']);
-                if(!in_array(date('N'), $week_text)){
-                    $this->success('今天不在允许星期内');exit();
+            //是否有指定日期
+            if(!empty($allot['specify_days'])){
+                //转化时间戳匹配  防止一些浏览器时间格式不一致
+                $specify_days = explode(',', $allot['specify_days']);
+                foreach($specify_days as $_days_k=>$_days_v){
+                    $specify_days[$_days_k] = strtotime($_days_v);
+                }
+                if(!in_array(strtotime(date('Y-m-d')), $specify_days)){
+                    if((!empty($allot['holiday']))){
+                        //是否有节假日限制？
+                        $holiday = explode(',', $allot['holiday']);
+                        $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd'));
+                        if($get_holiday['code']==0){
+                            if(in_array($get_holiday['data'], $holiday)){
+                                $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
+                            }
+                        }
+                    }
+                    if(!empty($allot['week_text']) && $allot['week_text']!=0){
+                        //是否有星期限制？
+                        $week_text = explode(',', $allot['week_text']);
+                        if(!in_array(date('N'), $week_text)){
+                            $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
+                        }
+                    }
+                }
+            }else{
+                if((!empty($allot['holiday']))){
+                    //是否有节假日限制？
+                    $holiday = explode(',', $allot['holiday']);
+                    $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd'));
+                    if($get_holiday['code']==0){
+                        if(in_array($get_holiday['data'], $holiday)){
+                            $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
+                        }
+                    }
+                }
+                if(!empty($allot['week_text']) && $allot['week_text']!=0){
+                    //是否有星期限制？
+                    $week_text = explode(',', $allot['week_text']);
+                    if(!in_array(date('N'), $week_text)){
+                        $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
+                    }
                 }
             }
-
             //查询分配人
             $join = "left join zl_allocation_systemuser on zl_system_user.system_user_id=zl_allocation_systemuser.system_user_id";
             $allotUser = D('SystemUser')->field('zl_system_user.system_user_id,realname,zone_id')->join($join)->where(array('user_allocation_id'=>$allot['user_allocation_id'],'zl_allocation_systemuser.status'=>1,'usertype'=>array('NEQ',10)))->select();
-            
+            if(empty($allotUser)){
+                $falg_msg[] =  '失败原因:找不到需要分配的员工，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
+            }
             //查询分配渠道
             $channel = M('Channel')->select();
             $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
@@ -105,8 +141,8 @@ class AllotController extends BaseController {
             
             $where['zone_id'] = array('IN',$zoneIds);
             $where['user_id'] = array('NOT IN',$userApplyArr);
-            
-            
+
+
             //获取近期放弃客户
             $excludeTime = $nowtime - (86400 * 7);
             $excludeUser = D('UserCallback')->field('user_id')->where(array('remark'=>array('LIKE','客户放弃:%'),'callbacktime'=>array('EGT',$excludeTime)))->select();
@@ -120,15 +156,15 @@ class AllotController extends BaseController {
             //获取所有资源信息
             $where['channel_id'] = array('IN',$allotChannel);
             $resource = $userdb->field('user_id,infoquality,channel_id,createtime')->where($where)->order('createtime desc')->limit($allotTotal)->select();
-            
+
             if(empty($resource)) continue;
-            
+
             $resultUser = array();
             foreach($resource as $k => $v){
                 $v['createtime'] = date('Y-m-d H:i:s',$v['createtime']);
                 $resultUser[$v['channel_id']][] = $v;
             }
-            
+
             //平均分配所有渠道数据
             $user = array();
             foreach($allotChannel as $k => $v){
@@ -260,40 +296,50 @@ class AllotController extends BaseController {
                 foreach ($arrIds as $arrkey1 => $arrvalue1){
                     $callbackDataAdd = array();
                     $callbackDataAdd['user_id'] = $arrvalue1;
-                    $callbackDataAdd['system_user_id'] = $allotvalue['system_user_id'];
+                    $callbackDataAdd['system_user_id'] = 0;
                     $callbackDataAdd['remark'] = '系统分配';
                     $callbackDataAdd['status'] = 1;
                     $callbackDataAdd['callbacktime'] = $nowtime;
                     $callbackDataAdd['nexttime'] = $nowtime;
+                    $callbackDataAdd['callbacktype'] = 30;
                     D('UserCallback')->add($callbackDataAdd);
+                    //添加数据记录
+                    $dataLog['operattype'] = '2';
+                    $dataLog['operator_user_id'] = 0;
+                    $dataLog['user_id'] = $arrvalue1;
+                    $dataLog['logtime'] = time();
+                    $DataService->addDataLogs($dataLog);
                 }
                 
-                foreach($allotvalue['allotnumchannel'] as $channelkey => $channelvalue){
-                    $logsdata['channel_id'] = $channelkey;
-                    $logsdata['infoqualitya']  = empty($channelvalue['1']) ? 0 : $channelvalue['1'];
-                    $logsdata['infoqualityb']  =  empty($channelvalue['2']) ? 0 : $channelvalue['2'];
-                    $logsdata['infoqualityc']  =  empty($channelvalue['3']) ? 0 : $channelvalue['3'];
-                    $logsdata['infoqualityd']  =  empty($channelvalue['4']) ? 0 : $channelvalue['4'];
-                    $logsdata['date'] = $dateYMD;
-                    $logsdata['system_user_id'] = $allotvalue['system_user_id'];
-            
-                    $log = $zl_user_allocation_logsdb->where(array('channel_id'=>$logsdata['channel_id'],'date'=>$dateYMD,'system_user_id'=>$allotvalue['system_user_id']))->find();
-                    if(!empty($log)){
-                        $log['infoqualitya'] += $logsdata['infoqualitya'];
-                        $log['infoqualityb'] += $logsdata['infoqualityb'];
-                        $log['infoqualityc'] += $logsdata['infoqualityc'];
-                        $log['infoqualityd'] += $logsdata['infoqualityd'];
-                        $zl_user_allocation_logsdb->save($log);
-                    }else{
-                        $zl_user_allocation_logsdb->add($logsdata);
-                    }
-                }
+//                foreach($allotvalue['allotnumchannel'] as $channelkey => $channelvalue){
+//                    $logsdata['channel_id'] = $channelkey;
+//                    $logsdata['infoqualitya']  = empty($channelvalue['1']) ? 0 : $channelvalue['1'];
+//                    $logsdata['infoqualityb']  =  empty($channelvalue['2']) ? 0 : $channelvalue['2'];
+//                    $logsdata['infoqualityc']  =  empty($channelvalue['3']) ? 0 : $channelvalue['3'];
+//                    $logsdata['infoqualityd']  =  empty($channelvalue['4']) ? 0 : $channelvalue['4'];
+//                    $logsdata['date'] = $dateYMD;
+//                    $logsdata['system_user_id'] = $allotvalue['system_user_id'];
+//
+//                    $log = $zl_user_allocation_logsdb->where(array('channel_id'=>$logsdata['channel_id'],'date'=>$dateYMD,'system_user_id'=>$allotvalue['system_user_id']))->find();
+//                    if(!empty($log)){
+//                        $log['infoqualitya'] += $logsdata['infoqualitya'];
+//                        $log['infoqualityb'] += $logsdata['infoqualityb'];
+//                        $log['infoqualityc'] += $logsdata['infoqualityc'];
+//                        $log['infoqualityd'] += $logsdata['infoqualityd'];
+//                        $zl_user_allocation_logsdb->save($log);
+//                    }else{
+//                        $zl_user_allocation_logsdb->add($logsdata);
+//                    }
+//                }
             }
+            $falg_msg[] = '分配成功:'.$result.'条数据/每人，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');
         }
-        if(!empty($allocation_id) && $result){
-            $this->success('分配成功'.$result.'条数据/每人');
-        }elseif (!empty($allocation_id) && !$result){
-            $this->success('分配失败');
+        if(!empty($allocation_id)){
+            $this->success($falg_msg[0]);
+        }elseif(!empty($falg_msg)){
+            foreach($falg_msg as $msg_v){
+                echo $msg_v.'<br/>';
+            }
         }
         
     }

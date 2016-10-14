@@ -1,93 +1,67 @@
 <?php
-
 namespace Common\Model;
+
 use Common\Model\BaseModel;
 
-class RoleUserModel extends BaseModel
+class RoleUserModel extends SystemModel
 {
-    protected $_id='user_id';
-    public function _initialize(){
-        parent::_initialize();
+
+    /**
+     * @author cq
+     */
+    public function  _initialize()
+    {
+
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | 获取单条记录
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function getFind($where=null, $field='*', $join=null)
+    /**
+     * 获取指定用户所属用户组
+     * @author cq
+     * @param string $where
+     * @return array
+     */
+    public function getRoleUser($where = "")
     {
-        return $this->field($field)->where($where)->join($join)->find();
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 获取列表
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function getList($where=null, $field='*', $order=null, $limit=null, $join=null)
-    {
-        return $this->field($field)->where($where)->join($join)->order($order)->limit($limit)->select();
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | 获取总数
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function getCount($where=null, $join=null)
-    {
-        return $this->where($where)->join($join)->count();
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | 添加
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function addData($data)
-    {
-        // 如果创建失败 表示验证没有通过 输出错误提示信息
-        if (!$this->create($data)){
-            return $this->getError();
-        }else{
-            $re_id =  $this->add($data);
-            return array('code'=>0,'data'=>$re_id);
+        $result = $this->field('role_id')->where($where)->select();
+        $role_id = array();
+        foreach ($result as $key => $value) {
+            $role_id[] = $value['role_id'];
         }
+        return $role_id;
+    }
+
+    /**
+     * 删除指定的用户
+     * @author cq
+     * @param string $where
+     * @return mixed
+     */
+    public function delRoleUser($where)
+    {
+        return $this->where($where)->delete();
+    }
+
+    /**
+     * 获取指定用户组的用户
+     * @author cq
+     * @return array
+     */
+    public function getAllRoleUser($where = array(), $field = "*")
+    {
+        return $this->field($field)->where($where)->select();
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | 修改
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function editData($data,$id)
-    {
-        // 如果创建失败 表示验证没有通过 输出错误提示信息
-        if (!$this->create($data)){
-            return $this->getError();
-        }else{
-            $re_flag =  $this->where(array($this->_id=>$id))->save($data);
-            return array('code'=>0,'data'=>$re_flag);
-        }
+     * userid=>获取员工权限
+     * @author zgt
+     * @return array
+     */
+    public function getSystemUserRole($systemUserId){
+        return $this
+            ->field('name,role_id,departmentname')
+            ->where(array('user_id'=>$systemUserId))
+            ->join('__ROLE__ ON __ROLE_USER__.role_id=__ROLE__.id')
+            ->join('LEFT JOIN __DEPARTMENT__ on __DEPARTMENT__.department_id=__ROLE__.department_id')
+            ->select();
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 删除
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function delData($id)
-    {
-        return $this->where(array($this->_id=>$id))->delete();
-    }
-
 }

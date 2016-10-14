@@ -1,7 +1,20 @@
 <?php
 namespace System\Controller;
 
+use Common\Controller\ChannelController;
+use Common\Controller\CourseController;
+use Common\Controller\DepartmentController;
+use Common\Controller\EducationController;
+use Common\Controller\OrderController;
+use Common\Controller\RoleController;
 use Common\Controller\SystemController;
+use Common\Controller\SystemUserController;
+use Common\Controller\ProidController;
+use Common\Controller\UserController as UserMain;
+use Common\Controller\ZoneController;
+use Api\Controller\UserController as ApiUser;
+use Common\Service\ApiService;
+use Common\Service\UserService;
 
 class UserController extends SystemController
 {
@@ -42,31 +55,40 @@ class UserController extends SystemController
             }
         }
         //客户列表
-        $re_userAll = D('User','Service')->getList($where, $order, (($re_page-1)*30).',30');
-        $data['userAll'] = $re_userAll['data']['data'];
+        $userMain = new UserMain();
+        $re_userAll = $userMain->getList($where, $order, (($re_page-1)*30).',30');
+        $data['userAll'] = $re_userAll['data'];
+        //获取总数
+        $result = $userMain->getCount($where);
         //加载分页类
-        $data['paging_data'] = $this->Paging($re_page, 30, $re_userAll['data']['count'], $request, __ACTION__, null, 'system');
+        $data['paging_data'] = $this->Paging($re_page, 30, $result['data'], $request, __ACTION__, null, 'system');
         //获取自定义列
-        $column_where['columntype'] = 1;
-        $column_list = D('SystemUser','Service')->getColumnList($column_where);
-        $data['column'] = $column_list['data'];
-        //课程列表
-        $courseList = D('Course','Service')->getCourseList();
-        $data['courseAll'] = $courseList['data']['data'];
-        //渠道列表
-        $channeList = D('Channel','Service')->getChannelList();
-        $data['channel'] = $channeList['data'];
-        //信息质量转换
-        $data['USER_INFOQUALITY'] = C('FIELD_STATUS.USER_INFOQUALITY');
-        //用户状态转换
-        $data['USER_STATUS'] = C('FIELD_STATUS.USER_STATUS');
-        //跟进结果转换
-        $data['USER_ATTITUDE'] = C('FIELD_STATUS.USER_ATTITUDE');
+        $systemUserMain = new SystemUserController();
+        $column_data['columntype'] = 1;
+        $column_data['system_user_id'] = $this->system_user_id;
+        $data['column'] = $systemUserMain->getColumn($column_data);
+        //获取职位及部门
+        $departmentMain = new DepartmentController();
+        $data['departmentAll'] = $departmentMain->getList();
+        $roleMain = new RoleController();
+        $data['roleAll'] = $roleMain->getAllRole();
         //学习平台
-        $data['LEARNINGTYPE'] = C('FIELD_STATUS.USER_LEARNINGTYPE');
-        //学习方式
-        $data['studytype'] = C('FIELD_STATUS.USER_STUDYTYPE');
-
+        $data['learningtype'] = C('USER_LEARNINGTYPE');
+        //跟进结果
+        $data['attitude'] = C('USER_ATTITUDE');
+        //缴费方式
+        $data['receivetype'] = C('USER_RECEIVETYPE');
+        //渠道列表
+        $channelMain = new ChannelController();
+        $channeList = $channelMain->getList();
+        $data['channel'] = $channeList['data'];
+        //课程列表
+        $courseMain = new CourseController();
+        $courseList = $courseMain->getList();
+        $data['courseAll'] = $courseList['data'];
+        //信息质量转换
+        $data['USER_INFOQUALITY'] = C('USER_INFOQUALITY');
+        $data['url'] = U('System/User/userList');
         $data['request'] = $request;
         $this->assign('data', $data);
         $this->display();
@@ -83,8 +105,11 @@ class UserController extends SystemController
         if (IS_POST) {
             //获取参数请求
             $request = I('post.');
+            $request['system_user_id'] = $this->system_user_id;
+            $request['zone_id'] = $this->system_user['zone_id'];
             //添加客户
-            $reflag = D('User','Service')->addUser($request);
+            $ApiUser = new ApiUser();
+            $reflag = $ApiUser->addUser($request);
             //返回数据操作状态 是否前台添加的客户
             $type = I('get.type');
             if ($type == 'visit') {
@@ -97,10 +122,12 @@ class UserController extends SystemController
         }
         $request = I('get.');
         //课程列表
-        $courseList = D('Course','Service')->getCourseList();
-        $data['course'] = $courseList['data']['data'];
+        $courseMain = new CourseController();
+        $courseList = $courseMain->getList();
+        $data['course'] = $courseList['data'];
         //渠道列表
-        $channeList = D('Channel','Service')->getChannelList();
+        $channelMain = new ChannelController();
+        $channeList = $channelMain->getList();
         $data['channel'] = $channeList['data'];
         $data['request'] = $request;
         $this->assign('data', $data);
@@ -135,12 +162,15 @@ class UserController extends SystemController
             //修改用户信息
             if ($request['type'] == 'edituser') {
                 $request['user_id'] = $user_id;
-                $reflag = D('User','Service')->editUser($request);
+                $request['system_user_id'] = $this->system_user_id;
+                $ApiUser = new ApiUser();
+                $reflag = $ApiUser->editUser($request);
                 if($reflag['code']==0){
                     if(!empty($request['remark'])){
                         $_request['user_id'] = $user_id;
+                        $_request['system_user_id'] = $this->system_user_id;
                         $_request['remark'] = $request['remark'];
-                        $reflag_info = D('User','Service')->editUserInfo($_request);
+                        $reflag_info = $ApiUser->editUser($_request);
                     }
                     //返回数据操作状态
                     if ($reflag_info['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
@@ -150,71 +180,108 @@ class UserController extends SystemController
                 }
                  //修改用户详情
             } else if ($request['type'] == 'editinfo') {
+                //实例验证类
+                $checkform = new \Org\Form\Checkform();
+                //年龄转换时间戳
+                if (!empty($request['birthday'])) $request['birthday'] = strtotime("-{$checkform->getStrInt($request['birthday'])} year");
                 $request['user_id'] = $user_id;
-                $reflag = D('User','Service')->editUserInfo($request);
+                $request['system_user_id'] = $this->system_user_id;
+                $ApiUser = new ApiUser();
+                $reflag = $ApiUser->editUserInfo($request);
                 //返回数据操作状态
                 if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
                 else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
             } else if ($request['type'] == 'addcallback') {
                 $request['nexttime'] = strtotime(($request['nextvisit']). ' ' .($request['nextvisit_hi']));
                 $request['user_id'] = $user_id;
-                $reflag = D('User','Service')->addUserCallback($request);
+                $request['system_user_id'] = $this->system_user_id;
+                $ApiUser = new ApiUser();
+                $reflag = $ApiUser->addCallback($request,1);
                 //返回数据操作状态
                 if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
                 else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
             } else if ($request['type'] == 'getFeeLogs') {
                 //缴费方式
                 $getWhere['user_id'] = $user_id;
-                $userOrder =  D('Order','Service')->getUserOrder($getWhere);
+                $orderController = new OrderController();
+                $userOrder = $orderController->getUserOrder($getWhere);
                 //返回数据操作状态
                 if ($userOrder['code'] == 0) $this->ajaxReturn(0, '', $userOrder['data']);
                 else  $this->ajaxReturn($userOrder['code'], $userOrder['msg']);
             } else if ($request['type'] == 'getSmsLogs') {
                 //短信记录
                 $getWhere['user_id'] = $user_id;
-                $userLog = D('User','Service')->getUserSmsLog($getWhere,$callbackType);
+                $ApiUser = new ApiUser();
+                $userLog = $ApiUser->getUserSmsLog($getWhere,$callbackType);
                 //返回数据操作状态
                 if ($userLog['code'] == 0) $this->ajaxReturn(0, '', $userLog['data']);
                 else  $this->ajaxReturn($userLog['code'], $userLog['msg']);
             }
+        }else{
+            //客户详情
+            $ApiUser = new ApiUser();
+            $userInfo = $ApiUser->getUserInfo(array('user_id'=>$user_id));
+            $data['userInfo'] = $userInfo['data'];
+            if ($data['userInfo']['status'] != 160 && $data['userInfo']['system_user_id'] == $this->system_user_id) $data['isSelf'] = 1;
+            //回访记录
+            $callbackList = $ApiUser->getUserCallback(array('user_id'=>$user_id,'callbackType'=>$callbackType));
+            $data['callbackList'] = $callbackList['data'];
+            //通话记录
+            $UserService = new UserService();
+            $call_List = $UserService->getCallList(array('user_id'=>$user_id,'system_user_id'=>$this->system_user_id,'rank'=>$callbackType));
+            $data['call_List'] = $call_List['data'];
+            //获取学历表
+            $educationMain = new EducationController();
+            $educationList = $educationMain->getList();
+            $data['educationAll'] = $educationList['data'];
+            //课程列表
+            $courseMain = new CourseController();
+            $courseList = $courseMain->getList();
+            $data['course'] = $courseList['data'];
+            //渠道列表
+            $channelMain = new ChannelController();
+            $channeList = $channelMain->getList();
+            $data['channel'] = $channeList['data'];
+            //获取职位及部门
+            $departmentMain = new DepartmentController();
+            $data['departmentAll'] = $departmentMain->getList();
+            $roleMain = new RoleController();
+            $data['roleAll'] = $roleMain->getAllRole();
+            //学习平台
+            $data['learningtype'] = C('USER_LEARNINGTYPE');
+            //跟进结果
+            $data['attitude'] = C('USER_ATTITUDE');
+            //回访方式
+            $data['callback'] = C('USER_CALLBACK');
+            //邀约状态转换
+            $data['USER_STATUS'] = C('USER_STATUS');
+            //信息质量转换
+            $data['USER_INFOQUALITY'] = C('USER_INFOQUALITY');
+            //学习平台转换
+            $data['USER_LEARNINGTYPE'] = C('USER_LEARNINGTYPE');
+            //学习方式转换
+            $data['USER_STUDYTYPE'] = C('USER_STUDYTYPE');
+            //跟进结果转换
+            $data['USER_ATTITUDE'] = C('USER_ATTITUDE');
+            //回访方式转换
+            $data['USER_CALLBACK'] = C('USER_CALLBACK');
+            //缴费方式
+            $data['USER_RECEIVETYPE'] = C('USER_RECEIVETYPE');
+            //贷款机构
+            $data['USER_LOAN_INSTITUTIONS'] = C('USER_LOAN_INSTITUTIONS');
+            //异步按钮操作地址
+            $data['url_dispost'] = U('System/User/dispostUser');
+            //转出客户操作
+            $data['url_allocationUser'] = U('System/User/allocationUser');
+            $data['user_id'] = $user_id;
+            $data['type'] = $type;
+            //判断是否从审核列表进来的  cq
+            if(!empty($isAuditList)){
+               $data['isAuditList'] = $isAuditList;
+            }
+            $this->assign('data', $data);
+            $this->display();
         }
-        //客户详情
-        $userInfo = D('User','Service')->getUserInfo(array('user_id'=>$user_id));
-        $data['userInfo'] = $userInfo['data'];
-        if ($data['userInfo']['status'] != 160 && $data['userInfo']['system_user_id'] == $this->system_user_id) $data['isSelf'] = 1;
-        //回访记录
-        $callbackList = D('User','Service')->getUserCallback(array('user_id'=>$user_id,'callbackType'=>$callbackType));
-        $data['callbackList'] = $callbackList['data'];
-        //通话记录
-        $call_List = D('User','Service')->getCallList(array('user_id'=>$user_id,'system_user_id'=>$this->system_user_id,'rank'=>$callbackType));
-        $data['call_List'] = $call_List['data'];
-        //获取学历表
-        $data['educationAll'] = C('FIELD_STATUS.EDUCATION_ARRAY');
-        //课程列表
-        $courseList = D('Course','Service')->getCourseList();
-        $data['course'] = $courseList['data']['data'];
-        //渠道列表
-        $channeList = D('Channel','Service')->getChannelList();
-        $data['channel'] = $channeList['data'];
-        //学习平台
-        $data['LEARNINGTYPE'] = C('FIELD_STATUS.USER_LEARNINGTYPE');
-        //跟进结果
-        $data['ATTITUDE'] = C('FIELD_STATUS.USER_ATTITUDE');
-        //回访方式
-        $data['CALLBACK'] = C('FIELD_STATUS.USER_CALLBACK');
-        //邀约状态转换
-        $data['USER_STATUS'] = C('FIELD_STATUS.USER_STATUS');
-        //信息质量转换
-        $data['USER_INFOQUALITY'] = C('FIELD_STATUS.USER_INFOQUALITY');
-        $data['user_id'] = $user_id;
-        $data['type'] = $type;
-        //判断是否从审核列表进来的  cq
-        if(!empty($isAuditList)){
-           $data['isAuditList'] = $isAuditList;
-        }
-        $this->assign('data', $data);
-        $this->display();
-
     }
 
     /*
@@ -634,48 +701,76 @@ class UserController extends SystemController
             $requestP = I('post.');
             if($requestP['type']=='getSysUser'){
                 //异步获取员工列表
-                $whereSystem['where']['usertype'] = array('neq',10);
-                $whereSystem['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-                $whereSystem['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+                $whereSystem['usertype'] = array('neq',10);
+                $whereSystem['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+                $whereSystem['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
                 //员工列表
-                $reSystemList = D('SystemUser','Service')->getSystemUsersList($whereSystem);
+                $systemUserMain = new SystemUserController();
+                $reSystemList = $systemUserMain->getListCache($whereSystem);
                 //返回数据操作状态
-                if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList['data']['data']);
+                if ($reSystemList !== false) $this->ajaxReturn(0, '', $reSystemList['data']);
                 else $this->ajaxReturn(1, '获取失败');
+            }else if($requestP['type']=='getPaging'){
+                //异步获取分页数据
+                $userMain = new UserMain();
+                $result = $userMain->getCount($where);
+                //加载分页类
+                $paging_data = $this->Paging($re_page, 30, $result['data'], $request, __ACTION__, null, 'system');
+                $this->ajaxReturn(0, '', $paging_data);
             }
         }
         //客户列表
-        $re_userAll = D('User','Service')->getList($where, $order, (($re_page-1)*30).',30');
-        $data['userAll'] = $re_userAll['data']['data'];
+        $userMain = new UserMain();
+        $re_userAll = $userMain->getList($where, $order, (($re_page-1)*30).',30');
+        $data['userAll'] = $re_userAll['data'];
+        //总数
+        $result = $userMain->getCount($where);
         //加载分页类
-        $data['paging_data'] = $this->Paging($re_page, 30, $re_userAll['data']['count'], $request, __ACTION__, null, 'system');
+        $data['paging_data'] = $this->Paging($re_page, 30, $result['data'], $request, __ACTION__, null, 'system');
         //获取自定义列
-        $column_where['columntype'] = 2;
-        $column_list = D('SystemUser','Service')->getColumnList($column_where);
-        $data['column'] = $column_list['data'];
-        //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
-        $data['zoneAll']['children'] = $zoneAll['data'];
+        $systemUserMain = new SystemUserController();
+        $column_data['columntype'] = 2;
+        $column_data['system_user_id'] = $this->system_user_id;
+        $data['column'] = $systemUserMain->getColumn($column_data);
+        //获取区域下
+        $zoneMain = new ZoneController();
+        $data['zoneAll']['children'] = $zoneMain->getZoneList($this->system_user['zone_id']);
         //获取职位及部门
-        $roleAll = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
+        $departmentMain = new DepartmentController();
+        $data['departmentAll'] = $departmentMain->getList();
+        $roleMain = new RoleController();
+        $data['roleAll'] = $roleMain->getAllRole();
+        //最近跟进结果
+        $data['attitude'] = C('USER_ATTITUDE');
+        //学习平台
+        $data['learningtype'] = C('USER_LEARNINGTYPE');
+        //学习方式
+        $data['studytype'] = C('USER_STUDYTYPE');
         //课程列表
-        $courseList = D('Course','Service')->getCourseList();
-        $data['courseAll'] = $courseList['data']['data'];
+        $courseMain = new CourseController();
+        $courseList = $courseMain->getList();
+        $data['courseAll'] = $courseList['data'];
+        //课程列表status
+        foreach($courseList['data'] as $k=>$v){
+            $data['course_status'][$v['course_id']] = $v['coursename'];
+        }
         //渠道列表
-        $channeList = D('Channel','Service')->getChannelList();
+        $channelMain = new ChannelController();
+        $channeList = $channelMain->getList();
         $data['channel'] = $channeList['data'];
         //信息质量转换
-        $data['USER_INFOQUALITY'] = C('FIELD_STATUS.USER_INFOQUALITY');
+        $data['USER_INFOQUALITY'] = C('USER_INFOQUALITY');
+        //预报审核状态
+        $data['USER_APPLY_STATUS'] = C('USER_APPLY_STATUS');
         //用户状态转换
-        $data['USER_STATUS'] = C('FIELD_STATUS.USER_STATUS');
+        $data['USER_STATUS'] = C('USER_STATUS');
         //跟进结果转换
-        $data['USER_ATTITUDE'] = C('FIELD_STATUS.USER_ATTITUDE');
-        //学习平台
-        $data['LEARNINGTYPE'] = C('FIELD_STATUS.USER_LEARNINGTYPE');
-        //学习方式
-        $data['studytype'] = C('FIELD_STATUS.USER_STUDYTYPE');
-
+        $data['USER_ATTITUDE'] = C('USER_ATTITUDE');
+        //异步按钮操作地址
+        $data['url_dispost'] = U('System/User/dispostUser');
+        //转出客户操作
+        $data['url_allocationUser'] = U('System/User/allocationUser');
+        $data['url'] = U('System/User/userLibrary');
         $data['request'] = $request;
         $this->assign('data', $data);
         $this->display();
@@ -1521,13 +1616,12 @@ class UserController extends SystemController
             $setpagesInfo = $res['msg'];
             if (!empty($_FILES['file'])) {
                 $exts = array('xls', 'xlsx');
-                $rootPath = './Public/';
-                $savePath = 'User/';
+                $rootPath = './Uploads/File';
+                $savePath = '/ImportUser/';
                 $uploadFile = $this->uploadFile($exts, $rootPath, $savePath);
                 $filename = $rootPath . $uploadFile['file']['savepath'] . $uploadFile['file']['savename'];
             }         
             $datas = importExecl($filename);
-            unlink($filename);         
             foreach ($datas as $key => $data) {
                 array_unique($data);
             }
@@ -1629,7 +1723,7 @@ class UserController extends SystemController
                 }
                 $user['infoquality'] = 4;   //信息质量不明确
                 $user['channel_id'] = $setpagesInfo[0]['channel_id'];
-                $result = D("User",'Service')->addUser($user);
+                $result = D("User")->addUser($user, $zone_id, $system_user_id);
                 if ($result['code'] != 0) {
                     $userList[$key]['msg'] = $result['msg'];
                     $errorData[$key] = $userList[$key];
@@ -1671,16 +1765,13 @@ class UserController extends SystemController
             $res = $proidMain->getSetPages($setPages);
             $setpagesInfo = $res['msg'];
             if (!empty($_FILES['file'])) {
-                //$exts = array('zip', 'xls', 'xlsx');
                 $exts = array('xls', 'xlsx');
-                $rootPath = './Public/';
-                $savePath = 'User/';
+                $rootPath = './Uploads/File';
+                $savePath = '/ImportLibraryUser/';
                 $uploadFile = $this->uploadFile($exts, $rootPath, $savePath);
                 $filename = $rootPath . $uploadFile['file']['savepath'] . $uploadFile['file']['savename'];
-            }
+            }         
             $datas = importExecl($filename);
-            unlink($filename);
-
             foreach ($datas as $key => $data) {
                 array_unique($data);
             }
@@ -1791,7 +1882,7 @@ class UserController extends SystemController
                 $user['channel_id'] = $setpagesInfo[0]['channel_id'];
                 $USER_STATUS = C('USER_STATUS');
                 $user['status'] = $USER_STATUS['160']['num'];
-                $result = D("User",'Service')->addUser($user);
+                $result = D("User")->addUser($user, $zone_id, $system_user_id);
                 if ($result['code'] != 0) {
                     $userList[$key]['msg'] = $result['msg'];
                     $errorData[$key] = $userList[$key];

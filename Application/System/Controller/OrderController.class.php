@@ -1,6 +1,16 @@
 <?php
 namespace System\Controller;
+
+use Common\Controller\CourseController;
+use Common\Controller\CourseProductController;
 use Common\Controller\SystemController;
+use Common\Controller\OrderController as OrderMainController;
+use Common\Controller\DepartmentController;
+use Common\Controller\RoleController;
+use Common\Controller\SystemUserController;
+use Common\Controller\ZoneController;
+use Org\Form\Checkform;
+
 class OrderController extends SystemController
 {
 
@@ -45,39 +55,38 @@ class OrderController extends SystemController
             if($requestP['type']=='getPaging') {
                 if(!empty($requestP['page'])) $requestG['page'] = $requestP['page'];
                 //异步获取分页数据
-                $res = D('Order', 'Service')->getOrderCount($where);
+                $orderMainController = new OrderMainController();
+                $result = $orderMainController->getCount($where);
                 //加载分页类
-                $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $res['data'], $requestG, __ACTION__, null, 'system');
+                $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $result['data'], $requestG, __ACTION__, null, 'system');
                 $this->ajaxReturn(0, '', $paging_data);
             }else if($requestP['type']=='getSysUser'){
                 //异步获取员工列表
-                $whereSystem['where']['usertype'] = array('neq',10);
-                $whereSystem['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-                $whereSystem['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+                $whereSystem['usertype'] = array('neq',10);
+                $whereSystem['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+                $whereSystem['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
                 //员工列表
-                $reSystemList = D('SystemUser', 'Service')->getSystemUsersList($whereSystem);
+                $systemUserMain = new SystemUserController();
+                $reSystemList = $systemUserMain->getListCache($whereSystem);
                 //返回数据操作状态
-                if ($reSystemList['data']['data']){
-                    $this->ajaxReturn(0, '', $reSystemList['data']['data']);
-                }else {
-                    $this->ajaxReturn(201, '员工列表加载失败!');
-                }
+                if ($reSystemList !== false) $this->ajaxReturn(0, '', $reSystemList['data']);
+                else $this->ajaxReturn(1, '');
             }
         }
         $limit = (empty($requestG['page'])?'0':($requestG['page']-1)*30).',30';
         //获取数据
-        $result = D('Order', 'Service')->getOrderList($where, 'createtime DESC', $limit);
+        $orderMainController = new OrderMainController();
+        $result = $orderMainController->getList($where, 'createtime DESC', $limit);
         //获取区域下
-        $res1 = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
-        $data['zoneAll']['children'] = $res1['data'];
+        $zoneMain = new ZoneController();
+        $data['zoneAll']['children'] = $zoneMain->getZoneList($this->system_user['zone_id']);
         $centersign = 10;
-        $res2 = D('Zone', 'Service')->getZoneCenter($centersign);
-        $centerList = $res2['data'];
+        $centerList = $zoneMain->getZoneCenter($centersign);
         //获取职位及部门
-        $department = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll']=$department['data'];
-        $roleList = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleList['data'];
+        $departmentMain = new DepartmentController();
+        $data['departmentAll'] = $departmentMain->getList();
+        $roleMain = new RoleController();
+        $data['roleAll'] = $roleMain->getAllRole();
         //获取配置状态值
         $data['order_status'] = C('ORDER_STATUS');
         $data['order_loan_institutions'] = C('USER_LOAN_INSTITUTIONS');
@@ -99,36 +108,42 @@ class OrderController extends SystemController
     */
     public function addOrderInfo()
     {
-        $request['order_id'] = I('get.order_id');
+        $order_id = I('get.order_id');
         if(IS_POST){
-            $res = I('post.');
-            $res['order_id'] = $request['order_id'];
-            $result = D('Order', 'Service')->submitOrder($res);
+            $request = I('post.');
+            $request['system_user_id'] = $this->system_user_id;
+            if (!$order_id) $this->ajaxReturn(1, '参数信息有误');
+            if (empty($request['course_id'])) $this->ajaxReturn(2, '请选择课程');
+            if (empty($request['studytype'])) $this->ajaxReturn(3, '请选择学习方式');
+            if (empty($request['loan_institutions_id']) && $request['loan_institutions_id']!=='0') $this->ajaxReturn(4, '请选择付款类型');
+            $request['order_id'] = $order_id;
+            $orderMainController = new OrderMainController();
+            $result = $orderMainController->submitOrder($request);
             if($result['code']==0){
                 $this->ajaxReturn($result['code'], $result['msg'], U('System/Order/orderList'));
             }
             $this->ajaxReturn($result['code'], $result['msg']);
         }
-        $orderInfo = D('Order', 'Service')->getOrderInfo($request);
+        $orderMainController = new OrderMainController();
+        $orderInfo = $orderMainController->getOrderInfo($order_id);
         $data['info'] = $orderInfo['data'];
         //课程列表
-        $courseList = D('Course', 'Service')->getCourseProductList();
-        $data['courseList'] = $courseList['data']['data'];
+        $CourseProductController = new CourseProductController();
+        $courseList = $CourseProductController->getList();
+        $data['courseList'] = $courseList['data'];
         //获取区域下
-        $zoneList = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
-        $data['zoneAll']['children'] = $zoneList['data'];
+        $zoneMain = new ZoneController();
+        $data['zoneAll']['children'] = $zoneMain->getZoneList($this->system_user['zone_id']);
         $centersign = 10;
-        $centerList = D('Zone', 'Service')->getZoneCenter($centersign);
-        $centerList = $centerList['data'];
+        $centerList = $zoneMain->getZoneCenter($centersign);
         //优惠方式
-        $discountList = D('Order', 'Service')->getDiscountList();
-        $data['discount'] = $discountList['data'];
+        $data['discount'] = $orderMainController->getDiscount();
         //获取配置状态值
         $data['order_loan_institutions'] = C('USER_LOAN_INSTITUTIONS');
         $data['order_studytype'] = C('USER_STUDYTYPE');
         $data['order_receivetype'] = C('USER_RECEIVETYPE');
         //模版赋值
-        $data['order_id'] = $request['order_id'];
+        $data['order_id'] = $order_id;
         $this->assign('centerList', $centerList);
         $this->assign('data', $data);
         $this->display();
@@ -143,7 +158,22 @@ class OrderController extends SystemController
     public function auditingOrder()
     {
         $request = I("post.");
-        $result = D('Order', 'Service')->auditOrder($request);
+        $orderMainController = new OrderMainController();
+        //是否提示
+        if($request['type']=='ishint'){
+            $isAuditOrder = $orderMainController->isAuditOrder($request);
+            if($isAuditOrder['code']!=0) $this->ajaxReturn('20', '该客户有未完成订单，请谨慎操作！');
+            $this->ajaxReturn('0', '审核订单时需注意检查客户名称是否有误！');
+        }
+        $request['system_user_id'] = $this->system_user_id;
+        if (!$request['order_id']) $this->ajaxReturn(1, '参数信息有误');
+        if ($request['status'] == 'success') {
+            if (!$request['payway']) $this->ajaxReturn(2, '收款方式不能为空');
+        }
+        if (!$request['practicaltime']) $this->ajaxReturn(3, '请输入收款时间');
+        //添加参数
+        $request['practicaltime'] = strtotime($request['practicaltime']);
+        $result = $orderMainController->auditOrder($request);
         $this->ajaxReturn($result['code'], $result['msg']);
     }
 
@@ -155,8 +185,29 @@ class OrderController extends SystemController
     {
         //获取参数
         $request = I('post.');
+        if(empty($request['order_id'])) $this->ajaxReturn(1, '参数异常！');
+        $zone_id = $this->system_user['zone_id'];
+        if ($zone_id == 6 || $zone_id == 1) {
+            $zone_id = 4;
+        }else{
+            $zoneInfo = D("Zone")->where("zone_id = $zone_id")->field("centersign")->find();
+            if (empty($request['zone_id'])) {
+                if ($zoneInfo['centersign'] != 10) {
+                    $this->ajaxReturn(1, '请选择中心！');
+                }
+            }
+        }
+        if(empty($request['payway'])) $this->ajaxReturn(1, '请输入收款方式！');
+        if(empty($request['cost'])) $this->ajaxReturn(1, '请输入收款金额', '', 'receivables_cost');
+        if(empty($request['practicaltime'])) $this->ajaxReturn(1, '请输入收款日期！', '', 'receivables_practicaltime');
+
+        //添加参数
+        $request['practicaltime'] = strtotime($request['practicaltime']);
+        $request['system_user_id'] = $this->system_user_id;
+        $request['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$zone_id;
         //获取接口
-        $result = D('Order', 'Service')->payOrder($request);
+        $orderMainController = new OrderMainController();
+        $result = $orderMainController->payOrder($request);
         $this->ajaxReturn($result['code'], $result['msg']);
     }
 
@@ -169,32 +220,41 @@ class OrderController extends SystemController
     {
         $request = I("post.");
         $request['system_user_id'] = $this->system_user_id;
-        if(empty($request['order_id'])) {
-            $this->ajaxReturn(301, '参数信息有误');
-        }
-        if(empty($request['practicaltime'])) {
-            $this->ajaxReturn(302, '请输入退款日期！');
-        }
-        $where['order_id'] = $request['order_id'];
-        $field = 'practicaltime';
-        $order = 'practicaltime desc';
-        $orderLog = D('Order', 'Service')->getOrderLogs($where, $field, $order);
+        if(empty($request['order_id'])) $this->ajaxReturn(1, '参数信息有误');
+        if(empty($request['practicaltime'])) $this->ajaxReturn(1, '请输入退款日期！');
+        $orderLog = D("OrderLogs")->where("order_id = $request[order_id]")->field("practicaltime")->order("practicaltime desc")->find();
         $request['practicaltime'] = strtotime($request['practicaltime']);
-        if ($request['practicaltime'] < $orderLog['data']['practicaltime']) {
-            $this->ajaxReturn(305,"退款日期不得早于上次缴费时间");
+        if ($request['practicaltime'] < $orderLog['practicaltime']) {
+            $this->ajaxReturn(1,"退款日期不得早于上次缴费时间");
         }
-        if(empty($request['payway'])) {
-            $this->ajaxReturn(303, '退款方式！');
-        }
+        if(empty($request['payway'])) $this->ajaxReturn(1, '退款方式！');
         if(empty($request['type']) || $request['type']!='deposit'){
-            if(empty($request['cost'])) $this->ajaxReturn(304, '退款金额！');
+            if(empty($request['cost'])) $this->ajaxReturn(1, '退款金额！');
         }
         //添加参数
         $request['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
         //获取接口
-        $result = D('Order', 'Service')->refundOrder($request);
+        $orderMainController = new OrderMainController();
+        $result = $orderMainController->refundOrder($request);
         $this->ajaxReturn($result['code'], $result['msg']);
     }
+
+    /**
+     * 订单详情
+     * @author nxx
+     */
+    public function orderDetail()
+    {
+        $request = I('post.');
+        if (!$request['user_id']) {
+            $this->ajaxReturn(1, '参数信息有误');
+        }
+        $orderMainController = new OrderMainController();
+        $orderInfo = $orderMainController->getOrderInfo($request);
+        $this->assign('orderInfo', $orderInfo);
+    }
+
+
 
     /**
      * 导出订单
@@ -204,19 +264,19 @@ class OrderController extends SystemController
     {
         set_time_limit(600);
         $system_user_id = $this->system_user_id;
+        $orderMainController = new OrderMainController();
         if (IS_POST) {
             $requestP = I('post.');
             if($requestP['type']=='getSysUser'){
-                $whereSystem['where']['usertype'] = array('neq',10);
-                $whereSystem['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-                $whereSystem['where']['role_id'] = $requestP['role_id'];
+                $whereSystem['usertype'] = array('neq',10);
+                $whereSystem['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+                $whereSystem['role_id'] = $requestP['role_id'];
                 //员工列表
-                $systemUserAll = D('SystemUser', 'Service')->getSystemUsersList($whereSystem);
-                if($systemUserAll['code'] == 0) {
-                    $this->ajaxReturn(0, '', $systemUserAll['data']['data']);
-                }else {
-                    $this->ajaxReturn($systemUserAll['code'], $systemUserAll['msg']);
-                }
+                $systemUserMain = new SystemUserController();
+                $systemUserAll = $systemUserMain->getList($whereSystem);
+                $systemList = $systemUserAll['data'];
+                if($systemList) $this->ajaxReturn(0, '', $systemList);
+                else $this->ajaxReturn(1, '');
             }else{
                 foreach ($requestP as $k => $v) {
                     if ($k == 'finishtime') {
@@ -243,22 +303,25 @@ class OrderController extends SystemController
                     $requestP['zone_id'] = $this->system_user['zone_id'];
                 }
                 unset($requestP['system_user_id']);
-                $result = D('Order', 'Service')->getOrderList($requestP, '', '0,1000');
-                if($result['code'] != 0){
-                    $this->ajaxReturn($result['code'],'暂无相关订单数据可供导出!');
+                $result = $orderMainController->getList($requestP, '', '0,1000');
+                $orderList = $result['data'];
+                if(!$orderList){
+                    $this->error('暂无相关订单数据可供导出!');
                 }
-                return D('Order', 'Service')->outputOrderList($result['data']);
+                return $orderMainController->outputOrderList($orderList);
             }
 
         }
+        $orderMainController = new OrderMainController();
+        //$result = $orderMainController->getList($where, 'createtime DESC', $limit);
         //获取区域下
-        $zoneList = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
-        $data['zoneAll']['children'] = $zoneList['data'];
+        $zoneMain = new ZoneController();
+        $data['zoneAll']['children'] = $zoneMain->getZoneList($this->system_user['zone_id']);
         //获取职位及部门
-        $department = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll']=$department['data'];
-        $roleList = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleList['data'];
+        $departmentMain = new DepartmentController();
+        $data['departmentAll'] = $departmentMain->getList();
+        $roleMain = new RoleController();
+        $data['roleAll'] = $roleMain->getAllRole();
         //获取配置状态值
         $data['order_status'] = C('ORDER_STATUS');
         $data['order_loan_institutions'] = C('USER_LOAN_INSTITUTIONS');
@@ -269,7 +332,8 @@ class OrderController extends SystemController
 
     }
 
-    /*
+
+        /*
     |--------------------------------------------------------------------------
     | 优惠列表
     |--------------------------------------------------------------------------
@@ -324,12 +388,37 @@ class OrderController extends SystemController
     {
         if (IS_POST) {
             $request = I("post.");
-            
-            $result = D('Order', 'Service')->createDiscount($request);
-            if ($result['code'] != 0) {
-                $this->ajaxReturn($result['code'],$result['msg']);
+            if (!$request['dname'] && $request['dname']>0) {
+                $this->ajaxReturn(1,'请填写优惠名称');
+            }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
+                $this->ajaxReturn(2,'不能包含特殊字符');
             }
-            $this->ajaxReturn(0, $result['data']);
+            if (strlen($request['dname'])>60) {
+                $this->ajaxReturn(2,'优惠名称不得超过20个字');
+            }
+            if (!$request['dmoney']) {
+                $this->ajaxReturn(4,'请填写优惠金额');
+            }elseif($request['dmoney']>2000){
+                $this->ajaxReturn(6,'优惠金额不能大于2000');
+            }
+            if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
+                $this->ajaxReturn(3,"请输入正确的优惠金额");
+            }
+            if (!$request['remark']) {
+                $this->ajaxReturn(7,'请填写优惠详情');
+            }
+            if (strlen($request['remark'])>90) {
+                $this->ajaxReturn(8,'优惠详情不得超过30个字');
+            }
+            if(!$request['pid']){
+                $this->ajaxReturn(9,'请选择优惠所属分类');
+            }
+            $orderMain = new OrderMainController();
+            $result = $orderMain->createDiscount($request);
+            if ($result === false) {
+                $this->ajaxReturn(9,'创建优惠失败');
+            }
+            $this->ajaxReturn(0,"创建优惠成功");
         }
     }
 
@@ -341,36 +430,90 @@ class OrderController extends SystemController
     {
         if (IS_POST) {
             $request = I("post.");
-            
-            $result = D('Order', 'Service')->createParentDiscount($request);
-            if ($result['code'] != 0) {
-                $this->ajaxReturn($result['code'], $result['msg']);
+            if (!$request['pid']) {
+                $request['pid'] = 0;
             }
-            $this->ajaxReturn(0, $result['data']);
+            if (!$request['dname'] && $request['dname']>0) {
+                $this->ajaxReturn(1,'请填写优惠分类名称');
+            }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
+                $this->ajaxReturn(2,'不能包含特殊字符');
+            }
+            if (strlen($request['dname'])>60) {
+                $this->ajaxReturn(3,'优惠名称不得超过20个字');
+            }
+            if (!$request['remark']) {
+                $this->ajaxReturn(4,'请填写优惠详情');
+            }
+            if (strlen($request['remark'])>90) {
+                $this->ajaxReturn(5,'优惠详情不得超过30个字');
+            }
+            $orderMain = new OrderMainController();
+            $result = $orderMain->createParentDiscount($request);
+            if ($result === false) {
+                $this->ajaxReturn(6,'创建优惠失败');
+            }
+            $this->ajaxReturn(0,"创建优惠成功");
         }
     }
 
     /*
-    *修改优惠---优惠分类
+    *修改优惠
     *@author nxx
     */
     public function editDiscount()
     {
         if (IS_POST) {
             $request = I("post.");
+            if (strlen($request['remark'])>90) {
+                $this->ajaxReturn(5,'优惠详情不得超过30个字');
+            }
             if ($request['sign'] == 10) {
                 $discount_parent_id = $request['discount_parent_id'];
-                $update = D('Order', 'Service')->editParentDiscount($request, $discount_parent_id);
-                if ($update['code'] != 0) {
-                    $this->ajaxReturn($update['code'], $update['msg']);
+                $save['dname'] = $request['dname'];
+                $save['remark'] = $request['remark'];
+                $save['type'] = $request['type'];
+                if (!$save['dname'] && $save['dname']>0) {
+                    $this->ajaxReturn(1,'请填写优惠名称');
+                }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$save['dname'])){
+                    $this->ajaxReturn(2,'不能包含特殊字符');
+                }
+                if (strlen($save['dname'])>60) {
+                    $this->ajaxReturn(3,'优惠名称不得超过20个字');
+                }
+                if (!$save['remark']) {
+                    $this->ajaxReturn(4,'请填写优惠详情');
+                }
+                $update = D("DiscountParent")->where("discount_parent_id = $discount_parent_id")->save($save);
+                if ($update === false || $update<0) {
+                    $this->ajaxReturn(1,'修改优惠类型失败');
                 }
                 $this->ajaxReturn(0,'修改优惠类型成功');
             }else{
-                $discount_id = $request['discount_id'];
-                unset($request['discount_id']);
-                $update = D('Order', 'Service')->editDiscount($request, $discount_id);
-                if ($update ['code'] != 0) {
-                    $this->ajaxReturn($update['code'],'修改优惠失败');
+                if (!$request['pid']) {
+                    $request['pid'] = 0;
+                }
+                if (!$request['dname'] && $request['dname'] > 0) {
+                    $this->ajaxReturn(1,'请输入优惠名称');
+                }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
+                    $this->ajaxReturn(2,'不能包含特殊字符');
+                }
+                if (strlen($request['dname'])>60) {
+                    $this->ajaxReturn(3,'优惠名称不得超过20个字');
+                }
+                if (!$request['dmoney']) {
+                    $this->ajaxReturn(4,'请填写优惠金额');
+                }elseif($request['dmoney']>2000){
+                    $this->ajaxReturn(6,'优惠金额不能大于2000');
+                }
+                if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
+                    $this->ajaxReturn(3,"请输入正确的优惠金额");
+                }
+                if (!$request['remark']) {
+                    $this->ajaxReturn(4,'请填写优惠详情');
+                }
+                $update = D("Discount")->where("discount_id = $request[discount_id]")->save($request);
+                if ($update === false) {
+                    $this->ajaxReturn(4,'修改优惠失败');
                 }
                 $this->ajaxReturn(0,'修改优惠成功');
             }
@@ -387,7 +530,62 @@ class OrderController extends SystemController
     public function banDiscount()
     {
         $request = I("post.");
-        
+        if ($request['sign'] == 10) { //分类操作
+            if(!$request['discount_parent_id']){
+                $this->ajaxReturn(1,"参数有误");
+            }
+            $discountParentInfo = D("DiscountParent")->where("discount_parent_id = $request[discount_parent_id]")->find();
+            D("DiscountParent")->startTrans();
+            if ($discountParentInfo['type'] == 1) { //如果是启用，则变成禁用
+                $save['type'] = 0;
+                $sons = D("Discount")->where("pid = $discountParentInfo[discount_parent_id]")->select();
+                if ($sons) {
+                    $updateSons = D("Discount")->where("pid = $discountParentInfo[discount_parent_id]")->save($save);
+                }else{
+                    $updateSons = true;
+                }
+            }else{
+                $save['type'] = 1;
+                $updateSons = true;
+            }
+            $update = D("DiscountParent")->where("discount_parent_id = $request[discount_parent_id]")->save($save);
+            if ($update===false || $updateSons===false) {
+                D("DiscountParent")->rollback();
+                if ($save['type'] == 0) {
+                    $this->ajaxReturn(2,'下架优惠失败');
+                }
+                $this->ajaxReturn(3,'启用优惠失败');
+            }
+            D("DiscountParent")->commit();
+            if ($save['type'] == 0) {
+                $this->ajaxReturn(0,'下架优惠成功');
+            }
+            $this->ajaxReturn(0,'启用优惠成功');
+        }else{
+            if(!$request['discount_id']){
+                $this->ajaxReturn(3,"参数有误");
+            }
+            $discountInfo = D("Discount")->where("discount_id = $request[discount_id]")->find();
+            D("Discount")->startTrans();
+            if ($discountInfo['type'] == 1) { //如果是启用，则变成禁用
+                $save['type'] = 0;
+            }else{
+                $save['type'] = 1;
+            }
+            $update = D("Discount")->where("discount_id = $request[discount_id]")->save($save);
+            if ($update ==false) {
+                D("Discount")->rollback();
+                if ($save['type'] == 0) {
+                    $this->ajaxReturn(4,'下架优惠失败');
+                }
+                $this->ajaxReturn(5,'启用优惠失败');
+            }
+            D("Discount")->commit();
+            if ($save['type'] == 0) {
+                $this->ajaxReturn(0,'下架优惠成功');
+            }
+            $this->ajaxReturn(0,'启用优惠成功');
+        }
 
     }
 

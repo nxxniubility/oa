@@ -175,9 +175,8 @@
 		                <dt class="wThr">节点名称</dt>
 		                <dt class="wFou">操作</dt>
 		            </dl>
-
-					<foreach name = "nodeList" item="node">
-		            <foreach name = "node[children]" item="v" key="k">
+		
+		            <foreach name = "nodeList[1][children]" item="v" key="k">
 		                <dl class="oneRegions clearfix">
 		                    <dd class="wOne regionSequence clearfix">
 		                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
@@ -255,7 +254,7 @@
 		                            </dd>
 		                        </dl>
 		                            <!--function-->
-									<?php foreach($v2['children'] as $v3){ ?>
+		                            <foreach name = "v2['children']" item="v3">
 		                                <dl class="threeRegionsRow dn clearfix  parent_{$v2.id}">
 		                                    <dd class="wOne regionSequence clearfix">
 		                                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
@@ -288,10 +287,9 @@
 		                                        </if>
 		                                    </dd>
 		                                </dl>
-		                            <?php } ?>
+		                            </foreach>
 		                    </foreach>
 		            </foreach>
-					</foreach>
 		        </div>
 		    </div>
 		</div>

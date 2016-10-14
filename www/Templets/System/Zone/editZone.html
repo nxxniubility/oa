@@ -18,61 +18,63 @@
 					</div>
 				</div>
 				<div class="newMiddle">
-					<div class="newRows clearfix">
-						<div class="newRowsLeft"><i>&#42</i>区域名称:</div>
-						<div class="newRowsRight">
-							<input type="text" class="newInp" name="name" value="{$zone['name']}">
+					<form method="post" action="{:U('System/Zone/editZone',array('zone_id'=>$zone_id))}">
+						<div class="newRows clearfix">
+							<div class="newRowsLeft"><i>&#42</i>区域名称:</div>
+							<div class="newRowsRight">
+								<input type="text" class="newInp" name="name" value="{$zone['name']}">
+							</div>
 						</div>
-					</div>
-					<?php if ($zoneList['mark'] != 1) { ?>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft"><i>&#42</i>所属区域:</div>
-						<div class="newRowsRight">
-							<div class="selectbox2 l">
-		                        <dl class="select2">
-									<dt>
-			                            <div class="select_title l" >请选择所属区域</div>
-			                            <div class="arrow r" ></div>
-		                            </dt>
-									<foreach name = "zoneList" item = "v1">
-			                            <dd class="fxDone" data-value="{$v1['zone_id']}">{$v1['name']}</dd>
-									</foreach>
-		                        </dl>
-		                        <input type="hidden" name="zone_id">
-		                    </div>
+						<?php if ($zoneList['mark'] != 1) { ?>
+						<div class="newRows clearfix">
+							<div class="newRowsLeft"><i>&#42</i>所属区域:</div>
+							<div class="newRowsRight">
+								<div class="selectbox2 l">
+			                        <dl class="select2">
+										<dt>
+				                            <div class="select_title l" >请选择所属区域</div>
+				                            <div class="arrow r" ></div>
+			                            </dt>
+										<foreach name = "zoneList" item = "v1">
+				                            <dd class="fxDone" data-value="{$v1['zone_id']}">{$v1['name']}</dd>
+										</foreach>
+			                        </dl>
+			                        <input type="hidden" name="zone_id">
+			                    </div>
+							</div>
 						</div>
-					</div>
-					<?php } ?>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft">详情地址:</div>
-						<div class="newRowsRight">
-							<input type="text" class="newInp" name="address" value="{$zoneList['address']}">
+						<?php } ?>
+						<div class="newRows clearfix">
+							<div class="newRowsLeft">详情地址:</div>
+							<div class="newRowsRight">
+								<input type="text" class="newInp" name="address" value="{$zoneList['address']}">
+							</div>
 						</div>
-					</div>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft">联系电话:</div>
-						<div class="newRowsRight">
-							<input type="tel" class="newInp" name="tel" value="{$zoneList['tel']}">
+						<div class="newRows clearfix">
+							<div class="newRowsLeft">联系电话:</div>
+							<div class="newRowsRight">
+								<input type="tel" class="newInp" name="tel" value="{$zoneList['tel']}">
+							</div>
 						</div>
-					</div>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft">电子邮箱:</div>
-						<div class="newRowsRight">
-							<input type="email" class="newInp" name="email" value="{$zoneList['email']}">
+						<div class="newRows clearfix">
+							<div class="newRowsLeft">电子邮箱:</div>
+							<div class="newRowsRight">
+								<input type="email" class="newInp" name="email" value="{$zoneList['email']}">
+							</div>
 						</div>
-					</div>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft">区域简介:</div>
-						<div class="newRowsRight">
-							<textarea class="newTxt" name="abstract" value="{$zoneList['abstract']}"></textarea>
+						<div class="newRows clearfix">
+							<div class="newRowsLeft">区域简介:</div>
+							<div class="newRowsRight">
+								<textarea class="newTxt" name="abstract" value="{$zoneList['abstract']}"></textarea>
+							</div>
 						</div>
-					</div>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft">&nbsp;</div>
-						<div class="newRowsRight">
-							<input type="submit" class="newAreaSubmit" value="提交">
+						<div class="newRows clearfix">
+							<div class="newRowsLeft">&nbsp;</div>
+							<div class="newRowsRight">
+								<input type="submit" class="newAreaSubmit" value="提交">
+							</div>
 						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 		</div>

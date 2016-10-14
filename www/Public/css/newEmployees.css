@@ -85,3 +85,6 @@
 .wrapBox#sUserAddWrap .newEmployeesCont {width:auto;}
 .wrapBox#sUserAddWrap .nsLeft {width:120px;margin-right:17px;}
 .wrapBox#sUserAddWrap .nsRight {width:auto;}
+
+/*1013*/
+.nsSelectTop .nsSelectBox, .selectbox.nsSelectBox dl {width:128px;}

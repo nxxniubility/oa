@@ -8,7 +8,13 @@
 | updatename：zgt
 */
 namespace System\Controller;
+use Common\Controller\EducationController;
 use Common\Controller\SystemController;
+use Common\Controller\NodeController as NodeMain;
+use Common\Controller\RoleController as RoleMain;
+use Common\Controller\SystemUserController as SystemMain;
+use Common\Controller\DepartmentController as DepartmentMain;
+use Common\Controller\ZoneController as ZoneMain;
 
 class PersonnelController extends SystemController {
 
@@ -18,11 +24,11 @@ class PersonnelController extends SystemController {
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | 部门管理---
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
+     * ****************************************************************
+     *  部门管理
+     * ****************************************************************
+     * @author zgt
+     */
     public function department()
     {
         //获取参数
@@ -50,12 +56,10 @@ class PersonnelController extends SystemController {
 			$data['url_department_id'] = U('System/Personnel/department').'?order=department_id-desc';
 		}
         //获取部门管理列表
-        $where['order'] = $order;
-        $where['page'] = $re_page.',30';
-        $departmentAll = D('Department','Service')->getDepartmentList($where);
+        $departmentMain = new DepartmentMain();
+        $data['departmentAll'] = $departmentMain->getList(null, $order,$re_page.',30');
         //加载分页类
-        $data['paging'] = $this->Paging($re_page,30,$departmentAll['data']['count'],$request);
-        $data['departmentAll'] = $departmentAll['data'];
+        $data['paging'] = $this->Paging($re_page,30,$data['departmentAll']['count'],$request);
         $this->assign('data', $data);
         $this->display();
     }
@@ -68,12 +72,18 @@ class PersonnelController extends SystemController {
         if(IS_POST) {
             //获取参数 验证
             $departmentname = I('post.departmentname',null);
-            $result = D('Department','Service')->addDepartment(array('departmentname'=>$departmentname));
+            $sort = I('post.sort',0);
+            if(empty($departmentname)) $this->ajaxReturn(1, '部门名称不能为空', '', 'departmentname');
+            $departmentMain = new DepartmentMain();
+            $result = $departmentMain->create(array('departmentname'=>$departmentname, 'sort'=>$sort));
             //添加部门成功
             if(empty($result)) $this->ajaxReturn(1, '数据添加失败');
-            else $this->ajaxReturn(0, '添加部门成功',  U('System/Personnel/department'));
+            else $this->success('添加部门成功', 0, U('System/Personnel/department'));
+        }else{
+            $data['url_department'] = U('System/Personnel/department');
+            $this->assign('data', $data);
+            $this->display();
         }
-        $this->display();
     }
     /**
      * 部门管理-修改
@@ -81,23 +91,28 @@ class PersonnelController extends SystemController {
      */
     public function editDepartment()
     {
-        $department_id = I('get.dep_id',null);
-        if( empty($department_id) )$this->error('非法请求！');
+        $departmentname_id = I('get.dep_id',null);
+        if( empty($departmentname_id) )$this->error('非法请求！');
         if(IS_POST) {
             //获取参数 验证
             $departmentname = I('post.departmentname',null);
+            //是否只修改排序值 --其他ajax调用
+            if(empty($departmentname)) $this->ajaxReturn(1, '部门名称不能为空', '', 'departmentname');
             $requery_data['departmentname'] = $departmentname;
-            $requery_data['department_id'] = $department_id;
-            $result = D('Department','Service')->editDepartment($requery_data);
-            //添加部门成功
+            $requery_data['department_id'] = $departmentname_id;
+            $departmentMain = new DepartmentMain();
+            $result = $departmentMain->edit($requery_data);
+            //修改部门成功
             if(empty($result)) $this->ajaxReturn(1, '数据修改失败');
-            else $this->ajaxReturn(0, '部门修改成功',  U('System/Personnel/department'));
+            else $this->success('修改成功', 0, U('System/Personnel/department'));
+        }else{
+            //获取相关部门详情
+            $departmentMain = new DepartmentMain();
+            $data['department'] = $departmentMain->getInfo($departmentname_id);
+            $data['url_department'] = U('System/Personnel/department');
+            $this->assign('data', $data);
+            $this->display();
         }
-        //获取相关部门详情
-        $department = D('Department','Service')->getDepartmentInfo(array('department_id'=>$department_id));
-        $data['department'] = $department['data'];
-        $this->assign('data', $data);
-        $this->display();
     }
     /**
      * 部门管理-操作页(删除/修改排序)
@@ -107,14 +122,17 @@ class PersonnelController extends SystemController {
     {
         if(IS_POST) {
             //获取参数 验证
-            $department_id = I('post.departmentname_id',null);
+            $departmentname_id = I('post.departmentname_id',null);
             $type = I('post.type',null);
             if( isset($type) && $type=='del' ){
-                $requery_data['department_id'] = $department_id;
-                $result = D('Department','Service')->delDepartment($requery_data);
+                if(empty($departmentname_id)) $this->ajaxReturn(1, '部门ID不能为空', '', 'departmentname_id');
+                $requery_data['status'] = 0;
+                $requery_data['department_id'] = $departmentname_id;
+                $departmentMain = new DepartmentMain();
+                $result = $departmentMain->edit($requery_data);
                 //删除部门
                 if(empty($result)) $this->ajaxReturn(1, '数据删除失败');
-                else $this->ajaxReturn(0, '删除部门成功', U('System/Personnel/department'));
+                else $this->ajaxReturn('0','删除部门成功',U('System/Personnel/department'));
             }else if( isset($type) && $type=='sort' ){
                 $sort_data = I('post.sort_data','');
                 if(empty($sort_data)) $this->ajaxReturn(1, '请输入要修改的排序值');
@@ -128,7 +146,7 @@ class PersonnelController extends SystemController {
 					$result = D('Department')->batch_update($new_sort_data,'department_id','sort');
                     //排序修改
                     if($result!==false){
-                        F('Cache/department', null);
+                        F('Cache/Personnel/department', null);
                         $this->ajaxReturn(0, '排序修改成功', U('System/Personnel/position'));
                     }else{
                         $this->ajaxReturn(1, '排序修改失败');
@@ -138,22 +156,24 @@ class PersonnelController extends SystemController {
         }
     }
 
+
     /*
-    |--------------------------------------------------------------------------
-    | 职位管理---
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
+     * ****************************************************************
+     *  职位管理（原用户权限组role）
+     * ****************************************************************
+     * @author zgt
+     */
     public function position()
     {
         //post=》列表页快捷修改权限
         if(IS_POST){
             $role_id = I('post.role_id');
             //获取职位详情
-            $result = D('Role','Service')->getRoleNode(array('role_id'=>$role_id,'type'=>1));
-            if(!empty($result['data'])){
+            $roleMain = new RoleMain();
+            $result = $roleMain->getRoleAccess($role_id);
+            if(!empty($result)){
                 $roleAccess = '';
-                foreach($result['data'] as $k=>$v){
+                foreach($result as $k=>$v){
                     if($k==0){
                         $roleAccess.=$v['node_id'];
                     }else{
@@ -161,40 +181,42 @@ class PersonnelController extends SystemController {
                     }
                 }
             }
-            $this->ajaxReturn(0, '获取职位权成功', $roleAccess);
-        }
-        //获取参数
-        $request = I('get.');
-        //获取排序 分页参数
-        $re_page = isset($request['page'])?$request['page']:1;
-        $order = !empty($request['order'])?str_replace('-',' ',$request['order']):'sort desc';
-
-        if($request['order']=='sort-desc')
-        {
-            $data['url_sort'] = U('System/Personnel/position').'?order=sort-asc';
+            $this->success('获取职位权成功', 0, $roleAccess);
         }else{
-            $data['url_sort'] = U('System/Personnel/position').'?order=sort-desc';
-        }
-        if($request['order']=='id-desc')
-        {
-            $data['url_id'] = U('System/Personnel/position').'?order=id-asc';
-        }else{
-            $data['url_id'] = U('System/Personnel/position').'?order=id-desc';
-        }
-        //获取数据
-        $where['order'] = $order;
-        $where['page'] = $re_page.',30';
-        $roleAll = D('Role','Service')->getRoleList($where);
-        //加载分页类
-        $data['paging'] = $this->Paging($re_page,30,$roleAll['data']['count'],$request);
-        $data['roleAll'] = $roleAll['data'];
-        //获取节点列表
-        $data['nodeHtml'] = $this->_getAllNodeHtml();
-        //加载分页类
-        $data['paging'] = $this->Paging($re_page,30,$data['roleAll']['count'],$request);
-        $this->assign('data', $data);
-        $this->display();
+            //获取参数
+            $request = I('get.');
+            //添加、修改、操作地址
+            $data['url_addPosition'] = U('System/Personnel/addPosition');
+            $data['url_editPosition'] = U('System/Personnel/editPosition');
+            $data['url_dispostPosition'] = U('System/Personnel/dispostPosition');
+            //获取排序 分页参数
+            $re_page = isset($request['page'])?$request['page']:1;
+            $order = !empty($request['order'])?str_replace('-',' ',$request['order']):'sort desc';
 
+            if($request['order']=='sort-desc')
+			{
+				$data['url_sort'] = U('System/Personnel/position').'?order=sort-asc';
+			}else{
+				$data['url_sort'] = U('System/Personnel/position').'?order=sort-desc';
+			}
+			if($request['order']=='id-desc')
+			{
+				$data['url_id'] = U('System/Personnel/position').'?order=id-asc';
+			}else{
+				$data['url_id'] = U('System/Personnel/position').'?order=id-desc';
+			}
+			
+            //获取数据
+            $roleMain = new RoleMain();
+            $data['roleAll'] = $roleMain->getAllRole(null, $order,$re_page.',30');
+            //获取节点列表
+            $nodeMain = new NodeMain();
+            $data['nodeHtml'] = $nodeMain->getAllNodeHtml();
+            //加载分页类
+            $data['paging'] = $this->Paging($re_page,30,$data['roleAll']['count'],$request);
+            $this->assign('data', $data);
+            $this->display();
+        }
     }
     /**
      * 职位管理-添加
@@ -205,6 +227,10 @@ class PersonnelController extends SystemController {
         if(IS_POST) {
             //获取参数 验证
             $request = I('post.');
+            if(empty($request['positionname'])) $this->ajaxReturn(1, '职位名称不能为空', '', 'positionname');
+            if(empty($request['remark'])) $this->ajaxReturn(1, '请添加该职位描述', '', 'remark');
+            if(empty($request['department_id'])) $this->ajaxReturn(1, '请选择所属部门');
+            if(empty($request['access'])) $this->ajaxReturn(1, '请先设置权限');
             //权限内容处理
             $access = explode(',', $request['access']);
             if(!empty($access)){
@@ -216,22 +242,21 @@ class PersonnelController extends SystemController {
                 unset($request['access']);
             }
             $request['name'] = $request['positionname'];
-            $request['access'] = $access_new;
-            $result = D('Role','Service')->addRole($request);
+            $roleMain = new RoleMain();
+            $result = $roleMain->create($request,$access_new);
             //添加部门成功
-            if($result['code']==0){
-                $this->ajaxReturn(0,'添加部门成功',U('System/Personnel/position'));
-            }
-            $this->ajaxReturn($result['code'],$result['msg']);
+            if(isset($result)) $this->success('添加部门成功', 0, U('System/Personnel/position'));
+            else $this->ajaxReturn(1, '数据添加失败');
         }else{
             //职位列表
-            $roleAll = D('Role','Service')->getRoleList();
-            $data['roleAll'] = $roleAll['data'];
+            $roleMain = new RoleMain();
+            $data['roleAll'] = $roleMain->getAllRole();
             //获取部门管理列表
-            $departmentAll = D('Department','Service')->getDepartmentList();
-            $data['departmentAll'] = $departmentAll['data'];
+            $departmentMain = new DepartmentMain();
+            $data['departmentAll'] = $departmentMain->getList();
             //获取节点列表
-            $data['nodeHtml'] = $this->_getAllNodeHtml();
+            $nodeMain = new NodeMain();
+            $data['nodeHtml'] = $nodeMain->getAllNodeHtml();
             //返回地址
             $data['url_position'] = U('System/Personnel/position');
             $this->assign('data', $data);
@@ -249,6 +274,12 @@ class PersonnelController extends SystemController {
         if( empty($role_id) )$this->error('非法请求！');
         if(IS_POST) {
             $request = I('post.');
+            if(empty($request['positionname'])) $this->ajaxReturn(1, '职位名称不能为空', '', 'positionname');
+            if(empty($request['remark'])) $this->ajaxReturn(1, '请添加该职位描述', '', 'remark');
+            if(empty($request['department_id'])) $this->ajaxReturn(1, '请选择所属部门');
+            if(empty($request['access'])) $this->ajaxReturn(1, '请先设置权限');
+            //权限内容处理
+            $access = explode(',', $request['access']);
             if(!empty($access)){
                 $access_new = array();
                 foreach($access as $v){
@@ -258,38 +289,38 @@ class PersonnelController extends SystemController {
                 unset($request['access']);
             }
             $request['name'] = $request['positionname'];
-            $request['access'] = $access_new;
-            $request['role_id'] = $role_id;
-            $result = D('Role','Service')->editRole($request);
+            $roleMain = new RoleMain();
+            $result = $roleMain->edit($request,$access_new,$role_id);
             //添加部门成功
-            if($result['code']==0){
-                $this->ajaxReturn(0,'添加部门成功',U('System/Personnel/position'));
+            if(!empty($result)) $this->success('修改职位成功', 0, U('System/Personnel/position'));
+            else $this->ajaxReturn(1, '数据修改失败');
+        }else{
+            //职位列表
+            $roleMain = new RoleMain();
+            $data['roleAll'] = $roleMain->getAllRole();
+            //获取部门管理列表
+            $departmentMain = new DepartmentMain();
+            $data['departmentAll'] = $departmentMain->getList();
+            //获取节点列表
+            $nodeMain = new NodeMain();
+            $data['nodeHtml'] = $nodeMain->getAllNodeHtml();
+            //获取职位详情
+            $roleMain = new RoleMain();
+            $data['roleInfo'] = $roleMain->getInfo($role_id);
+            $roleAccess = $roleMain->getRoleAccess($role_id);
+            $data['roleAccess'] = '';
+            foreach($roleAccess as $k=>$v){
+                if($k==0){
+                    $data['roleAccess'].=$v['node_id'];
+                }else{
+                    $data['roleAccess'].=','.$v['node_id'];
+                }
             }
-            $this->ajaxReturn($result['code'],$result['msg']);
+            //返回地址
+            $data['url_position'] = U('System/Personnel/position');
+            $this->assign('data', $data);
+            $this->display();
         }
-        //职位列表
-        $roleAll = D('Role','Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
-        //获取部门管理列表
-        $departmentAll = D('Department','Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
-        //获取节点列表
-        $data['nodeHtml'] = $this->_getAllNodeHtml();
-        //获取职位详情
-        $role_info = D('Role','Service')->getRoleInfo(array('role_id'=>$role_id));
-        $data['roleInfo'] = $role_info['data'];
-        $roleAccess = D('Role','Service')->getRoleNode(array('role_id'=>$role_id));
-        $data['roleAccess'] = '';
-        foreach($roleAccess['data'] as $k=>$v){
-            if($k==0){
-                $data['roleAccess'].=$v['node_id'];
-            }else{
-                $data['roleAccess'].=','.$v['node_id'];
-            }
-        }
-        //返回地址
-        $this->assign('data', $data);
-        $this->display();
     }
 
     /**
@@ -299,15 +330,18 @@ class PersonnelController extends SystemController {
     public function dispostPosition()
     {
         if(IS_POST) {
+            //实例化
+            $RoleModel = D('Role');
             //获取参数 验证
             $role_id = I('post.role_id',null);
             $type = I('post.type',null);
             if( isset($type) && $type=='del' ){
-                $requery_data['role_id'] = $role_id;
-                $result = D('Role','Service')->delRole($requery_data);
+                if(empty($role_id)) $this->ajaxReturn(1, '职位ID不能为空', '', 'role_id');
+                $roleMain = new RoleMain();
+                $result = $roleMain->edit(array('status'=>0),'',$role_id);
                 //删除部门
-                if($result['code']==0) $this->ajaxReturn(0, '删除职位成功', U('System/Personnel/position'));
-                else $this->ajaxReturn($result['code'], '数据删除失败');
+                if(!empty($result)) $this->success('删除职位成功', 0, U('System/Personnel/department'));
+                else $this->ajaxReturn(1, '数据删除失败');
             }else if( isset($type) && $type=='sort' ){
 				$sort_data = I('post.sort_data','');
                 if(empty($sort_data)) $this->ajaxReturn(1, '请输入要修改的排序值');
@@ -322,7 +356,7 @@ class PersonnelController extends SystemController {
 					$result = D('Role')->batch_update($new_sort_data,'id','sort');
 					//排序修改
 					if($result!==false) {
-                        F('Cache/role', null);
+                        F('Cache/Personnel/role', null);
                         $this->ajaxReturn(0, '排序修改成功', U('System/Personnel/position'));
                     }else{
                         $this->ajaxReturn(1, '排序修改失败');
@@ -338,9 +372,8 @@ class PersonnelController extends SystemController {
                     $v = explode('-', $v);
                     $access_new[] = array('node_id'=>$v[0], 'pid'=>$v[1], 'level'=>$v[2]);
                 }
-                $request['access'] = $access_new;
-                $request['role_id'] = $role_id;
-                $result = D('Role','Service')->editRole($request);
+                $roleMain = new RoleMain();
+                $result = $roleMain->edit(null,$access_new,$role_id);
                 //权限修改
                 if(!empty($result)) $this->success('权限修改成功', 0, U('System/Personnel/department'));
                 else $this->ajaxReturn(1, '权限修改失败');
@@ -359,42 +392,53 @@ class PersonnelController extends SystemController {
         //获取参数 页码
         $requestG = I('get.');
         $where['usertype'] = !empty($requestG['usertype'])?$requestG['usertype']:array('neq',10);
+        $where['status'] = 1;
         $re_page = isset($requestG['page'])?$requestG['page']:1;
         //查询条件where处理
         if(!empty($requestG['key_value']) && !empty($requestG['key_name'])) {
             if($requestG['key_name']=='username'){
-                $where['username'] = (trim($requestG['key_value']));
+                $where['username'] = encryptPhone(trim($requestG['key_value']), C('PHONE_CODE_KEY'));
             }else{
-                $where[$requestG['key_name']] = array('like', $requestG['key_value']);
+                $where[$requestG['key_name']] = array('like', "%".$requestG['key_value']."%");
             }
         }
         if(!empty($requestG['role_id'])) $where['role_id'] = $requestG['role_id'];
         $where['zone_id'] = !empty($requestG['zone_id'])?$requestG['zone_id']:$this->system_user['zone_id'];
+        if(IS_POST){
+            $requestP = I('post.');
+            if($requestP['type']='getCount'){
+                //异步获取分页数据
+                $systemMain = new SystemMain();
+                $result = $systemMain->getCount($where);
+                //加载分页类
+                $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $result['data'], $requestG);
+                $this->ajaxReturn(0, '', $paging_data);
+            }
+        }
         //员工列表
-        $_param['where'] = $where;
-        $_param['page'] = $re_page.',30';
-        $_param['order'] = 'system_user_id desc';
-        $systemUserAll = D('SystemUser','Service')->getSystemUsersList($_param);
-        $data['systemUserAll'] = $systemUserAll['data'];
-        //加载分页类
-        $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $data['systemUserAll']['count'], $requestG);
-        $data['paging'] = $paging_data;
+        $systemMain = new SystemMain();
+        $data['systemUserAll'] = $systemMain->getList($where,null,(($re_page-1)*30).',30');
         //获取职位及部门
-        $departmentAll = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
-        $roleAll = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
+        $departmenMain = new DepartmentMain();
+        $data['departmentAll'] = $departmenMain->getList();
+        $roleMain = new RoleMain();
+        $data['roleAll'] = $roleMain->getAllRole();
         //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
-        $data['zoneAll'] = $zoneAll['data'];
+        $zoneMain = new ZoneMain();
+        $data['zoneAll'] = $zoneMain->getZoneList($this->system_user['zone_id']);
         //员工状态
-        $data['systemUserStatus'] = C('FIELD_STATUS.SYSTEMUSERSTATUS');
+        $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
         foreach($data['systemUserStatus'] as $k=>$v){
-            if($v=='离职'){
+            if($v['text']=='离职'){
                 unset($data['systemUserStatus'][$k]);
             }
         }
         $data['requery'] = $requestG;
+        $data['url_addSystemUser'] = U('System/Personnel/addSystemUser');
+        $data['url_editSystemUser'] = U('System/Personnel/editSystemUser');
+        $data['url_dispostSystemUser'] = U('System/Personnel/dispostSystemUser');
+        $data['url_systemUserInfo'] = U('System/Personnel/systemUserInfo');
+        $data['url_editSystemUserInfo'] = U('System/Personnel/editSystemUserInfo');
         $this->assign('data', $data);
         $this->display();
     }
@@ -410,32 +454,52 @@ class PersonnelController extends SystemController {
         //获取参数 页码
         $requestG = I('get.');
         $where['usertype'] = 10;
+        $where['status'] = 1;
         $re_page = isset($requestG['page'])?$requestG['page']:1;
         //查询条件where处理
         if(!empty($requestG['key_value']) && !empty($requestG['key_name'])) {
             if($requestG['key_name']=='username'){
-                $where['username'] = (trim($requestG['key_value']));
+                $where['username'] = encryptPhone(trim($requestG['key_value']), C('PHONE_CODE_KEY'));
             }else{
-                $where[$requestG['key_name']] = array('like', $requestG['key_value']);
+                $where[$requestG['key_name']] = array('like', "%".$requestG['key_value']."%");
             }
         }
         if(!empty($requestG['role_id'])) $where['role_id'] = $requestG['role_id'];
         $where['zone_id'] = !empty($requestG['zone_id'])?$requestG['zone_id']:$this->system_user['zone_id'];
+        if(IS_POST){
+            $requestP = I('post.');
+            if($requestP['type']='getCount'){
+                //异步获取分页数据
+                $systemMain = new SystemMain();
+                $result = $systemMain->getCount($where);
+                //加载分页类
+                $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $result['data'], $requestG);
+                $this->ajaxReturn(0, '', $paging_data);
+            }
+        }
         //员工列表
-        $_param['where'] = $where;
-        $_param['page'] = $re_page.',30';
-        $_param['order'] = 'system_user_id desc';
-        $systemUserAll = D('SystemUser','Service')->getSystemUsersList($_param);
-        $data['systemUserAll'] = $systemUserAll['data'];
-        //加载分页类
-        $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $data['systemUserAll']['count'], $requestG);
-        $data['paging'] = $paging_data;
+        $systemMain = new SystemMain();
+        $data['systemUserAll'] = $systemMain->getList($where,null,(($re_page-1)*30).',30');
         //获取职位及部门
-        $departmentAll = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
-        $roleAll = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
+        $departmenMain = new DepartmentMain();
+        $data['departmentAll'] = $departmenMain->getList();
+        $roleMain = new RoleMain();
+        $data['roleAll'] = $roleMain->getAllRole();
+        //获取区域ID 获取下拉框
+        $zoneMain = new ZoneMain();
+        $data['zoneAll'] = $zoneMain->getZoneList($this->system_user['zone_id']);
+        //员工状态
+        $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
+        foreach($data['systemUserStatus'] as $k=>$v){
+            if($v['text']=='离职'){
+                unset($data['systemUserStatus'][$k]);
+            }
+        }
         $data['requery'] = $requestG;
+        $data['url_addSystemUser'] = U('System/Personnel/addSystemUser');
+        $data['url_editSystemUser'] = U('System/Personnel/editSystemUser');
+        $data['url_dispostSystemUser'] = U('System/Personnel/dispostSystemUser');
+        $data['url_systemUserInfo'] = U('System/Personnel/systemUserInfo');
         $this->assign('data', $data);
         $this->display();
 		
@@ -448,11 +512,11 @@ class PersonnelController extends SystemController {
     {
         $request = I('post.');
         $system_user_id = !empty($request['system_user_id'])?$request['system_user_id']:null;
-        $flag = D('SystemUser','Service')->removeToken($system_user_id);
+        $systemMain = new SystemMain();
+        $flag = $systemMain->removeToken($system_user_id);
         if($flag['code']==0) $this->ajaxReturn(0, $flag['msg']);
         else $this->ajaxReturn($flag['code'], $flag['msg']);
     }
-
     /**
      * 员工-添加
      * @author zgt
@@ -460,32 +524,51 @@ class PersonnelController extends SystemController {
     public function addSystemUser()
     {
         if(IS_POST) {
+            //实例化
+            $checkform = new \Org\Form\Checkform();
             //获取参数 验证
             $request = I('post.');
+            if(empty($request['realname'])) $this->ajaxReturn(1, '真实姓名不能为空', '', 'realname');
+            if (strlen($request['realname'])>12) {
+                $this->ajaxReturn(1,'员工姓名不得超过12个字符');
+            }
+            if(empty($request['username'])) $this->ajaxReturn(1, '手机号码不能为空', '', 'username');
+            if(!$checkform->checkMobile($request['username'])) $this->ajaxReturn(1, '手机号码格式有误', '', 'username');
+            if(!$checkform->isCompanyEmail($request['email'])) $this->ajaxReturn(1, '邮箱地址输入有误', '', 'email');
+            if(empty($request['zone_id'])) $this->ajaxReturn(1, '请选择所属区域');
+            if(empty($request['role_id'])) $this->ajaxReturn(1, '请选择所属部门及职位' );
+            if(empty($request['usertype'])) $this->ajaxReturn(1, '请选择员工状态' );
+            if(empty($request['check_id'])) $this->ajaxReturn(1, '指纹编号不能为空' );
+            if(empty($request['entrytime'])) $this->ajaxReturn(1, '入职时间不能为空' );
+            if(empty($request['straightime'])) $this->ajaxReturn(1, '转正时间不能为空' );
+            $request['entrytime'] = strtotime($request['entrytime']);
+            $request['straightime'] = strtotime($request['straightime']);
             //获取 数据判断
-            $addSystemUser = D('SystemUser','Service')->addSystemUser($request);
+            $systemMain = new SystemMain();
+            $addSystemUser = $systemMain->create($request);
             if($addSystemUser['code']==0) $this->ajaxReturn(0, $addSystemUser['msg'], U('System/Personnel/systemUserList'));
             else $this->ajaxReturn($addSystemUser['code'], $addSystemUser['msg']);
-        }
-        //获取职位及部门
-        $departmentAll = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
-        $roleAll = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
-        //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
-        $data['zoneAll'] = $zoneAll['data'];
-        //员工状态
-        $data['systemUserStatus'] = C('FIELD_STATUS.SYSTEMUSERSTATUS');
-        foreach($data['systemUserStatus'] as $k=>$v){
-            if($v=='离职'){
-                unset($data['systemUserStatus'][$k]);
+        }else{
+            //获取职位及部门
+            $departmenMain = new DepartmentMain();
+            $data['departmentAll'] = $departmenMain->getList();
+            $roleMain = new RoleMain();
+            $data['roleAll'] = $roleMain->getAllRole();
+            //获取区域ID 获取下拉框
+            $zoneMain = new ZoneMain();
+            $data['zoneAll'] = $zoneMain->getZoneList($this->system_user['zone_id']);
+            //员工状态
+            $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
+            foreach($data['systemUserStatus'] as $k=>$v){
+                if($v['text']=='离职'){
+                    unset($data['systemUserStatus'][$k]);
+                }
             }
+            $data['url_systemUser'] = U('System/Personnel/systemUserList');
+            $data['url_getZoneSelect'] = U('System/Personnel/getZoneSelect');
+            $this->assign('data', $data);
+            $this->display();
         }
-        $data['url_systemUser'] = U('System/Personnel/systemUserList');
-        $data['url_getZoneSelect'] = U('System/Personnel/getZoneSelect');
-        $this->assign('data', $data);
-        $this->display();
     }
 
     /**
@@ -500,48 +583,72 @@ class PersonnelController extends SystemController {
             //获取参数 验证
             $request = I('post.');
             if(!empty($request['type']) && $request['type']=='editzone'){
+                $systemMain = new SystemMain();
                 $where['system_user_id'] = $system_user_id;
-                $editUserZone = D('SystemUser','Service')->editUserZone($where);
-                if($editUserZone['code']==0) $this->ajaxReturn(0, '已修改成功', U('System/Personnel/systemUserList'));
+                $editUserZone = $systemMain->editUserZone($where);
+                if($editUserZone['code']==0) $this->ajaxReturn(0, '该员工的客户已修改成功', U('System/Personnel/systemUserList'));
                 else $this->ajaxReturn(1, '数据操作失败');
             }else{
+                $checkform = new \Org\Form\Checkform();
+                if(empty($request['realname'])) $this->ajaxReturn(1, '真实姓名不能为空', '', 'realname');
+                if (strlen($request['realname'])>12) {
+                    $this->ajaxReturn(1,'员工姓名不得超过12个字符');
+                }
+                if(empty($request['username'])) $this->ajaxReturn(1, '手机号码不能为空', '', 'username');
+                if(!$checkform->checkMobile($request['username'])) $this->ajaxReturn(1, '手机号码格式有误', '', 'username');
+                if(!$checkform->isCompanyEmail($request['email'])) $this->ajaxReturn(1, '邮箱地址输入有误', '', 'email');
+                if(empty($request['zone_id'])) $this->ajaxReturn(1, '请选择所属区域');
+                if(empty($request['role_id'])) $this->ajaxReturn(1, '请选择所属部门及职位' );
+                if(empty($request['usertype'])) $this->ajaxReturn(1, '请选择员工状态' );
+                if(empty($request['check_id'])) $this->ajaxReturn(1, '指纹编号不能为空' );
+                if(empty($request['entrytime'])) $this->ajaxReturn(1, '入职时间不能为空' );
+                if(empty($request['straightime'])) $this->ajaxReturn(1, '转正时间不能为空' );
+                $request['entrytime'] = strtotime($request['entrytime']);
+                $request['straightime'] = strtotime($request['straightime']);
+                if ($request['entrytime'] > $request['straightime']) {
+                    $this->ajaxReturn(1, '转正时间不能早于入职时间' );
+                }
+                
                 //获取 数据判断
                 $request['system_user_id'] = $system_user_id;
-                $editSystemUser = D('SystemUser','Service')->editSystemUser($request);
+                $systemMain = new SystemMain();
+                $editSystemUser = $systemMain->edit($request);
                 if($editSystemUser['code']==0){
-                    $where_user['system_user_id'] = $system_user_id;
-                    $where_user['status'] = array('IN','20,30,60');
-                    $getUserCount = D('User')->getCount($where_user);
-                    if($getUserCount>0){
+                    $getUserCount = $systemMain->getUserCount($request);
+                    if($getUserCount['code']==0){
                         $this->ajaxReturn(2001, '该员工下面有客户，是否需要带走客户');
                     }
                     $this->ajaxReturn(0, '员工账号修改成功', U('System/Personnel/systemUserList'));
                 }
                 $this->ajaxReturn($editSystemUser['code'], $editSystemUser['msg']);
             }
-        }
-        //获取员工信息
-        $systemUserInfo = D('SystemUser','Service')->getSystemUserInfo(array('system_user_id'=>$system_user_id));
-        $data['SystemUserInfo'] = $systemUserInfo['data'];
-        //获取职位及部门
-        $departmentAll = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
-        $roleAll = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
-        //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
-        $data['zoneAll'] = $zoneAll['data'];
-        //员工状态
-        $data['systemUserStatus'] = C('FIELD_STATUS.SYSTEMUSERSTATUS');
-        foreach($data['systemUserStatus'] as $k=>$v){
-            if($v=='离职'){
-                unset($data['systemUserStatus'][$k]);
+        }else{
+            //获取员工信息
+            $systemMain = new SystemMain();
+            $systemUserInfo = $systemMain->getInfo($system_user_id);
+            if(!empty($systemUserInfo['data']['user_roles'])){
+                foreach($systemUserInfo['data']['user_roles'] as $k=>$v){
+                    $data['is_roles'][] = $v['role_id'];
+                    if($k==0) $data['roles'] .= $v['role_id'];
+                    else $data['roles'] .= ','.$v['role_id'];
+                }
             }
+            $data['SystemUserInfo'] = $systemUserInfo['data'];
+            //获取职位及部门
+            $departmenMain = new DepartmentMain();
+            $data['departmentAll'] = $departmenMain->getList();
+            $roleMain = new RoleMain();
+            $data['roleAll'] = $roleMain->getAllRole();
+            //获取区域ID 获取下拉框
+            $zoneMain = new ZoneMain();
+            $data['zoneAll'] = $zoneMain->getZoneList($this->system_user['zone_id']);
+            //员工状态
+            $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
+            $data['url_systemUser'] = U('System/Personnel/systemUserList');
+            $data['system_user_id'] = $system_user_id;
+            $this->assign('data', $data);
+            $this->display();
         }
-        $data['url_systemUser'] = U('System/Personnel/systemUserList');
-        $data['system_user_id'] = $system_user_id;
-        $this->assign('data', $data);
-        $this->display();
     }
 
     /**
@@ -554,23 +661,35 @@ class PersonnelController extends SystemController {
         if($type=='del'){
             $data['flag'] = 'del';
             $data['system_user_id'] = $system_user_id;
-            $flag = D('SystemUser','Service')->delSystemUser($data);
+            $systemMain = new SystemMain();
+            $flag = $systemMain->del($data);
             if($flag['code']==0) $this->ajaxReturn(0, '账号删除成功', U('System/Personnel/systemUserList'));
             else $this->ajaxReturn(1, '数据操作失败');
         }else if($type=='dels'){
             $data['flag'] = 'del';
             $data['system_user_id'] = $users = I('post.users');
             if(empty($users)) $this->ajaxReturn(1, '请先选中所需删除项');
-            $flag = D('SystemUser','Service')->delSystemUser($data);
+            $systemMain = new SystemMain();
+            $flag = $systemMain->del($data);
             if($flag['code']==0) $this->ajaxReturn(0, '账号删除成功', U('System/Personnel/systemUserList'));
             else $this->ajaxReturn(1, '数据操作失败');
         }else if($type=='usertype'){
             $data['flag'] = 'usertype';
             $data['system_user_id'] = $system_user_id;
-            $flag = D('SystemUser','Service')->delSystemUser($data);
+            $systemMain = new SystemMain();
+            $flag = $systemMain->del($data);
             if($flag['code']==0) $this->ajaxReturn(0, '离职设置成功', U('System/Personnel/systemUserList'));
             else $this->ajaxReturn(1, '数据操作失败');
         }
+//        else if($type=='call'){
+//            $system_user = $this->system_user;
+//            $myPhone = decryptPhone($system_user['username'],C(PHONE_CODE_KEY));
+//            $phone = decryptPhone(I('post.userKey'),C(PHONE_CODE_KEY));
+//            if($myPhone==$phone) $this->ajaxReturn(1, '无法与自己通话');
+//            $reflag = $this->call($myPhone,$phone,$myPhone);
+//            if(!empty($reflag) && $reflag->code==0) $this->ajaxReturn(0, '网络电话已开始拨打，请确保您手机信号通畅，注意：最大通话时长5分钟！');
+//            else $this->ajaxReturn(1, '网络电话拨打失败');
+//        }
     }
 
 
@@ -585,26 +704,65 @@ class PersonnelController extends SystemController {
             //获取参数 验证
             $request = I('post.');
             $request['system_user_id'] = $system_user_id;
-            //数据操作
-            $flag = D('SystemUser','Service')->editSystemUserInfo($request);
-            if($flag['code']==0) $this->ajaxReturn(0, '员工档案修改成功', U('System/Personnel/systemUserList'));
-            else $this->ajaxReturn($flag['code'], $flag['msg']);
-        }
-        //获取员工信息
-        $systemUserInfo = D('SystemUser','Service')->getSystemUserInfo(array('system_user_id'=>$system_user_id));
-        $data['SystemUserInfo'] = $systemUserInfo['data'];
-        //员工状态
-        $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
-        foreach($data['systemUserStatus'] as $k=>$v){
-            if($v['text']=='离职'){
-                unset($data['systemUserStatus'][$k]);
+            if(empty($system_user_id)) $this->ajaxReturn(1, '非法操作');
+            if(empty($request['birthday'])) $this->ajaxReturn(1, '生日不能为空', '', 'birthday');
+            if(empty($request['nativeplace'])) $this->ajaxReturn(1, '籍贯不能为空', '', 'nativeplace');
+            if(empty($request['education_id'])) $this->ajaxReturn(1, '学历不能为空');
+            if(empty($request['school'])) $this->ajaxReturn(1, '毕业学校不能为空', '', 'school');
+            if(empty($request['plivatemail'])) $this->ajaxReturn(1, '个人邮箱不能为空', '', 'plivatemail');
+            if(empty($request['usertype'])) $this->ajaxReturn(1, '用户状态不能为空');
+            if(empty($request['entrytime'])) $this->ajaxReturn(1, '开始时间', '', 'entrytime');
+            if(empty($request['straightime'])) $this->ajaxReturn(1, '结束时间', '', 'straightime');
+            if(empty($request['check_id'])) $this->ajaxReturn(1, '指纹编号不能为空', '', 'check_id');
+            $request['birthday'] = strtotime($request['birthday']);
+            $request['entrytime'] = strtotime($request['entrytime']);
+            $request['straightime'] = strtotime($request['straightime']);
+            if ($request['entrytime'] > $request['straightime']) {
+                $this->ajaxReturn(2, '转正时间不能早于入职时间', '', '');
             }
+            if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['nativeplace'])){
+                $this->ajaxReturn(1,'籍贯信息不能包含特殊字符');
+            }
+            if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['school'])){
+                $this->ajaxReturn(1,'学校不能包含特殊字符');
+            }
+            //数据操作
+            $systemMain = new SystemMain();
+            $flag = $systemMain->editInfo($request);
+            if($flag['code']==0) $this->ajaxReturn(0, '员工档案修改成功', U('System/Personnel/systemUserList'));
+            else $this->ajaxReturn(1, '数据操作失败');
+        }else{
+            //获取员工信息
+            $systemMain = new SystemMain();
+            $systemUserInfo = $systemMain->getInfo($system_user_id);
+            if(!empty($systemUserInfo['data']['user_roles'])){
+                foreach($systemUserInfo['data']['user_roles'] as $k=>$v){
+                    $data['is_roles'][] = $v['role_id'];
+                    if($k==0) $data['roles'] .= $v['role_id'];
+                    else $data['roles'] .= ','.$v['role_id'];
+                }
+            }
+            $data['systemUserInfo'] = $systemUserInfo['data'];
+            //学历
+            $educationMain = new EducationController();
+            if ($data['systemUserInfo']['education_id']) {
+                $edu = $educationMain->getInfo($data['systemUserInfo']['education_id']);
+                $data['systemUserInfo']['educationname'] = $edu['data'];
+            }
+            //员工状态
+            $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
+            foreach($data['systemUserStatus'] as $k=>$v){
+                if($v['text']=='离职'){
+                    unset($data['systemUserStatus'][$k]);
+                }
+            }
+            //获取学历表
+            $res = $educationMain->getlist();
+            $data['educationAll'] = $res['data'];
+            $data['url_systemUser'] = U('System/Personnel/systemUserList');
+            $this->assign('data', $data);
+            $this->display();
         }
-        //获取学历表
-        $data['educationAll'] = C('FIELD_STATUS.EDUCATION_ARRAY');
-        $data['url_systemUser'] = U('System/Personnel/systemUserList');
-        $this->assign('data', $data);
-        $this->display();
     }
 
     /**
@@ -614,11 +772,20 @@ class PersonnelController extends SystemController {
     public function systemUserInfo(){
         //获取被查看用户ID
         $system_user_id = I('get.user_id',null);
-        //获取员工信息
-        $systemUserInfo = D('SystemUser','Service')->getSystemUserInfo(array('system_user_id'=>$system_user_id));
+        $systemMain = new SystemMain();
+        $systemUserInfo = $systemMain->getInfo($system_user_id);
+        if(!empty($systemUserInfo['data']['user_roles'])){
+            foreach($systemUserInfo['data']['user_roles'] as $k=>$v){
+                $data['is_roles'][] = $v['role_id'];
+                if($k==0) $data['roles'] .= $v['role_id'];
+                else $data['roles'] .= ','.$v['role_id'];
+            }
+        }
         $data['systemUserInfo'] = $systemUserInfo['data'];
         //获取学历表
-        $data['educationAll'] = C('FIELD_STATUS.EDUCATION_ARRAY');
+        $educationMain = new EducationController();
+        $educationList = $educationMain->getList();
+        $data['educationAll'] = $educationList['data'];
         //员工状态
         $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
         foreach($data['systemUserStatus'] as $k=>$v){
@@ -636,9 +803,8 @@ class PersonnelController extends SystemController {
      */
     public function getZoneSelect(){
         $zone_id = I('post.zone_id');
-        //获取区域ID
-        $zoneAll = D('Zone', 'Service')->getZoneList($zone_id);
-        $zoneList = $zoneAll['data'];
+        $zoneMain = new ZoneMain();
+        $zoneList = $zoneMain->getZoneList($zone_id);
         $zoneHtml =
         "<dt>
             <div class='select_title l'>所有</div>
@@ -662,50 +828,5 @@ class PersonnelController extends SystemController {
         $zoneMain = new ZoneMain();
         $zoneList = $zoneMain->getZoneList($zone_id);
         $this->ajaxReturn(0, '数据获取成功', $zoneList);
-    }
-    /**
-     * 生成节点列表HTML
-     * @author
-     */
-    protected function _getAllNodeHtml()
-    {
-        $nodeAll = D('Node','Service')->getNodeList();
-        $nodeAll_html = '';
-        foreach ($nodeAll['data']['data'] as $k => $v) {
-            $nodeAll_html .=
-                "<tr id='node-{$v['id']}' class=' collapsed '>
-                    <td style='padding-left: 30px;'>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<input type='checkbox' name='node_id[]' value='{$v['id']}' pid='0' level='0' class='radio radio-node-{$v['id']}'  onclick='javascript:checknode(this);' autocomplete='off'> {$v['title']} ({$v['name']})</td>
-                </tr>";
-            if (!empty($v['children'])) {
-                foreach ($v['children'] as $k2 => $v2) {
-                    $nodeAll_html .=
-                        "<tr id='node-{$v2['id']}' class='tr lt child-of-node-{$v2['pid']}  collapsed ui-helper-hidden'>
-                            <td style='padding-left: 49px;'>
-                                &nbsp;&nbsp;&nbsp;&nbsp;├─
-                                <input type='checkbox' name='node_id[]' value='{$v2['id']}' class='radio radio-node-{$v2['id']}' pid='{$v2['pid']}' level='1'  onclick='javascript:checknode(this);' autocomplete='off'> {$v2['title']} ({$v2['name']})</td>
-                        </tr>";
-                    if (!empty($v2['children'])) {
-                        foreach ($v2['children'] as $k3 => $v3) {
-                            $nodeAll_html .=
-                                "<tr id='node-{$v3['id']}' class='tr lt child-of-node-{$v3['pid']} ui-helper-hidden'>
-                                    <td style='padding-left: 68px;'>&nbsp;&nbsp;&nbsp;&nbsp;│ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─
-                                        <input type='checkbox' name='node_id[]' value='{$v3['id']}' class='radio radio-node-{$v3['id']}' pid='{$v3['pid']}' level='2'  onclick='javascript:checknode(this);' autocomplete='off'> {$v3['title']} ({$v3['name']})</td>
-                                </tr>";
-                            if (!empty($v3['children'])) {
-                                foreach ($v3['children'] as $k4 => $v4) {
-                                    $nodeAll_html .=
-                                        "<tr id='node-{$v4['id']}' class='tr lt child-of-node-{$v4['pid']} ui-helper-hidden'>
-                                            <td style='padding-left: 68px;'>&nbsp;&nbsp;&nbsp;&nbsp;│ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─
-                                                <input type='checkbox' name='node_id[]' value='{$v4['id']}' class='radio radio-node-{$v4['id']}' pid='{$v4['pid']}' level='3'  onclick='javascript:checknode(this);' autocomplete='off'> {$v4['title']} ({$v4['name']})</td>
-                                        </tr>";
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return $nodeAll_html;
     }
 }
