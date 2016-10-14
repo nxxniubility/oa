@@ -133,7 +133,6 @@ class ZoneController extends SystemController {
     public function editCenter()
     {
         $zone['zone_id'] = I('get.zone_id');
-        $zone_id = $zone['zone_id'];
         if(IS_POST){
             $zone['name'] = I('post.name');
             $zone['email'] = I('post.email');
@@ -141,23 +140,16 @@ class ZoneController extends SystemController {
             $zone['abstract'] = I('post.abstract');
             $zone['address'] = I('post.address');
             $zone['addusr'] = $this->system_user_id;
-            if(empty($zone['name'])){
-                $this->ajaxReturn(1,'请输入中心名称', '', 'name');
-            }
-            if(empty($zone['parentid'])){
-                $this->ajaxReturn(2,'请选择所属区域', '', '');
-            }
-            $zone_id = D('Zone', 'Service')->editZone($zone);
-            if(!$zone_id){
-                $this->ajaxReturn(3,'修改失败');
+            
+            $res = D('Zone', 'Service')->editZone($zone);
+            if($res['code'] != 0){
+                $this->ajaxReturn($res['code'],'修改失败');
             }
             $this->success('修改成功', 0, U('System/Zone/zoneList'));
         }
-
-        $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone_id));
-        $this->assign('zone_id', $zone_id);
+        $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone['zone_id']));
+        $this->assign('zone_id', $zone['zone_id']);
         $this->assign('zoneList', $zoneList['data']);
-
         $this->display();
 
     }
@@ -171,7 +163,7 @@ class ZoneController extends SystemController {
     {
         $where['zone_id'] = I("post.zone_id");
         $zone = D('Zone', 'Service')->getZoneInfo($where);
-        if ($zone === false) {
+        if (!$zone['data']) {
             $this->ajaxReturn(1,'没有可供管理的区域');
         }
         $this->assign('zone', $zone['data']);
@@ -187,7 +179,7 @@ class ZoneController extends SystemController {
         $zone_id = I("post.zone_id");
         $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone_id));
         if (!empty($zoneList['children'])) {
-            $this->ajaxReturn(1,'当前区域没有城市,请先添加城市');
+            $this->ajaxReturn(301,'当前区域没有城市,请先添加城市');
         }
         $this->ajaxReturn(0,'',$zoneList['data']);
     }
@@ -200,7 +192,7 @@ class ZoneController extends SystemController {
     {
     	$zone_id = 1;//超级管理员
     	$zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone_id));
-        if ($zoneList['data'] === false) {
+        if (!$zoneList['data']) {
             $this->ajaxReturn(1,'没有可供管理的区域');
         }
         $this->assign('zoneList', $zoneList['data']);

@@ -1,8 +1,6 @@
 <?php
-
 namespace Common\Model;
 use Common\Model\BaseModel;
-
 class ServicecodeModel extends BaseModel
 {
     protected $_id='servicecode_id';
