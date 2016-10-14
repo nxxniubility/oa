@@ -66,7 +66,11 @@
                 <div class="vfRow">
                     <div class="vfBoxLeft">
                         <div class="vfRowLeft">学历：</div>
-                        <div class="vfRowRight">{$data['systemUserInfo']['education_name']}</div>
+                        <foreach name="data['educationAll']" item="v" key="k">
+                            <if condition="($data['systemUserInfo']['education_id'] eq $v['education_id'])">
+                                <div class="vfRowRight">{$v.educationname}</div>
+                            </if>
+                        </foreach>
                     </div>
                     <div class="vfBoxRight">
                         <div class="vfRowLeft">毕业院校：</div>
@@ -85,7 +89,7 @@
                 <div class="vfRow">
                     <div class="vfBoxLeft">
                         <div class="vfRowLeft">手机号码：</div>
-                        <div class="vfRowRight"><?php echo $data['systemUserInfo']['username'] ?></div>
+                        <div class="vfRowRight"><?php echo decryptPhone($data['systemUserInfo']['username'], C('PHONE_CODE_KEY')) ?></div>
                     </div>
                     <div class="vfBoxRight">
                         <div class="vfRowLeft">公司邮箱：</div>
@@ -120,7 +124,7 @@
                 <div class="vfRow">
                     <div class="vfBoxLeft">
                         <div class="vfRowLeft">员工状态：</div>
-                        <div class="vfRowRight">{$data['systemUserInfo']['usertype_name']}</div>
+                        <div class="vfRowRight">{:$data['systemUserStatus'][$data['systemUserInfo']['usertype']]['text']}</div>
                     </div>
                     <div class="vfBoxRight">
                         <div class="vfRowLeft">入职时间：</div>

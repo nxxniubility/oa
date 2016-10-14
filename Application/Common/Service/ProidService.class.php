@@ -625,7 +625,7 @@ class ProidService extends BaseService
         $param['satus'] = 1;
         $proInfo = D("Proid")->getFind($param);
         if (!$proInfo) {
-            return array('code'=>1,'msg'=>'没有信息');
+            return array('code'=>201,'msg'=>'没有信息');
         }
         $channelInfo = D("Channel")->getFind(array('channel_id'=>$proInfo['channel_id']));
         $proInfo['channelName'] = $channelInfo['channelname'];
