@@ -1,5 +1,0 @@
-<div class="topBox clearfix">
-    <h2>{$action_name}</h2>
-
-    <a  href="{$return_url}"  class="newCourse  mr">返回</a><a href="javascript:window.location.reload();"  class="newCourse  mr" >刷新</a><volist name="btn_list"  id="btn" ><if condition="($btn['display']  eq  1) and  in_array($btn['name'],$role_access_urls)"><a href="{:U($btn['name'])}" target="_self" class="newCourse    mr">{$btn.title}</a></if></volist>
-</div>
