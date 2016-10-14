@@ -1,0 +1,129 @@
+[ 2016-09-23T15:40:04+08:00 ] 127.0.0.1 /api/systemlogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.007000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.011000s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.008001s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.020001s ]
+ERR: 无法加载控制器:Systemlogin(Api模块)
+
+[ 2016-09-23T15:40:51+08:00 ] 127.0.0.1 /api/systemlogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.002000s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.003000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.005000s ]
+ERR: 无法加载控制器:Systemlogin(Api模块)
+
+[ 2016-09-23T15:41:13+08:00 ] 127.0.0.1 /api/SystemLogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.002000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.003000s ]
+ERR: 1146:Table 'zelininfo_test.zl_memcache' doesn't exist
+ [ SQL语句 ] : SHOW COLUMNS FROM `zl_memcache`
+ERR: 1146:Table 'zelininfo_test.zl_memcache' doesn't exist
+ [ SQL语句 ] : SHOW COLUMNS FROM `zl_memcache`
+
+[ 2016-09-23T15:41:31+08:00 ] 127.0.0.1 /api/SystemLogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.002000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.003000s ]
+ERR: 1146:Table 'zelininfo_test.zl_memcache' doesn't exist
+ [ SQL语句 ] : SHOW COLUMNS FROM `zl_memcache`
+ERR: 1146:Table 'zelininfo_test.zl_memcache' doesn't exist
+ [ SQL语句 ] : SHOW COLUMNS FROM `zl_memcache`
+
+[ 2016-09-23T15:46:12+08:00 ] 127.0.0.1 /api/SystemLogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.002001s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.002000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.004001s ]
+NOTIC: [8] Undefined index:  F:\wamp\www\oa_project.2.1\Application\Common\Controller\ApiBaseController.class.php 第 20 行.
+NOTIC: [8] Undefined index: username F:\wamp\www\oa_project.2.1\Application\Common\Service\SystemUserService.class.php 第 33 行.
+NOTIC: [8] Undefined index: username F:\wamp\www\oa_project.2.1\Application\Common\Service\SystemUserService.class.php 第 36 行.
+
+[ 2016-09-23T16:27:07+08:00 ] 127.0.0.1 /api/SystemLogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.007000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.007000s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.007001s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.015001s ]
+ERR: Think\Controller:_memcache_init方法不存在！
+
+[ 2016-09-23T16:28:17+08:00 ] 127.0.0.1 /api/SystemLogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.003000s ]
+NOTIC: [8] Undefined index:  F:\wamp\www\oa_project.2.1\Application\Common\Controller\ApiBaseController.class.php 第 16 行.
+NOTIC: [8] Undefined index: username F:\wamp\www\oa_project.2.1\Application\Common\Service\SystemUserService.class.php 第 33 行.
+NOTIC: [8] Undefined index: username F:\wamp\www\oa_project.2.1\Application\Common\Service\SystemUserService.class.php 第 36 行.
+
+[ 2016-09-23T16:43:39+08:00 ] 127.0.0.1 /api/SystemLogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.002000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.003000s ]
+NOTIC: [8] Undefined index:  F:\wamp\www\oa_project.2.1\Application\Common\Controller\ApiBaseController.class.php 第 16 行.
+NOTIC: [8] Undefined index: username F:\wamp\www\oa_project.2.1\Application\Common\Service\SystemUserService.class.php 第 33 行.
+
+[ 2016-09-23T16:43:40+08:00 ] 127.0.0.1 /api/SystemLogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.002000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.003000s ]
+NOTIC: [8] Undefined index:  F:\wamp\www\oa_project.2.1\Application\Common\Controller\ApiBaseController.class.php 第 16 行.
+NOTIC: [8] Undefined index: username F:\wamp\www\oa_project.2.1\Application\Common\Service\SystemUserService.class.php 第 33 行.
+
+[ 2016-09-23T16:43:49+08:00 ] 127.0.0.1 /api/SystemLogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.003000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.001001s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.003001s ]
+NOTIC: [8] Undefined index:  F:\wamp\www\oa_project.2.1\Application\Common\Controller\ApiBaseController.class.php 第 16 行.
+NOTIC: [8] Undefined index: username F:\wamp\www\oa_project.2.1\Application\Common\Service\SystemUserService.class.php 第 33 行.
+
+[ 2016-09-23T16:57:45+08:00 ] 127.0.0.1 /api/SystemLogin/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.003000s ]
+NOTIC: [8] Undefined index:  F:\wamp\www\oa_project.2.1\Application\Common\Controller\ApiBaseController.class.php 第 16 行.
+NOTIC: [8] Undefined index: username F:\wamp\www\oa_project.2.1\Application\Common\Service\SystemUserService.class.php 第 33 行.
+NOTIC: [8] Undefined index: password F:\wamp\www\oa_project.2.1\Application\Common\Service\SystemUserService.class.php 第 34 行.
+NOTIC: [8] Undefined index: data F:\wamp\www\oa_project.2.1\Application\Api\Controller\SystemLoginController.class.php 第 48 行.
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.030002s ]
+INFO: [ app_end ] --END-- [ RunTime:0.030002s ]
+

@@ -8,6 +8,7 @@ document.onkeydown=function(event){
 $('.loginSubmit').click(function(){
     Login();
 });
+var login_fref = '/Api/SystemLogin/login';
 function Login() {
     //$('#loginForm').submit();
     layer.load(2);
@@ -17,21 +18,21 @@ function Login() {
         verification:$(':input[name="verification"]').val()
     };
     $.ajax({
-        url:window.location.href,
+        url:login_fref,
         dataType:'json',
         type:'post',
         data:data,
         success:function(reflag){
             if(reflag.code && reflag.code!=0){
-                if(reflag.sign){
-                    layer.tips(reflag.msg, $(':input[name="'+reflag.sign+'"]'),{time:1000});
+                if(reflag.data.sign){
+                    layer.tips(reflag.msg, $(':input[name="'+reflag.data.sign+'"]'),{time:1000});
                 }else{
                     layer.msg(reflag.msg,{icon:2});
                 }
                 $('#verify_img').trigger('click');
                 layer.closeAll('loading');
             }else{
-                location.href=reflag.data;
+                location.href='/';
             };
         },
         error:function(){

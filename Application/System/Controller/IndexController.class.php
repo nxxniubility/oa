@@ -27,7 +27,6 @@ class IndexController extends SystemController
      */
     public function _initialize()
     {
-        $this->system_userDB = D('SystemUser');
         parent::_initialize();
     }
 
@@ -46,7 +45,7 @@ class IndexController extends SystemController
                 $edit_data['status']=$request['status'];
                 $edit_data['user_id']='0';
                 $edit_data['markstring']= null;
-                $reflag = $this->system_userDB->editSystemEngagedStatus($edit_data,$this->system_user_id);
+                $reflag = D('SystemUser')->editSystemEngagedStatus($edit_data,$this->system_user_id);
                 if($reflag!==false) $this->ajaxReturn('0','状态修改成功');
                 else $this->ajaxReturn('1','状态修改失败');
             }elseif($request['type']=='getMsgList'){
@@ -60,33 +59,33 @@ class IndexController extends SystemController
                 $this->ajaxReturn('1','获取失败');
             }else{
                 //获取员工忙线状态
-                $engagedStatus = $this->system_userDB->getSystemEngagedStatus($this->system_user_id);
-                if(!empty($engagedStatus)){
-                    if($engagedStatus['status']==1){
-                        if($engagedStatus['isget']==1){
+                $engagedStatus =  D('SystemUser','Service')->getSystemEngagedStatus();
+                if(!empty($engagedStatus['data'])){
+                    if($engagedStatus['data']['status']==1){
+                        if($engagedStatus['data']['isget']==1){
                             //提示有客户到访
                             $edit_data['isget']='0';
-                            $this->system_userDB->editSystemEngagedStatus($edit_data,$this->system_user_id);
-                            $userInfo = D('User')->getUser(array('user_id'=>$engagedStatus['user_id']));
+                             D('SystemUser','Service')->editSystemEngagedStatus($edit_data);
+                            $userInfo = D('User')->getUser(array('user_id'=>$engagedStatus['data']['user_id']));
                             if(!empty($userInfo)){
                                 $userInfo['username'] = decryptPhone($userInfo['username'],C('PHONE_CODE_KEY'));
                             }
                             $this->ajaxReturn('10','您有客户到访，请到前台接待',$userInfo);
                         }else{
                             //提示超时时间
-                            if( (time()-$engagedStatus['createtime'])>3600 ) {
+                            if( (time()-$engagedStatus['data']['createtime'])>3600 ) {
                                 //是否超时警告
-                                if($engagedStatus['isovertime']==1){
+                                if($engagedStatus['data']['isovertime']==1){
                                     $edit_data['isovertime']='0';
-                                    $this->system_userDB->editSystemEngagedStatus($edit_data,$this->system_user_id);
+                                    D('SystemUser','Service')->editSystemEngagedStatus($edit_data);
                                     //警告措施
                                 }
                                 $this->ajaxReturn('2','已超过60分钟');
-                            }elseif( (time()-$engagedStatus['createtime'])>3000 ) {
+                            }elseif( (time()-$engagedStatus['data']['createtime'])>3000 ) {
                                 $this->ajaxReturn('2','已超时50分钟');
-                            }elseif( (time()-$engagedStatus['createtime'])>2400 ) {
+                            }elseif( (time()-$engagedStatus['data']['createtime'])>2400 ) {
                                 $this->ajaxReturn('2','已超时40分钟');
-                            }elseif( (time()-$engagedStatus['createtime'])>1800 ){
+                            }elseif( (time()-$engagedStatus['data']['createtime'])>1800 ){
                                 $this->ajaxReturn('2','已超时30分钟');
                             }else{
                                 $this->ajaxReturn('3','忙线还未超时');
@@ -105,23 +104,62 @@ class IndexController extends SystemController
             if(strstr($get_url,'crm.didazp')){
                 $is_dida = 1;
             }
-            $this->assign('is_dida', $is_dida);
-            $userRole = D('RoleUser')->field('name, role_id')->where(array('user_id' => session('system_user_id')))
-                ->join('LEFT JOIN zl_role on zl_role_user.role_id=zl_role.id')->select();
-            foreach ($userRole as $key => $value) {
-                $userRole[$key]['url'] = U('System/Index/changeRole', array('role_id' => $value['role_id']));
-            }
-            if (count($userRole) > 1) {
-                $this->assign('user_role', $userRole);
-                $this->assign('user_role_name', session('role_name'));
-            }
+            //获取左侧边栏
+            $newSideber = $this->_sideMenu();
+            //获取员工忙线状态
+            $engagedStatus =  D('SystemUser','Service')->getSystemEngagedStatus();
+
             $this->getCurSystemUpdateInfo();
 
-            //获取员工忙线状态
-            $engagedStatus = $this->system_userDB->getSystemEngagedStatus($this->system_user_id);
+            $this->assign('is_dida', $is_dida);
             $this->assign('engagedStatus', $engagedStatus);
+            //模板变量赋值
+            $this->assign('sidebar',$newSideber);
             $this->display();
         }
+    }
+
+    /**
+     * 设置侧边菜单
+     * @author cq
+     */
+    protected function _sideMenu()
+    {
+        $system_user_role = session('system_user_role');
+        if(session('sidebar')){
+            $sidebar = session('sidebar');
+        }else{
+            if($system_user_role[0]['id']!=C('ADMIN_SUPER_ROLE')){
+                $re_sidebar = D('Role','Service')->getRoleNode();
+            }else{
+                $re_sidebar = D('Role','Service')->getRoleNodeAll();
+            }
+            $sidebar = $re_sidebar['data'];
+            session('sidebar',$sidebar);
+        }
+        $newSideber = array();
+        $childNodes = array();
+        $i = 0;
+        foreach ($sidebar as $k => $v) {
+            if ($v['name'] == CONTROLLER_NAME) $controllerName = $v['title'];
+            if ($v['display'] == 3) $newSideber[$k] = $v;
+            unset($newSideber[$k]['children']);
+            if (is_array($v['children'])) {
+                foreach ($v['children'] as $c_key => $c_value) {
+                    if ($v['name'] == CONTROLLER_NAME && $c_value['name'] == ACTION_NAME) $actionName = $c_value['title'];
+                    if ($c_value['display'] == 3) {
+                        $newSideber[$k]['children'][$c_key] = $c_value;
+                        $url = U(MODULE_NAME . '/' . $v['name'] . '/' . $c_value['name']);
+                        $newSideber[$k]['children'][$c_key]['url'] = $url;
+
+                        //获得用户的所有子节点
+                        $childNodes[$i] = $newSideber[$k]['children'][$c_key];
+                        $i++;
+                    }
+                }
+            }
+        }
+        return $newSideber;
     }
 
     /**
@@ -238,20 +276,6 @@ class IndexController extends SystemController
 
 
     /**
-     * 切换角色
-     * @author cq
-     */
-    public function changeRole()
-    {
-        $role_id = I('get.role_id', 0, 'intval');
-        $flag = $this->changeUserRole($role_id);
-        session('sidebar',null);session('_ACCESS_LIST',null);
-        Rbac::saveAccessList();
-
-        $this->redirect('System/Index/index');
-    }
-
-    /**
      * 设置主页的路径
      * @author cq
      */
@@ -279,30 +303,6 @@ class IndexController extends SystemController
                 $this->success('添加成功', 0, U('System/Index/main'));
             }
         } else {
-            //自定义导航class
-            $navClass = array('0' => 'sbOne', '1' => 'sbTwo', '2' => 'sbThr', '3' => 'sbFou', '4' => 'sbFiv', '5' => 'sbSix', '6' => 'sbSev', '7' => 'sbEig');
-            $userDefaultNodes = $this->getUserDefineNodes();
-
-            $in_array = array();
-            if(!empty($userDefaultNodes)){
-                foreach ($userDefaultNodes as $k => $v) {
-                    $in_array[] = $v['id'];
-                    $nodeData = D('Node')->getNodeInfo($v['pid'], 'name');
-                    foreach ($nodeData as $k2 => $v2) {
-                        $url = U('System/' . $v2['name'] . '/' . $v['name']);
-                    }
-                    $userDefaultNodes[$k]['url'] = $url;
-                }
-            }
-
-            $siderbar = session('sidebar');
-            $sysUpdateData = session('sysUpdateData');
-            $this->assign('sysUpdateData', $sysUpdateData);
-            $this->assign('navClass', $navClass);
-            $this->assign('in_array', $in_array);
-            $this->assign('default_nodes', $userDefaultNodes);
-            $this->assign('siderbar', $siderbar);
-            $this->assign('system_user_role_id', $this->system_user_role_id);
 
             $this->display();
         }
@@ -448,5 +448,7 @@ class IndexController extends SystemController
             $this->display();
         }
     }
+
+
 
 }

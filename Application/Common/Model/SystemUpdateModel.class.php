@@ -1,17 +1,99 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2016/5/10
- * Time: 15:15
- */
 
 namespace Common\Model;
+use Common\Model\BaseModel;
 
-
-use Common\Model\SystemModel;
-class SystemUpdateModel extends SystemModel
+class SystemUpdateModel extends BaseModel
 {
+    protected $_id='system_update_id';
+    public function _initialize(){
+        parent::_initialize();
+    }
+
+    //自动验证
+    protected $_validate = array(
+        array('uptitle', '0,10', array('code'=>'201','msg'=>'标题不能大于10位字符！'), 0, 'length'),
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取单条记录
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getFind($where=null, $field='*', $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->find();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取列表
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getList($where=null, $field='*', $order=null, $limit=null, $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->order($order)->limit($limit)->select();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取总数
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getCount($where=null, $join=null)
+    {
+        return $this->where($where)->join($join)->count();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 添加
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function addData($data)
+    {
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
+        }else{
+            $re_id =  $this->add($data);
+            return array('code'=>0,'data'=>$re_id);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 修改
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function editData($data,$id)
+    {
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
+        }else{
+            $re_flag =  $this->where(array($this->_id=>$id))->save($data);
+            return array('code'=>0,'data'=>$re_flag);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 删除
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function delData($id)
+    {
+        return $this->where(array($this->_id=>$id))->delete();
+    }
 
     /**
      *获取所有的系统更新信息
@@ -20,8 +102,8 @@ class SystemUpdateModel extends SystemModel
      */
     public  function  getSystemUpdateInfo($where='',$limit=null, $order='createtime DESC'){
 
-        /* $sysUpdateData['data'] = $this->systemUpdateDb->where($where)->limit($limit)->select();
-         $sysUpdateData['count'] = $this->systemUpdateDb->where($where)->count();
+        /* $sysUpdateData['data'] = $this->where($where)->limit($limit)->select();
+         $sysUpdateData['count'] = $this->where($where)->count();
          return  $sysUpdateData;*/
         $DB_PREFIX = C('DB_PREFIX');
         $field  = array(
@@ -49,7 +131,7 @@ class SystemUpdateModel extends SystemModel
      */
     public  function  addNewUpdateInfo($data){
 
-        $result = $this->systemUpdateDb->data($data)->add();
+        $result = $this->data($data)->add();
         return $result;
     }
 
@@ -60,7 +142,7 @@ class SystemUpdateModel extends SystemModel
      */
     public  function  delUpdateInfo($where){
 
-        $result = $this->systemUpdateDb->where($where)->delete();
+        $result = $this->where($where)->delete();
         return $result;
 
     }
@@ -72,9 +154,7 @@ class SystemUpdateModel extends SystemModel
      * @return mixed
      */
     public  function  modifyUpdateInfo($where,$data){
-        $result = $this->systemUpdateDb->where($where)->save($data);
+        $result = $this->where($where)->save($data);
         return $result;
     }
-
-
 }

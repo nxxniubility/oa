@@ -1,100 +1,98 @@
 <?php
-/*
-|--------------------------------------------------------------------------
-| 渠道数据表
-|--------------------------------------------------------------------------
-| createtime：2016-04-12
-| updatetime：
-| updatename：
-*/
+
 namespace Common\Model;
-use Common\Model\SystemModel;
+use Common\Model\BaseModel;
 
-class ChannelModel extends SystemModel{
-
-    /**
-     * 获取所有渠道
-     * @return array
-     */
-    public function getAllChannel($order='sort desc',$page=null){
-        if( F('Cache/channel/channel') ) {
-            $channel = F('Cache/channel/channel');
-        }else{
-            $channel['data'] = $this->where('system_user_id=0')->select();
-            $channel['count'] = $this->where('system_user_id=0')->count();
-            F('Cache/channel/channel', $channel);
-        }
-        //数组分级
-        $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
-        $channel['data'] = $Arrayhelps->createTree($channel['data'], 0, 'channel_id', 'pid');
-        $_channelAll = $this->disposeArray($channel, $order, $page);
-        return $_channelAll;
+class ChannelModel extends BaseModel
+{
+    protected $_id='channel_id';
+    public function _initialize(){
+        parent::_initialize();
     }
 
-    /**
-     * 获取渠道
-     * @return array
-     */
-    public function getChannel($channel_id){
+    //自动验证
+    protected $_validate = array(
+        array('channelname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
+        array('channelname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
+    );
 
-        $channelInfo = M("channel")->where("channel_id = $channel_id")->find();
-        if (!$channelInfo) {
-            return false;
-        }
-        return $channelInfo;
-    }
-    /*
-	Channel 获取想关联的ID
-	@author Nixx
-	*/
-    public function getChannelIds($channel_id = 0)
-    {
-        if( F('Cache/channel/channel') ) {
-            $channelist = F('Cache/channel/channel');
-        }else{
-            $channelist['data'] = $this->where(array('system_user_id'=>0))->select();
-            $channelist['count'] = $this->where('system_user_id=0')->count();
-            F('Cache/channel/channel', $channelist);
-        }
-        //数组分级
-        $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
-        $_channelist['data'] = $Arrayhelps->subFinds($channelist['data'],$channel_id,'channel_id','pid');
-        foreach($channelist['data'] as $k=>$v){
-            if($v['channel_id']==$channel_id){
-                $_channelist['data'][] = $v;
-            }
-        }
-        return $_channelist['data'];
-    }
     /*
     |--------------------------------------------------------------------------
-    | 获取渠道名称  包括上级
+    | 获取单条记录
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getChannelNames($channel_id){
-        if( F('Cache/channel/channel') ) {
-            $channelist = F('Cache/channel/channel');
-        }else{
-            $channelist['data'] = $this->where(array('system_user_id'=>0))->select();
-            $channelist['count'] = $this->where('system_user_id=0')->count();
-        }
-        foreach($channelist['data'] as $k=>$v){
-            if($v['channel_id']==$channel_id){
-                $_channeDetail = $v;
-            }
-        }
-
-        if($_channeDetail['pid']==0){
-            $renames = $_channeDetail['channelname'];
-        }else{
-            foreach($channelist['data'] as $k=>$v){
-                if($v['channel_id']==$_channeDetail['pid']){
-                    $_channeDetail2 = $v;
-                }
-            }
-            $renames = $_channeDetail2['channelname'].'-'.$_channeDetail['channelname'];
-        }
-        return $renames;
+    public function getFind($where=null, $field='*', $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->find();
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取列表
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getList($where=null, $field='*', $order=null, $limit=null, $join=null)
+    {
+        return $this->field($field)->where($where)->join($join)->order($order)->limit($limit)->select();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取总数
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getCount($where=null, $join=null)
+    {
+        return $this->where($where)->join($join)->count();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 添加
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function addData($data)
+    {
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
+        }else{
+            $re_id =  $this->add($data);
+            return array('code'=>0,'data'=>$re_id);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 修改
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function editData($data,$id)
+    {
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
+        }else{
+            return $this->where(array($this->_id=>$id))->save($data);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 删除
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function delData($id)
+    {
+        return $this->where(array($this->_id=>$id))->delete();
+    }
+
 }

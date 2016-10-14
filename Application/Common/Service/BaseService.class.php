@@ -6,16 +6,18 @@
 */
 namespace Common\Service;
 
-use Think\Model;
+use Common\Model\BaseModel;
 
-class BaseService extends Model {
+class BaseService extends BaseModel {
 	
 	//不检查数据库，虚拟表
-    protected $autoCheckFields = false;
+    protected $autoCheckFields = false,$system_user_id,$system_user;
 	
     //初始化
     public function _initialize() {
         parent::_initialize();
+        $this->system_user_id = session('system_user_id');
+        $this->system_user = session('system_user');
     }
 	/**
      * 开启事务
@@ -47,10 +49,15 @@ class BaseService extends Model {
        * @author zgt
       */
     protected function disposeArray($array,$order=null,$page=null,$where=null){
+        if(!empty($array['data'])){
+            $array_list = $array['data'];
+        }else{
+            $array_list = $array;
+        }
         //对缓存数据进行排序
         if(!empty($order)){
             $order = explode(' ', $order);
-            uasort($array['data'], function($a, $b) use($order) {
+            uasort($array_list, function($a, $b) use($order) {
                 $al = ($a[$order[0]]);
                 $bl = ($b[$order[0]]);
                 if($al==$bl)return 0;
@@ -58,41 +65,50 @@ class BaseService extends Model {
                 else return ($al>$bl)?-1:1;
             });
         }
-        //对缓存条件筛选 %%XXXX 模糊搜索
+        //对缓存条件筛选 XXXX 模糊搜索
         if(!empty($where)){
+            $where = array_filter($where);
             foreach($where as $k=>$v){
-                if(!empty($v)) $array['data'] = $this->disposeArray_where($array['data'] ,$k ,$v);
+                $array_list = $this->disposeArray_where($array_list ,$k ,$v);
             }
         }
-        $array['count'] = count($array['data']);
+        if(!empty($array['count'])) $array['count'] = count($array_list);
         //对缓存进行分页
         if(!empty($page)){
             //分页数据
             $page = explode(',', $page);
-            foreach($array['data'] as $k=>$v){
+            foreach($array_list as $k=>$v){
                 $department_new[] = $v;
             }
-            $array['data'] = null;
+            $array_list = null;
             foreach($department_new as $k=>$v){
                 if($k>=(($page[0]-1)*$page[1]) && $k<($page[0]*$page[1])){
-                    $array['data'][] = $v;
+                    $array_list[] = $v;
                 }
             }
         }
-
+        $array['data'] = $array_list;
         return $array;
     }
     //对缓存条件筛选
     public function disposeArray_where($array, $key, $value){
         $value_link = null;
-        if(strpos($value,'%%')!==false) {
-            $value_link = explode('%%', $value);
-        }
         foreach($array as $k=>$v){
-            if(!empty($value_link[1])){
-                if(strpos($v[$key], $value_link[1])!==false) $department_new[] = $v;
+            if(is_array($value)){
+                if(!is_array($value[1])) $value[1] = explode(',', $value[1]);
+                if(strtoupper($value[0])=='IN'){
+                    if(in_array($v[$key],$value[1])) $department_new[] = $v;
+                }elseif(strtoupper($value[0])=='NEQ'){
+                    if(!in_array($v[$key],$value[1])) $department_new[] = $v;
+                }elseif(strtoupper($value[0])=='LIKE'){
+                    if(strpos($v[$key], $value[1][0])!==false) $department_new[] = $v;
+                }
             }else{
-                if($v[$key]==$value) $department_new[] = $v;
+                if( count(explode(',', $value))>1 ){
+                    if(in_array($v[$key],explode(',', $value))) $department_new[] = $v;
+                }else{
+                    if($v[$key]==$value) $department_new[] = $v;
+                }
             }
         }
         return $department_new;

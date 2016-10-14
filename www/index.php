@@ -19,17 +19,13 @@ define('APP_DEBUG',true);
 
 // 定义应用目录
 define('APP_PATH','../Application/');
-
-//定义模板路径
-define('BASE_PATH', dirname(__FILE__));
-
-//定义模板路径
+define('LOG_PATH','../Logs/');
 define('TMPL_PATH', 'Templets/');
+define('RUNTIME_PATH','../Runtime/'); //定义编译目录
+define("BASE_PATH",dirname(__FILE__));
 
-//runtime 目录
-define('RUNTIME_PATH','../Runtime/');
-
+//@ini_set("session.cookie_domain",'zelininfo.com');
 // 引入ThinkPHP入口文件
-require '../OACore/Core.php';
+require '../Core/core.php';
 
 // 亲^_^ 后面不需要任何代码了 就是如此简单
