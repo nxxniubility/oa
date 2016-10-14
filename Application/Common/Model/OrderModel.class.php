@@ -1,7 +1,6 @@
 <?php
 namespace Common\Model;
 use Common\Model\BaseModel;
-
 class OrderModel extends BaseModel
 {
     public function _initialize(){

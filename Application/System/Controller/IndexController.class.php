@@ -141,8 +141,12 @@ class IndexController extends SystemController
         $childNodes = array();
         $i = 0;
         foreach ($sidebar as $k => $v) {
-            if ($v['name'] == CONTROLLER_NAME) $controllerName = $v['title'];
-            if ($v['display'] == 3) $newSideber[$k] = $v;
+            if ($v['name'] == CONTROLLER_NAME){
+                $controllerName = $v['title'];
+            }
+            if ($v['display'] == 3){
+                $newSideber[$k] = $v;
+            }
             unset($newSideber[$k]['children']);
             if (is_array($v['children'])) {
                 foreach ($v['children'] as $c_key => $c_value) {

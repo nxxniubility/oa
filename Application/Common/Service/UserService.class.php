@@ -25,7 +25,7 @@ class UserService extends BaseService
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getUserList($where, $order=null, $limit=null)
+    public function getList($where, $order=null, $limit=null)
     {
         //参数处理
         $where = $this->dispostWhere($where);

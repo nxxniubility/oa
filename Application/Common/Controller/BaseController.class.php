@@ -279,4 +279,25 @@ class BaseController extends Controller {
         return $client->execute($request);
     }
 
+    /**
+     * @author nxx
+     * @param unknown $maxSize 文件上传大小
+     * @param unknown $exts 文件上传类型
+     * @param unknown $rootPath 附件根目录
+     * @param unknown $savePath 附件二级目录
+     * @param unknown $subName 附件三级目录
+     */
+    public function uploadFile($exts,$rootPath,$savePath,$maxSize=10567840,$subName=array('date','Ymd')){
+        $upload = new \Think\Upload();
+        $upload->maxSize = $maxSize;// 设置附件上传大小
+        $upload->exts = $exts;// 设置附件上传类型
+        $upload->rootPath  = $rootPath;// 设置附件上传根目录
+        $upload->savePath  = $savePath;
+        $upload->subName = $subName;
+        $upLoadInfo = $upload->upload();
+
+        if(!$upLoadInfo) $this->error($upload->getError());
+        return $upLoadInfo;
+    }
+
 }

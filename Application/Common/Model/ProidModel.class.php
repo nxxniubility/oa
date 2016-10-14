@@ -1,8 +1,6 @@
 <?php
-
 namespace Common\Model;
 use Common\Model\BaseModel;
-
 class ProidModel extends BaseModel
 {
     public function _initialize(){
