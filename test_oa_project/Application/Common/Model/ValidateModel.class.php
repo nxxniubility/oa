@@ -7,7 +7,8 @@ use Think\Model;
  */
 class ValidateModel extends Model {
 
-	 public $regexArr=array(
+    public $regexArr=
+        array(
             "mobile"=>"/^13[0-9]{1}[0-9]{8}$|14[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9]{1}[0-9]{8}$|^17[0-9]{1}[0-9]{8}$/",
             "tel"=>"/^0\d{2,3}-?\d{7,8}$/",
             "mtel"=>"/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/",
@@ -16,8 +17,8 @@ class ValidateModel extends Model {
             "url"=>"/^(http(s)?:\/\/)?([\w-]+\.)+[\w-]+\.((com)|(cn)|(com\.cn)|(net)|(cc)|(xyz)|(org)|(org\.cn)|(site)|(pw)|(info)|(vip)|(xin)|(club)|(win)|(top)|(wang))(\/[\w- .\/?%&=]*)?$/",
             "chinese"=>"/[^u4E00-u9FA5]/g/",
             "special_character"=>"/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",
-             "float_int"=>"/^[0-9]*+.?+[0-9]*$/",
-             "int"=>"/^[0-9]+$/u"
+            "float_int"=>"/^[0-9]*+.?+[0-9]*$/",
+            "int"=>"/^[0-9]+$/u"
 	);
 	 /**
      * 验证手机号码

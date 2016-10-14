@@ -10,6 +10,13 @@ class SystemUserInfoModel extends BaseModel
         parent::_initialize();
     }
 
+    //自动验证
+    protected $_validate = array(
+        array('nativeplace', 'checkSpecialCharacter', array('code'=>'201','msg'=>'籍贯信息不能包含特殊字符！'), 0, 'callback'),
+        array('school', 'checkSpecialCharacter', array('code'=>'201','msg'=>'学校不能包含特殊字符！'), 0, 'callback'),
+        array('nativeplace', 'checkSpecialCharacter', array('code'=>'201','msg'=>'籍贯信息不能包含特殊字符！'), 0, 'callback'),
+    );
+
     /*
     |--------------------------------------------------------------------------
     | 获取单条记录
