@@ -3,7 +3,7 @@
 namespace Common\Model;
 use Common\Model\BaseModel;
 
-class PagesTypeModel extends BaseModel
+class PagesTypeModel extends SystemModel
 {
     public function _initialize(){
         parent::_initialize();

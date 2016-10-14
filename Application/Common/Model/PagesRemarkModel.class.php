@@ -3,7 +3,7 @@
 namespace Common\Model;
 use Common\Model\BaseModel;
 
-class PagesRemarkModel extends BaseModel
+class PagesRemarkModel extends SystemModel
 {
     public function _initialize(){
         parent::_initialize();

@@ -1,7 +1,9 @@
 <?php
+
 namespace Common\Model;
 use Common\Model\BaseModel;
-class PagesModel extends BaseModel
+
+class PagesModel extends SystemModel
 {
     public function _initialize(){
         parent::_initialize();

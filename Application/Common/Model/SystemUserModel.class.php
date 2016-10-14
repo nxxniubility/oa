@@ -11,8 +11,6 @@ class SystemUserModel extends BaseModel
 
     //自动验证
     protected $_validate = array(
-        array('username', '', array('code'=>'201','msg'=>'手机号码已存在！'), 0, 'unique'),
-        array('email', '', array('code'=>'202','msg'=>'邮箱地址已存在！'), 0, 'unique'),
         array('realname', '0,5', array('code'=>'203','msg'=>'姓名不能大于五位字符！'), 0, 'length'),
         array('username', 'checkMobile', array('code'=>'204','msg'=>'手机号码格式有误！'), 0, 'callback'),
     );
