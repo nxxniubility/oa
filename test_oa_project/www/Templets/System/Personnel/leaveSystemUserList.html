@@ -144,7 +144,7 @@
 							<td>{$v.zonename}</td>
 							<td>{$v.role_names}</td>
 							<td>{: $v['sex']==1?'男':($v['sex']==2?'女':'未知'); }</td>
-							<td>{: $v['usertype']==14?'正式员工':($v['usertype']==13?'试用期':($v['usertype']==12?'实习生':($v['usertype']==11?'兼职':'离职'))); }</td>
+							<td>{$v.usertype_name }</td>
 							<td>{: date('Y-m-d H:i:s',$v['createtime']) }</td>
 							<td>{: !empty($v['logintime'])?date('Y-m-d H:i:s',$v['logintime']):'--'; }</td>
 							<td>
@@ -168,14 +168,14 @@
 	                                                </a>
 	                                            </li>
 	                                            <li>
-	                                                <a href="{:$data['url_editSystemUserInfo'].'?user_id='.$v['system_user_id']}">
+	                                                <a href="{:U('System/Personnel/editSystemUserInfo').'?user_id='.$v['system_user_id']}">
 	                                                    <span class="fileChange"></span>
 	                                                    <em>修改档案</em>
 	                                                </a>
 	                                            </li>
 	                                        </if>
 	                                        <li>
-	                                            <a href="<?php echo $data['url_editSystemUser'].'?user_id='.$v['system_user_id']; ?>">
+	                                            <a href="<?php echo U('System/Personnel/editSystemUser').'?user_id='.$v['system_user_id']; ?>">
 	                                                <span class="modify"></span>
 	                                                <em>修改账号</em>
 	                                            </a>
@@ -202,22 +202,9 @@
                         <span>全选</span>
                         <input type="button" value="删除所选" class="delInp">
                     </div>
-                    <div class="collegaPage" id="paging"></div>
-                    <script>
-                        $(function(){
-                            //异步获取分页
-                            var data = {
-                                'type':'getCount'
-                            };
-                            common_ajax2(data, window.location.href, 'no', paging);
-                            function paging(data){
-                                $('#paging').empty();
-                                if(data.code==0){
-                                    $('#paging').html(data.data);
-                                }
-                            };
-                        });
-                    </script>
+                    <div class="collegaPage" id="paging">
+                        {$data['paging']}
+                    </div>
                 </dl>
             </div>
             
@@ -284,14 +271,14 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="{:$data['url_editSystemUserInfo'].'?user_id='.$v['system_user_id']}">
+                                                <a href="{:U('System/Personnel/editSystemUserInfo').'?user_id='.$v['system_user_id']}">
                                                     <span class="fileChange"></span>
                                                     <em>修改档案</em>
                                                 </a>
                                             </li>
                                         </if>
                                         <li>
-                                            <a href="<?php echo $data['url_editSystemUser'].'?user_id='.$v['system_user_id']; ?>">
+                                            <a href="<?php echo U('System/Personnel/editSystemUser').'?user_id='.$v['system_user_id']; ?>">
                                                 <span class="modify"></span>
                                                 <em>修改账号</em>
                                             </a>
@@ -392,7 +379,7 @@
         });
         //离职设置-前置判断
         $(document).on('click','.usertypeBtn',function(){
-            var system_user_id = $(this).parents('.wEle').siblings('.wTwo').text();
+            var system_user_id = $(this).parents('tr').children('td').eq(1).text();
             var data = {
                 system_user_id:system_user_id,
                 type:'usertype'
@@ -400,12 +387,12 @@
             layer.confirm('确定要设置离职？', {
                 btn: ['确定','取消'] //按钮
             }, function(){
-                common_ajax(data,'{$data[\'url_dispostSystemUser\']}','reload');
+                common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
             }, function(){});
         })
         //账号删除-前置判断
         $(document).on('click','.delSystemUser',function(){
-            var system_user_id = $(this).parents('.wEle').siblings('.wTwo').text();
+            var system_user_id = $(this).parents('tr').children('td').eq(1).text();
             var data = {
                 system_user_id:system_user_id,
                 type:'del'
@@ -413,7 +400,7 @@
             layer.confirm('确定要删除该账号？', {
                 btn: ['确定','取消'] //按钮
             }, function(){
-                common_ajax(data,'{$data[\'url_dispostSystemUser\']}','reload');
+                common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
             }, function(){});
         });
         $(document).on('click','.delInp',function(){
@@ -432,7 +419,7 @@
             layer.confirm('确定要批量删除选中的账号？', {
                 btn: ['确定','取消'] //按钮
             }, function(){
-                common_ajax(data,'{$data[\'url_dispostSystemUser\']}','reload');
+                common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
             }, function(){});
         });
     });

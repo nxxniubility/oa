@@ -118,7 +118,7 @@
     </div>
     <div class="z_rows clearfix">
         <span><i>*</i>渠道父级ID：</span>
-        <input type="text" class="z_inp" name="ceate_pid" value="0" autocomplete="off">
+        <input type="text" class="z_inp" name="create_pid" value="0" autocomplete="off">
     </div>
     <div class="z_rows clearfix">
         <span><i>*</i>渠道排序：</span>
@@ -183,7 +183,7 @@
     $('.create_subtn').click(function(){
         var data = {
             channelname : $(':input[name="ceate_name"]').val(),
-            pid : $(':input[name="ceate_pid"]').val(),
+            pid : $(':input[name="create_pid"]').val(),
             sort : $(':input[name="ceate_sort"]').val()
         };
         common_ajax2(data, create_channel_href, 'reload');

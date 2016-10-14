@@ -15,7 +15,7 @@
         <div class="rightsContTop clearfix">
             <div class="topTit l"><span class="masterList">职位权限管理</span></div>
             <div class="topRight r">
-                <a href="{$data['url_addPosition']}" class="addPermissions">添加职位权限</a>
+                <a href="{:U('System/Personnel/addPosition')}" class="addPermissions">添加职位权限</a>
             </div>
         </div>
         
@@ -58,7 +58,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="<?php echo $data['url_editPosition'].'?role_id='.$v['id'] ?>">
+                                        <a href="{:U('System/Personnel/editPosition',array('role_id'=>$v['id']))}">
                                             <span class="modify"></span>
                                             <em>修改</em>
                                         </a>
@@ -229,7 +229,7 @@
                 role_id:role_id,
                 type:'del'
             };
-            common_ajax(data,'{$data[\'url_dispostPosition\']}','reload');
+            common_ajax(data,"{:U('System/Personnel/dispostPosition')}",'reload');
         }, function(){});
     }
     //职位权限修改
@@ -241,7 +241,7 @@
             access:access
         };
         $.ajax({
-            url:'{$data[\'url_dispostPosition\']}',
+            url:"{:U('System/Personnel/dispostPosition')}",
             dataType:'json',
             type:'post',
             data:data,

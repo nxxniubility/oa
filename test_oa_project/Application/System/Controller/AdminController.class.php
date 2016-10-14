@@ -34,46 +34,21 @@ class AdminController extends BaseController {
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function index(){
-
+    public function index()
+    {
         if(IS_POST){
-            //实例化
-            $SystemUserModel = D('SystemUser');
-            $verify = new Verify();
             //获取参数 验证
             $request = I('post.');
             if(empty($request['username'])) $this->ajaxReturn(1, '用户名不能为空', '', 'username');
             if(empty($request['password'])) $this->ajaxReturn(1, '密码不能为空', '', 'password');
-            if(!$verify->check($request['verification'],'login')) $this->ajaxReturn(1, '验证码不正确', '', 'verification');
-            //获取登录信息
-            $systemUserMain = new SystemUserMain();
-            $result = $systemUserMain->systemLogin($request);
-            if($result['code']!=0)$this->ajaxReturn($result['code'], $result['msg'], '', (empty($result['sign'])?'':$result['sign']));
-            //保存session
-            $session_data = array(
-                'zone_id'=>$result['data']['userInfo']['zone_id'],
-                'system_user_id'=>$result['data']['userInfo']['system_user_id'],
-                'realname'=>$result['data']['userInfo']['realname'],
-                'username'=>$result['data']['userInfo']['username'],
-                'face'=>$result['data']['userInfo']['face'],
-                'email'=>$result['data']['userInfo']['email'],
-                'sex'=>$result['data']['userInfo']['sex'],
-                'usertype'=>$result['data']['userInfo']['usertype'],
-                'isuserinfo'=>$result['data']['userInfo']['isuserinfo'],
-                'logintime'=>$result['data']['userInfo']['logintime']
-            );
-            session('system_user_id',$result['data']['userInfo']['system_user_id']);
-            session('system_user',$session_data);
-            session('system_user_role',$result['data']['userRole']);
-            //登录成功
-            Rbac::saveAccessList();
-            $this->success('登录成功', 0, U('System/Index/index'));
-        }else{
-            $this->assign('verify', U('System/Admin/verify', array('type' => 'login')));
-            $this->assign('url_activation', U('System/Admin/activation'));
-            $this->assign('version',C('SYSTEM_VERSION'));
-            $this->display();
+            $result = D('SystemUser', 'Service')->login($request);
+            if($result['code']==0){
+                $this->ajaxReturn(0, '登录成功', U('System/Index/index'));
+            }
+            $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
         }
+        $this->assign('verify', U('System/Admin/verify', array('type' => 'login')));
+        $this->display();
     }
 
     /*
@@ -198,12 +173,18 @@ class AdminController extends BaseController {
 
         //参数验证
         $username =  I('post.username');
-        if(empty($username)) $this->ajaxReturn(1, '手机号不能为空', '', 'username');
+        if(empty($username)){
+            $this->ajaxReturn(1, '手机号不能为空', '', 'username');
+        }
         //数据验证
-        $userInfo = $systemUserModel->getSystemUser(array('username'=>encryptPhone($username,C('PHONE_CODE_KEY'))));
-        if (empty($userInfo)) $this->ajaxReturn(2, '该OA账号未创建,请先找人事创建账号！', '', 'username');
+        $userInfo = D('SystemUser')->getFind(array('username'=>encryptPhone($username,C('PHONE_CODE_KEY'))));
+        if (empty($userInfo)){
+            $this->ajaxReturn(2, '该OA账号未创建,请先找人事创建账号！', '', 'username');
+        }
         if($smsType=='activate'){
-            if (!empty($userInfo['password'])) $this->ajaxReturn(1, '该OA账号已激活！');
+            if (!empty($userInfo['password'])){
+                $this->ajaxReturn(3, '该OA账号已激活！');
+            }
         }
         $smsData = array(
             'code' => $strNum,
@@ -212,12 +193,12 @@ class AdminController extends BaseController {
         //阿里大鱼短信模板
         $smspages = C('ALDAYUSMSPAGES');
         //发送短信验证码
-        $result =  $this->sms($username, $username, $smsData, $smspages[$smsType], '身份验证');
+        $result = $this->sms($username, $username, $smsData, $smspages[$smsType], '身份验证');
         if($result->code==0){
             session('smsVerifyCode_'.$smsType, $strNum);
             $this->ajaxReturn(0, '已经发送验证码,请查收','','smsverify');
         }else{
-            $this->ajaxReturn(1, '发送验证码失败');
+            $this->ajaxReturn(4, '发送验证码失败');
         }
     }
     

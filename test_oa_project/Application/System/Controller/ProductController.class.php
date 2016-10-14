@@ -21,12 +21,18 @@ class ProductController extends SystemController
     */
     public function courseProductList()
     {
-        //获取数据
-        $courseProductController = new CourseProductController();
-        $list = $courseProductController->getList();
-        $data['list'] = $list['data'];
+        //获取参数 页码
+        $request = I('get.');
+        $where['usertype'] = 10;
+        $re_page = isset($request['page'])?$request['page']:1;
+        $_param['page'] = $re_page.',30';
+        $list = D('Course', 'Service')->getCourseProductList($_param);
+        $data['list'] = $list['data']['data'];
         //获取平台
-        $data['proList'] =  C('PRODUCT_PROJECT');
+        $data['proList'] = C('FIELD_STATUS.USER_LEARNINGTYPE');
+        //加载分页类
+        $paging_data = $this->Paging($re_page, 30, $list['data']['count'], $request);
+        $data['paging'] = $paging_data;
         //模版赋值
         $this->assign('data', $data);
         $this->display();
@@ -39,24 +45,9 @@ class ProductController extends SystemController
     public function createCourseProduct()
     {
         //获取数据
-        $data = I("post.");
-        $data['productname'] = str_replace(' ','',$data['productname']);
-        if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$data['productname'])){
-            $this->ajaxReturn(1,'产品名称不能包含特殊字符');
-        }
-        if (empty($data['productname'])) {
-            $this->ajaxReturn(2,'产品名称不能为空');
-        }
-        if($data['price'] == 0){
-            $this->ajaxReturn(3,"金额不能为零");
-        }
-        if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(4,'请选择产品类型');
-        // if (empty(trim($data['description']))) {
-        //     $this->ajaxReturn(2,'产品描述不能为空格?');
-        // }
-        //执行操作
-        $courseProductController = new CourseProductController();
-        $reflag = $courseProductController->cerate_courseProduct($data);
+        $_param = I("post.");
+        $_param['productname'] = trim($_param['productname']);
+        $reflag = D('Course', 'Service')->addCourseProduct($_param);
         if($reflag['code']==0){
             $this->ajaxReturn('0', '产品添加成功');
         }
@@ -70,21 +61,10 @@ class ProductController extends SystemController
     public function editCourseProduct()
     {
         //获取数据
-        $data = I("post.");
-        $data['productname'] = str_replace(' ','',$data['productname']);
-        if (!$data['productname']) {
-            $this->ajaxReturn(1,'产品名称不为空');
-        }
-        if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$data['productname'])){
-            $this->ajaxReturn(2,'不能包含特殊字符');
-        }
-        if($data['price'] == 0){
-            $this->ajaxReturn(3,"金额不能为零");
-        }
-        if(empty($data['productplatform']) || $data['productplatform']==0) $this->ajaxReturn(5,'请选择产品类型');
+        $_param = I("post.");
+        $_param['productname'] = trim($_param['productname']);
         //执行操作
-        $courseProductController = new CourseProductController();
-        $reflag = $courseProductController->edit_courseProduct($data);
+        $reflag = D('Course', 'Service')->editCourseProduct($_param);
         if($reflag['code']==0){
             $this->ajaxReturn('0', '产品修改成功');
         }

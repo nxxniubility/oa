@@ -16,7 +16,7 @@
 						<span class="masterList">员工列表</span>
 					</div>
 					<div class="topRight r">
-						<a href="{$data['url_addSystemUser']}" class="newEmployees">新增员工</a>
+						<a href="{:U('System/Personnel/addSystemUser')}" class="newEmployees">新增员工</a>
 						<a href="javascript:;" class="return Offline" data-id="">强制员工离线</a>
 					</div>
 				</div>
@@ -95,8 +95,8 @@
 										<div class="arrow r"></div>
 									</dt>
 									<dd class="fxDone" data-value="0" data-name="usertype">全部员工状态</dd>
-									<foreach name="data['systemUserStatus']" item="v">
-										<dd class="fxDone" data-value="{$v.num}" data-name="usertype">{$v.text}</dd>
+									<foreach name="data['systemUserStatus']" item="v" key="k">
+										<dd class="fxDone" data-value="{$k}" data-name="usertype">{$v}</dd>
 									</foreach>
 								</dl>
 								<input type="hidden" name="usertype" value="<?php echo !empty($data['requery']['usertype'])?$data['requery']['usertype']:0; ?>">
@@ -157,7 +157,7 @@
 									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{$v.zonename}</td>
 									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{$v.role_names}</td>
 									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{:$v['sex']==1?'男':($v['sex']==2?'女':'未知')}</td>
-									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{:$data['systemUserStatus'][$v['usertype']]['text']}</td>
+									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{:$v['usertype_name']}</td>
 									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{:date('Y-m-d H:i:s',$v['createtime'])}</td>
 									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{:!empty($v['logintime'])?date('Y-m-d H:i:s',$v['logintime']):'--'}</td>
 									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>
@@ -175,13 +175,13 @@
 														</li>
 													<else />
 														<li>
-															<a href="{:$data['url_systemUserInfo'].'?user_id='.$v['system_user_id']}">
+															<a href="{:U('System/Personnel/systemUserInfo').'?user_id='.$v['system_user_id']}">
 																<span class="fileDetail"></span>
 																<em>档案详情</em>
 															</a>
 														</li>
 														<li>
-															<a href="{:$data['url_editSystemUserInfo'].'?user_id='.$v['system_user_id']}">
+															<a href="{:U('System/Personnel/editSystemUserInfo').'?user_id='.$v['system_user_id']}">
 																<span class="fileChange"></span>
 																<em>修改档案</em>
 															</a>
@@ -212,7 +212,7 @@
 						                                </a>
 					                                </li>
 					                                <li>
-					                                	<a href="<?php echo $data['url_editSystemUser'].'?user_id='.$v['system_user_id']; ?>">
+					                                	<a href="<?php echo U('System/Personnel/editSystemUser').'?user_id='.$v['system_user_id']; ?>">
 						                                    <span class="modify"></span>
 						                                    <em>修改账号</em>
 						                                </a>    
@@ -240,20 +240,8 @@
 								<input type="button" value="删除所选" class="delInp">
 							</div>
 							<div class="collegaPage" id="paging">
-				                <!--{$data['paging']} -->
+				                {$data['paging']}
 							</div>
-							<script>
-								$(function(){
-									//异步获取分页
-									var data = {
-										'type':'getCount'
-									};
-									common_ajax2(data, window.location.href, 'no', paging);
-									function paging(data){
-										$('#paging').html(data.data);
-									};
-								});
-							</script>
 						</dl>
 					</div>
 					
@@ -311,13 +299,13 @@
 												</li>
 											<else />
 												<li>
-													<a href="{:$data['url_systemUserInfo'].'?user_id='.$v['system_user_id']}">
+													<a href="{:U('System/Personnel/systemUserInfo').'?user_id='.$v['system_user_id']}">
 														<span class="fileDetail"></span>
 														<em>档案详情</em>
 													</a>
 												</li>
 												<li>
-													<a href="{:$data['url_editSystemUserInfo'].'?user_id='.$v['system_user_id']}">
+													<a href="{:U('System/Personnel/editSystemUser').'?user_id='.$v['system_user_id']}">
 														<span class="fileChange"></span>
 														<em>修改档案</em>
 													</a>
@@ -475,7 +463,7 @@
 					layer.confirm('确定要设置离职？如该员工拥有客户，将被全部回库！', {
 						btn: ['确定','取消'] //按钮
 					}, function(){
-						common_ajax(data,'{$data[\'url_dispostSystemUser\']}','reload');
+						common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
 					}, function(){});
 				})
 				//账号删除
@@ -488,7 +476,7 @@
 					layer.confirm('确定要删除该账号？', {
 						btn: ['确定','取消'] //按钮
 					}, function(){
-						common_ajax(data,'{$data[\'url_dispostSystemUser\']}','reload');
+						common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
 					}, function(){});
 				});
 				//账号批量删除
@@ -508,7 +496,7 @@
 					layer.confirm('确定要批量删除选中的账号？', {
 						btn: ['确定','取消'] //按钮
 					}, function(){
-						common_ajax(data,'{$data[\'url_dispostSystemUser\']}','reload');
+						common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
 					}, function(){});
 				});
 			});
@@ -546,7 +534,7 @@
 					btn: ['确定','取消'] //按钮
 				}, function(){
 					$.ajax({
-						url:'{$data[\'url_dispostSystemUser\']}',
+						url:"{:U('System/Personnel/dispostSystemUser')}",
 						dataType:'json',
 						type:'post',
 						data:{userKey:userKey,type:'call'},

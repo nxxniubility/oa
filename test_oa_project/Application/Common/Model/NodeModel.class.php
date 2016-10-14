@@ -1,117 +1,100 @@
 <?php
-/*
-|--------------------------------------------------------------------------
-| 节点模型
-|--------------------------------------------------------------------------
-| createtime：2016-04-11
-| updatetime：2016-04-12
-| updatename：zgt
-*/
+
 namespace Common\Model;
+use Common\Model\BaseModel;
 
-use Common\Model\SystemModel;
-
-class NodeModel extends SystemModel
+class NodeModel extends BaseModel
 {
+    protected $_id='id';
+    public function _initialize(){
+        parent::_initialize();
+    }
 
-    protected $nodeDb;
+    //自动验证
+    protected $_validate = array(
+        array('name', 'checkSpecialCharacter', array('code'=>'201','msg'=>'方法名称不能含有特殊字符！'), 0, 'callback'),
+        array('name', '0,20', array('code'=>'202','msg'=>'方法名称不能大于20字符！'), 0, 'length'),
+        array('title', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
+    );
 
-    public function _initialize()
+    /*
+    |--------------------------------------------------------------------------
+    | 获取单条记录
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getFind($where=null, $field='*', $join=null)
     {
+        return $this->field($field)->where($where)->join($join)->find();
     }
 
     /*
-     * 获取所有节点内容-缓存
-     * @author zgt
-     * @return array
-     */
-    public function getAllNode($where = '', $field = '*', $order = 'sort ASC', $join = null)
+    |--------------------------------------------------------------------------
+    | 获取列表
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getList($where=null, $field='*', $order=null, $limit=null, $join=null)
     {
-        if (F('Cache/node/node')) {
-            $nodeAll = F('Cache/node/node');
-        } else {
-            $nodeAll = $this->where($where)->field($field)->join($join)->order($order)->select();
-            //数组分级
-            $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
-            $nodeAll = $Arrayhelps->createTree($nodeAll, 0, 'id', 'pid');
-            F('Cache/node/node', $nodeAll);
-        }
-        return $nodeAll;
+        return $this->field($field)->where($where)->join($join)->order($order)->limit($limit)->select();
     }
 
-    /**
-     * 获取所有节点内容
-     * @author zgt
-     * @return array
-     */
-    public function getAllNode2($where = '', $field = '*', $order = 'sort ASC', $join = null)
-    {
-        $nodeAll = $this->where(array('id'=>$this->id))->field($field)->join($join)->order($order)->select();
 
-        return $nodeAll;
+    /*
+    |--------------------------------------------------------------------------
+    | 获取总数
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getCount($where=null, $join=null)
+    {
+        return $this->where($where)->join($join)->count();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 添加
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function addData($data)
+    {
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
+        }else{
+            $re_id =  $this->add($data);
+            return array('code'=>0,'data'=>$re_id);
+        }
     }
 
     /*
-     * 返回html 多级复选内容
-     * @author zgt
-     * @return array
-     */
-    public function getAllNodeHtml()
+    |--------------------------------------------------------------------------
+    | 修改
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function editData($data,$id)
     {
-        if (F('Cache/node/node')) {
-            $nodeAll = F('Cache/node/node');
-        } else {
-            $nodeAll = $this->getAllNode();
+        // 如果创建失败 表示验证没有通过 输出错误提示信息
+        if (!$this->create($data)){
+            return $this->getError();
+        }else{
+            $re_flag =  $this->where(array($this->_id=>$id))->save($data);
+            return array('code'=>0,'data'=>$re_flag);
         }
-        $nodeAll_html = '';
-        foreach ($nodeAll as $k => $v) {
-            $nodeAll_html .=
-                "<tr id='node-{$v['id']}' class=' collapsed '>
-                    <td style='padding-left: 30px;'>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<input type='checkbox' name='node_id[]' value='{$v['id']}' pid='0' level='0' class='radio radio-node-{$v['id']}'  onclick='javascript:checknode(this);' autocomplete='off'> {$v['title']} ({$v['name']})</td>
-                </tr>";
-            if (!empty($v['children'])) {
-                foreach ($v['children'] as $k2 => $v2) {
-                    $nodeAll_html .=
-                        "<tr id='node-{$v2['id']}' class='tr lt child-of-node-{$v2['pid']}  collapsed ui-helper-hidden'>
-                            <td style='padding-left: 49px;'>
-                                &nbsp;&nbsp;&nbsp;&nbsp;├─
-                                <input type='checkbox' name='node_id[]' value='{$v2['id']}' class='radio radio-node-{$v2['id']}' pid='{$v2['pid']}' level='1'  onclick='javascript:checknode(this);' autocomplete='off'> {$v2['title']} ({$v2['name']})</td>
-                        </tr>";
-                    if (!empty($v2['children'])) {
-                        foreach ($v2['children'] as $k3 => $v3) {
-                            $nodeAll_html .=
-                                "<tr id='node-{$v3['id']}' class='tr lt child-of-node-{$v3['pid']} ui-helper-hidden'>
-                                    <td style='padding-left: 68px;'>&nbsp;&nbsp;&nbsp;&nbsp;│ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─
-                                        <input type='checkbox' name='node_id[]' value='{$v3['id']}' class='radio radio-node-{$v3['id']}' pid='{$v3['pid']}' level='2'  onclick='javascript:checknode(this);' autocomplete='off'> {$v3['title']} ({$v3['name']})</td>
-                                </tr>";
-                            if (!empty($v3['children'])) {
-                                foreach ($v3['children'] as $k4 => $v4) {
-                                    $nodeAll_html .=
-                                        "<tr id='node-{$v4['id']}' class='tr lt child-of-node-{$v4['pid']} ui-helper-hidden'>
-                                            <td style='padding-left: 68px;'>&nbsp;&nbsp;&nbsp;&nbsp;│ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─
-                                                <input type='checkbox' name='node_id[]' value='{$v4['id']}' class='radio radio-node-{$v4['id']}' pid='{$v4['pid']}' level='3'  onclick='javascript:checknode(this);' autocomplete='off'> {$v4['title']} ({$v4['name']})</td>
-                                        </tr>";
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return $nodeAll_html;
     }
 
-    /**
-     * 获取指定id 和 字段的节点信息
-     * @param $id
-     * @param string $field
-     * @return mixed
-     */
-    public  function  getNodeInfo($id, $field="*"){
-
-         $parentData = $this->where("id=".$id)->field($field)->select();
-         return $parentData;
+    /*
+    |--------------------------------------------------------------------------
+    | 删除
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function delData($id)
+    {
+        return $this->where(array($this->_id=>$id))->delete();
     }
 
 }

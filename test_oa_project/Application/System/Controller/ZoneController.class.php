@@ -14,12 +14,11 @@ class ZoneController extends SystemController {
     protected $zoneDb;
     public function _initialize(){
         parent::_initialize();
-        $this->zoneDb = D("Common/zone");
     }
 
     /*
-	添加区域
-    @author Nixx
+	  | 添加区域
+    | @author Nixx
 	*/
     public function addZone()
     {
@@ -35,31 +34,21 @@ class ZoneController extends SystemController {
             $zone['tel'] = I('post.tel');
             $zone['abstract'] = I('post.abstract');
             $zone['address'] = I('post.address');
-            $zone['addusr'] = $this->system_user_id;
-            if(empty($zone['name'])) $this->ajaxReturn(1,'请选择区域名称', '', 'name');
-            if(empty($zone['parentid'])) $this->ajaxReturn(2,'请选择所属区域', '', '');
-            $parentZone = $this->zoneDb->where("zone_id = $zone[parentid] and status=1")->find();
-            $zone['level']  = $parentZone['level']+1;
-            $zList = D("zone")->where("level = $zone[level] and status=1")->select();
-            foreach ($zList as $key => $zoneInfo) {
-                if ($zoneInfo['name'] == $zone['name']) {
-                    $this->ajaxReturn(3,'该区域已被创建，请重新选择父级区域或创建别的区域');
-                }
+            $result = D('Zone', 'Service')->createZone($zone);
+            if ($result['code'] == 0) {
+                $this->ajaxReturn(0, $result['msg'], U('System/Zone/zoneList'));
+            }else{
+                $this->ajaxReturn($result['code'], $result['msg']);
             }
-            $result = $this->zoneDb->createZone($zone);
-            if($result=== false){
-                $this->ajaxReturn(4,'创建失败');
-            }
-            $this->success('创建成功', 0, U('System/Zone/zoneList')); 
         }
         if ($zone_id) {
-            $zone = $this->zoneDb->getZone($zone_id);        
+            $zone = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone_id));
         }else{
-            $zoneList = $this->zoneDb->getZoneList();
+            $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>0));
         }
-        $this->assign('zone', $zone);             
-        $this->assign('zoneList', $zoneList);
-        $this->display();   	
+        $this->assign('zone', $zone['data']);
+        $this->assign('zoneList', $zoneList['data']);
+        $this->display();
     }
 
     /*
@@ -70,38 +59,34 @@ class ZoneController extends SystemController {
     {
         $zone['zone_id'] = I('get.zone_id');
         $zone_id = $zone['zone_id'];
-        if(IS_POST) {           
+        if(IS_POST) {
             $zone['name'] = I('post.name');
             $zone['email'] = I('post.email');
             $zone['tel'] = I('post.tel');
             $zone['abstract'] = I('post.abstract');
             $zone['address'] = I('post.address');
             $zone['parentid'] = I("post.zone_id");
-            $zone['addusr'] = $this->system_user_id;
-            if(empty($zone['name'])) $this->ajaxReturn(1,'请选择区域名称', '', 'name');
-            if(empty($zone['parentid'])) $this->ajaxReturn(2,'请选择所属区域', '', '');
-            
-            $zone_id = $this->zoneDb->editZone($zone);
-            if(!$zone_id){
-                $this->ajaxReturn(1,'修改失败');
+            $result = D('Zone', 'Service')->editZone($zone, $zone_id);
+            if($result['code'] != 0){
+                $this->ajaxReturn($result['code'],$result['msg']);
             }
-            $this->success('修改成功', 0, U('System/Zone/zoneList')); 
+            $this->ajaxReturn(0, $result['msg'], U('System/Zone/zoneList'));
         }
         if ($zone['zone_id'] == 1) {
-            $zoneList = $this->zoneDb->getZone($zone['zone_id']);
-            $zoneList['mark'] = 1;
+            $zoneList = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone_id));
+            $zoneList['data']['mark'] = 1;
         }else{
-            $zoneList = $this->zoneDb->getPidZone($zone['zone_id']);         
+            $zoneList = D('Zone', 'Service')->getPidZone(array('zone_id'=>$zone_id));
         }
-        $zone = D("Zone")->getZone($zone_id);
-        $this->assign("zone", $zone);
+        $zone = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone_id));
+        $this->assign("zone", $zone['data']);
         $this->assign('zone_id', $zone_id);
-        $this->assign('zoneList', $zoneList);
+        $this->assign('zoneList', $zoneList['data']);
         $this->display();
-      
+
     }
 
-     /*
+    /*
     添加中心
     @author Nixx
     */
@@ -119,45 +104,26 @@ class ZoneController extends SystemController {
             $zone['tel'] = I('post.tel');
             $zone['abstract'] = I('post.abstract');
             $zone['address'] = I('post.address');
-            $zone['addusr'] = $this->system_user_id;
-            //中心标记 - 10 ，
+            //中心标记 - 10
             $zone['centersign'] = 10;
             $zone['level'] = 4;
-            if(!$zone['parentid']){
-                $this->ajaxReturn(1,'请选择父级区域', '');
+            $result = D('Zone', 'Service')->createZone($zone);
+            if($result['code'] != 0 ){
+                $this->ajaxReturn($result['code'],$result['msg']);
             }
-            if(empty($zone['name'])){
-                $this->ajaxReturn(1,'请输入中心名称', '', 'name');
-            } 
-            if(empty($zone['parentid'])){
-                $this->ajaxReturn(2,'请选择所属区域', '', '');
-            }  
-            if(empty($zone['address'])){
-                $this->ajaxReturn(4,'请输入中心地址', '', 'address');
-            }
-            if(empty($zone['tel'])){
-                $this->ajaxReturn(5,'请输入中心电话', '', 'tel');
-            }
-            if(empty($zone['email'])){
-                $this->ajaxReturn(6,'请输入中心联系邮箱', '', 'email');
-            }       
-            $zone_id = $this->zoneDb->createZone($zone);
-            if(!$zone_id){
-                $this->ajaxReturn(7,'创建失败');
-            }
-            $this->success('创建成功', 0, U('System/Zone/zoneList'));   
+            $this->ajaxReturn(0, $result['msg'], U('System/Zone/zoneList'));
         }
         if ($zone_id) {
-            $zone = $this->zoneDb->getZone($zone_id);        
+            $zone = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone_id));
         }else{
-            $zoneList = $this->zoneDb->getZoneList();
+            $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>0));
         }
-       
-        $this->assign('zone', $zone);      
-        $this->assign('zoneList', $zoneList);
+
+        $this->assign('zone', $zone['data']);
+        $this->assign('zoneList', $zoneList['data']);
         $this->display();
-        
-                        
+
+
     }
 
     /*
@@ -166,7 +132,6 @@ class ZoneController extends SystemController {
     */
     public function editCenter()
     {
-
         $zone['zone_id'] = I('get.zone_id');
         $zone_id = $zone['zone_id'];
         if(IS_POST){
@@ -178,23 +143,23 @@ class ZoneController extends SystemController {
             $zone['addusr'] = $this->system_user_id;
             if(empty($zone['name'])){
                 $this->ajaxReturn(1,'请输入中心名称', '', 'name');
-            } 
+            }
             if(empty($zone['parentid'])){
                 $this->ajaxReturn(2,'请选择所属区域', '', '');
             }
-            $zone_id = $this->zoneDb->editZone($zone);
+            $zone_id = D('Zone', 'Service')->editZone($zone);
             if(!$zone_id){
                 $this->ajaxReturn(3,'修改失败');
             }
-            $this->success('修改成功', 0, U('System/Zone/zoneList'));   
+            $this->success('修改成功', 0, U('System/Zone/zoneList'));
         }
 
-        $zoneList = $this->zoneDb->getZoneList($zone['zone_id']); 
-        $this->assign('zone_id', $zone_id);            
-        $this->assign('zoneList', $zoneList);
+        $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone_id));
+        $this->assign('zone_id', $zone_id);
+        $this->assign('zoneList', $zoneList['data']);
 
         $this->display();
-                        
+
     }
 
 
@@ -204,12 +169,12 @@ class ZoneController extends SystemController {
     */
     public function getZoneInfo()
     {
-        $zone_id = I("post.zone_id",0);
-        $zone = $this->zoneDb->getZone($zone_id);           
+        $where['zone_id'] = I("post.zone_id");
+        $zone = D('Zone', 'Service')->getZoneInfo($where);
         if ($zone === false) {
             $this->ajaxReturn(1,'没有可供管理的区域');
         }
-        $this->assign('zone', $zone);
+        $this->assign('zone', $zone['data']);
 
     }
 
@@ -220,13 +185,11 @@ class ZoneController extends SystemController {
     public function zoneInfoList()
     {
         $zone_id = I("post.zone_id");
-       
-        $zoneList = $this->zoneDb->getZoneList($zone_id);               
-        
-        if ($zoneList === false) {
-            $this->ajaxReturn(1,'没有可供管理的区域');
+        $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone_id));
+        if (!empty($zoneList['children'])) {
+            $this->ajaxReturn(1,'当前区域没有城市,请先添加城市');
         }
-        $this->ajaxReturn(0,'',$zoneList);
+        $this->ajaxReturn(0,'',$zoneList['data']);
     }
 
     /*
@@ -235,34 +198,32 @@ class ZoneController extends SystemController {
     */
     public function zoneList()
     {
-    	$zone_id = 1;//超级管理员  
-    	$zoneList = $this->zoneDb->getZoneList($zone_id); 
-
-        if ($zoneList === false) {
+    	$zone_id = 1;//超级管理员
+    	$zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone_id));
+        if ($zoneList['data'] === false) {
             $this->ajaxReturn(1,'没有可供管理的区域');
         }
-        $this->assign('zoneList', $zoneList);
+        $this->assign('zoneList', $zoneList['data']);
         $this->assign('urlDelZone', U("System/Zone/delZone"));
-
         $this->display();
     }
 
     /*
-    删除区域信息 - 删除的同时是否删除此区域下的所有员工信息？？？？？待定！！
+    删除区域信息
     @author Nixx
     */
     public function delZone()
     {
         $zone_id = I("post.zone_id");
-        $zone = $this->zoneDb->getZone($zone_id);
-        $level = $zone['level'];
-        $backInfo = $this->zoneDb->deleteZoneList($zone_id,$level);
-        if ($backInfo !== false) {
-            $this->success('删除成功', 0, U('System/Zone/zoneList'));
+        $zone = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone_id));
+        $level = $zone['data']['level'];
+        $backInfo = D('Zone', 'Service')->deleteZone($zone_id,$level);
+        if ($backInfo['code'] != 0) {
+            $this->ajaxReturn(1,'删除失败');
         }
-        $this->ajaxReturn(1,'删除失败');
+        $this->ajaxReturn(0, '删除成功', U('System/Zone/zoneList'));
     }
-    
+
 
     // public function promoteToPromote()
     // {
@@ -276,7 +237,7 @@ class ZoneController extends SystemController {
 
     // print_r($nodeAll);
     // dump($a);
-        
+
     // }
 
 }
