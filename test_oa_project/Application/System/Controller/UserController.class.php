@@ -42,7 +42,7 @@ class UserController extends SystemController
             }
         }
         //客户列表
-        $re_userAll = D('User','Service')->getUserList($where, $order, (($re_page-1)*30).',30');
+        $re_userAll = D('User','Service')->getList($where, $order, (($re_page-1)*30).',30');
         $data['userAll'] = $re_userAll['data']['data'];
         //加载分页类
         $data['paging_data'] = $this->Paging($re_page, 30, $re_userAll['data']['count'], $request, __ACTION__, null, 'system');
@@ -645,7 +645,7 @@ class UserController extends SystemController
             }
         }
         //客户列表
-        $re_userAll = D('User','Service')->getUserList($where, $order, (($re_page-1)*30).',30');
+        $re_userAll = D('User','Service')->getList($where, $order, (($re_page-1)*30).',30');
         $data['userAll'] = $re_userAll['data']['data'];
         //加载分页类
         $data['paging_data'] = $this->Paging($re_page, 30, $re_userAll['data']['count'], $request, __ACTION__, null, 'system');

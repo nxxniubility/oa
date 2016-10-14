@@ -585,26 +585,63 @@ class PersonnelController extends SystemController {
             //获取参数 验证
             $request = I('post.');
             $request['system_user_id'] = $system_user_id;
-            //数据操作
-            $flag = D('SystemUser','Service')->editSystemUserInfo($request);
-            if($flag['code']==0) $this->ajaxReturn(0, '员工档案修改成功', U('System/Personnel/systemUserList'));
-            else $this->ajaxReturn($flag['code'], $flag['msg']);
-        }
-        //获取员工信息
-        $systemUserInfo = D('SystemUser','Service')->getSystemUserInfo(array('system_user_id'=>$system_user_id));
-        $data['SystemUserInfo'] = $systemUserInfo['data'];
-        //员工状态
-        $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
-        foreach($data['systemUserStatus'] as $k=>$v){
-            if($v['text']=='离职'){
-                unset($data['systemUserStatus'][$k]);
+            if(empty($system_user_id)) $this->ajaxReturn(1, '非法操作');
+            if(empty($request['birthday'])) $this->ajaxReturn(1, '生日不能为空', '', 'birthday');
+            if(empty($request['nativeplace'])) $this->ajaxReturn(1, '籍贯不能为空', '', 'nativeplace');
+            if(empty($request['education_id'])) $this->ajaxReturn(1, '学历不能为空');
+            if(empty($request['school'])) $this->ajaxReturn(1, '毕业学校不能为空', '', 'school');
+            if(empty($request['plivatemail'])) $this->ajaxReturn(1, '个人邮箱不能为空', '', 'plivatemail');
+            if(empty($request['usertype'])) $this->ajaxReturn(1, '用户状态不能为空');
+            if(empty($request['entrytime'])) $this->ajaxReturn(1, '开始时间', '', 'entrytime');
+            if(empty($request['straightime'])) $this->ajaxReturn(1, '结束时间', '', 'straightime');
+            if(empty($request['check_id'])) $this->ajaxReturn(1, '指纹编号不能为空', '', 'check_id');
+            $request['birthday'] = strtotime($request['birthday']);
+            $request['entrytime'] = strtotime($request['entrytime']);
+            $request['straightime'] = strtotime($request['straightime']);
+            if ($request['entrytime'] > $request['straightime']) {
+                $this->ajaxReturn(2, '转正时间不能早于入职时间', '', '');
             }
+            if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['nativeplace'])){
+                $this->ajaxReturn(1,'籍贯信息不能包含特殊字符');
+            }
+            if(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['school'])){
+                $this->ajaxReturn(1,'学校不能包含特殊字符');
+            }
+            //数据操作
+            $flag = D('System','Service')->editInfo($request);
+            if($flag['code']==0) $this->ajaxReturn(0, '员工档案修改成功', U('System/Personnel/systemUserList'));
+            else $this->ajaxReturn(1, '数据操作失败');
+        }else{
+            //获取员工信息
+            $systemUserInfo = D('System','Service')->getInfo($system_user_id);
+            if(!empty($systemUserInfo['data']['user_roles'])){
+                foreach($systemUserInfo['data']['user_roles'] as $k=>$v){
+                    $data['is_roles'][] = $v['role_id'];
+                    if($k==0) $data['roles'] .= $v['role_id'];
+                    else $data['roles'] .= ','.$v['role_id'];
+                }
+            }
+            $data['systemUserInfo'] = $systemUserInfo['data'];
+            //学历
+            $educationMain = new EducationController();
+            if ($data['systemUserInfo']['education_id']) {
+                $edu = $educationMain->getInfo($data['systemUserInfo']['education_id']);
+                $data['systemUserInfo']['educationname'] = $edu['data'];
+            }
+            //员工状态
+            $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
+            foreach($data['systemUserStatus'] as $k=>$v){
+                if($v['text']=='离职'){
+                    unset($data['systemUserStatus'][$k]);
+                }
+            }
+            //获取学历表
+            $res = $educationMain->getlist();
+            $data['educationAll'] = $res['data'];
+            $data['url_systemUser'] = U('System/Personnel/systemUserList');
+            $this->assign('data', $data);
+            $this->display();
         }
-        //获取学历表
-        $data['educationAll'] = C('FIELD_STATUS.EDUCATION_ARRAY');
-        $data['url_systemUser'] = U('System/Personnel/systemUserList');
-        $this->assign('data', $data);
-        $this->display();
     }
 
     /**
@@ -614,11 +651,19 @@ class PersonnelController extends SystemController {
     public function systemUserInfo(){
         //获取被查看用户ID
         $system_user_id = I('get.user_id',null);
-        //获取员工信息
-        $systemUserInfo = D('SystemUser','Service')->getSystemUserInfo(array('system_user_id'=>$system_user_id));
+        $systemUserInfo = D('System','Service')->getInfo($system_user_id);
+        if(!empty($systemUserInfo['data']['user_roles'])){
+            foreach($systemUserInfo['data']['user_roles'] as $k=>$v){
+                $data['is_roles'][] = $v['role_id'];
+                if($k==0) $data['roles'] .= $v['role_id'];
+                else $data['roles'] .= ','.$v['role_id'];
+            }
+        }
         $data['systemUserInfo'] = $systemUserInfo['data'];
         //获取学历表
-        $data['educationAll'] = C('FIELD_STATUS.EDUCATION_ARRAY');
+        $educationMain = new EducationController();
+        $educationList = $educationMain->getList();
+        $data['educationAll'] = $educationList['data'];
         //员工状态
         $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
         foreach($data['systemUserStatus'] as $k=>$v){
