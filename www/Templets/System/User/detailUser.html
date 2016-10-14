@@ -57,7 +57,7 @@
                     <if condition="!empty($access_list['CREATEORDER'])">
                         <a href="javascript:;" class="return btn_reserve">创建订单</a>
                     </if>
-                <elseif condition="($data['userInfo']['status']==160 && ($data['userInfo']['system_user_id'] == $userinfo['system_user_id']))" />
+                <elseif condition="($data['userInfo']['status']==160 && empty($data['isSelf']))" />
                     <if condition="!empty($access_list['REDEEMUSER'])">
                         <a href="javascript:;" class="return mr10 btn_recover">赎回客户</a>
                     </if>
@@ -78,12 +78,12 @@
                 <div class="cur">系统信息</div>
                 <div>个人信息</div>
                 <if condition="($data['userInfo']['status']==20 || $data['userInfo']['status']==30)">
-                    <div>回访记录</div>
+                    <div>跟进记录</div>
                     <div class="dn">缴费信息</div>
                     <div>短信记录</div>
                     <div>通话记录</div>
                 <else/>
-                    <div>回访记录</div>
+                    <div>跟进记录</div>
                     <div>缴费信息</div>
                     <div>短信记录</div>
                     <div>通话记录</div>
@@ -595,7 +595,7 @@
                 </div>
             </div>
             <!--  个人信息 end-->
-            <!-- 回访记录 start -->
+            <!-- 跟进记录 start -->
             <div class="content">
                 <div class="listRight">
                     <if condition="(!empty($data['isSelf']))">

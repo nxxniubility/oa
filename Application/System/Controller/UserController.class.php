@@ -183,7 +183,7 @@ class UserController extends SystemController
         $data['userInfo'] = $userInfo['data'];
         if ($data['userInfo']['status'] != 160 && $data['userInfo']['system_user_id'] == $this->system_user_id) $data['isSelf'] = 1;
         //回访记录
-        $callbackList = D('User','Service')->getUserCallback(array('user_id'=>$user_id,'callbackType'=>$callbackType));
+        $callbackList = D('User','Service')->getUserCallback(array('user_id'=>$user_id,'rank'=>$callbackType));
         $data['callbackList'] = $callbackList['data'];
         //通话记录
         $call_List = D('User','Service')->getCallList(array('user_id'=>$user_id,'system_user_id'=>$this->system_user_id,'rank'=>$callbackType));
@@ -404,9 +404,7 @@ class UserController extends SystemController
         $data['user_id'] = $request['user_id'];
         $data['attitude_id'] = $request['abandon_attitude_id'];
         $data['remark'] = $request['abandon_remark'];
-        $data['system_user_id'] = $this->system_user_id;
-        $ApiUser = new ApiUser();
-        $reflag = $ApiUser->abandonUser($data);
+        $reflag = D('User', 'Service')->abandonUser($data);
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -724,9 +722,7 @@ class UserController extends SystemController
         $data['user_id'] = $request['user_id'];
         $data['attitude_id'] =0;
         $data['remark'] = $request['abandon_remark'];
-        $data['system_user_id'] = $this->system_user_id;
-        $ApiUser = new ApiUser();
-        $reflag = $ApiUser->abandonUserManage($data, 2);
+        $reflag = D('User', 'Service')->abandonUser($data, 2);
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');

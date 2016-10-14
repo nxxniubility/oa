@@ -154,38 +154,6 @@ class UserService extends BaseService
         }
         return array('code'=>'0', 'data'=>$result);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 获取回访记录
-    |--------------------------------------------------------------------------
-    | user_id system_user_id $rank：操作等级（1：普通员工，2：主管）
-    | @author zgt
-    */
-    public function getUserCallback($user_id,$rank=1)
-    {
-        $where[$this->DB_PREFIX.'user_callback.user_id'] = $user_id;
-        if($rank==1) $where[$this->DB_PREFIX.'user_callback.status'] = 1;
-        $field = array(
-            "{$this->DB_PREFIX}user_callback.user_id",
-            "{$this->DB_PREFIX}user_callback.system_user_id",
-            "{$this->DB_PREFIX}user_callback.waytype",
-            "{$this->DB_PREFIX}user_callback.attitude_id",
-            "{$this->DB_PREFIX}user_callback.remark",
-            "{$this->DB_PREFIX}user_callback.nexttime",
-            "{$this->DB_PREFIX}user_callback.callbacktime",
-            "{$this->DB_PREFIX}system_user.realname",
-            "{$this->DB_PREFIX}system_user.face"
-        );
-        $result =  D('UserCallback')
-            ->field($field)
-            ->join('__SYSTEM_USER__ ON __SYSTEM_USER__.system_user_id=__USER_CALLBACK__.system_user_id')
-            ->where($where)
-            ->order($this->DB_PREFIX.'user_callback.callbacktime DESC')
-            ->select();
-        return array('code'=>0, 'data'=>$result);
-    }
-
     /*
     |--------------------------------------------------------------------------
     | 添加用户
@@ -241,70 +209,6 @@ class UserService extends BaseService
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | 客户放弃/回库
-    |--------------------------------------------------------------------------
-    | user_id:客户 system_user_id：操作人  attitude_id：放弃 remark：放弃原因 $rank：操作等级（1：普通员工，2：主管）
-    | @author zgt
-    */
-    public function abandonUser($data, $rank=1)
-    {
-        //必要参数
-        if(empty($data['user_id']) || empty($data['system_user_id'])) return array('code'=>2,'msg'=>'参数异常');
-        //获取客户信息
-        $userList = D('User')->field('user_id,status,channel_id,system_user_id,realname,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->select();
-        if(empty($userList)) return array('code'=>2,'msg'=>'查找不到客户信息');
-        //客户验证
-        foreach($userList as $k=>$v) {
-            //是否交易中
-            if ($v['status'] == '70') return array('code' => 1, 'msg' => '客户' . $v['realname'] . '状态不予许放弃');
-            //普通员工判断归属人
-            if ($rank == 1) {
-                if ($data['system_user_id'] != $v['system_user_id']) return array('code' => 1, 'msg' => '只有归属人才能分配该客户信息');
-            }
-        }
-        $_time = time();
-        //数据更新
-        D()->startTrans();
-        $save_user['status'] = 160;
-        $where['user_id'] = array('IN',$data['user_id']);
-        $result = D('User')->where($where)->save($save_user);
-        if($result!==false){
-            //添加回访记录
-            $data_callback['status'] = 0;
-            $data_callback['user_id'] = $data['user_id'];
-            $data_callback['attitude_id'] = !empty($data['attitude_id'])?$data['attitude_id']:0;
-            $data_callback['system_user_id'] = $data['system_user_id'];
-            $data_callback['nexttime'] = $_time;
-            if($rank==2){
-                //批量
-                if(count($where['user_id'])>1){
-                    $data_callback['remark'] = '批量客户回库(管理操作):'.$data['remark'];
-                    $data_callback['callbacktype'] = 15;
-                }else{
-                    $data_callback['remark'] = '客户回库(管理操作):'.$data['remark'];
-                    $data_callback['callbacktype'] = 14;
-                }
-                $dataLog['operattype'] = '8';
-            }else{
-                $data_callback['remark'] = '客户放弃：'.$data['remark'];
-                $data_callback['callbacktype'] = 2;
-                $dataLog['operattype'] = '6';
-            }
-            $this->addCallback($data_callback,2);
-            //操作后-添加数据记录
-            $dataLog['operator_user_id'] = $data['system_user_id'];
-            $dataLog['user_id'] = $data['user_id'];
-            $dataLog['logtime'] = $_time;
-            $DataService = new DataService();
-            $DataService->addDataLogs($dataLog);
-            D()->commit();
-            return array('code'=>0,'msg'=>'操作成功');
-        }
-        D()->rollback();
-        return array('code'=>1,'msg'=>'操作失败');
-    }
 
     /*
     |--------------------------------------------------------------------------
@@ -466,50 +370,6 @@ class UserService extends BaseService
         }
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | 赎回客户
-    |--------------------------------------------------------------------------
-    | user_id:客户 system_user_id：操作人
-    | @author zgt
-    */
-    public function redeemUser($data)
-    {
-        //必要参数
-        if(empty($data['user_id']) || empty($data['system_user_id'])  || empty($data['nexttime']) || empty($data['remark'])) return array('code'=>2,'msg'=>'参数异常');
-        //该客户是否在申请转入审核中
-        $userApply = $this->isApply($data['user_id']);
-        if(!empty($userApply)) return array('code'=>1,'msg'=>'客户 正在审核转入中，无法赎回');
-        //获取客户信息与被转出人信息
-        $userInfo = D('User')->field('user_id,status,channel_id,system_user_id,realname,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->find();
-        if($data['system_user_id']!=$userInfo['system_user_id']) return array('code'=>1,'msg'=>'只有归属人才能分配该客户信息');
-        if($userInfo['status']!=160)  return array('code'=>1,'msg'=>'客户不属于回库状态,无法赎回');
-        D()->startTrans();
-        $save_data['status'] = 30;
-        D('User')->where(array('user_id'=>$data['user_id']))->save($save_data);
-        //添加分配记录
-        $data_callback['status'] = 1;
-        $data_callback['callbacktype'] = 3;
-        $data_callback['attitude_id'] = !empty($data['attitude_id'])?$data['attitude_id']:0;
-        $data_callback['user_id'] = $data['user_id'];
-        $data_callback['nexttime'] = $data['nexttime'];
-        $data_callback['system_user_id'] = $data['system_user_id'];
-        $data_callback['remark'] = $data['remark'];
-        $reflag = $this->addCallback($data_callback);
-        //添加数据记录
-        $dataLog['operattype'] = 9;
-        $dataLog['operator_user_id'] = $data['system_user_id'];
-        $dataLog['user_id'] = $data['user_id'];
-        $dataLog['logtime'] = time();
-        $DataService = new DataService();
-        $DataService->addDataLogs($dataLog);
-        if($reflag['code']==0){
-            D()->commit();
-            return array('code'=>0,'msg'=>'赎回客户成功');
-        }
-        D()->rollback();
-        return array('code'=>1,'msg'=>'赎回客户失败');
-    }
 
     /*
     |--------------------------------------------------------------------------
@@ -908,6 +768,7 @@ class UserService extends BaseService
             if($reflag_save===false) return false;
             //获取新增数据集合
             $add_callback[$k] = $data;
+            $add_callback[$k]['system_user_id'] = $this->system_user_id;
             $add_callback[$k]['user_id'] = $v['user_id'];
         }
         //批量新增回访
@@ -921,60 +782,6 @@ class UserService extends BaseService
         }
     }
 
-    /*
-     |--------------------------------------------------------------------------
-     | 添加回访记录
-     |--------------------------------------------------------------------------
-     | user_id system_user_id
-     | @author zgt
-     */
-    public function addCallback($data,$rank=1)
-    {
-        //数据添加
-        $user = D('User')->field('user_id,status')->where(array('user_id'=>array('IN', $data['user_id'])))->select();
-        if(empty($user)) return array('code'=>2,'msg'=>'查找不到客户信息');
-        //启动事务
-        D()->startTrans();
-        foreach($user as $k=>$v){
-            $data_user['attitude_id'] = $data['attitude_id'];
-            $data_user['nextvisit'] = $data['nexttime'];
-            $data_user['callbacktype'] = $data['callbacktype'];
-            if($rank==1){
-                //更新客户状态
-                if($v['status']==20){
-                    $data_user['status'] = 30;
-                }
-                $data['callbacktime'] = time();
-                $data_user['callbacknum'] = array('exp','callbacknum+1');
-                $data_user['lastvisit'] = $data['callbacktime'];
-                //添加数据记录
-                $dataLog['operattype'] = '11';
-                $dataLog['operator_user_id'] = $data['system_user_id'];
-                $dataLog['system_user_id'] = $data['system_user_id'];
-                $dataLog['user_id'] = $data['user_id'];
-                $dataLog['logtime'] = time();
-                $dataController = new DataController();
-                $dataController->addDataLogs($dataLog);
-            }else{
-                $data['callbacktime'] = !empty($data['nexttime'])?$data['nexttime']:time();
-                $data_user['lastvisit'] = $data['callbacktime'];
-            }
-            $reflag_save = D('User')->where(array('user_id'=>$v['user_id']))->save($data_user);
-            if($reflag_save===false) return false;
-            //获取新增数据集合
-            $add_callback[$k] = $data;
-            $add_callback[$k]['user_id'] = $v['user_id'];
-        }
-        //批量新增回访
-        $reflag = D('UserCallback')->addAll($add_callback);
-        if($reflag!==false && $reflag_save!==false){
-            D()->commit();
-            return array('code'=>0,'msg'=>'添加成功');
-        }else{
-            D()->rollback();
-            return array('code'=>1,'msg'=>'数据添加失败');
-        }
-    }
 
 
     /*
@@ -1007,14 +814,182 @@ class UserService extends BaseService
         return array('code'=>0, 'data'=>$result);
     }
 
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取回访记录
+    |--------------------------------------------------------------------------
+    | user_id system_user_id $rank：操作等级（1：普通员工，2：主管）
+    | @author zgt
+    */
+    public function getUserCallback($param)
+    {
+        $param['rank'] = empty($param['rank'])?'1':$param['rank'];
+        $where[$this->DB_PREFIX.'user_callback.user_id'] = $param['user_id'];
+        if($param['rank']==1) $where[$this->DB_PREFIX.'user_callback.status'] = 1;
+        $field = array(
+            "{$this->DB_PREFIX}user_callback.user_id",
+            "{$this->DB_PREFIX}user_callback.system_user_id",
+            "{$this->DB_PREFIX}user_callback.waytype",
+            "{$this->DB_PREFIX}user_callback.attitude_id",
+            "{$this->DB_PREFIX}user_callback.remark",
+            "{$this->DB_PREFIX}user_callback.nexttime",
+            "{$this->DB_PREFIX}user_callback.callbacktime",
+            "{$this->DB_PREFIX}system_user.realname",
+            "{$this->DB_PREFIX}system_user.face"
+        );
+        $join = '__SYSTEM_USER__ ON __SYSTEM_USER__.system_user_id=__USER_CALLBACK__.system_user_id';
+        $result =  D('UserCallback')->getList($where,$field,$this->DB_PREFIX.'user_callback.callbacktime DESC',null,$join);
+        return array('code'=>0, 'data'=>$result);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 赎回客户
+    |--------------------------------------------------------------------------
+    | user_id:客户 system_user_id：操作人
+    | @author zgt
+    */
+    public function redeemUser($data)
+    {
+        //当前操作人
+        $data['system_user_id'] = $this->system_user_id;
+        //必要参数
+        if(empty($data['user_id']) || empty($data['system_user_id'])  || empty($data['nexttime']) || empty($data['remark'])) return array('code'=>2,'msg'=>'参数异常');
+        //该客户是否在申请转入审核中
+        $userApply = $this->_isApply($data['user_id']);
+        if(!empty($userApply)) return array('code'=>1,'msg'=>'客户 正在审核转入中，无法赎回');
+        //获取客户信息与被转出人信息
+        $userInfo = D('User')->field('user_id,status,channel_id,system_user_id,realname,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->find();
+        if($data['system_user_id']!=$userInfo['system_user_id']) return array('code'=>1,'msg'=>'只有归属人才能分配该客户信息');
+        if($userInfo['status']!=160)  return array('code'=>1,'msg'=>'客户不属于回库状态,无法赎回');
+        D()->startTrans();
+        $save_data['status'] = 30;
+        D('User')->where(array('user_id'=>$data['user_id']))->save($save_data);
+        //添加分配记录
+        $data_callback['status'] = 1;
+        $data_callback['callbacktype'] = 3;
+        $data_callback['attitude_id'] = !empty($data['attitude_id'])?$data['attitude_id']:0;
+        $data_callback['user_id'] = $data['user_id'];
+        $data_callback['nexttime'] = $data['nexttime'];
+        $data_callback['system_user_id'] = $data['system_user_id'];
+        $data_callback['remark'] = $data['remark'];
+        $reflag = $this->addCallback($data_callback);
+        //添加数据记录
+        $dataLog['operattype'] = 9;
+        $dataLog['operator_user_id'] = $data['system_user_id'];
+        $dataLog['user_id'] = $data['user_id'];
+        $dataLog['logtime'] = time();
+        $DataService = new DataService();
+        $DataService->addDataLogs($dataLog);
+        if($reflag['code']==0){
+            D()->commit();
+            return array('code'=>0,'msg'=>'赎回客户成功');
+        }
+        D()->rollback();
+        return array('code'=>1,'msg'=>'赎回客户失败');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 客户放弃/回库
+    |--------------------------------------------------------------------------
+    | user_id:客户 system_user_id：操作人  attitude_id：放弃 remark：放弃原因 $rank：操作等级（1：普通员工，2：主管）
+    | @author zgt
+    */
+    public function abandonUser($data, $rank=1)
+    {
+        //必要参数
+        if(empty($data['user_id'])) return array('code'=>300,'msg'=>'参数异常');
+        //获取客户信息
+        $userList = D('User')->field('user_id,status,channel_id,system_user_id,realname,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->select();
+        if(empty($userList)) return array('code'=>100,'msg'=>'查找不到客户信息');
+        //客户验证
+        foreach($userList as $k=>$v) {
+            //是否交易中
+            if ($v['status'] == '70') return array('code' => 201, 'msg' => '客户' . $v['realname'] . '状态不予许放弃');
+            //普通员工判断归属人
+            if ($rank == 1) {
+                if ($this->system_user_id != $v['system_user_id']) return array('code' => 200, 'msg' => '只有归属人才能分配该客户信息');
+            }
+        }
+        $_time = time();
+        //数据更新
+        D()->startTrans();
+        $save_user['status'] = 160;
+        $where['user_id'] = array('IN',$data['user_id']);
+        $result = D('User')->where($where)->save($save_user);
+        if($result!==false){
+            //添加回访记录
+            $data_callback['status'] = 0;
+            $data_callback['user_id'] = $data['user_id'];
+            $data_callback['attitude_id'] = !empty($data['attitude_id'])?$data['attitude_id']:0;
+            $data_callback['system_user_id'] = $this->system_user_id;
+            $data_callback['nexttime'] = $_time;
+            if($rank==2){
+                //批量
+                if(count($where['user_id'])>1){
+                    $data_callback['remark'] = '批量客户回库(管理操作):'.$data['remark'];
+                    $data_callback['callbacktype'] = 15;
+                }else{
+                    $data_callback['remark'] = '客户回库(管理操作):'.$data['remark'];
+                    $data_callback['callbacktype'] = 14;
+                }
+                $dataLog['operattype'] = '8';
+            }else{
+                $data_callback['remark'] = '客户放弃：'.$data['remark'];
+                $data_callback['callbacktype'] = 2;
+                $dataLog['operattype'] = '6';
+            }
+            $this->_addCallback($data_callback);
+            //操作后-添加数据记录
+            $dataLog['operator_user_id'] = $this->system_user_id;
+            $dataLog['user_id'] = $data['user_id'];
+            $dataLog['logtime'] = $_time;
+            D('Data','Service')->addDataLogs($dataLog);
+            D()->commit();
+            return array('code'=>0,'msg'=>'操作成功');
+        }
+        D()->rollback();
+        return array('code'=>1,'msg'=>'操作失败');
+    }
+
     /**
      * 参数过滤
      * @author zgt
      */
-    protected function _addCallback($where)
+    protected function _addCallback($data)
     {
-
+        //数据添加
+        $user = D('User')->field('user_id,status')->where(array('user_id'=>array('IN', $data['user_id'])))->select();
+        if(empty($user)) return array('code'=>2,'msg'=>'查找不到客户信息');
+        //启动事务
+        D()->startTrans();
+        foreach($user as $k=>$v){
+            $data_user['attitude_id'] = $data['attitude_id'];
+            $data_user['nextvisit'] = $data['nexttime'];
+            $data_user['callbacktype'] = $data['callbacktype'];
+            $data['callbacktime'] = !empty($data['nexttime'])?$data['nexttime']:time();
+            $data_user['lastvisit'] = $data['callbacktime'];
+            $reflag_save = D('User')->where(array('user_id'=>$v['user_id']))->save($data_user);
+            if($reflag_save===false) return false;
+            //获取新增数据集合
+            $add_callback[$k] = $data;
+            $add_callback[$k]['user_id'] = $v['user_id'];
+        }
+        //批量新增回访
+        $reflag = D('UserCallback')->addAll($add_callback);
+        if($reflag!==false && $reflag_save!==false){
+            D()->commit();
+            return array('code'=>0,'msg'=>'添加成功');
+        }else{
+            D()->rollback();
+            return array('code'=>1,'msg'=>'数据添加失败');
+        }
     }
+
 
     /**
      * 参数过滤
@@ -1188,5 +1163,14 @@ class UserService extends BaseService
             }
         }
         return array('code'=>0,'data'=>$data);
+    }
+
+    /**
+     * 该客户是否在申请转入审核中
+     * @author zgt
+     */
+    protected function _isApply($user_id)
+    {
+        return D('UserApply')->getFind(array('user_id'=>$user_id,'status'=>10),'user_id');
     }
 }

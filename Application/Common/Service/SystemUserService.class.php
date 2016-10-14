@@ -676,6 +676,9 @@ class SystemUserService extends BaseService
         if(empty($data['check_id'])) return array('code'=>303, 'msg'=>'指纹编号不能为空');
         if(empty($data['entrytime'])) return array('code'=>304, 'msg'=>'入职时间不能为空');
         if(empty($data['straightime'])) return array('code'=>305, 'msg'=>'转正时间不能为空');
+        $data['entrytime'] = strtotime($data['entrytime']);
+        $data['straightime'] = strtotime($data['straightime']);
+        if($data['entrytime']>$data['straightime']) return array('code'=>203, 'msg'=>'转正时间不能小于入职时间');
         $system_user_id = !empty($data['system_user_id'])?$data['system_user_id']:$this->system_user_id;
         $data['username'] = encryptPhone($data['username'], C('PHONE_CODE_KEY'));
         //是否修改手机号码 是：清空密码
@@ -723,7 +726,7 @@ class SystemUserService extends BaseService
             return array('code'=>'0', 'msg'=>'操作成功');
         }else{
             D()->rollback();
-            return array('code'=>'1', 'msg'=>'数据操作失败');
+            return array('code'=>100, 'msg'=>$result['msg']);
         }
     }
 
@@ -904,7 +907,7 @@ class SystemUserService extends BaseService
             ->find();
 
         //添加多职位
-        $roles = $this->getSystemUserRole($systemUserInfo['system_user_id']);
+        $roles = $this->getSystemUserRole(array('system_user_id'=>$systemUserInfo['system_user_id']));
         $systemUserInfo['user_roles'] = $roles['data'];
         $roleNames = '';
         foreach($roles['data'] as $k2=>$v2){

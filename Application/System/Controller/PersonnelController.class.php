@@ -503,7 +503,7 @@ class PersonnelController extends SystemController {
                 $where['system_user_id'] = $system_user_id;
                 $editUserZone = D('SystemUser','Service')->editUserZone($where);
                 if($editUserZone['code']==0) $this->ajaxReturn(0, '已修改成功', U('System/Personnel/systemUserList'));
-                else $this->ajaxReturn(1, '数据操作失败');
+                else $this->ajaxReturn($editUserZone['code'], $editUserZone['msg']);
             }else{
                 //获取 数据判断
                 $request['system_user_id'] = $system_user_id;
@@ -536,6 +536,13 @@ class PersonnelController extends SystemController {
         foreach($data['systemUserStatus'] as $k=>$v){
             if($v=='离职'){
                 unset($data['systemUserStatus'][$k]);
+            }
+        }
+        if(!empty($systemUserInfo['data']['user_roles'])){
+            foreach($systemUserInfo['data']['user_roles'] as $k=>$v){
+                $data['is_roles'][] = $v['id'];
+                if($k==0) $data['roles'] .= $v['id'];
+                else $data['roles'] .= ','.$v['id'];
             }
         }
         $data['url_systemUser'] = U('System/Personnel/systemUserList');
