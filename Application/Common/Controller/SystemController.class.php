@@ -129,7 +129,6 @@ class SystemController extends BaseController
             }
             session('sidebar',$sidebar);
         }
-
         $newSideber = array();
         $childNodes = array();
         $i = 0;
