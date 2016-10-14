@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>查找客户-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/examine.css">
+	</head>
+	<body>
+		<div class="wrapBox">
+			<div class="proCont">
+				<div class="proContTop clearfix">
+					<div class="topTit l">
+						<span class="masterList">审核转入列表</span>
+						<span><em>&gt;</em>审核转入</span>
+					</div>
+					<div class="topRight r">
+						<a href="{:U(auditList)}" class="return">返回</a>
+					</div>
+				</div>
+				<div class="addContMiddle">
+					<!--  系统信息 start-->
+					<div class="content active">
+						<div class="content-child">
+							<div class="addRow clearfix">
+								<div class="contenCol">
+									<div class="contenColLeft"><i>*</i>真实姓名&nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$auditDetails[0].realname}</div>
+								</div>
+								<div class="contenCol">
+									<div class="contenColLeft"><i>*</i>手机号码&nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$auditDetails[0].username}</div>
+								</div>
+								<div class="contenCol">
+									<div class="contenColLeft">固定电话&nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$auditDetails[0].tel}</div>
+								</div>
+							</div>
+							<div class="addRow clearfix">
+								<div class="contenCol">
+									<div class="contenColLeft">QQ&nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$auditDetails[0].qq}</div>
+								</div>
+								<div class="contenCol">
+									<div class="contenColLeft">邮箱&nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$auditDetails[0].email}</div>
+								</div>
+							</div>
+						</div>
+						<div class="content-child">
+							<div class="addRow clearfix">
+								<div class="contenCol">
+									<div class="contenColLeft"><i>*</i>所属渠道 &nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$auditDetails[0].channelname}</div>
+								</div>
+								<div class="contenCol colWidth2">
+									<div class="contenColLeft">搜索&nbsp;:&nbsp;</div>
+									<div class="contenColRight auto">{$auditDetails[0].searchword}</div>
+								</div>
+							</div>
+							<div class="addRow clearfix">
+								<div class="contenCol w100">
+									<div class="contenColLeft">咨询页面 &nbsp;:&nbsp;</div>
+									<div class="contenColRight auto">{$auditDetails[0].interviewurl}</div>
+								</div>
+							</div>
+						</div>
+						<div class="content-child">
+							<div class="addRow clearfix">
+								<div class="contenCol">
+									<div class="contenColLeft"><i>*</i>信息质量 &nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$auditDetails[0].infoquality}</div>
+								</div>
+								<div class="contenCol colWidth2">
+									<div class="contenColLeft">意向课程&nbsp;:&nbsp;</div>
+									<div class="contenColRight auto">{$auditDetails[0].coursename}</div>
+								</div>
+							</div>
+						</div>
+						<div class="content-child">
+							<div class="addRow clearfix">
+								<!-- 是否转介绍： 是 -->
+								<div class="contenCol">
+									<div class="contenColLeft">转介绍 &nbsp;:&nbsp;</div>
+									<div class="contenColRight">{:$auditDetails[0][introducermobile] ? '是' : '否' }</div>
+								</div>
+								<div class="contenCol colWidth2">
+									<div class="contenColLeft"><i>*</i>转介绍人手机 &nbsp;:&nbsp;</div>
+									<div class="contenColRight auto">{$auditDetails[0].introducermobile}</div>
+								</div>
+								<!-- 是否转介绍： 否 -->
+								<!--<div class="contenCol">
+									<div class="contenColLeft">转介绍 &nbsp;:&nbsp;</div>
+									<div class="contenColRight">否</div>
+								</div>-->
+							</div>
+						</div>
+						<div class="content-child">
+							<div class="addRow clearfix">
+								<div class="contenCol">
+									<div class="contenColLeft">申请人 &nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$auditDetails[0].apply_realname}</div>
+								</div>
+								<div class="contenCol">
+									<div class="contenColLeft">预所属人 &nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$auditDetails[0].to_system_user}</div>
+								</div>
+								<div class="contenCol colWidth2">
+									<div class="contenColLeft">申请时间&nbsp;:&nbsp;</div>
+									<div class="contenColRight auto">{$auditDetails[0].applytime|date='Y-m-d H:i:s',###}</div>
+								</div>
+							</div>
+							<div class="addRow clearfix">
+								<div class="contenCol w100 hauto">
+									<div class="contenColLeft"><i>*</i>申请理由&nbsp;:&nbsp;</div>
+									<div class="contenColRight remark">{$auditDetails[0].applyreason|htmlspecialchars_decode}</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="content-child">
+							<div class="addRow clearfix">
+								<div class="contenCol">
+									<div class="contenColLeft"><i>*</i>审核转入&nbsp;:&nbsp;</div>
+									<div class="contenColRight l-row">
+										<div class="b-radio-wrapper">
+											<a href="javascript:void(0)" data-value="1" class="b-radio b-radio-checked"></a>
+											<label>通过</label>
+											<input type="radio" value="1" name="view" class="hidden" checked="checked">
+										</div>
+									    <div class="b-radio-wrapper">
+									    	<a href="javascript:void(0)" data-value="0" class="b-radio"></a>
+									    	<label>不通过</label>
+									    	<input type="radio" value="0" name="view" class="hidden">
+									    </div>
+									</div>
+								</div>
+							</div>
+							<div class="addRow clearfix">
+								<div class="contenCol w100 hauto reason">
+									<div class="contenColLeft"><i>*</i>不通过原因&nbsp;:&nbsp;</div>
+									<div class="contenColRight backrecord">
+										<script id="editor3" name="advantage" type="text/plain" ></script>
+									</div>
+								</div>
+								<div class="contenCol">
+									<div class="contenColLeft">&nbsp;</div>
+									<div class="contenColRight"><input type="submit" class="nsSubmit" value="提交"></div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<!--  系统信息 end-->
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="__PUBLIC__/js/examine.js"></script>
+		<include  file="Common@Html/ueditor_simple" />
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+
+		<script>
+			var ue = UE.getEditor('editor3',{
+				toolbars: [
+					['fullscreen', 'source','fontsize','fontfamily', 'undo', 'redo','underline', 'bold','spechars','justifyleft','justifyright','justifycenter','emotion']
+				],
+				initialFrameHeight:220,
+				pasteplain:true,
+				enableAutoSave:false,
+				elementPathEnabled:false,
+				maximumWords:250,
+				autoFloatEnabled:false
+			}); //实例化编辑器
+
+			$('.nsSubmit').click(function() {
+				var curStatus;
+				if(	1 == $('.b-radio-checked').attr('data-value')){
+					curStatus = 30; //通过
+				}else{
+					curStatus = 20; //不通过
+				}
+				var editContent = ue.getContent();  //获取编辑器的内容值
+				var data = {
+					user_id : {$auditDetails[0].user_id},
+					user_apply_id : {$auditDetails[0].user_apply_id},
+					system_user_id : {$auditDetails[0].system_user_id},
+					to_system_user_id : {:!empty($auditDetails[0]['to_system_user_id'])?$auditDetails[0]['to_system_user_id']:0},
+					status: curStatus,
+					auditorreason : editContent
+				};
+				common_ajax(data,"{:U('System/User/auditTransfer')}",'loca');
+			});
+
+		</script>
+
+
+	</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/organization.css">
+	</head>
+	<body>
+		<div class="wrapBox" id="departWrap">
+			<div class="orgCont">
+				<div class="orgContTop clearfix">
+					<div class="topTit l"><span class="masterList">部门管理</span></div>
+					<div class="topRight r">
+						<a href="{$data['url_addDepartment']}" class="newDepartMent">新增部门</a>
+					</div>
+				</div>
+				
+				<table cellpadding="0" cellspacing="0" id="deparrTable">
+					<tr>
+						<th class="firItem">
+							<span>排序</span>
+							<i class="oergList" onclick="location.href='{$data[\'url_sort\']}'"></i>
+						</th>
+						<th>
+							<span>ID</span>
+							<i class="oergList" onclick="location.href='{$data[\'url_department_id\']}'"></i>
+						</th>
+						<th>部门名称</th>
+						<th class="lastItem">操作</th>
+					</tr>
+					<foreach name="data['departmentAll']['data']" item="v" key="k" >
+						<tr>
+							<td class="firItem">
+								<input type="tel" class="SequenceInp" placeholder="0" maxlength="4" value="{$v.sort}" data-id="{$v.department_id}" oldSort="{$v.sort}" autocomplete="off">
+							</td>
+							<td>{$v.department_id}</td>
+							<td>{$v.departmentname}</td>
+							<td class="lastItem dtOperation">
+								<a href="javascript:;" class="orgSelect"><i></i></a>
+								<div class="otherOperation">
+									<div class="triangle"></div>
+									<div class="otherIcon">
+										<ul>
+											<li>
+												<a href="<?php echo U('System/Personnel/editDepartment',array('dep_id'=>$v['department_id'])); ?>">
+													<span class="modify"></span>
+													<em>修改</em>
+												</a>
+											</li>
+											<li>
+												<a href="javascript:;" onclick="del_department('{$v.department_id}')">
+													<span class="delete"></span>
+													<em>删除</em>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</foreach>
+				</table>
+				
+				<div class='collegaPage'>
+                   <a class="sort"  id="sort" href="javascript:void(0)">修改排序</a>
+                   <span class="spTips l">'排序'列表内输入框的数字是可修改，再点击左侧按钮进行再排序的.</span>
+					{$data['paging']}
+				</div>
+			</div>
+		</div>
+
+		
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/organization.js"></script>
+		<script>
+			$(function(){
+				//修改排序值
+				$('#sort').click(function(){
+					var  ids_sort="";
+					$(".SequenceInp").each(function(index, element) {
+                        if( $(this).val()!=$(this).attr('oldSort') ){							
+							ids_sort+=','+$(this).attr('data-id')+'-'+$(this).val();
+						}
+                    });
+					if(ids_sort!="")ids_sort=ids_sort.substr(1);					
+					var data = {
+						sort_data:ids_sort,
+						type:'sort'
+					};
+					common_ajax(data,'{$data[\'url_dispostDepartment\']}','reload');
+					
+				});
+			
+				//修改排序值
+				$('.SequenceInp').blur(function(){
+					
+					var v=parseInt($.trim($(this).val()));
+					
+					if(!v)
+					{
+					    $(this).val($(this).attr('oldSort'));
+					}else{
+						$(this).val(v);
+					}
+				})
+				
+			});
+
+			//部门删除
+			function del_department(dep_id){
+				layer.confirm('确定要删除该部门？', {
+					btn: ['确定','取消'] //按钮
+				}, function(){
+					var data = {
+						departmentname_id:dep_id,
+						type:'del'
+					};
+					common_ajax(data,'{$data[\'url_dispostDepartment\']}','reload');
+				}, function(){});
+			}
+		</script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+		<script src="__PUBLIC__/js/request/department.js"></script>
+	</body>
+</html>

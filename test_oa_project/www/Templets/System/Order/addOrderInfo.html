@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/external.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/paymentInformation.css">
+    <script>
+        var local_href = window.location.href;
+        var payfundOrder_href = "{:U('System/Order/payfund')}";
+        var orderList_href = "{:U('System/Order/orderList')}";
+    </script>
+</head>
+<body>
+<div class="wrapBox">
+    <div class="imCont">
+        <div class="imContTop clearfix">
+            <div class="topTit l">
+                <span class="masterList">订单管理</span>
+                <span><em>&gt;</em>设置缴费信息</span>
+            </div>
+            <div class="topRight r">
+                <a href="javascript:history.go(-1);" class="addAccount">返回</a>
+            </div>
+        </div>
+    </div>
+    <div class="payInfoMain">
+        <div class="payRow clearfix">
+            <div class="payRowLeft">真实姓名：</div>
+            <div class="payRowRight">{$data.info.orderInfo.user_realname}</div>
+        </div>
+        <div class="payRow clearfix">
+            <div class="payRowLeft">手机号：</div>
+            <div class="payRowRight">{:!empty($data['info']['orderInfo']['username'])?decryptPhone($data['info']['orderInfo']['username'], C('PHONE_CODE_KEY')):'--'}</div>
+        </div>
+        <div class="payRow clearfix">
+            <div class="payRowLeft">所属人：</div>
+            <div class="payRowRight">{$data.info.orderInfo.system_user_realname}</div>
+        </div>
+        <div class="payRow clearfix" id="paymentCourse">
+            <div class="payRowLeft"><i>&#42</i>进班课程：</div>
+            <div class="payRowRight clearfix">
+                <div class="selectbox l">
+                    <dl class="select">
+                        <dt>
+                        <div class="select_title l">选择课程</div>
+                        <div class="arrow r"></div>
+                        </dt>
+                        <foreach name="data['courseList']" item="v">
+                            <dd class="fxDone" data-value="{$v.course_product_id}" data-price="{$v.price}">{$v.productname}</dd>
+                        </foreach>
+                    </dl>
+                    <input type="hidden" name="course_id">
+                </div>
+            </div>
+        </div>
+        <div class="payRow dn clearfix">
+            <div class="payRowLeft">学费总额：</div>
+            <div class="payRowRight price">￥19800.00</div>
+        </div>
+        <div class="payRow clearfix">
+            <div class="payRowLeft"><i>&#42</i>学习方式：</div>
+            <div class="payRowRight clearfix">
+                <div class="selectbox l">
+                    <dl class="select">
+                        <dt>
+                        <div class="select_title l">选择方式</div>
+                        <div class="arrow r"></div>
+                        </dt>
+                        <foreach name="data['order_studytype']" item="v">
+                            <dd class="fxDone" data-value="{$v.num}">{$v.text}</dd>
+                        </foreach>
+                    </dl>
+                    <input type="hidden" name="studytype">
+                </div>
+            </div>
+        </div>
+        <div class="payRow clearfix" id="paymentType">
+            <div class="payRowLeft"><i>&#42</i>付款类型：</div>
+            <div class="payRowRight clearfix">
+                <div class="selectbox l">
+                    <dl class="select">
+                        <dt>
+                        <div class="select_title l">选择类型</div>
+                        <div class="arrow r"></div>
+                        </dt>
+                        <foreach name="data['order_loan_institutions']" item="v">
+                            <dd class="fxDone" data-value="{$v.num}">{$v.text}</dd>
+                        </foreach>
+                    </dl>
+                    <input type="hidden" name="loan_institutions_id">
+                </div>
+            </div>
+        </div>
+        <div class="payRow dn clearfix">
+            <div class="payRowLeft"><i>&#42</i>货款金额：</div>
+            <div class="payRowRight">
+                <input type="text" class="payInfoInp" maxlength="6" name="loan_institutions_cost" />
+            </div>
+        </div>
+        <div class="payRow clearfix">
+            <div class="payRowLeft">优惠方式：</div>
+            <div class="payRowRight">
+                <input type="button" class="payPreferentialWay" maxlength="6" value="选择优惠" />
+                <input type="hidden" name="discount_id" value="" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="payRow clearfix">
+            <div class="payRowLeft">&nbsp;</div>
+            <div class="payRowRight">
+                <table id="discount_body" class="dn" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <th>优惠项目</th>
+                        <th>优惠金额</th>
+                    </tr>
+                </table>
+                <input type="submit" class="paySubmit" value="提交" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dn">
+    <input type="hidden" name="order_id" value="{$data['order_id']}" autocomplete="off">
+
+    <!-- 设置优惠方式 S -->
+    <div class="preferentialWayBox popup">
+    	<div class="preCont">
+	        <table cellpadding="0" cellspacing="0">
+	            <tr>
+	                <th>优惠ID</th>
+	                <th>优惠项目</th>
+	                <th>优惠金额</th>
+	                <th>说明</th>
+	                <th class="lastTh">操作</th>
+	            </tr>
+	            <foreach name="data['discount']" item="v" key="k">
+	                <tr>
+                        <td class="name">{:$v['discount_id']}</td>
+	                    <td class="name">{:$v['dname']}</td>
+	                    <td class="money" data-value="{:$v['dmoney']}">¥{:$v['dmoney']}</td>
+	                    <td>{:$v['remark']}</td>
+	                    <td class="lastTd">
+	                        <input type="checkbox" name="checkboxName" id="discountInfo_{$v['discount_id']}" class="pwChk" value="{$v['discount_id']}" data-value="{:$v['repeat']}"/>
+	                    </td>
+	                </tr>
+	            </foreach>
+	        </table>
+	    </div>
+        <div class="pwBtnBox">
+            <input type="button" class="pwConfirm discountSub true" value="确定" />
+            <input type="button" class="notpreferential discountSub" value="无优惠" />
+        </div>
+    </div>
+    <!-- 设置优惠方式 E -->
+
+    <!-- 收款 s -->
+    <div class="receivablesBox popup">
+        <div class="reRow clearfix add">
+            <span>真实姓名：</span>
+            <em>{$data.info.orderInfo.user_realname}</em>
+        </div>
+        <div class="reRow clearfix add">
+            <span>手机号码：</span>
+            <em>{:!empty($data['info']['orderInfo']['username'])?decryptPhone($data['info']['orderInfo']['username'], C('PHONE_CODE_KEY')):'--'}</em>
+        </div>
+        <div class="reRow clearfix add">
+            <span>所属人：</span>
+            <em>{$data.info.orderInfo.system_user_realname}</em>
+        </div>
+        <if condition="$data['zoneAll']['children']['centersign'] NEQ 10">
+            <div class="reRow clearfix">
+                <span><i>&#42</i>退款中心：</span>
+                <div class="selectbox l">
+                    <dl class="select">
+                        <dt>
+                        <div class="select_title l">选择中心</div>
+                        <div class="arrow r"></div>
+                        </dt>
+                        <foreach name="data['zoneAll']" item="v1" key="k1">
+                            <dd class="fxDone" data-value="{$v1['zone_id']}">{$v1['name']}</dd>
+                            <if condition = "($v1['centersign'] neq 10) && (!empty($v1['children']))">
+                                <foreach name = "v1['children']" item = "v2">
+                                    <dd class="fxDone" data-value="{$v2['zone_id']}">&nbsp;&nbsp;├─ {$v2['name']}</dd>
+                                    <if condition = "($v2['centersign'] neq 10) && (!empty($v2['children']))">
+                                        <foreach name = "v2['children']" item = "v3">
+                                            <dd class="fxDone" data-value="{$v3['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v3['name']}</dd>
+                                            <?php foreach($v3['children'] as $v4){ ?>
+                                            <dd class="fxDone" data-value="{$v4['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v4['name']}</dd>
+                                            <?php } ?>
+                                        </foreach>
+                                    </if>
+                                </foreach>
+                            </if>
+                        </foreach>
+                    </dl>
+                    <input type="hidden" name="receivables_zone_id" aotucomplete="off" value="">
+                </div>
+            </div>
+        </if>
+        <div class="reRow clearfix">
+            <span><i>&#42</i>收款日期：</span>
+            <input type="text" class="receivablesTime" name="receivables_practicaltime" value="" readonly="readonly" placeholder="选择日期">
+        </div>
+        <div class="reRow clearfix">
+            <span><i>&#42</i>收款方式：</span>
+            <div class="selectbox l">
+                <dl class="select">
+                    <dt>
+                    <div class="select_title l">选择方式</div>
+                    <div class="arrow r"></div>
+                    </dt>
+                    <dd class="fxDone" data-value="0">选择方式</dd>
+                    <foreach name="data['order_receivetype']" item="v" key="k">
+                        <dd class="fxDone" data-value="{$v.num}">{$v.text}</dd>
+                    </foreach>
+                </dl>
+                <input type="hidden" name="receivables_payway">
+            </div>
+        </div>
+        <div class="reRow clearfix">
+            <span><i>&#42</i>收款金额：</span>
+            <input type="text" class="receivablesInp" name="receivables_cost">
+        </div>
+        <div class="reRow clearfix">
+            <span>&nbsp;</span>
+            <input type="button" class="receivablesConfirm" id="receivablesSub" value="提交">
+        </div>
+    </div>
+	<!-- 收款 e -->
+
+</div>
+
+
+<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+<script src="__PUBLIC__/js/jquery.lib.min.js"></script>
+<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+<script src="__PUBLIC__/js/paymentInformation.js?v=20160908"></script>
+<script>
+    var max_cost = "{:C('ADMIN_USER_MAX_DISCOUNT')}";
+</script>
+</body>
+</html>

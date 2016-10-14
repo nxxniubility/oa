@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/employeesList.css">
+    <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+<div class="wrapBox" id="lUserWrap">
+    <div class="feCont">
+        <div class="feContTop clearfix">
+            <div class="topTit l">
+                <span class="masterList">离职员工列表</span>
+            </div>
+            <div class="topRight r">
+            </div>
+        </div>
+        <div class="feMiddle">
+            <div class="feMiddleTop">
+                <form action="{:U('System/Personnel/leaveSystemUserList')}" method="get" target="main" onsubmit="return false;">
+                    <div class="selectbox2 area l">
+                        <dl class="select2">
+                            <dt>
+                                <if condition="$data['requery']['role_id'] eq 0">
+                                    <div class="select_title l">全部职位</div>
+                                    <else />
+                                    <foreach name="data['roleAll']['data']" item="v" key="k">
+                                        <if condition="($v['id'] eq $data['requery']['role_id'])">
+                                            <div class="select_title l">{$v.name}</div>
+                                        </if>
+                                    </foreach>
+                                </if>
+                                <div class="arrow r"></div>
+                            </dt>
+                            <dt class="caption">
+                                <div class="select_title2 l dt_btn" data-name="role_id" data-value="0">全部职位</div>
+                            </dt>
+                            <foreach name="data['departmentAll']['data']" item="v" key="k">
+                                <dt class="caption">
+                                    <div class="select_title2 l " data-name="role_id" data-value="{$v2.id}">{$v.departmentname}</div>
+                                </dt>
+                                <foreach name="data['roleAll']['data']" item="v2" key="k2">
+                                    <if condition="$v['department_id'] eq $v2['department_id']">
+                                        <dd class="fxDone" data-name="role_id" data-value="{$v2.id}">{$v2.name}</dd>
+                                    </if>
+                                </foreach>
+                            </foreach>
+                        </dl>
+                        <input type="hidden" name="role_id" value="<?php echo !empty($data['requery']['role_id'])?$data['requery']['role_id']:0; ?>">
+                    </div>
+                    <?php if(!empty($data['zoneAll']['level']) && $data['zoneAll']['level']<4 ){ ?>
+                    <div class="selectbox2 area l">
+                        <dl class="select2">
+                            <dt>
+                                <div class="select_title l">选择大区及城市</div>
+                                <div class="arrow r"></div>
+                            </dt>
+                            <?php if(!empty($data['zoneAll']['level']) && $data['zoneAll']['level']==1){ ?>
+                                <dt class="caption2">
+                                    <div class="select_title3 l dt_btn" data-name='zone_id' onclick="getArea();" data-value="{$data['zoneAll']['zone_id']}">总部</div>
+                                </dt>
+                            <?php } ?>
+                            <?php if(!empty($data['zoneAll']['level']) && $data['zoneAll']['level']<4 ){ ?>
+                                <foreach name="data['zoneAll']['children']" item="v" key="k">
+                                    <?php if( $v['level'] == 2 ){ ?>
+                                        <?php if( !empty($v['children']) ){ ?>
+                                            <dt class="caption">
+                                                <div class="select_title2 l dt_btn" onclick="getArea();" data-name='zone_id' data-value="{$v.zone_id}">{$v.name}</div>
+                                            </dt>
+                                            <?php if( !empty($v['children']) ){ ?>
+                                                <foreach name="v['children']" item="v2" key="k2">
+                                                    <dd class="fxDone" onclick="getArea('{$v2.zone_id}');" data-name='zone_id' data-value="{$v2.zone_id}">{$v2.name}</dd>
+                                                </foreach>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    <?php }else{ ?>
+                                        <dd class="fxDone" onclick="getArea('{$v.zone_id}');" data-name='zone_id' data-value="{$v.zone_id}">{$v.name}</dd>
+                                    <?php } ?>
+                                </foreach>
+                            <?php } ?>
+                        </dl>
+                    </div>
+                    <?php } ?>
+                    <div class="selectbox chooseCenter l" id="areaBody" style="display: none">
+
+                    </div>
+                    <input type="hidden" name="zone_id" value="<?php echo !empty($data['requery']['zone_id'])?$data['requery']['zone_id']:0; ?>">
+                    <div class="feSearchBox l">
+                        <div class="selectbox searchInp l">
+                            <dl class="select">
+                                <dt>
+                                    <div class="select_title l"><?php echo $data['requery']['key_name']=='realname'?'真实姓名':($data['requery']['key_name']=='email'?'电子邮箱':($data['requery']['key_name']=='system_user_id'?'用户ID':'请选择搜索类型')) ?></div>
+                                    <div class="arrow r"></div>
+                                </dt>
+                                <dd class="fxDone" data-value="realname">真实姓名</dd>
+                                <dd class="fxDone" data-value="username">手机号码</dd>
+                                <dd class="fxDone" data-value="email">公司邮箱</dd>
+                                <dd class="fxDone" data-value="system_user_id">用户ID</dd>
+                            </dl>
+                            <input type="hidden" name="key_name" value="<?php echo !empty($data['requery']['key_name'])?$data['requery']['key_name']:''; ?>">
+                        </div>
+                        <input type="text" class="feInp" name="key_value" value="<?php echo !empty($data['requery']['key_value'])?$data['requery']['key_value']:''; ?>">
+                        <input type="submit" class="feSearchSubmit" value="搜索">
+                    </div>
+                </form>
+            </div>
+            
+            <div id="pjax_body">
+            	
+            	<table cellpadding="0" cellspacing="0" id="lUserTable">
+            		<tr>
+            			<th class="firItem">选中</th>
+            			<th>
+            				<span>ID</span>
+            			</th>
+            			<th>头像</th>
+            			<th>真实姓名</th>
+            			<th>所属区域</th>
+            			<th>所属部门及职位</th>
+            			<th>性别</th>
+            			<th>员工状态</th>
+            			<th>注册时间</th>
+            			<th>登录时间</th>
+            			<th>操作</th>
+            		</tr>
+            		
+            		<foreach name="data['systemUserAll']['data']" item="v" key="k">
+            			<tr>
+							<td class="firItem">
+								<input type="checkbox" name="feCheck" class="feCheckBox">
+							</td>            				
+							<td>{$v.system_user_id}</td>
+							<if condition = "!empty($v[face])">
+	                            <td class="sPic"><img src="{:$v[face].'@30w.jpg'}"></td>
+	                        <elseif condition="$v[sex] eq 1"/>
+	                            <td class="sPic"><img src="__PUBLIC__/images/personalInfo_01-02.jpg"></td>
+	                        <else/>
+	                            <td class="sPic"><img src="__PUBLIC__/images/personalInfo_01-01.jpg"></td>
+	                        </if>
+							<td>{$v.realname}</td>
+							<td>{$v.zonename}</td>
+							<td>{$v.role_names}</td>
+							<td>{: $v['sex']==1?'男':($v['sex']==2?'女':'未知'); }</td>
+							<td>{$v.usertype_name }</td>
+							<td>{: date('Y-m-d H:i:s',$v['createtime']) }</td>
+							<td>{: !empty($v['logintime'])?date('Y-m-d H:i:s',$v['logintime']):'--'; }</td>
+							<td>
+								<a href="javascript:;" class="proSelect"><i></i></a>
+	                            <div class="otherOperation">
+	                                <div class="triangle"></div>
+	                                <div class="otherIcon">
+	                                    <ul>
+	                                        <if condition="($v['system_user_info_id'] eq 0)">
+	                                            <li>
+	                                                <a href="javascript:;" onclick="layer.msg('改员工还未添加档案内容',{icon:2});">
+	                                                    <span class="fileDetail"></span>
+	                                                    <em>档案详情</em>
+	                                                </a>
+	                                            </li>
+	                                        <else />
+	                                            <li>
+	                                                <a href="{:$data['url_systemUserInfo'].'?user_id='.$v['system_user_id']}">
+	                                                    <span class="fileDetail"></span>
+	                                                    <em>档案详情</em>
+	                                                </a>
+	                                            </li>
+	                                            <li>
+	                                                <a href="{:U('System/Personnel/editSystemUserInfo').'?user_id='.$v['system_user_id']}">
+	                                                    <span class="fileChange"></span>
+	                                                    <em>修改档案</em>
+	                                                </a>
+	                                            </li>
+	                                        </if>
+	                                        <li>
+	                                            <a href="<?php echo U('System/Personnel/editSystemUser').'?user_id='.$v['system_user_id']; ?>">
+	                                                <span class="modify"></span>
+	                                                <em>修改账号</em>
+	                                            </a>
+	                                        </li>
+	                                        <li>
+	                                            <a href="javascript:;" class="delSystemUser">
+	                                                <span class="delete"></span>
+	                                                <em>删除账号</em>
+	                                            </a>
+	                                        </li>
+	                                    </ul>
+	                                </div>
+	                            </div>
+							</td>
+            			</tr>
+            		</foreach>	
+            	</table>
+            	
+            	
+            	
+            	<dl class="feOptions clearfix">
+                    <div class="leftChoose">
+                        <input type="checkbox" class="feCheckBox1" id="feCheckBox1">
+                        <span>全选</span>
+                        <input type="button" value="删除所选" class="delInp">
+                    </div>
+                    <div class="collegaPage" id="paging">
+                        {$data['paging']}
+                    </div>
+                </dl>
+            </div>
+            
+            
+            
+            
+            <!--<div class="feMiddleList" id="pjax_body">
+                <dl class="feTit clearfix">
+                    <dt class="wOne">选中</dt>
+                    <dt class="wTwo proSequence clearfix">
+                        <span>ID</span>
+                        <i class="proListID"></i>
+                    </dt>
+                    <dt class="wThr">头像</dt>
+                    <dt class="wFou">真实姓名</dt>
+                    <dt class="wSix">所属区域</dt>
+                    <dt class="wFiv">所属部门及职位</dt>
+                    <dt class="wSev">性别</dt>
+                    <dt class="wEig">员工状态</dt>
+                    <dt class="wNin">注册时间</dt>
+                    <dt class="wTen">登录时间</dt>
+                    <dt class="wEle">操作</dt>
+                </dl>
+
+                <foreach name="data['systemUserAll']['data']" item="v" key="k">
+                    <dl class="clearfix">
+                        <dd class="wOne">
+                            <input type="checkbox" name="feCheck" class="feCheckBox">
+                        </dd>
+                        <dd class="wTwo">{$v.system_user_id}</dd>
+                        <if condition = "!empty($v[face])">
+                            <dd class="wThr"><img src="{:$v[face].'@30w.jpg'}"></dd>
+                        <elseif condition="$v[sex] eq 1"/>
+                            <dd class="wThr"><img src="__PUBLIC__/images/personalInfo_01-02.jpg"></dd>
+                        <else/>
+                            <dd class="wThr"><img src="__PUBLIC__/images/personalInfo_01-01.jpg"></dd>
+                        </if>
+
+                        <dd class="wFou">{$v.realname}&nbsp;</dd>
+                        <dd class="wSix">{$v.zonename}&nbsp;</dd>
+                        <dd class="wFiv">{$v.role_names}&nbsp;</dd>
+                        <dd class="wSev">{: $v['sex']==1?'男':($v['sex']==2?'女':'未知'); }&nbsp;</dd>
+                        <dd class="wEig">{: $v['usertype']==14?'正式员工':($v['usertype']==13?'试用期':($v['usertype']==12?'实习生':($v['usertype']==11?'兼职':'离职'))); }&nbsp;</dd>
+                        <dd class="wNin">{: date('Y-m-d H:i:s',$v['createtime']) }&nbsp;</dd>
+                        <dd class="wTen">{: !empty($v['logintime'])?date('Y-m-d H:i:s',$v['logintime']):'--'; }&nbsp;</dd>
+                        <dd class="wEle">
+                            <a href="javascript:;" class="proSelect"><i></i></a>
+                            <div class="otherOperation">
+                                <div class="triangle"></div>
+                                <div class="otherIcon">
+                                    <ul>
+                                        <if condition="($v['system_user_info_id'] eq 0)">
+                                            <li>
+                                                <a href="javascript:;" onclick="layer.msg('改员工还未添加档案内容',{icon:2});">
+                                                    <span class="fileDetail"></span>
+                                                    <em>档案详情</em>
+                                                </a>
+                                            </li>
+                                        <else />
+                                            <li>
+                                                <a href="{:$data['url_systemUserInfo'].'?user_id='.$v['system_user_id']}">
+                                                    <span class="fileDetail"></span>
+                                                    <em>档案详情</em>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{:U('System/Personnel/editSystemUserInfo').'?user_id='.$v['system_user_id']}">
+                                                    <span class="fileChange"></span>
+                                                    <em>修改档案</em>
+                                                </a>
+                                            </li>
+                                        </if>
+                                        <li>
+                                            <a href="<?php echo U('System/Personnel/editSystemUser').'?user_id='.$v['system_user_id']; ?>">
+                                                <span class="modify"></span>
+                                                <em>修改账号</em>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;" class="delSystemUser">
+                                                <span class="delete"></span>
+                                                <em>删除账号</em>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+                </foreach>
+
+                <dl class="feOptions clearfix">
+                    <div class="leftChoose">
+                        <input type="checkbox" class="feCheckBox1" id="feCheckBox1">
+                        <span>全选</span>
+                        <input type="button" value="删除所选" class="delInp">
+                    </div>
+                    <div class="collegaPage" id="paging">
+
+                    </div>
+                    <script>
+                        $(function(){
+                            //异步获取分页
+                            var data = {
+                                'type':'getCount'
+                            };
+                            common_ajax2(data, window.location.href, 'no', paging);
+                            function paging(data){
+                                $('#paging').empty();
+                                if(data.code==0){
+                                    $('#paging').html(data.data);
+                                }
+                            };
+                        });
+                    </script>
+                </dl>
+            </div>-->
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="__PUBLIC__/js/pjax/css/nprogress.css">
+<script type="text/javascript" src="__PUBLIC__/js/pjax/js/jquery.pjax.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/pjax/js/nprogress.js"></script>
+<script src="__PUBLIC__/js/employeesList.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+<script>
+    $(function(){
+        if(navigator.userAgent.indexOf("MSIE")>0)
+        {
+            if(navigator.userAgent.indexOf("MSIE 6.0")>0)
+            {
+                $('#foem1').attr('onsubmit',' ');
+            }
+            if(navigator.userAgent.indexOf("MSIE 7.0")>0)
+            {
+                $('#foem1').attr('onsubmit',' ');
+            }
+            if(navigator.userAgent.indexOf("MSIE 8.0")>0)
+            {
+                //	alert("ie8");
+                $('#foem1').attr('onsubmit',' ');
+            }
+        }
+        //pjax
+        $(document).pjax('a', '#pjax_body' ,{fragment:'#pjax_body', timeout:8000});
+        $('form').submit(function (event) {
+            $.pjax.submit(event, '#pjax_body', {fragment:'#pjax_body', timeout:6000});
+        });
+        //pjax链接点击后显示加载动画
+        $(document).on('pjax:send', function() {
+            //加载层-默认风格 loading
+            layer.load(2);
+        });
+        //pjax链接加载完成后隐藏加载动画
+        $(document).on('pjax:complete', function() {
+            //此处 关闭loading
+            layer.closeAll('loading');
+        });
+        //全选
+        $('#feCheckBox1').on('click',function(e){
+            if($(this).is(':checked')){
+                $(":input[name='feCheck']").each(function(){
+                    $(this)[0].checked = true 
+                });
+            }else{
+                $(":input[name='feCheck']").each(function(){
+                   $(this).removeAttr("checked");
+                });
+               
+            }
+        });
+        //离职设置-前置判断
+        $(document).on('click','.usertypeBtn',function(){
+            var system_user_id = $(this).parents('tr').children('td').eq(1).text();
+            var data = {
+                system_user_id:system_user_id,
+                type:'usertype'
+            };
+            layer.confirm('确定要设置离职？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
+            }, function(){});
+        })
+        //账号删除-前置判断
+        $(document).on('click','.delSystemUser',function(){
+            var system_user_id = $(this).parents('tr').children('td').eq(1).text();
+            var data = {
+                system_user_id:system_user_id,
+                type:'del'
+            };
+            layer.confirm('确定要删除该账号？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
+            }, function(){});
+        });
+        $(document).on('click','.delInp',function(){
+            var users = '';
+            $(':input[name="feCheck"]:checked').each(function(k,v){
+                if(k==0){
+                    users = $(this).val();
+                }else{
+                    users += ','+$(this).val();
+                }
+            });
+            var data = {
+                users:users,
+                type:'dels'
+            };
+            layer.confirm('确定要批量删除选中的账号？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
+            }, function(){});
+        });
+    });
+    //获取中心
+    function getArea(zoneid){
+        if(zoneid){
+            $.ajax({
+                url:"{:U('System/Personnel/getZoneList')}",
+                dataType:'json',
+                type:'post',
+                data:{zone_id:zoneid},
+                success:function(redata){
+                    if(redata.code==0) {
+                        if(redata.data.children.length!=''){
+                            $('#areaBody').show();
+                            var str = '<dl class="select2"><dt><div class="select_title l">所有中心</div> <div class="arrow r"></div></dt>';
+                            $.each(redata.data.children, function (n, value) {
+                                str += '<dd class="fxDone" data-name="zone_id" data-value="'+value.zone_id+'">'+value.name+'</dd>'
+                            });
+                            str += '</dl>';
+                            $('#areaBody').html(str);
+                        }else{
+                            $('#areaBody').hide();
+                        }
+                    }
+                }
+            });
+        }else{
+            $('#areaBody').hide();
+        };
+    };
+</script>
+</body>
+</html>

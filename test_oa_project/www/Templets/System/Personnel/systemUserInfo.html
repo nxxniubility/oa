@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/viewProfile.css">
+</head>
+<body>
+<div class="wrapBox" id="sUserDesWrap">
+    <div class="viewFileCont">
+        <div class="vfContTop clearfix">
+            <div class="topTit l">
+                <span class="masterList">员工列表</span>
+                <span><em>&gt;</em>查看档案</span>
+            </div>
+            <div class="topRight r">
+                <a href="javascript:location.href = document.referrer" class="return">返回</a>
+            </div>
+        </div>
+    </div>
+    <div class="vfContMiddle">
+        <div class="vfBox">
+            <div class="vfBoxTop clearfix">
+                <div class="topLeft"></div>
+                <span>基本信息</span>
+                <em></em>
+            </div>
+            <div class="vfBoxMiddle clearfix">
+                <div class="vfRow">
+                    <div class="vfBoxLeft">
+                        <div class="vfRowLeft">姓名：</div>
+                        <div class="vfRowRight">{$data['systemUserInfo']['realname']}</div>
+                    </div>
+                    <div class="vfBoxRight">
+                        <div class="vfRowLeft">性别：</div>
+                        <div class="vfRowRight"><?php echo $data['systemUserInfo']['sex']==1?男:'女'; ?></div>
+                    </div>
+                </div>
+                <div class="vfRow">
+                    <div class="vfBoxLeft">
+                        <div class="vfRowLeft">生日：</div>
+                        <div class="vfRowRight">{:($data['systemUserInfo']['birthday']!=0)?date('Y-m-d',$data['systemUserInfo']['birthday']):''}</div>
+                    </div>
+                    <div class="vfBoxRight">
+                        <div class="vfRowLeft">婚姻状态：</div>
+                        <div class="vfRowRight"><?php echo $data['systemUserInfo']['marital']==0?'未婚':($data['systemUserInfo']['marital']==1?'已婚':'离异'); ?></div>
+                    </div>
+                </div>
+                <div class="vfRow">
+                    <div class="vfBoxLeft">
+                        <div class="vfRowLeft">籍贯：</div>
+                        <div class="vfRowRight">{$data['systemUserInfo']['nativeplace']}</div>
+                    </div>
+                    <div class="vfBoxRight">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+        <div class="vfBox">
+            <div class="vfBoxTop clearfix">
+                <div class="topLeft"></div>
+                <span>教育经历</span>
+                <em></em>
+            </div>
+            <div class="vfBoxMiddle clearfix">
+                <div class="vfRow">
+                    <div class="vfBoxLeft">
+                        <div class="vfRowLeft">学历：</div>
+                        <div class="vfRowRight">{$data['systemUserInfo']['education_name']}</div>
+                    </div>
+                    <div class="vfBoxRight">
+                        <div class="vfRowLeft">毕业院校：</div>
+                        <div class="vfRowRight">{$data['systemUserInfo']['school']}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="vfBox">
+            <div class="vfBoxTop clearfix">
+                <div class="topLeft"></div>
+                <span>联系方式</span>
+                <em></em>
+            </div>
+            <div class="vfBoxMiddle clearfix">
+                <div class="vfRow">
+                    <div class="vfBoxLeft">
+                        <div class="vfRowLeft">手机号码：</div>
+                        <div class="vfRowRight"><?php echo $data['systemUserInfo']['username'] ?></div>
+                    </div>
+                    <div class="vfBoxRight">
+                        <div class="vfRowLeft">公司邮箱：</div>
+                        <div class="vfRowRight">{$data['systemUserInfo']['email']}</div>
+                    </div>
+                </div><div class="vfRow">
+                <div class="vfBoxLeft">
+                    <div class="vfRowLeft">电子邮箱：</div>
+                    <div class="vfRowRight">{$data['systemUserInfo']['plivatemail']}</div>
+                </div>
+                <div class="vfBoxRight">&nbsp;</div>
+            </div>
+            </div>
+        </div>
+        <div class="vfBox">
+            <div class="vfBoxTop clearfix">
+                <div class="topLeft"></div>
+                <span>任职信息</span>
+                <em></em>
+            </div>
+            <div class="vfBoxMiddle clearfix">
+                <div class="vfRow">
+                    <div class="vfBoxLeft">
+                        <div class="vfRowLeft">所属部门及职位：</div>
+                        <div class="vfRowRight">{$data['systemUserInfo']['role_names']}</div>
+                    </div>
+                    <div class="vfBoxRight">
+                        <div class="vfRowLeft">所属区域：</div>
+                        <div class="vfRowRight">{$data['systemUserInfo']['zonename']}</div>
+                    </div>
+                </div>
+                <div class="vfRow">
+                    <div class="vfBoxLeft">
+                        <div class="vfRowLeft">员工状态：</div>
+                        <div class="vfRowRight">{$data['systemUserInfo']['usertype_name']}</div>
+                    </div>
+                    <div class="vfBoxRight">
+                        <div class="vfRowLeft">入职时间：</div>
+                        <div class="vfRowRight"><?php echo date('Y-m-d',$data['systemUserInfo']['entrytime']); ?></div>
+                    </div>
+                </div>
+                <div class="vfRow">
+                    <div class="vfBoxLeft">
+                        <div class="vfRowLeft">转正时间：</div>
+                        <div class="vfRowRight"><?php echo date('Y-m-d',$data['systemUserInfo']['straightime']); ?></div>
+                    </div>
+                    <div class="vfBoxRight">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+        <div class="vfBox">
+            <div class="vfBoxTop clearfix">
+                <div class="topLeft"></div>
+                <span>五险一金</span>
+                <em></em>
+            </div>
+            <div class="vfBoxMiddle clearfix">
+                <div class="vfRow">
+                    <div class="vfBoxLeft">
+                        <div class="vfRowLeft">社保电脑号：</div>
+                        <div class="vfRowRight">{$data['systemUserInfo']['socialsecurity']}</div>
+                    </div>
+                    <div class="vfBoxRight">
+                        <div class="vfRowLeft">公积金账号：</div>
+                        <div class="vfRowRight">{$data['systemUserInfo']['providentfund']}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="vfBox">
+            <div class="vfBoxTop clearfix">
+                <div class="topLeft"></div>
+                <span>其他信息</span>
+                <em></em>
+            </div>
+            <div class="vfBoxMiddle clearfix">
+                <div class="vfRow">
+                    <div class="vfRowLeft2 ">指纹编号：</div>
+                    <div class="vfRowRight2">{$data['systemUserInfo']['check_id']}</div>
+                </div>
+                <div class="vfRow">
+                    <div class="vfRowLeft2 ">备注：</div>
+                    <div class="vfRowRight2">
+                        {$data['systemUserInfo']['remark']}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

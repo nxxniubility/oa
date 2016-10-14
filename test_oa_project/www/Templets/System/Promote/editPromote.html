@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/batchEdit.css">	
+        <style type="text/css">
+		.imRight .imSelect { width:150px;}
+		</style>
+	</head>
+	<body>
+		<div class="wrapBox">
+			<div class="proCont">
+				<div class="proContTop clearfix">
+					<div class="topTit l">
+						<span class="masterList">推广账号管理</span>
+						<span><em>&gt;</em>修改推广计划</span>
+					</div>
+					<div class="topRight r">
+						<a href="<?php echo U('System/promote/index', array('proid_id'=>$promoteInfo['proid_id']));?>" class="return">返回</a>
+					</div>
+				</div>
+					<div class="improContMiddle">
+                         <div class="proRow clearfix">
+							<div class="imLeft l">推广账号:</div>
+							<div class="imRight l">
+								{$promoteInfo['accountname']}
+							</div>
+						</div>
+						<div class="proRow clearfix">
+							<div class="imLeft l">推广计划:</div>
+							<div class="imRight l">
+								{$promoteInfo['plan']}
+							</div>
+						</div>
+                        <div class="proRow clearfix">
+							<div class="imLeft l">推广单元:</div>
+							<div class="imRight l">
+								{$promoteInfo['planunit']}
+							</div>
+						</div>
+                        <div class="proRow clearfix">
+							<div class="imLeft l">关键词:</div>
+							<div class="imRight l">
+								{$promoteInfo['keyword']}
+							</div>
+						</div>
+                        <div class="proRow clearfix">
+							<div class="imLeft l">PC客服代码:</div>
+							<div class="imRight l">
+								<select class="imSelect" name="pcservice_id"  id="pcservice_id">
+									<option value="0"  >请选择客服代码</option>
+									<foreach name = "promoteInfo['pcServicecode']['data']" item = "pcservice">
+										<option value="{$pcservice['servicecode_id']}"   <if condition="$pcservice['servicecode_id'] eq $promoteInfo['pcservice_id']"> selected=" selected"</if>>{$pcservice['title']}</option>
+									</foreach>
+								</select>
+							</div>
+						</div>
+						<div class="proRow clearfix">
+							<div class="imLeft l">移动客服代码:</div>
+							<div class="imRight l">
+								<select class="imSelect" name="mservice_id"  id="mservice_id">
+									<option value="0" >请选择客服代码</option>
+									<foreach name = "promoteInfo['mServicecode']['data']" item = "mservice">
+										<option value="{$mservice['servicecode_id']}"  <if condition="$mservice['servicecode_id'] eq $promoteInfo['mservice_id']"> selected=" selected"</if>  >{$mservice['title']}</option>
+									</foreach>
+								</select>
+							</div>
+						</div>
+						<div class="proRow clearfix">
+							<div class="imLeft l">PC端专题页:</div>
+							<div class="imRight l">
+								<div class="pcUploadBox">
+									<input type="button" class="pcUploadBtn" id="pcUploadBtn" value="选择专题页">&nbsp;&nbsp;<span>{$promoteInfo['pc_page']}</span>
+								</div>
+								<input type="hidden" name="pc_pages_id" autocomplete="off"  value="{$promoteInfo['pc_pages_id']}"  >
+							</div>
+						</div>
+						<div class="proRow clearfix">
+							<div class="imLeft l">移动端专题页:</div>
+							<div class="imRight l">
+								<div class="mobileUploadBox">
+									<input type="button" class="mbUploadBtn" id="mUploadBtn" value="选择专题页">&nbsp;&nbsp;<span>{$promoteInfo['m_page']}</span>
+								</div>
+								<input type="hidden" name="m_pages_id" autocomplete="off"  value="{$promoteInfo['m_pages_id']}">
+							</div>
+						</div>
+						<div class="proRow clearfix">
+							<div class="imLeft l">&nbsp;</div>
+							<div class="imRight l">
+								<input type="submit" class="imSubmit" value="提交">
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+		
+		<!-- 选择模版 S -->
+		<div class="chooseTemplate" id="pcChooseTemplate">
+			<div class="temTop clearfix">
+				<span>PC端模版</span>
+				<div class="imClose"></div>
+			</div>
+			<div class="temCont">
+				<div class="temSearch clearfix">
+					<span>筛选分类：</span>
+					<select name="pcPagesType_id">
+						<option value="0" selected="selected">请选择分类：</option>
+						<foreach name = "promoteInfo['pcPagesTypeList']" item = "pcPagesType">
+							<option value="{$pcPagesType['pagestype_id']}">{$pcPagesType['typename']}</option>
+						</foreach>
+					</select>
+					<input type="button" class="temSearchBtn" id="pcTemSearchBtn" value="搜索">
+				</div>
+				<div class="temMiddle">
+					<div class="titBox clearfix">
+						<span class="optionsSp">选中</span>
+						<span class="picSp">缩略图</span>
+						<span class="desSp">详细</span>
+					</div>
+					<div class="contBox" id="pcContBox">
+				
+
+					</div>
+				</div>
+				<a href="javascript:;" class="imChooseBtn" id="pcSure">确定</a>
+			</div>
+		</div>
+		<!-- 选择模版 E -->
+		<div class="chooseTemplate" id="mChooseTemplate">
+			<div class="temTop clearfix">
+				<span>移动端模版</span>
+				<div class="imClose"></div>
+			</div>
+			<div class="temCont">
+				<div class="temSearch clearfix">
+					<span>筛选分类：</span>
+					<select name="mPagesType_id">
+						<option value="0" selected="selected">请选择分类：</option>
+						<foreach name = "promoteInfo['mPagesTypeList']" item = "mPagesType">
+							<option value="{$mPagesType['pagestype_id']}">{$mPagesType['typename']}</option>
+						</foreach>
+					</select>
+					<input type="button" class="temSearchBtn2" id="mTemSearchBtn" value="搜索">
+				</div>
+				<div class="temMiddle">
+					<div class="titBox clearfix">
+						<span class="optionsSp">选中</span>
+						<span class="picSp">缩略图</span>
+						<span class="desSp">详细</span>
+					</div>
+					<div class="contBox" id="mContBox">
+
+					</div>
+				</div>
+				<a href="javascript:;" class="imChooseBtn" id="mSure">确定</a>
+			</div>
+		</div>
+		
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/jquery.mousewheel.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/batchEdit.js"></script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>	
+		<script>
+			$(function(){
+				$('#pcTemSearchBtn').click(function(){
+					layer.load(2);
+					$('#pcContBox').html('');
+				    $.ajax({
+				        url:"<?php echo U('System/Promote/pagesList'); ?>",
+				        dataType:'json',
+				        type:'post',
+				        data:{pagesType_id:$(':input[name="pcPagesType_id"]').val(),terminal_id:2},
+				        success:function(reflag){
+				            layer.closeAll('loading');
+				            if(reflag.code==0){
+				            	var str = '';
+				               $.each(reflag.data.data,function(k,v){
+				               		str+="<div class='temRows clearfix'><label for='chosse1'><input type='radio' id='chosse1' name='selectCategory1'  data-subject='"+v.subject+"' value='"+v.pages_id+"'></label><div class='picImgBox'><div class='limit'><img src='"+v.litpic+"' alt='缩略图'></div></div><div class='desBox clearfix'><p class='theme'>"+v.subject+"</p><p class='time'>备注："+v.remark+"</p><p class='time'>创建时间："+getDate(v.createtime)+"</p><p class='pang conversionRate'>信息转化率：0%</p><p class='pang forecastingRates'>预报率：0%</p><p class='pang views'>访问：0</p></div></div>";
+				               });
+				               	$('#pcContBox').html(str);
+				            }else{
+				                layer.msg(reflag.msg,{icon:2});
+				            }
+				        },
+				        error:function(){
+				            layer.msg('网络异常,请稍后再试！',{icon:2});
+				            layer.closeAll('loading');
+				        }
+				    });
+				});
+				$('#mTemSearchBtn').click(function(){
+					layer.load(2);
+					$('#mContBox').html('');
+				    $.ajax({
+				        url:"<?php echo U('System/Promote/pagesList'); ?>",
+				        dataType:'json',
+				        type:'post',
+				        data:{pagesType_id:$(':input[name="mPagesType_id"]').val(),terminal_id:1},
+				        success:function(reflag){
+				            layer.closeAll('loading');
+				            if(reflag.code==0){
+				            	var str = '';
+				               $.each(reflag.data.data,function(k,v){
+				               		str+="<div class='temRows clearfix'><label for='chosse1'><input type='radio' id='chosse1' name='selectCategory2'  data-subject='"+v.subject+"' value='"+v.pages_id+"'></label><div class='picImgBox'><div class='limit'><img src='"+v.litpic+"' alt='缩略图'></div></div><div class='desBox clearfix'><p class='theme'>"+v.subject+"</p><p class='time'>备注："+v.remark+"</p><p class='time'>创建时间："+getDate(v.createtime)+"</p><p class='pang conversionRate'>信息转化率：0%</p><p class='pang forecastingRates'>预报率：0%</p><p class='pang views'>访问：0</p></div></div>";
+				               });
+				               	$('#mContBox').html(str);
+				            }else{
+				                layer.msg(reflag.msg,{icon:2});
+				            }
+				        },
+				        error:function(){
+				            layer.msg('网络异常,请稍后再试！',{icon:2});
+				            layer.closeAll('loading');
+				        }
+				    });
+				});
+			});
+
+			function getDate(tm){
+				var tt=new Date(parseInt(tm) * 1000).toLocaleString().replace(/\//g, "-").replace(/下午/g, " ").replace(/上午/g, " ");
+				return tt;
+			}
+
+			$('#accounselect').find('.imSelect').change(function() {
+					$('#planselect').show();
+					$('#planunitselect').hide();
+		            //获取node_id
+		           var proid_id = $(this).val();
+		           $.ajax({
+		           		url:"<?php echo U('System/Promote/getProlevPlanList');?>",
+		           		dataType:'json',
+		           		type:'post',
+		           		data:{proid_id:proid_id},
+		           		success:function(redata){
+		           			if(redata.code==0){
+		           				var str = '<option value="0" selected="selected">请选择推广计划</option>';
+		           				$.each(redata.data,function(n,value) {  
+		           					str+='<option value="'+value.pro_lev_id+'">'+value.name+'</option>';
+		           				});
+
+		           				$('#planselect').find('.imSelect').html(str);
+		           			}
+		           		}
+		           });
+		        });
+
+			$('#planselect').find('.imSelect').change(function() {
+					$('#planunitselect').show();
+		            //获取node_id
+		           var pro_lev_id = $(this).val();
+
+		           $.ajax({
+		           		url:"<?php echo U('System/Promote/getProlevPlanunitList');?>",
+		           		dataType:'json',
+		           		type:'post',
+		           		data:{pro_lev_id:pro_lev_id},
+		           		success:function(redata){
+		           			if(redata.code==0){
+		           				var str = '<option value="0" selected="selected">请选择推广计划单元</option>';
+		           				$.each(redata.data,function(n,value) {  
+		           					str+='<option value="'+value.pro_lev_id+'" >'+value.name+'</option>';
+		           				});
+		           				$('#planunitselect').find('.imSelect').html(str);
+		           			}
+		           		}
+		           });
+		        });
+
+		    $(document).ready(function() {
+		        //提交
+		        $('.imSubmit').click(function() {
+		            //获取node_id
+		            var access='';
+		            if($('.radio:checked').length>0){
+		                for(var i=0;i<$('.radio:checked').length;i++){
+		                    var Obj = null;
+		                    Obj = $('.radio:checked').eq(i);
+		                    if(i==0){
+		                        access+=Obj.val()+'-'+Obj.attr('pid')+'-'+Obj.attr('level');
+		                    }else{
+		                        access+=','+Obj.val()+'-'+Obj.attr('pid')+'-'+Obj.attr('level');
+		                    }
+		                }
+		            }
+		            var data = {
+						pro_lev_id:$('#planunitselect').find('.imSelect').val(),
+		                pc_pages_id:$(':input[name="pc_pages_id"]').val(),
+		                m_pages_id:$(':input[name="m_pages_id"]').val(),
+						pcservice_id:$('#pcservice_id').val(),
+						mservice_id:$('#mservice_id').val(),
+		                access:access
+		            };
+		            common_ajax(data);
+		        });
+		    });
+		</script>
+		
+	</body>
+</html>

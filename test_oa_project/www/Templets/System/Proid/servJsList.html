@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/customerList.css">
+	</head>
+	<body>
+		<div class="wrapBox" id="cusWrap">
+			<div class="proCont">
+				<div class="proContTop clearfix">
+					<div class="topTit l">
+						<span class="masterList">客服代码管理</span>
+						<!--<span><em>&gt;</em>推广列表 </span>-->
+					</div>
+					<div class="topRight r">
+						<a href="{$data['url_addServ']}" class="return">添加客服代码</a>
+					</div>
+				</div>
+				
+				<table cellpadding="0" cellspacing="0" id="clTable">
+					<tr>
+						<th class="firItem">
+							<span>ID</span>
+							<i class="proListID" onclick="location.href='{$data[\'url_servicecode_id\']}'"></i>
+						</th>
+						<th>标题</th>
+						<th>所属终端分类</th>
+						<th>咨询链接</th>
+						<th>备注</th>
+						<th>创建时间</th>
+						<th>操作</th>
+					</tr>
+					<foreach name="data['servicecodeAll']['data']" item="v" key="k" >
+						<tr>
+							<td class="firItem">
+								<span>{$v.servicecode_id}</span>
+							</td>
+							<td title="{$v.title}">{$v.title}</td>
+							<td>{$v.terminalname}</td>
+							<td title="{$v.url}">{$v.url}</td>
+							<td title="{$v.remark}">{$v.remark}</td>
+							<td><?php echo date('Y-m-d H:i:s',$v['createtime']);?></td>
+							<td class="dtOperation">
+								<a href="javascript:;" class="proSelect clearfix"><i></i></a>
+								<div class="otherOperation">
+									<div class="triangle"></div>
+			                        <div class="otherIcon">
+			                            <ul class=" clearfix">
+			                            	<li>
+			                                	<a href="<?php echo $data['url_detailServ'].'?serv_id='.$v['servicecode_id']; ?>">
+				                                    <span class="view"></span>
+				                                    <em>查看</em>
+				                                </a>
+			                                </li>
+			                                <li>
+			                                	<a href="<?php echo $data['url_editServ'].'?serv_id='.$v['servicecode_id']; ?>">
+				                                    <span class="setEdit"></span>
+				                                    <em>修改</em>
+				                                </a>
+			                                </li>
+			                                <li>
+			                                	<a href="javascript:delServ('{$v.servicecode_id}');">
+				                                    <span class="setDel"></span>
+				                                    <em>删除</em>
+				                                </a>
+			                                </li>
+			                            </ul>
+			                        </div>
+			                    </div>
+							</td>
+						</tr>
+					</foreach>
+				</table>
+				
+				<!--<div class="proContMiddle">
+					<dl class="proTit clearfix">
+						<dt class="wOne proSequence clearfix">
+							<span>ID</span>
+							<i class="proListID" onclick="location.href='{$data[\'url_servicecode_id\']}'"></i>
+						</dt>
+						<dt class="wTwo">标题</dt>
+						<dt class="wThr">所属终端分类</dt>
+						<dt class="wFou">咨询链接</dt>
+						<dt class="wFiv">备注</dt>
+						<dt class="wSev">创建时间</dt>
+						<dt class="wEig">操作</dt>
+					</dl>
+					<foreach name="data['servicecodeAll']['data']" item="v" key="k" >
+					<dl class="clearfix">
+						<dd class="wOne proListDetails">
+							<span>{$v.servicecode_id}</span>
+						</dd>
+						<dd class="wTwo" title={$v.title}>{$v.title}&nbsp;</dd>
+						<dd class="wThr">{$v.terminalname}&nbsp;</dd>
+						<dd class="wFou" title={$v.url}>{$v.url}&nbsp;</dd>
+						<dd class="wFiv" title={$v.remark}>{$v.remark}&nbsp;</dd>
+						<dd class="wSev"><?php echo date('Y-m-d H:i:s',$v['createtime']);?>&nbsp;</dd>
+						<dd class="wEig">
+							<a href="javascript:;" class="proSelect clearfix"><i></i></a>
+							<div class="otherOperation">
+								<div class="triangle"></div>
+		                        <div class="otherIcon">
+		                            <ul class=" clearfix">
+		                            	<li>
+		                                	<a href="<?php echo $data['url_detailServ'].'?serv_id='.$v['servicecode_id']; ?>">
+			                                    <span class="view"></span>
+			                                    <em>查看</em>
+			                                </a>
+		                                </li>
+		                                <li>
+		                                	<a href="<?php echo $data['url_editServ'].'?serv_id='.$v['servicecode_id']; ?>">
+			                                    <span class="setEdit"></span>
+			                                    <em>修改</em>
+			                                </a>
+		                                </li>
+		                                <li>
+		                                	<a href="javascript:delServ('{$v.servicecode_id}');">
+			                                    <span class="setDel"></span>
+			                                    <em>删除</em>
+			                                </a>
+		                                </li>
+		                            </ul>
+		                        </div>
+		                    </div>
+						</dd>
+					</dl>
+					</foreach>
+				</div>-->
+
+				<div class='collegaPage clearfix'>
+					{$data['paging']}
+				</div>
+			</div>
+		</div>
+
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/customerList.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script>
+			//删除
+			function delServ(serv_id){
+				layer.confirm('确定要删除该客服代码？', {
+					btn: ['确定','取消'] //按钮
+				}, function(){
+					var data = {
+						serv_id:serv_id
+					};
+					common_ajax(data,'{$data[\'url_delServ\']}','reload');
+				}, function(){});
+			}
+		</script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+	</body>
+</html>

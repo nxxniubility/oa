@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/external.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/templateList.css">
+</head>
+
+<body>
+<div class="wrapBox">
+    <div class="proCont">
+        <div class="proContTop clearfix">
+            <div class="topTit l">
+                <span class="masterList">专题页列表</span>
+                <span><em>&gt;</em>添加专题页 </span>
+            </div>
+            <div class="topRight r">
+                <a href="{$data['url_pages']}" class="return">返回</a>
+            </div>
+        </div>
+        <div class="addContMiddle">
+            <div class="addMiddle2">
+                <span class="tlStep1"></span>
+                <span class="tlStep2"></span>
+            </div>
+            <div class="addRow clearfix">
+                <div class="addRowLeft"><i>*</i>主题:</div>
+                <div class="addRowRight">
+                    <input type="text" class="addInp" name="subject">
+                </div>
+            </div>
+            <div class="addRow clearfix">
+                <div class="addRowLeft"><i>*</i>所属终端分类:</div>
+                <div class="addRowRight">
+                    <div class="selectbox l">
+                        <dl class="select">
+                            <dt>
+                            <div class="select_title l">选择所属终端分类:</div>
+                            <div class="arrow r"></div>
+                            </dt>
+                            <foreach name="data['terminalAll']" item="v" key="k" >
+                                <dd class="fxDone terminal_{$v.terminal_id}" onclick="pagestype('{$v.terminal_id}');" data-value="{$v.terminal_id}">{$v.terminalname}</dd>
+                            </foreach>
+                        </dl>
+                        <input type="hidden" name="terminal_id">
+                    </div>
+                    <a href="javascript:;" id="terminalCategory" class="terminalCategory">管理终端分类</a>
+                </div>
+            </div>
+            <div class="addRow clearfix">
+                <div class="addRowLeft"><i>*</i>所属服务分类:</div>
+                <div class="addRowRight">
+                    <div class="selectbox l">
+                        <dl class="select" id="pagestype_select">
+                            <dt>
+                            <div class="select_title l">请选择所属服务分类:</div>
+                            <div class="arrow r"></div>
+                            </dt>
+                            <dd class="fxDone">请先选择终端分类</dd>
+                        </dl>
+                        <input type="hidden" name="pagestype_id">
+                    </div>
+                    <a href="javascript:;" id="serviceCategory" class="serviceCategories" style="display: none">管理服务分类</a>
+                </div>
+            </div>
+            <div id="pagestype_body" style="display: none">
+                <foreach name="data['pagesType']" item="v" key="k" >
+                    <dd class="fxDone pagestype_{$v.pagestype_id} terminal_{$v.terminal_id}" data-value="{$v.pagestype_id}">{$v.typename}</dd>
+                </foreach>
+            </div>
+            <div class="addRow clearfix">
+                <div class="addRowLeft"><i>*</i>所属课程:</div>
+                <div class="addRowRight">
+                    <div class="selectbox l">
+                        <dl class="select">
+                            <dt>
+                            <div class="select_title l">请选择所属课程:</div>
+                            <div class="arrow r"></div>
+                            </dt>
+                            <foreach name="data['courseAll']" item="v" key="k" >
+                                <dd class="fxDone" data-value="{$v.course_id}">{$v.coursename}</dd>
+                            </foreach>
+                            <dd class="fxDone course_0" data-value="0">其他</dd>
+                        </dl>
+                        <input type="hidden" name="course_id">
+                    </div>
+                </div>
+            </div>
+            <div class="addRow clearfix dn" id="show_img">
+                <div class="addRowLeft l"></div>
+                <div class="addRowRight l" style="width:220px;height: 150px;overflow: hidden">
+                    <img width="100%" src="" alt="">
+                </div>
+            </div>
+            <div class="addRow clearfix">
+                <div class="addRowLeft l"><i>*</i>预览图:</div>
+                <div class="addRowRight l">
+                    <div class="imUploadBox">
+                        <span>上传图片</span>
+                        <span  id="uploadLabel">上传图片</span>
+                        <input type="button" class="imUploadBtn"  id="imUploadBtn" >
+                        <input type="hidden"  name="image"  autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="addRow clearfix">
+                <div class="addRowLeft"></div>
+                <div class="addRowRight">
+                    <a href="javascript:;" id="subform" class="submitBtn">下一步</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dn">
+    <!-- 添加终端分类模板 S -->
+    <div class="newTemplate popup" id="popup1">
+        <div class="newMiddle" id="terminal">
+            <foreach name="data['terminalAll']" item="v" key="k" >
+                <div class="newRow clearfix newCategory old_body">
+                    <div class="newLeft l"><i>*</i><span class="lbl">终端分类名称<?php echo ($k+1); ?>：</span></div>
+                    <div class="newRight l">
+                        <input type="text" class="newIpn l" name="newIpn" oldName="{$v.terminalname}" pid="{$v.terminal_id}" value="{$v.terminalname}" autocomplete="off" placeholder="请输入分类名称">
+                        <div class="delCategory l" onclick="delTerminal(this,'{$v.terminal_id}');"></div>
+                    </div>
+                </div>
+            </foreach>
+            <div class="newRow clearfix">
+                <div class="newLeft l"> </div>
+                <div class="newRight l">
+                    <div class="newBtn">新增分类</div>
+                </div>
+            </div>
+            <div class="newRow clearfix">
+                <div class="newLeft l">&nbsp;</div>
+                <div class="newRight newFont l">
+                    <input type="submit" class="setSubmit" id="terminalSubtn" value="提交">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 添加终端分类模板 E -->
+    <!--终端分类添加行模板-->
+    <div class="newRow clearfix newRowModel newCategory new_body">
+        <div class="newLeft l"><i>*</i><span class="lbl">终端分类名称1：</span></div>
+        <div class="newRight l">
+            <input type="text" class="newIpn l" name="newIpn"  placeholder="请输入分类名称">
+            <div class="delCategory l"></div>
+        </div>
+    </div>
+    <!--终端分类添加行模板END-->
+    <!-- 添加管理服务分类模板 S -->
+    <div class="newTemplate popup"  id="popup2">
+        <div class="newMiddle" id="pagesType">
+            <foreach name="data['pagesType']" item="v" key="k" >
+                <div class="newRow clearfix newCategory old_body terminal_{$v.terminal_id}">
+                    <div class="newLeft l"><i>*</i><span class="lbl">服务分类名称<?php echo ($k+1); ?>：</span></div>
+                    <div class="newRight l">
+                        <input type="text" class="newIpn l" name="newIpn" tid="{$v.terminal_id}" oldName="{$v.typename}" pid="{$v.pagestype_id}" value="{$v.typename}" autocomplete="off" placeholder="请输入分类名称">
+                        <div class="delCategory l" onclick="delPagesType(this,'{$v.pagestype_id}');"></div>
+                    </div>
+                </div>
+            </foreach>
+            <div class="newRow clearfix">
+                <div class="newLeft l"> </div>
+                <div class="newRight l">
+                    <div class="newBtn">新增分类</div>
+                </div>
+            </div>
+            <div class="newRow clearfix">
+                <div class="newLeft l">&nbsp;</div>
+                <div class="newRight newFont l">
+                    <input type="submit" class="setSubmit" id="pagesTypeSubtn" value="提交">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 添加管理服务分类模板 E -->
+</div>
+<script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
+<script src="__PUBLIC__/js/jquery.lib.min.js"></script>
+<script src="__PUBLIC__/js/templateList.js"></script>
+<script src="__PUBLIC__/js/addPagesAliconfig.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<include file="Common@Html/alioss"  />
+
+<script>
+    $(function(){
+        $('#subform').click(function() {
+            var data = {
+                subject:$(':input[name="subject"]').val(),
+                terminal_id:$(':input[name="terminal_id"]').val(),
+                pagestype_id:$(':input[name="pagestype_id"]').val(),
+                course_id:$(':input[name="course_id"]').val(),
+                image:$(':input[name="image"]').val()
+            };
+            if($(':input[name="image"]').val()==''){
+                layer.msg('请上传图片或请等待图片上传完成在提交',{icon:2});
+            }else{
+                common_ajax(data);
+            };
+        });
+        //终端分类 提交修改
+        $('#terminalSubtn').click(function(){
+            var addTerminal = '';
+            var editTerminal = '';
+            if( $('#terminal').find('.new_body').length>0 ){
+                for(var i=0;i<$('#terminal').find('.new_body').length;i++){
+                    var _thisObj = $('#terminal').find('.new_body').eq(i);
+                    if(i==0){
+                        addTerminal += _thisObj.find('.newIpn').val();
+                    }else{
+                        addTerminal += '@@'+_thisObj.find('.newIpn').val();
+                    }
+                }
+            }
+            if( $('#terminal').find('.old_body').length>0 ){
+                for(var i=0;i<$('#terminal').find('.old_body').length;i++){
+                    var _thisObj = $('#terminal').find('.old_body').eq(i);
+                    if(_thisObj.find('.newIpn').attr('oldName')!=_thisObj.find('.newIpn').val()){
+                        if(i==0){
+                            editTerminal += _thisObj.find('.newIpn').attr('pid')+'=='+_thisObj.find('.newIpn').val();
+                        }else{
+                            editTerminal += '@@'+_thisObj.find('.newIpn').attr('pid')+'=='+_thisObj.find('.newIpn').val();
+                        }
+                    }
+                }
+            }
+            var data = {
+                addTerminal:addTerminal,
+                editTerminal:editTerminal,
+                type:'addEdit'
+            };
+            common_ajax(data,'{$data[\'url_disposTermin\']}','reload');
+        });
+        //服务分类 提交修改
+        $('#pagesTypeSubtn').click(function(){
+            var addPagesType = '';
+            var editPagesType = '';
+            if( $('#pagesType').find('.new_body').length>0 ){
+                for(var i=0;i<$('#pagesType').find('.new_body').length;i++){
+                    var _thisObj = $('#pagesType').find('.new_body').eq(i);
+                    if(i==0){
+                        addPagesType += _thisObj.find('.newIpn').val()+'=='+$(':input[name="terminal_id"]').val();
+                    }else{
+                        addPagesType += '@@'+_thisObj.find('.newIpn').val()+'=='+$(':input[name="terminal_id"]').val();
+                    }
+                }
+            }
+            if( $('#pagesType').find('.old_body').length>0 ){
+                for(var i=0;i<$('#pagesType').find('.old_body').length;i++){
+                    var _thisObj = $('#pagesType').find('.old_body').eq(i);
+                    if(_thisObj.find('.newIpn').attr('oldName')!=_thisObj.find('.newIpn').val()){
+                        if(i==0){
+                            editPagesType += _thisObj.find('.newIpn').attr('pid')+'=='+_thisObj.find('.newIpn').val()+'=='+_thisObj.find('.newIpn').attr('tid');
+                        }else{
+                            editPagesType += '@@'+_thisObj.find('.newIpn').attr('pid')+'=='+_thisObj.find('.newIpn').val()+'=='+_thisObj.find('.newIpn').attr('tid');
+                        }
+                    }
+                }
+            }
+            var data = {
+                addPagesType:addPagesType,
+                editPagesType:editPagesType,
+                type:'addEdit'
+            };
+            common_ajax(data,'{$data[\'url_dispostPagesType\']}','reload');
+        });
+    });
+    //删除终端分类
+    function delTerminal(obj,terminal_id){
+        var _thisObj = $(obj);
+        layer.confirm('确定要删除该终端分类？', {
+            btn: ['确定','取消'] //按钮
+        }, function(index){
+            layer.load(2);
+            var data = {
+                terminal_id:terminal_id,
+                type:'del'
+            };
+            $.ajax({
+                url:"{$data['url_disposTermin']}",
+                dataType:'json',
+                type:'post',
+                data:data,
+                success:function(reflag){
+                    layer.closeAll();
+                    if(reflag.code && reflag.code!=0){
+                        layer.msg(reflag.msg,{icon:2});
+                    }else{
+                        $('.terminal_'+terminal_id).remove();
+                        _thisObj.closest(".newRow").remove();
+                        orderCategoryNo(_thisObj);
+                    }
+                },
+                error:function(){
+                    layer.closeAll();
+                    layer.msg('网络异常,请稍后再试！',{icon:2});
+                }
+            });
+        }, function(){});
+    };
+    //删除服务分类
+    function delPagesType(obj,pagestype_id){
+        var _thisObj = $(obj);
+        layer.confirm('确定要删除该服务分类？', {
+            btn: ['确定','取消'] //按钮
+        }, function(index){
+            layer.load(2);
+            var data = {
+                pagestype_id:pagestype_id,
+                type:'del'
+            };
+            $.ajax({
+                url:"{$data['url_dispostPagesType']}",
+                dataType:'json',
+                type:'post',
+                data:data,
+                success:function(reflag){
+                    layer.closeAll();
+                    if(reflag.code && reflag.code!=0){
+                        layer.msg(reflag.msg,{icon:2});
+                    }else{
+                        $('.pagestype_'+pagestype_id).remove();
+                        _thisObj.closest(".newRow").remove();
+                        orderCategoryNo(_thisObj);
+                    }
+                },
+                error:function(){
+                    layer.closeAll();
+                    layer.msg('网络异常,请稍后再试！',{icon:2});
+                }
+            });
+        }, function(){});
+    };
+    //获取服务分类
+    function pagestype(id){
+        $('#pagestype_select').find('.select_title').html('请选择服务分类');
+        $('#pagestype_select dd').remove();
+        $(':input[name="pagestype_id"]').val('');
+        $('#pagestype_select').append($('#pagestype_body .terminal_'+id).clone());
+        $('#serviceCategory').show();
+    }
+</script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+</body>
+
+</html>

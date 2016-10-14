@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <title>系统首页-{$siteinfo.sitename}</title>
+	    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+	    <link rel="stylesheet" href="__PUBLIC__/css/external.min.css">
+	</head>
+	<body>
+		<div class="header clearfix {:($engagedStatus['status']==1)?'redBg':''}" style="min-width: 1250px">
+		    <div class="logo l">
+		        <a href="javascript:;">
+					<if condition="$is_dida eq 1">
+						<img src="__PUBLIC__/images/didazp-logo.png" alt="Logo">
+						<else/>
+						<img src="__PUBLIC__/images/newSys_header-01.png" alt="Logo">
+					</if>
+		        </a>
+		    </div>
+		    <ul class="nav l">
+		        <li><a href="{:U('system/Index/index')}">系统主页</a></li>
+		        <li><a href="http://www.zelininfo.com/" target="_blank">网站主页</a></li>
+		    </ul>
+		    <div class="headSearch l">
+		        <div class="inpBox clearfix">
+                    <form action=""  method="get"  id="search_form"  target="main">
+                    	<select class="headSelect l" name="keyname">
+							<option value="username" selected="selected">手机号码</option>
+							<option value="qq">QQ</option>
+							<option value="tel">固定电话</option>
+							<option value="user_id">用户ID</option>
+                    	</select>
+			            <input type="text" name="search" class="headSearchInp l" placeholder="请输入手机号码">
+			            <a href="javascript:;" class="headSearchBtn l">搜索</a>
+                    </form>
+		        </div>
+		    </div>
+		    <ul class="userinfo r">
+		        <li class="userinfo logout_parent">
+					{$system_user.realname}
+					(
+					<foreach name="system_user_role" item="v" key="k">
+						<if condition="$k GT 0">
+							<a href="javascript:;">/{$v.name}</a>
+							<else/>
+							<a href="javascript:;">{$v.name}</a>
+						</if>
+					</foreach>
+					)
+		            <div class="logout">
+		                <a href="{:U('System/Admin/logout')}">退出</a>
+		            </div>
+		            <div class="peopleStatus">
+						<if condition="$engagedStatus['status'] eq 1">
+							<span class="xian" style="display: none"><img src="__PUBLIC__/images/peopleStatus_01-01.png"></span>
+							<span class="mang"><img src="__PUBLIC__/images/peopleStatus_01-02.png"></span>
+						<else/>
+							<span class="xian"><img src="__PUBLIC__/images/peopleStatus_01-01.png"></span>
+							<span class="mang" style="display: none"><img src="__PUBLIC__/images/peopleStatus_01-02.png"></span>
+						</if>
+		            	<!--<span class="chao">30</span>-->
+		            </div>
+		        </li>
+		        <li><a href="javascript:;">在线反馈</a></li>
+		        <li class="message">
+		            <a href="javascript:;">
+		                <span id="poll_total_msg">0</span>
+		            </a>
+		            <div class="msgbody">
+		                <div class="msg_con">
+		                    <div class="msgtype" style="display: block">
+		                        <p class="msgtype_title">通知</p>
+		                        <div class="msgtype_list" id="poll_msg_bady" style="display: none">
+									<!--<p>-->
+										<!--<a href="javascript:;" style="margin-top: 0px; width: 263px;">{$v.content}</a>-->
+										<!--<span>{$v.createtime}</span>-->
+									<!--</p>-->
+		                        </div>
+								<p class="MsgNull" style="text-align: center;clear: both;color: #666;display: none">暂无消息内容</p>
+								<img src="__PUBLIC__/images/loading.gif" style="margin-left: 210px; margin-top: 18px; margin-bottom: 18px;">
+		                    </div>
+		                </div>
+		                <div class="msg_bottom" id="poll_msg_more" style="display: none">
+		                    <a href="{:U('System/Information/msgList')}" target="main" id="checkMore">查看更多</a>
+		                </div>
+		            </div>
+		        </li>
+		    </ul>
+		</div>
+
+		<div class="contentBox">
+		    <div class="sidebarbox l">
+		        <div class="sidebar">
+		            <div class="sidebar_btn"><i></i></div>
+		            <foreach name="sidebar" item="sidebarItem">
+		                <div class="sideber_nav">
+		                    <div class="sideber_title sideber_title_on">
+		                        <span class="sideber_title_icon l <if condition=" $sidebar.open eq 0"
+		                        >sideber_title_icon_on</if>"></span>
+		                        <span class="sidebar_manage l">{$sidebarItem.title}</span>
+		                        <span class="icon_setup r"></span>
+		                    </div>
+		                    <ul class="sideber_trans" style="display:none">
+		                        <foreach name="sidebarItem.children" item="child">
+		                            <li><a href="{$child.url}" target="main"><span class="link_icon {$child.icon}"></span><span
+		                                    class="nav-title">{$child.title}</span></a></li>
+		                        </foreach>
+		                    </ul>
+		                </div>
+		            </foreach>
+		        </div>
+		    </div>
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/jquery.lib.min.js"></script>
+

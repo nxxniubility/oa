@@ -1,0 +1,52 @@
+/**/
+.wrapBox { padding: 0 20px; background: #fff;}
+.newCont { width: 1130px; margin-bottom: 20px;}
+.newContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.newContTop .topTit { line-height: 14px; font-size: 0; cursor: default;}
+.newContTop .topTit span { float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
+.newContTop .topTit span.masterList { color: #53b567; border-bottom: 2px solid #53b567;}
+.newContTop .topTit span em { margin: 0 4px;}
+.topRight { height: 55px; font-size: 0;}
+.topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
+
+.newMiddle { margin-top: 40px;}
+.newRows { margin-bottom: 20px;width: 100%;float: left;}
+.newRowsLeft { float: left; width: 10.6%; height: 30px; line-height: 30px; margin-right: 20px; color:#333; text-align: right;}
+.newRowsLeft i { margin-right: 4px; color: #d00202;}
+.newRowsRight { float: left; width: 87.6%;}
+.newRowsRight .newInp, .newRowsRight .newTxt { display: block; color: #555; text-align: left; border: 1px solid #ccc; background: #fff;}
+.newRowsRight .newInp { width: 468px; height: 28px; line-height: 28px; text-indent: 10px;}
+.newRowsRight .newTxt { width: 448px; height: 78px; padding: 10px; text-indent: 1em; resize: none; overflow: hidden;}
+.newRowsRight .newInp:focus, .newRowsRight .newTxt:focus { border-color: #53b567;}
+.newRowsRight .newAreaSubmit { display: block; width: 94px; height: 30px; line-height: 30px; margin-top: 20px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
+
+.selectbox2 { position:relative; width:468px; height:30px; line-height:30px; margin-right:20px; font-size:12px;}
+.selectbox2 .ddoption { display:none; height:200px; border:medium none; overflow-y:scroll;}
+.selectbox2 .caption { background: #eaedf1; cursor:default;}
+.selectbox2 .arrow { width: 30px; height: 28px; background:transparent url(../images/Descending.png) no-repeat center center;}
+.selectbox2 .arrow_on { background: transparent url(../images/Ascending.png) no-repeat center center;}
+.selectbox2 .select2 .fxDone { display: none;}
+.selectbox2 dl.zindex4 { z-index: 4;}
+.selectbox2 dl { position:absolute; width:100%; color:#555; border:1px solid #ccc;}
+.selectbox2 dl.on { width: calc(100% + 10px); max-height: 150px; border: 1px solid #ccc; overflow-y: auto; overflow-x: hidden;}
+.selectbox2 dl dt { padding-left:10px; cursor:pointer; overflow:hidden;}
+.selectbox2 dl dt.on { background: #e6e6e6 none repeat scroll 0 0; border-bottom: 1px solid #ccc;}
+.selectbox2 dl dd { position:relative; padding:0 10px 0 50px; border-bottom: 1px solid #ccc; background:#fff none repeat scroll 0 0; cursor:pointer; z-index: 5;}
+.selectbox2 dl dd:last-child { border-bottom: none;}
+.selectbox2 dl dd.on { border-bottom: 1px solid #53b567; background:#fff;}
+.selectbox2 dl dd:hover { color:#fff; background: #53b567 none repeat scroll 0 0;}
+.select_title { height: 28px;}
+.select_title2 { display:none; font-size:12px; width:100%; margin-left:-10px; padding-left:10px; border-bottom:1px solid #ccc; color: #555;}
+
+
+
+
+
+
+
+
+
+
+
+

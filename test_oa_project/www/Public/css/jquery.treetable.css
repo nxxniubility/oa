@@ -1,0 +1,40 @@
+table.treetable span.indenter {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+
+  /* Disable text selection of nodes (for better D&D UX) */
+  user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -webkit-user-select: none;
+
+  /* Force content-box box model for indenter (Bootstrap compatibility) */
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+
+  width: 19px;
+}
+
+table.treetable span.indenter a {
+  background-position: left center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  text-decoration: none;
+  width: 19px;
+}
+
+table#boxTabel {
+    background-position: left center;
+    background-repeat: no-repeat;
+    color: #000;
+    text-decoration: none;
+}
+.treeTable tr.expanded td a.expander { background-image: url(../images/toggle-collapse-dark.png);}
+.treeTable tr.collapsed td a.expander {background-image: url(../images/toggle-expand-dark.png);}
+.treeTable tr td .expander {cursor: pointer;padding: 0;zoom: 1;}
+.treeTable tr td input {   border: 1px solid #d0d0d0;width: 16px;  height: 18px;  line-height: 18px;  padding-left: 5px;  vertical-align: middle;  font-size: 12px;}
+.ui-helper-hidden {display: none;}

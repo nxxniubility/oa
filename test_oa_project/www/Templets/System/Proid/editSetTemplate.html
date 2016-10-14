@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/setTemplate.css">
+	</head>
+	<body>
+		<div class="wrapBox" id="editSetWrap">
+			<div class="proCont">
+				<div class="proContTop clearfix">
+					<div class="topTit l">
+						<span class="masterList">推广账号管理</span>
+						<span><em>&gt;</em>修改推广计划模板</span>
+					</div>
+					<div class="topRight r">
+						<a href="<?php echo U('System/Proid/setPages', array('proid_id'=>$proid_id)); ?>" class="return">返回</a>
+					</div>
+				</div>
+				</div>
+
+					<div class="improContMiddle">
+
+						<div class="proRow clearfix">
+							<div class="imLeft l"><i>&#42</i>模板名称:</div>
+							<div class="imRight l">
+								
+									<input type="text" class="addProInp" name="pagesname" value="{$pagesInfo['pagesname']}">
+								
+							</div>
+						</div>
+						<div class="proRow clearfix">
+							<div class="imLeft l"><i>&#42</i>设置表头:</div>
+							<div class="imRight l">
+								<div class="div">
+									<div class="d1">
+										<p>拖动表区块调整顺序</p>
+										
+                                        <volist name="pagesInfo['head_info']"  id="vo">
+                                              <div class="big">
+                                                  <input type="text" value="{$vo['pagehead']}" data-value="{$vo['headname']}" class="findname">
+                                                  <ul class="ul1" id="ul1">
+                                                       <li style="background-color: rgb(83, 181, 103);" data-value="{$vo['headname']}" ><a data-value="{$vo['headname']}" class="sign" href="javascript:;">{$page_head[$vo['headname']]}</a></li>
+                                                  </ul>
+                                              </div>
+                                        </volist>
+										<ul class="ul1"></ul>
+									</div>
+									<div class="d2">
+									<p>单击选择标头项</p>
+									<ul id="ul2" class="ul2">
+                                        <volist name="page_head"  id="vo">
+										    <li  id="li_{$key}"  <if  condition="in_array($key,$head_name_arr)">style="background-color: rgb(83, 181, 103);"</if>    ><a href="javascript:;" class="sign" data-value="{$key}">{$vo}</a></li>
+                                        </volist>
+										
+									</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="proRow clearfix">
+							<div class="imLeft l">&nbsp;</div>
+							<div class="newRight newFont l">
+								<input type="submit" class="setSubmit" value="提交">
+							</div>
+						</div>
+
+					</div>
+			</div>
+		</div>
+		
+
+		<Zelin:js  src="jquery-1.9.1.min,jquery.sortable,addPromotion,common_ajax"   />
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script type="text/javascript">
+		    $(document).ready(function() {
+		        //提交
+		        $('.setSubmit').click(function(){
+					
+		        	var sign = '';
+		        	$('.findname').each(function(k,v) {
+		        		if(k==0){
+		        			sign = $(v).val()+'-'+$(v).attr('data-value');
+		        		}else{
+		        			sign += ','+$(v).val()+'-'+$(v).attr('data-value');
+		        		}
+		        	})
+		            var data = {
+		                pagesname:$(':input[name="pagesname"]').val(),
+		                sign:sign
+		            };
+		            common_ajax(data);
+		        });
+		    });
+
+			var n=$(".ul1 li").length;
+
+			$(".ul2").find("li").on("click",function(){
+
+				var color=$(this).css("backgroundColor");
+			
+				var dataValue=$(this).children().attr('data-value');
+
+				$(this).css("background-color","#53b567");
+			
+				if($(this).css("backgroundColor")!=color){
+
+					$($(".ul1")[n]).wrap("<div class='big'></div>");
+
+					$($(".ul1")[n]).before("<input type='text' class='findname' data-value='"+dataValue+"'  value='A'>");
+
+					var clone=$(this).clone(true);
+                    clone.attr('data-value',dataValue);
+					clone.removeAttr("id");
+					clone.appendTo($($(".ul1")[n]));
+					clone.on("dblclick",function(){
+				
+						$(".big").has($(this)).remove();
+		
+						$("#li_"+$(this).attr("data-value")).css("background-color","#eaeaea");
+		
+						n=$(".ul1 li").length;
+					  
+					});
+					n++;
+
+					$(".d1").append("<ul class='ul1'></ul>");
+					
+				}
+				
+			});
+			$(".ul1  li").on("dblclick",function(){
+				
+				$(".big").has($(this)).remove();
+
+			    $("#li_"+$(this).attr("data-value")).css("background-color","#eaeaea");
+
+				n=$(".ul1 li").length;
+		      
+			});
+            
+		</script>
+  
+		
+	</body>
+</html>

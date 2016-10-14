@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/market.new.standard.css">
+    <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+<div class="wrapper_box">
+    <div class="title clearfix">
+        <div class="title_left">
+            <span class="title_text">营销统计管理</span>
+            <span><em>></em>设置合格标准</span>
+        </div>
+        <div class="title_right fr clearfix">
+            <a href="javascript:history.go(-1);" class="return_btn">返回</a>
+        </div>
+    </div>
+
+    <div class="ns_main">
+        <div class="ns_rows clearfix">
+            <span><i>*</i>标准名称：</span>
+            <div class="rows_cont">
+                <input type="text" class="ns_inp" name="standard_name" value="{$data['info']['standard_name']}">
+            </div>
+        </div>
+        <div class="ns_rows clearfix">
+            <span><i>*</i>应用部门：</span>
+            <div class="rows_cont">
+                <select name="department_id" autocomplete="off" >
+                    <option selected="selected" value="0">请选择标准应用部门</option>
+                    <foreach name="data['departmentList']['data']" item="v" key="k">
+                        <if condition="$v['department_id'] == $data['info']['department_id']">
+                            <option selected="selected" value="{$v.department_id}">{$v.departmentname}</option>
+                            <else/>
+                            <option value="{$v.department_id}">{$v.departmentname}</option>
+                        </if>
+                    </foreach>
+                </select>
+            </div>
+        </div>
+        <div class="ns_rows clearfix">
+            <span><i>*</i>统计单项：</span>
+            <div class="rows_cont">
+                <ul class="individual clearfix">
+                    <li data-value="addcount">新增量</li>
+                    <li data-value="acceptcount">出库量</li>
+                    <li data-value="switchcount">转出量</li>
+                    <li data-value="restartcount">放弃量</li>
+                    <li data-value="recyclecount">系统回收量</li>
+                    <li data-value="callbackcount">已回访量</li>
+                    <li data-value="attitudecount">跟进次数</li>
+                    <li data-value="visitcount">到访量</li>
+                    <li data-value="ordercount">签单量</li>
+                    <li data-value="refundcount">退款量</li>
+                    <li data-value="visitratio">到访率</li>
+                    <li data-value="conversionratio">面转率</li>
+                    <li data-value="chargebackratio">退单率</li>
+                    <li data-value="totalratio">总转率</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ns_rows clearfix">
+            <span><i>*</i>规则内容：</span>
+            <div class="rows_cont">
+                <ul class="standard_list">
+                    <foreach name="data['info']['children']" item="v" key="k">
+                        <script>
+                            $(function(){
+                                $('.individual li[data-value="{$v.option_name}"]').addClass('cur');
+                            });
+                        </script>
+                        <li class="{$v.option_name}">
+                            <div class="list_top clearfix">
+                                <p>{$v.status_name}</p>
+                                <a href="javascript:;" class="top_close"><img src="__PUBLIC__/images/organization_04-01.png" alt="关闭"></a>
+                            </div>
+                            <div class="list_cont">
+                                <div class="cont_top clearfix">
+                                    <span><i>*</i>标准数值</span>
+                                    <input type="text" class="list_inp" name="option_num" value="{$v.option_num}">
+                                    <em>请输入正整数或者百分比数值</em>
+                                </div>
+                                <div class="cont_choose">
+                                    <span><i>*</i>告警数值</span>
+                                    <!-- less_than-->
+                                    <label for="less_than_{$v.option_name}" >
+                                        <input type="radio" class="list_radio" name="than_{$v.option_name}" value="1" id="less_than_{$v.option_name}" {:$v['option_warn']==1?'checked="checked"':''} >
+                                        <em>低于标准数值即警告</em>
+                                    </label>
+                                    <!-- higher_than_-->
+                                    <label for="higher_than_{$v.option_name}" >
+                                        <input type="radio" class="list_radio" name="than_{$v.option_name}" id="higher_than_{$v.option_name}" value="2" {:$v['option_warn']==2?'checked="checked"':''}>
+                                        <em>高于标准数值即警告</em>
+                                    </label>
+                                </div>
+                            </div>
+                        </li>
+                    </foreach>
+                </ul>
+            </div>
+        </div>
+        <div class="ns_rows clearfix">
+            <span>备注：</span>
+            <div class="rows_cont">
+                <textarea name="standard_remark">{$data['info']['standard_remark']}</textarea>
+            </div>
+        </div>
+        <div class="ns_rows clearfix">
+            <span>&nbsp;</span>
+            <div class="rows_cont">
+                <input type="button" class="list_confirm" value="确定">
+                <input type="button" class="list_cancel" value="取消" onclick="history.go(-1);">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- js动态模版-->
+<div style="display: none;" id="body_li">
+    <li>
+        <div class="list_top clearfix">
+            <p>--</p>
+            <a href="javascript:;" class="top_close"><img src="__PUBLIC__/images/organization_04-01.png" alt="关闭"></a>
+        </div>
+        <div class="list_cont">
+            <div class="cont_top clearfix">
+                <span><i>*</i>标准数值</span>
+                <input type="text" class="list_inp" name="option_num">
+                <em>请输入正整数或者百分比数值</em>
+            </div>
+            <div class="cont_choose">
+                <span><i>*</i>告警数值</span>
+                <!-- less_than-->
+                <label >
+                    <input type="radio" class="list_radio" name="warning" value="1" checked="checked">
+                    <em>低于标准数值即警告</em>
+                </label>
+                <!-- higher_than-->
+                <label >
+                    <input type="radio" class="list_radio" name="warning" value="2">
+                    <em>高于标准数值即警告</em>
+                </label>
+            </div>
+        </div>
+    </li>
+</div>
+
+<script>
+    var add_standard_url = '/Api/Data/editStandard';
+    var href_standard = "{:U('System/Statistics/marketStandard')}";
+    var data_standard_id = "{$data['standard_id']}";
+</script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+<script src="__PUBLIC__/js/market.new.standard.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<div class="sidebarbox l">
+    <div class="sidebar">
+        <div class="sidebar_btn"></div>
+        <foreach name="sidebar" item="sidebar">
+        <div class="sideber_nav">
+        	<div class="sideber_title sideber_title_on">
+            	<span class="sideber_title_icon l <if condition="$sidebar.open eq 0">sideber_title_icon_on</if>"></span>
+                <span class="sidebar_manage l">{$sidebar.title}</span>
+                <span class="icon_setup r"></span>
+            </div>
+            <ul class="sideber_trans" style="display:none">
+            	<foreach name="sidebar.children" item="child">
+            	<li><a href="{$child.url}" target="main"><span class="link_icon"></span><span class="nav-title">{$child.title}</span></a></li>
+                </foreach>
+            </ul>
+        </div>
+        </foreach>
+	</div>
+</div>

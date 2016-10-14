@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/addService.css">
+</head>
+<body>
+<div class="wrapBox" id="addWrap">
+    <div class="proCont">
+        <div class="proContTop clearfix">
+            <div class="topTit l">
+                <span class="masterList">系统更新记录</span>
+                <span><em>&gt;</em>添加系统更新</span>
+            </div>
+            <div class="topRight r">
+                <a href="{:U(updateRecord)}" class="return">返回</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="addContMiddle">
+            <div class="addRow clearfix">
+                <div class="addRowLeft"><i>*</i>标题: </div>
+                <div class="addRowRight">
+                    <input type="text" class="addInp" id="title" name="title"  value="{$curUpdateInfo[0].uptitle}">
+                </div>
+            </div>
+            <div class="addRow clearfix">
+                <div class="addRowLeft"><i>*</i>内容:</div>
+                <div class="addRowRight">
+                    <!--<img src="__PUBLIC__/css/images/text_plug.png" class="addInp1">-->
+                   <script id="editor3" name="advantage"  type="text/plain" >{$curUpdateInfo[0]['upbody']|htmlspecialchars_decode}</script>
+                </div>
+            </div>
+            <div class="newRow clearfix">
+                <div class="newLeft l">&nbsp;</div>
+                <div class="newRight newFont l">
+                    <input type="submit" class="setSubmit" value="提交">
+                </div>
+            </div>
+    </div>
+
+</div>
+
+<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+<script src="__PUBLIC__/js/main.js"></script>
+<include  file="Common@Html/ueditor_simple" />
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common_ajax.js"></script>
+<script>
+    var ue = UE.getEditor('editor3'); //实例化编辑器
+    //需要ready后执行，否则可能报错
+  /*  ue.ready(function(){
+        var arr = <?php echo json_encode($curUpdateInfo[0]); ?>;
+        var obj = eval(arr);
+        var content = obj.upbody;
+        ue.setContent(content);
+    });*/
+    $('.setSubmit').click(function () {
+        var jumpType = <?php echo $jumpType; ?>;
+        var editContent = ue.getContent(); //获取编辑器的内容值
+        var data = {
+            type : jumpType,
+            title :  $(':input[name="title"]').val(),
+            content : editContent
+        };
+        common_ajax(data);   //获取编辑器输入的内容
+    });
+
+</script>
+
+</body>
+</html>

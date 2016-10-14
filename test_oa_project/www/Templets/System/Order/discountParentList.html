@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>优惠列表-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/discountList.css">	
+	</head>
+	<body>
+		<div class="wrapBox">
+			<div class="regionCont">
+				<div class="regionContTop clearfix">
+					<div class="topTit l"><span class="masterList">优惠分类列表</span></div>
+					<div class="topRight r">
+						<a href="javascript:location.reload();" class="refresh">刷新</a>
+						<a href="javascript:;" class="addDiscount">添加优惠分类</a>
+						<a href="<?php echo U('System/Order/discountList'); ?>" class="return" >返回</a>
+					</div>
+				</div>
+				<div class="regionContMiddle">
+					<dl class="regionTit  clearfix">
+						<dt class="wOne regionSequence clearfix">
+							<span>ID</span>
+						</dt>
+						<dt class="wTwo">优惠名称</dt>
+						<dt class="wFou">优惠详情</dt>
+						<dt class="wSix indent10">是否启用</dt>
+						<dt class="wSev">操作</dt>
+					</dl>
+					
+					<foreach name = "discountParentList" item = "v1">			
+					<dl class="secondaryZoneRow clearfix" data-value="{$v1['discount_parent_id']}-#-{$v1['dname']}-#-{$v1['remark']}-#-{$v1['type']}">
+						<dd class="wOne regionSequence clearfix">{$v1['discount_parent_id']}&nbsp;</dd>
+						<dd class="wTwo">{$v1['dname']}&nbsp;</dd>
+						<dd class="wFou">{$v1['remark']}&nbsp;</dd>
+						<dd class="wSix indent10">{$v1['typeName']}&nbsp;</dd>
+						<dd class="wSev szOperation clearfix"  >
+							<a href="javascript:;" class="regionSelect"><i></i></a>
+							<div class="otherOperation">
+								<div class="triangle"></div>
+		                        <div class="otherIcon">
+		                            <ul>
+	                                <li >
+			                            <a href="javascript:;"class="editPreferential" value="{$v1.discount_parent_id}">
+		                                    <span class="addZone add"></span>
+		                                    <em>修改</em>
+		                                </a>     
+	                                </li>
+	                                <li onclick="banDiscount('{$v1.discount_parent_id}','{$v1.type}')">
+	                                	<a href="javascript:;">
+		                                    <span class="delete"></span>
+		                                    <em>启用/下架</em>
+		                                </a>    
+	                                </li>
+		                            </ul>
+		                        </div>
+		                    </div>
+						</dd>
+					</dl>
+					</foreach>
+				</div>
+			</div>
+		</div>
+
+		
+		<!--  添加弹窗 S  -->
+		<div class="preBox dn">
+			<div class="preCont">
+				<div class="preRows clearfix">
+					<span>优惠名称：</span>
+					<input type="text" class="preInt" name="dname" autocomplete="off" onkeyup="chkLength(this,20)">
+				</div>
+				<div class="preRows clearfix">
+					<span>优惠详情：</span>
+					<input type="text" class="preInt" name="remark" autocomplete="off" onkeyup="chkLength(this,30)">
+				</div>
+				<div class="preRows clearfix">
+					<span>是否下架：</span>
+					<select class="preSelect" name="type" autocomplete="off">
+						<option value="1">启用</option>
+						<option value="0">下架</option>
+					</select>
+				</div>
+				<div class="preRows clearfix">
+					<div class="preBtns">
+						<input type="submit" class="newAreaSubmit" value="提交">
+						<input type="button" class="preCancel" value="取消">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--  添加弹窗 E  -->
+		<div class="preBox2 dn">
+			<div class="preCont">
+				<div class="preRows clearfix">
+					<input type="hidden" class="preInt edit"  name="edit_discount_parent_id">
+				</div>
+				<div class="preRows clearfix">
+					<span>优惠名称：</span>
+					<input type="text" class="preInt edit" name="edit_dname" onkeyup="chkLength(this,20)">
+				</div>
+				<div class="preRows clearfix">
+					<span>优惠详情：</span>
+					<input type="text" class="preInt edit" name="edit_remark" autocomplete="off" onkeyup="chkLength(this,30)">
+				</div>
+				<div class="preRows clearfix">
+					<span>是否下架：</span>
+					<select class="preSelect" name="edit_type" autocomplete="off">
+						<option value="1">启用</option>
+						<option value="0">下架</option>
+					</select>
+				</div>
+				<div class="preRows clearfix">
+					<div class="preBtns">
+						<input type="submit" class="editAreaSubmit" value="提交">
+						<input type="button" class="preCancel" value="取消">
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/regionlManagement.js"></script>
+		<script src="__PUBLIC__/js/discountList.js"></script>
+		<script>
+		    $(document).ready(function() {
+		        //提交
+		        $('.newAreaSubmit').click(function() {
+		            var data = {
+		                dname:$(':input[name="dname"]').val(),
+		                remark:$(':input[name="remark"]').val(),
+		                type:$(':input[name="type"]').val(),
+		            };
+		            common_ajax(data,"{:U('System/Order/addParentDiscount')}",'reload');
+		        });
+		        $('.editAreaSubmit').click(function() {
+		            var data = {
+		            	discount_parent_id:$(':input[name="edit_discount_parent_id"]').val(),
+		                dname:$(':input[name="edit_dname"]').val(),
+		                remark:$(':input[name="edit_remark"]').val(),
+		                type:$(':input[name="edit_type"]').val(),
+		                sign:10,
+		            };
+		            common_ajax(data,"{:U('System/Order/editDiscount')}",'reload');
+		        });
+		        $('.editPreferential').click(function() {
+		        	var editdata = $(this).parents('.secondaryZoneRow').attr('data-value');
+		        	editdata = editdata.split('-#-');
+		        	$.each(editdata,function(k,v){
+		        		if(k!=3){
+		        			$('.preBox2').find('.edit').eq(k).val(v);
+		        		}else{
+		        			$(':input[name="edit_type"]').children('option[value="'+v+'"]').prop('selected',true);
+		        			
+		        		}
+		        	});
+		        });
+		    });
+    		function banDiscount(discount_parent_id,type){
+    			if (type == 1) {
+    				layer.confirm('确定要下架？', {
+		            btn: ['确定','取消'] //按钮
+			        }, function(){
+			            var data = {
+			                discount_parent_id:discount_parent_id,
+			                sign:10,
+			            };
+			            common_ajax(data,"{:U('System/Order/banDiscount')}",'reload');
+			        }, function(){});
+    			}else{
+			        layer.confirm('确定要启用？', {
+			            btn: ['确定','取消'] //按钮
+			        }, function(){
+			            var data = {
+			                discount_parent_id:discount_parent_id,
+			                sign:10,
+			            };
+			            common_ajax(data,"{:U('System/Order/banDiscount')}",'reload');
+			        }, function(){});
+
+    			}
+		    }
+		</script>
+		<script src="__PUBLIC__/js/common_ajax.js"></script>
+	</body>
+</html>
