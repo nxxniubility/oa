@@ -1,24 +1,23 @@
 <?php
 namespace Common\Model;
 use Common\Model\BaseModel;
-class TerminalModel extends BaseModel
+class ProLevModel extends BaseModel
 {
-    protected $_id='terminal_id';
     public function _initialize(){
         parent::_initialize();
     }
 
-    // //自动验证
-    // protected $_validate = array(
-    //     array('channelname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
-    //     array('channelname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
-    // );
+    //自动验证
+    protected $_validate = array(
+        array('channelname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
+        array('channelname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
+    );
 
     /*
     |--------------------------------------------------------------------------
     | 获取单条记录
     |--------------------------------------------------------------------------
-    | @author zgt
+    | @author nxx
     */
     public function getFind($where=null, $field='*', $join=null)
     {
@@ -29,7 +28,7 @@ class TerminalModel extends BaseModel
     |--------------------------------------------------------------------------
     | 获取列表
     |--------------------------------------------------------------------------
-    | @author zgt
+    | @author nxx
     */
     public function getList($where=null, $field='*', $order=null, $limit=null, $join=null)
     {
@@ -41,7 +40,7 @@ class TerminalModel extends BaseModel
     |--------------------------------------------------------------------------
     | 获取总数
     |--------------------------------------------------------------------------
-    | @author zgt
+    | @author nxx
     */
     public function getCount($where=null, $join=null)
     {
@@ -52,7 +51,7 @@ class TerminalModel extends BaseModel
     |--------------------------------------------------------------------------
     | 添加
     |--------------------------------------------------------------------------
-    | @author zgt
+    | @author nxx
     */
     public function addData($data)
     {
@@ -69,7 +68,7 @@ class TerminalModel extends BaseModel
     |--------------------------------------------------------------------------
     | 修改
     |--------------------------------------------------------------------------
-    | @author zgt
+    | @author nxx
     */
     public function editData($data,$id)
     {
@@ -77,7 +76,7 @@ class TerminalModel extends BaseModel
         if (!$this->create($data)){
             return $this->getError();
         }else{
-            $re_flag =  $this->where(array($this->_id=>$id))->save($data);
+            $re_flag =  $this->where(array('pro_lev_id'=>$id))->save($data);
             return array('code'=>0,'data'=>$re_flag);
         }
     }
@@ -86,11 +85,11 @@ class TerminalModel extends BaseModel
     |--------------------------------------------------------------------------
     | 删除
     |--------------------------------------------------------------------------
-    | @author zgt
+    | @author nxx
     */
     public function delData($id)
     {
-        return $this->where(array($this->_id=>$id))->delete();
+        return $this->where(array('pro_lev_id'=>$id))->delete();
     }
 
 }
