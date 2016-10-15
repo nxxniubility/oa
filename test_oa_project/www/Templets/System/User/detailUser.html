@@ -57,7 +57,7 @@
                     <if condition="!empty($access_list['CREATEORDER'])">
                         <a href="javascript:;" class="return btn_reserve">创建订单</a>
                     </if>
-                <elseif condition="($data['userInfo']['status']==160 && empty($data['isSelf']))" />
+                <elseif condition="($data['userInfo']['status']==160 && $data['userInfo']['system_user_id']==$system_user['system_user_id'])" />
                     <if condition="!empty($access_list['REDEEMUSER'])">
                         <a href="javascript:;" class="return mr10 btn_recover">赎回客户</a>
                     </if>
@@ -990,7 +990,7 @@
             <button class="nsSearchSubmit">搜索</button>
         </div>
 
-        <div class="Capacity" style="height: 344px;">
+        <div class="Capacity" style="height: 344px;" data-type="apply">
             <div class="overflow">
                 <dl class="proTit clearfix">
                     <dt class="wOne proSequence clearfix"><span>姓名</span></dt>
@@ -1387,7 +1387,7 @@
         common_ajax2(data, "{:U('System/User/detailUser',array('id'=>$data['user_id']))}", 'no', getHtml, 1);
         function getHtml(reflag){
             if(reflag.code==0){
-                var setHtml = '';console.log(reflag.data);
+                var setHtml = '';
                 $.each(reflag.data, function(k, v){
                     if(v.status==30 || v.status==40 || v.status==50) {
                         setHtml += '<li class="green">';

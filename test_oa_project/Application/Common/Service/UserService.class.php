@@ -28,7 +28,7 @@ class UserService extends BaseService
     public function getList($where, $order=null, $limit=null)
     {
         //参数处理
-        $where = $this->dispostWhere($where);
+        $where = $this->_dispostWhere($where);
         $field = array(
             "{$this->DB_PREFIX}user.user_id",
             "{$this->DB_PREFIX}user.username",
@@ -907,7 +907,8 @@ class UserService extends BaseService
     public function abandonUser($data, $rank=1)
     {
         //必要参数
-        if(empty($data['user_id'])) return array('code'=>300,'msg'=>'参数异常');
+        if(empty($data['user_id'])) return array('code'=>301,'msg'=>'参数异常');
+        if (empty($data['remark'])) return array('code'=>300,'msg'=>'备注不能为空');
         //获取客户信息
         $userList = D('User')->field('user_id,status,channel_id,system_user_id,realname,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->select();
         if(empty($userList)) return array('code'=>100,'msg'=>'查找不到客户信息');
@@ -935,7 +936,8 @@ class UserService extends BaseService
             $data_callback['nexttime'] = $_time;
             if($rank==2){
                 //批量
-                if(count($where['user_id'])>1){
+                $user_ids = explode(',', $data['user_id']);
+                if(count($user_ids)>1){
                     $data_callback['remark'] = '批量客户回库(管理操作):'.$data['remark'];
                     $data_callback['callbacktype'] = 15;
                 }else{
@@ -987,6 +989,313 @@ class UserService extends BaseService
         return array('code'=>100,'msg'=>'操作失败');
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | 申请转入客户
+    |--------------------------------------------------------------------------
+    | user_id:客户 system_user_id:申请人 channel_id：请选择渠道 applyreason：申请理由不能为空 infoquality：信息质量
+    | @author zgt
+    */
+    public function applyUser($data)
+    {
+        $data = array_filter($data);
+        $data['system_user_id'] = $this->system_user_id;
+        $_time = time();
+        //必要参数
+        if(empty($data['user_id']) || empty($data['system_user_id']) || empty($data['channel_id']) || empty($data['infoquality'])) return array('code'=>300,'msg'=>'参数异常');
+        //是否有转介绍人手机号码
+        if(!empty($data['introducermobile'])){
+            if($this->checkMobile($data['introducermobile'])){
+                $data['introducermobile'] = trim($data['introducermobile']);
+                $data['introducermobile'] = encryptPhone($data['introducermobile'], C('PHONE_CODE_KEY'));
+            }else{
+                return array('code'=>200, 'msg'=>'介绍人手机号不正确');
+            }
+        }
+        //获取用户信息
+        $userInfo = D('User')->getFind(array('user_id'=>$data['user_id']));
+        //保存旧用户信息
+        $data['affiliation_system_user_id'] = $userInfo['system_user_id'];
+        $data['affiliation_channel_id'] = $userInfo['channel_id'];
+        $data['applytime'] = $_time;
+        //该客户是否在申请转入审核中
+        $userApply = $this->_isApply($data['user_id']);
+        if(!empty($userApply)) return array('code'=>201,'msg'=>'客户 正在被其他人申请转入中，无法再次申请');
+        //客户是否回库状态
+        if($userInfo['status'] != 160) return array('code'=>202,'msg'=>'该客户不在回库状态,不能申请');
+        //添加记录
+        $reflag = D('UserApply')->addData($data);
+        if($reflag['code']==0){
+            return array('code'=>0,'msg'=>'提交转入申请成功，请等待审核');
+        }else{
+            return array('code'=>$reflag['code'],'msg'=>$reflag['msg']);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 审核申请转入列表
+    |--------------------------------------------------------------------------
+    | user_apply_id:客户 system_user_id:审核人 status：审核状态
+    | @author zgt
+    */
+    public function getApplyList($where,  $limit=null, $order=null)
+    {
+        //参数处理
+        $where = $this->_dispostApplyWhere($where);
+        $field  = array(
+            "{$this->DB_PREFIX}user_apply.user_apply_id",
+            "{$this->DB_PREFIX}user_apply.applytime",
+            "{$this->DB_PREFIX}user_apply.status as applystatus",
+            "{$this->DB_PREFIX}user.user_id",
+            "{$this->DB_PREFIX}user.realname",
+            "{$this->DB_PREFIX}user.username",
+            "{$this->DB_PREFIX}user.qq",
+            "{$this->DB_PREFIX}user.tel",
+            "{$this->DB_PREFIX}user.status as userstatus" ,
+            "{$this->DB_PREFIX}user.infoquality",
+            "{$this->DB_PREFIX}user.channel_id",
+            "{$this->DB_PREFIX}channel.channelname",
+            "{$this->DB_PREFIX}system_user.realname as apply_realname" ,
+            "{$this->DB_PREFIX}system_user.system_user_id as apply_system_user_id" ,
+            "C.realname as auditor_realname" ,
+            "C.system_user_id as auditor_system_user_id",
+            "D.channelname as apply_channelname",
+            "D.channel_id as apply_channel_id",
+            "E.realname as affiliation_realname" ,
+            "E.system_user_id as affiliation_system_user_id",
+            "F.channelname as affiliation_channelname",
+            "F.channel_id as affiliation_channel_id"
+        );
+        $applyList['data'] = D('UserApply')->field($field)
+            ->join('__USER__ ON  __USER__.user_id = __USER_APPLY__.user_id')
+            ->join('LEFT JOIN  __CHANNEL__  ON  __CHANNEL__.channel_id = __USER__.channel_id')
+            ->join('LEFT JOIN  __SYSTEM_USER__  ON  __SYSTEM_USER__.system_user_id = __USER_APPLY__.system_user_id')
+            ->join('LEFT JOIN  __SYSTEM_USER__ C ON  C.system_user_id = __USER_APPLY__.auditor_system_user_id')
+            ->join('LEFT JOIN  __CHANNEL__ D ON  D.channel_id = __USER_APPLY__.channel_id')
+            ->join('LEFT JOIN  __SYSTEM_USER__ E ON  E.system_user_id = __USER_APPLY__.affiliation_system_user_id')
+            ->join('LEFT JOIN  __CHANNEL__ F ON  F.channel_id = __USER_APPLY__.affiliation_channel_id')
+            ->where($where)
+            ->limit($limit)
+            ->order("{$this->DB_PREFIX}user_apply.applytime DESC")
+            ->select();
+
+        $applyList['count'] = D('UserApply')->field($field)
+            ->join('__USER__ ON  __USER__.user_id = __USER_APPLY__.user_id')
+            ->join('LEFT JOIN  __CHANNEL__  ON  __CHANNEL__.channel_id = __USER__.channel_id')
+            ->join('LEFT JOIN  __SYSTEM_USER__  ON  __SYSTEM_USER__.system_user_id = __USER_APPLY__.system_user_id')
+            ->join('LEFT JOIN  __SYSTEM_USER__ C ON  C.system_user_id = __USER_APPLY__.auditor_system_user_id')
+            ->join('LEFT JOIN  __CHANNEL__ D ON  D.channel_id = __USER_APPLY__.channel_id')
+            ->join('LEFT JOIN  __SYSTEM_USER__ E ON  E.system_user_id = __USER_APPLY__.affiliation_system_user_id')
+            ->join('LEFT JOIN  __CHANNEL__ F ON  F.channel_id = __USER_APPLY__.affiliation_channel_id')
+            ->where($where)->count();
+
+        return $applyList;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获得指定条件的最新一条申请转入记录
+    |--------------------------------------------------------------------------
+    | @author cq
+    */
+    public function getApplyRecord($where, $field='*'){
+        $DB_PREFIX = C('DB_PREFIX');
+        return D('UserApply')->field($field)->where($where)->order("{$DB_PREFIX}user_apply.applytime DESC")->find();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取申请客户转入详情
+    |--------------------------------------------------------------------------
+    | @author cq
+    */
+    public function getApplyUserDetails($where)
+    {
+        $DB_PREFIX = C('DB_PREFIX');
+        $field  = array(
+            "{$DB_PREFIX}user.user_id",
+            "{$DB_PREFIX}user.realname",
+            "{$DB_PREFIX}user.username",
+            "{$DB_PREFIX}user.qq",
+            "{$DB_PREFIX}user.tel",
+            "{$DB_PREFIX}user.email",
+            "{$DB_PREFIX}user_apply.searchword",
+            "{$DB_PREFIX}user_apply.interviewurl",
+            "{$DB_PREFIX}user.status as userstatus" ,
+            "{$DB_PREFIX}user.infoquality",
+            "{$DB_PREFIX}channel.channelname",
+            "{$DB_PREFIX}course.coursename",
+            "{$DB_PREFIX}user_apply.applytime",
+            "{$DB_PREFIX}user_apply.applyreason",
+            "{$DB_PREFIX}user_apply.status applystatus",
+            "{$DB_PREFIX}user_apply.auditortime",
+            "{$DB_PREFIX}user_apply.auditorreason",
+            "{$DB_PREFIX}user_apply.introducermobile", //转介绍人手机号
+            "{$DB_PREFIX}system_user.system_user_id as apply_system_user_id" ,
+            "{$DB_PREFIX}system_user.realname as apply_realname" ,
+            "{$DB_PREFIX}system_user.face as apply_face" ,
+            "{$DB_PREFIX}system_user.sex as apply_sex" ,
+            "A.system_user_id as auditor_system_user_id" ,
+            "A.realname as auditor_realname" ,
+            "A.face as auditor_face" ,
+            "A.sex as auditor_sex",
+        );
+        $applyDetails = $this->field($field)
+            ->join('LEFT JOIN  __USER_APPLY__ ON  __USER__.user_id = __USER_APPLY__.user_id')
+            ->join('LEFT JOIN  __CHANNEL__ ON  __CHANNEL__.channel_id = __USER_APPLY__.channel_id')
+            ->join('LEFT JOIN  __SYSTEM_USER__ ON  __SYSTEM_USER__.system_user_id = __USER_APPLY__.system_user_id')
+            ->join('LEFT JOIN  __SYSTEM_USER__ A ON  A.system_user_id = __USER_APPLY__.auditor_system_user_id')
+            ->join('LEFT JOIN  __COURSE__ ON  __COURSE__.course_id = __USER__.course_id')
+            ->where($where)
+            ->select();
+
+        return $applyDetails;
+    }
+
+    /**
+     * 获取审核界面的客户信息
+     * @param $where
+     * @return mixed
+     */
+    public function getAuditUserDetails($where)
+    {
+        $DB_PREFIX = C('DB_PREFIX');
+        $field  = array(
+            "{$DB_PREFIX}user.user_id",
+            "{$DB_PREFIX}user.realname",
+            "{$DB_PREFIX}user.username",
+            "{$DB_PREFIX}user.qq",
+            "{$DB_PREFIX}user.tel",
+            "{$DB_PREFIX}user.email",
+            "{$DB_PREFIX}user.status as userstatus" ,
+            "{$DB_PREFIX}user.infoquality",
+            "{$DB_PREFIX}channel.channelname",
+            "{$DB_PREFIX}course.coursename",
+            "{$DB_PREFIX}system_user.realname as apply_realname" , //申请者
+            "{$DB_PREFIX}user_apply.user_apply_id", //记录id
+            "{$DB_PREFIX}user_apply.system_user_id", //申请人ID
+            "{$DB_PREFIX}user_apply.searchword",
+            "{$DB_PREFIX}user_apply.interviewurl",
+            "{$DB_PREFIX}user_apply.applytime", //申请时间
+            "{$DB_PREFIX}user_apply.applyreason",//审核时间
+            "{$DB_PREFIX}user_apply.introducermobile", //转介绍人手机号
+            "{$DB_PREFIX}user_apply.to_system_user_id", //审核通过后所属员工ID
+            "{$DB_PREFIX}user_apply.remark" //备注
+        );
+        $audioDetails = $this->field($field)
+            ->join(' __USER_APPLY__ ON  __USER__.user_id = __USER_APPLY__.user_id')
+            ->join('LEFT JOIN  __CHANNEL__ ON  __CHANNEL__.channel_id = __USER_APPLY__.channel_id')
+            ->join('LEFT JOIN  __SYSTEM_USER__ ON  __SYSTEM_USER__.system_user_id = __USER_APPLY__.system_user_id')
+            ->join('LEFT JOIN  __COURSE__ ON  __COURSE__.course_id = __USER__.course_id')
+            ->where($where)
+            ->select();
+
+        return $audioDetails;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 审核转入操作
+    |--------------------------------------------------------------------------
+    | user_apply_id:客户 system_user_id:审核人 status：审核状态
+    | @author zgt
+    */
+    public function auditTransfer($data)
+    {
+        //必要参数
+        if(empty($data['user_apply_id']) || empty($data['system_user_id']) || empty($data['status'])) return array('code'=>2,'msg'=>'参数异常');
+        //审核人
+        $applyData['auditor_system_user_id'] = $data['system_user_id'];
+        $_time = time();
+        $applyData['auditortime'] = $_time;
+        //不同状态处理
+        if($data['status'] == 20){
+            $applyData['status'] = 20;
+            $applyData['auditorreason'] = $data['auditorreason'];
+            //数据更新
+            $result = D('UserApply')->where(array('user_apply_id'=>$data['user_apply_id']))->save($applyData);
+            if($result !== false){
+                return array('code'=>0,'msg'=>'审核操作成功');
+            }else{
+                return array('code'=>1,'msg'=>'审核操作失败');
+            }
+        }elseif($data['status'] == 30){
+            $applyData['status'] = 30;
+            //申请信息
+            $applyInfo = D('UserApply')->where(array('user_apply_id'=>$data['user_apply_id']))->find();
+            //获取申请人信息 区域
+            $systemUser = D('SystemUser')->field('status,zone_id,system_user_id,realname')->where(array('system_user_id'=>$applyInfo['system_user_id']))->find();
+            $userData['zone_id'] = $systemUser['zone_id'];
+            $userData['system_user_id'] = $systemUser['system_user_id'];
+            //是否存在预转出人？ 获取预申请人信息 区域
+            if (!empty($applyInfo['to_system_user_id'])) {
+                $toSysUser = D('SystemUser')->field('status,zone_id,system_user_id,realname')->where(array('system_user_id'=>$applyInfo['to_system_user_id']))->find();
+                $userData['zone_id'] = $toSysUser['zone_id'];
+                $userData['system_user_id'] = $applyInfo['to_system_user_id'];
+            }
+            $userData['mark'] = 1;
+            $userData['status'] = 20;
+            $userData['updatetime'] = $applyData['auditortime'];
+            $userData['allocationtime'] = $applyData['auditortime'];
+            $userData['lastvisit'] = $applyInfo['auditortime'];
+            $userData['createuser_id'] = $applyInfo['system_user_id'];
+            $userData['updateuser_id'] = $applyInfo['system_user_id'];
+            $userData['createtime'] = $applyInfo['applytime'];
+            $userData['infoquality'] = $applyInfo['infoquality'];
+            $userData['channel_id'] = $applyInfo['channel_id'];
+            $userData['nextvisit'] = 0;
+            $userData['visittime'] = 0;
+            $userData['attitude_id'] = 0;
+            $userData['callbacknum'] = 0;
+            $userData['waytype'] = 0;
+            $userData['reservetype'] = 0;
+            $userData['searchword'] = $applyInfo['searchword'];
+            $userData['interviewurl'] = !empty($applyInfo['interviewurl'])?$applyInfo['interviewurl']:null;
+            $userData['introducermobile'] = !empty($applyInfo['introducermobile'])?decryptPhone($applyInfo['introducermobile'],C('PHONE_CODE_KEY')):null;
+            //是否获取新渠道
+            $newChannelData = $this->isNewChannel($userData);
+            if($newChannelData['code']!=0) return array('code'=>$newChannelData['code'], 'msg'=>$newChannelData['msg']);
+            $userData = $newChannelData['data'];
+            //开启事务
+            D()->startTrans();
+            $userResult = D('User')->where(array('user_id'=>$applyInfo['user_id']))->save($userData);
+            //是否重置 remark
+            if (!empty($applyInfo['remark'])) {
+                $userInfo['remark'] = $applyInfo['remark'];
+                D('UserInfo')->where(array('user_id'=>$applyInfo['user_id']))->save($userInfo);
+            }
+            $applyResult = D('UserApply')->where(array('user_apply_id'=>$applyInfo['user_apply_id']))->save($applyData);
+            $callbackData['status'] = 0;
+            $callbackResult = D('UserCallback')->where(array('user_id'=>$applyInfo['user_id']))->save($callbackData);
+            if($userResult !==false && $applyResult !==false && $callbackResult !==false){
+                //添加回访记录
+                $data_callback['status'] = 0;
+                $data_callback['callbacktype'] = 5;
+                $data_callback['user_id'] = $applyInfo['user_id'];
+                $data_callback['attitude_id'] = !empty($data['attitude_id'])?$data['attitude_id']:0;
+                $data_callback['system_user_id'] = $data['system_user_id'];
+                $data_callback['nexttime'] = $_time;
+                $data_callback['remark'] = '审核申请转入操作：申请人-'.$systemUser['realname'].(!empty($toSysUser['realname'])?'，预所属人-'.$toSysUser['realname'].'。':'。');
+                $this->addCallback($data_callback,2);
+                //添加数据记录
+                $dataLog['operattype'] = '4';
+                $dataLog['operator_user_id'] = $data['system_user_id'];
+                $dataLog['user_id'] = $applyInfo['user_id'];
+                $dataLog['logtime'] = time();
+                $DataService = new DataService();
+                $DataService->addDataLogs($dataLog);
+
+                D()->commit();
+                return array('code'=>0,'msg'=>'审核通过');
+            }else{
+                D()->rollback();
+                return array('code'=>1,'msg'=>'审核异常');
+            }
+        }
+    }
+
     /**
      * 参数过滤
      * @author zgt
@@ -995,7 +1304,7 @@ class UserService extends BaseService
     {
         //数据添加
         $user = D('User')->field('user_id,status')->where(array('user_id'=>array('IN', $data['user_id'])))->select();
-        if(empty($user)) return array('code'=>2,'msg'=>'查找不到客户信息');
+        if(empty($user)) return array('code'=>200,'msg'=>'查找不到客户信息');
         //启动事务
         D()->startTrans();
         foreach($user as $k=>$v){
@@ -1027,7 +1336,7 @@ class UserService extends BaseService
      * 参数过滤
      * @author zgt
      */
-    protected function dispostWhere($where)
+    protected function _dispostWhere($where)
     {
         $where = array_filter($where);
         $systemType = !empty($where['system_type'])?$where['system_type']:'system_user_id';
@@ -1116,11 +1425,11 @@ class UserService extends BaseService
             }else{
                 $data['username'] = trim($data['username']);
                 $username = $data['username'];
-                if(!$this->checkMobile($data['username'])) return array('code'=>1,'msg'=>'手机号码格式有误','sign'=>'username');
+                if(!$this->checkMobile($data['username'])) return array('code'=>200,'msg'=>'手机号码格式有误','sign'=>'username');
                 $username0 = encryptPhone('0'.$data['username'], C('PHONE_CODE_KEY'));
                 $data['username'] = encryptPhone($data['username'], C('PHONE_CODE_KEY'));
                 $isusername = D('User')->where(array('username'=>array(array('eq',$data['username']),array('eq',$username0),'OR')))->find();
-                if(!empty($isusername)) return array('code'=>1,'msg'=>'手机号码已存在');
+                if(!empty($isusername)) return array('code'=>201,'msg'=>'手机号码已存在');
                 $reApi = phoneVest($username);
                 if(!empty($reApi)) {
                     $data['phonevest'] = $reApi['city'];
@@ -1135,7 +1444,7 @@ class UserService extends BaseService
                 unset($data['tel']);
             }else{
                 $data['tel'] = trim($data['tel']);
-                if (!$this->checkTel($data['tel'])) return array('code' => 1, 'msg' => '固定号码格式有误', 'sign' => 'tel');
+                if (!$this->checkTel($data['tel'])) return array('code' => 202, 'msg' => '固定号码格式有误', 'sign' => 'tel');
                 $istel = D('User')->where(array('tel' => $data['tel']))->find();
                 if (!empty($istel)) return array('code' => 1, 'msg' => '固定电话已存在');
             }
@@ -1146,7 +1455,7 @@ class UserService extends BaseService
                 unset($data['qq']);
             }else{
                 $data['qq'] = trim($data['qq']);
-                if (!$this->checkInt($data['qq'])) return array('code' => 1, 'msg' => 'qq格式有误', 'sign' => 'qq');
+                if (!$this->checkInt($data['qq'])) return array('code' => 205, 'msg' => 'qq格式有误', 'sign' => 'qq');
                 $isqq = D('User')->where(array('qq' => $data['qq']))->find();
                 if (!empty($isqq)) return array('code' => 1, 'msg' => 'qq号码已存在');
                 if (empty($data['email']) && !empty($user['email'])) $data['email'] = $data['qq'] . '@qq.com';
@@ -1220,4 +1529,42 @@ class UserService extends BaseService
         $sms_where['touser_id'] = array('IN',$user_id);
         D('SmsLogs')->where($sms_where)->save($sms_data);
     }
+
+    /*
+    * 申请列表参数处理
+    * @author zgt
+    */
+    protected function _dispostApplyWhere($where)
+    {
+        $where = array_filter($where);
+        foreach($where as $k=>$v){
+            if($k=='admin_system_user_id' && empty($where['system_user_id'])){
+                //获取下及职位相关员工
+                $ids = D('SystemUser','Service')->getRoleSystemUser($where['admin_system_user_id']);
+                if($ids['code']==0){
+                    $where["{$this->DB_PREFIX}user_apply.system_user_id"] = array('IN', $ids['data']);
+                }
+            }elseif($k=='zone_id'){
+                $zoneIdArr = $this->getZoneIds($where["zone_id"]);
+                $where[$this->DB_PREFIX.'system_user.zone_id'] = array('IN',$zoneIdArr);
+            }elseif($k=='username' || $k=='qq' || $k=='tel' || $k=='realname'){
+                $where["{$this->DB_PREFIX}user.".$k] = $v;
+            }elseif($v!='0'){
+                $where["{$this->DB_PREFIX}user_apply.".$k] = $v;
+            }
+            unset($where[$k]);
+        }
+        if (!empty($where["{$this->DB_PREFIX}user_apply.key_name"]) && !empty($where["{$this->DB_PREFIX}user_apply.key_value"])) {
+            if ($where["{$this->DB_PREFIX}user_apply.key_name"] == 'username'){
+                $where["{$this->DB_PREFIX}user.username"] = encryptPhone(trim($where["{$this->DB_PREFIX}user_apply.key_value"]), C('PHONE_CODE_KEY'));
+            }else{
+                $where["{$this->DB_PREFIX}user.".$where["{$this->DB_PREFIX}user_apply.key_name"]] = array('like', '%' . $where["{$this->DB_PREFIX}user_apply.key_value"] . '%');
+            }
+        }
+        unset($where["{$this->DB_PREFIX}user_apply.key_name"]);
+        unset($where["{$this->DB_PREFIX}user_apply.key_value"]);
+        unset($where["{$this->DB_PREFIX}user_apply.admin_system_user_id"]);
+        return $where;
+    }
+
 }

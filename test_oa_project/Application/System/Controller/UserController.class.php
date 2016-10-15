@@ -194,6 +194,12 @@ class UserController extends SystemController
         //通话记录
         $call_List = D('User','Service')->getCallList(array('user_id'=>$user_id,'system_user_id'=>$this->system_user_id,'rank'=>$callbackType));
         $data['call_List'] = $call_List['data'];
+        //获取部门
+        $departmentAll = D('Department', 'Service')->getDepartmentList();
+        $data['departmentAll'] = $departmentAll['data'];
+        //获取职位
+        $roleAll = D('Role', 'Service')->getRoleList();
+        $data['roleAll'] = $roleAll['data'];
         //获取学历表
         $data['educationAll'] = C('FIELD_STATUS.EDUCATION_ARRAY');
         //课程列表
@@ -231,21 +237,29 @@ class UserController extends SystemController
     {
         $request = I('post.');
         if ($request['type'] == 'getSystemUser') {
+            $requestP = I('post.');
             $page = I('post.page',1);
-            $where['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-            $where['status'] = 1;
-            $where['usertype'] = array('neq', 10);
-            if(!empty($request['search'])) $where['realname'] = array('like','%'.$request['search'].'%');
-            if(!empty($request['role_id'])) $where['role_id'] = $request['role_id'];
-            $systemUserMain = new SystemUserController();
-            $reSystemList = $systemUserMain->getListCache($where, null, (($page-1)*10).",10", 1);
+            //异步获取员工列表
+            $where_system['where']['usertype'] = array('NEQ',10);
+            $where_system['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+            $where_system['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+            if(!empty($request['search'])) $where_system['where']['realname'] = array('like',$request['search']);
+            $where_system['order'] = 'sign asc';
+            $where_system['page'] = $page.',10';
+            //员工列表
+            $reSystemList = D('SystemUser','Service')->getSystemUsersList($where_system);
             //返回数据操作状态
-            if ($reSystemList !== false) $this->ajaxReturn(0, '', $reSystemList);
-            else  $this->ajaxReturn(1);
-        } else if ($request['type'] == 'submit') {
-            $userMain = new UserMain();
-            $request['system_user_id'] = $this->system_user_id;
-            $reflag = $userMain->applyUser($request);
+            if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList['data']);
+            else $this->ajaxReturn(1, '获取失败');
+        }else if ($request['type'] == 'getInfoquality') {
+            $where_system['systemUserId'] = I('post.systemUserId');
+            //获取员工渠道出库量统计
+            $reSystemList = D('SystemUser','Service')->getInfoqualityCount($where_system);
+            //返回数据操作状态
+            if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList);
+            else $this->ajaxReturn(1, '获取失败');
+        }else if ($request['type'] == 'submit') {
+            $reflag = D('User','Service')->applyUser($request);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
             else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -455,7 +469,7 @@ class UserController extends SystemController
             $where_system['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
             if(!empty($request['search'])) $where_system['where']['realname'] = array('like',$request['search']);
             $where_system['order'] = 'sign asc';
-            $where_system['page'] = $page.',15';
+            $where_system['page'] = $page.',10';
             //员工列表
             $reSystemList = D('SystemUser','Service')->getSystemUsersList($where_system);
             //返回数据操作状态
@@ -493,7 +507,7 @@ class UserController extends SystemController
             $where_system['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
             if(!empty($request['search'])) $where_system['where']['realname'] = array('like',$request['search']);
             $where_system['order'] = 'sign asc';
-            $where_system['page'] = $page.',15';
+            $where_system['page'] = $page.',10';
             //员工列表
             $reSystemList = D('SystemUser','Service')->getSystemUsersList($where_system);
             //返回数据操作状态
@@ -651,7 +665,10 @@ class UserController extends SystemController
         //获取区域ID 获取下拉框
         $zoneAll = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
         $data['zoneAll']['children'] = $zoneAll['data'];
-        //获取职位及部门
+        //获取部门
+        $departmentAll = D('Department', 'Service')->getDepartmentList();
+        $data['departmentAll'] = $departmentAll['data'];
+        //获取职位
         $roleAll = D('Role', 'Service')->getRoleList();
         $data['roleAll'] = $roleAll['data'];
         //课程列表
@@ -694,7 +711,7 @@ class UserController extends SystemController
             $where_system['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
             if(!empty($request['search'])) $where_system['where']['realname'] = array('like',$request['search']);
             $where_system['order'] = 'sign asc';
-            $where_system['page'] = $page.',15';
+            $where_system['page'] = $page.',10';
             //员工列表
             $reSystemList = D('SystemUser','Service')->getSystemUsersList($where_system);
             //返回数据操作状态
@@ -723,7 +740,6 @@ class UserController extends SystemController
     public function abandonUserControl()
     {
         $request = I('post.');
-        if (empty($request['abandon_remark'])) $this->ajaxReturn(1, '备注不能为空');
         $data['user_id'] = $request['user_id'];
         $data['attitude_id'] =0;
         $data['remark'] = $request['abandon_remark'];
@@ -749,7 +765,7 @@ class UserController extends SystemController
             $where_system['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
             if(!empty($request['search'])) $where_system['where']['realname'] = array('like',$request['search']);
             $where_system['order'] = 'sign asc';
-            $where_system['page'] = $page.',15';
+            $where_system['page'] = $page.',10';
             //员工列表
             $reSystemList = D('SystemUser','Service')->getSystemUsersList($where_system);
             //返回数据操作状态
@@ -1075,8 +1091,10 @@ class UserController extends SystemController
 
 
     /*
-    申请转入列表
-    @author cq
+    |--------------------------------------------------------------------------
+    | 申请转入列表
+    |--------------------------------------------------------------------------
+    | @author cq
     */
     public function applyList() {
         $request = I('get.');
@@ -1085,26 +1103,25 @@ class UserController extends SystemController
         unset($request['page']);
 
         $where = array();
-        $where['B.system_user_id'] = $this->system_user_id;
         if (!empty($request['key_value'])) {
             $request['key_name'] = trim($request['key_name']);
             $request['key_value'] = trim($request['key_value']);
 
             if ($request['key_name'] == 'username') {
-                    $where['zl_user.username'] = encryptPhone($request['key_value'], C('PHONE_CODE_KEY'));
+                    $where['username'] = encryptPhone($request['key_value'], C('PHONE_CODE_KEY'));
             }else{
-                $where['zl_user.'.$request['key_name']] = array('like', "%{$request['key_value']}%");
+                $where[$request['key_name']] = array('like', "%{$request['key_value']}%");
             }
         }
-        $where['zl_user_apply.system_user_id'] = $this->system_user_id;
-        if (!empty($request['status'])) $where['zl_user_apply.status'] = $request['status'];
+        $where['system_user_id'] = $this->system_user_id;
+        if (!empty($request['status'])) $where['status'] = $request['status'];
         //今天申请, 三日内申请, 一周内申请筛选
         if (!empty($request['applytime'])) {
             $days = $request['applytime'];
             $curTimestamp = time() - ($days-1) * 24 * 60 * 60; //获取当天,3日内, 1周内的时间戳
             $curTimestamp = date('Y-m-d',$curTimestamp);  //从0点开始
             $curTimestamp = strtotime($curTimestamp);
-            $where['zl_user_apply.applytime'] = array('EGT', $curTimestamp);
+            $where['applytime'] = array('EGT', $curTimestamp);
         }
         //自定义时间段筛选
         if (!empty($request['dateStart']) && !empty($request['dateEnd'])) {
@@ -1114,18 +1131,18 @@ class UserController extends SystemController
             $request['dateStart'] = strtotime($request['dateStart']);
             $request['dateEnd'] = strtotime($request['dateEnd']);
 
-            if (!empty($request['status'])) $where['zl_user_apply.status'] = $request['status'];
+            if (!empty($request['status'])) $where['status'] = $request['status'];
 
             if ($request['dateEnd'] >= $request['dateStart']) {
                 $request['dateEnd'] = $request['dateEnd'] + 24 * 60 * 60 - 1; //到当天23:59:59
-                $where['zl_user_apply.applytime'] = array(
+                $where['applytime'] = array(
                     array('egt', $request['dateStart']),
                     array('lt', $request['dateEnd']),
                     'and'
                 );
             } else {
                 $request['dateStart'] = $request['dateStart'] + 24 * 60 * 60 - 1; //到当天23:59:59
-                $where['zl_user_apply.applytime'] = array(
+                $where['applytime'] = array(
                     array('egt', $request['dateEnd']),
                     array('lt', $request['dateStart']),
                     'and'
@@ -1133,7 +1150,7 @@ class UserController extends SystemController
             }
         }
 
-        $applyList = D("User")->getApplyList($where, (($re_page - 1) * 15) . ',15');
+        $applyList = D('User', 'Service')->getApplyList($where, (($re_page - 1) * 15) . ',15');
 
         if ($applyList['count'] > 0) {
             $statusArray = C('USER_STATUS');
@@ -1176,20 +1193,21 @@ class UserController extends SystemController
         $this->display();
     }
 
-    /**
-     *申请/审核详情
-     * @author cq
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | 申请/审核详情
+    |--------------------------------------------------------------------------
+    | @author cq
+    */
     public function  applyDetails() {
-        $PHONE_CODE_KEY = C('PHONE_CODE_KEY');
         $userData = I('get.');
 
         if (!empty($userData)) {
             $where['zl_user_apply.user_apply_id'] = $userData['id'];
-            $applyRecord = D('User')->getApplyRecord($where);
+            $applyRecord = D('User','Service')->getApplyRecord($where);
         }
         $where['zl_user.user_id'] = $applyRecord['user_id'];
-        $applyUserDetails = D('User')->getApplyUserDetails($where);
+        $applyUserDetails = D('User','Service')->getApplyUserDetails($where);
 
         if (!empty($applyUserDetails)) {
             $applyUserDetails[0]['username'] = decryptPhone($applyUserDetails[0]['username'], C('PHONE_CODE_KEY'));
@@ -1219,7 +1237,8 @@ class UserController extends SystemController
                     break;
             }
 
-            $data['channel'] = D('Channel')->getAllChannel();
+            $data['channel'] = D('Channel', 'Service')->getChannelList();
+            $data['channel'] = $data['channel']['data'];
             if ($applyUserDetails[0]['apply_system_user_id'] == $this->system_user_id) {
                 $data['canReApply'] = 1;
             } else {
@@ -1278,7 +1297,7 @@ class UserController extends SystemController
             else  $this->ajaxReturn(1, $reflag['msg']);
         }
         $apply['zl_user_apply.user_apply_id'] = I("get.id");
-        $auditDetails = D("User")->getAuditUserDetails($apply);
+        $auditDetails = D("User","Service")->getAuditUserDetails($apply);
         if (!empty($auditDetails)) {
             $PHONE_CODE_KEY = C('PHONE_CODE_KEY');
             $auditDetails[0]['username'] = decryptPhone($auditDetails[0]['username'],$PHONE_CODE_KEY);
@@ -1288,8 +1307,8 @@ class UserController extends SystemController
             $auditDetails[0]['infoquality'] = $infoquality[$key];
         }
         if ($auditDetails[0]['to_system_user_id'] != 0) {
-            $systemUser = D("SystemUser")->getSystemUserInfo($auditDetails[0]['to_system_user_id']);
-            $auditDetails[0]['to_system_user'] = $systemUser['realname'];
+            $systemUser = D("SystemUser","Service")->getSystemUserInfo(array('system_user_id'=>$auditDetails[0]['to_system_user_id']));
+            $auditDetails[0]['to_system_user'] = $systemUser['data']['realname'];
         }else{
             $auditDetails[0]['to_system_user'] = $auditDetails[0]['apply_realname'];
         }
@@ -1316,10 +1335,10 @@ class UserController extends SystemController
         }
         $where['zone_id'] = $this->system_user['zone_id'];
         $where['admin_system_user_id'] = $this->system_user_id;
-        $userMain = new UserMain();
-        $data['auditList'] = $userMain->getApplyList($where,null, (($re_page - 1) * 15) . ',15');
+        $data['auditList'] = D('User', 'Service')->getApplyList($where, (($re_page - 1) * 15) . ',15');
         //获取区域下员工
-        $data['systemList'] = D('User')->getUserSystem(array(C('DB_PREFIX') . 'user.zone_id' => $this->system_user['zone_id']));
+        $data['systemList'] = D('SystemUser', 'Service')->getSystemUserList(array('zone_id' => $this->system_user['zone_id']));
+        $data['systemList'] = $data['systemList']['data'];
         //信息质量转换
         $data['USER_INFOQUALITY'] = C('USER_INFOQUALITY');
         //加载分页类
@@ -1331,7 +1350,6 @@ class UserController extends SystemController
 
     /* 导入客户模板列表页
     * @author
-    *
     */
     public function importTemplateList()
     {
