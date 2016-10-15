@@ -196,7 +196,7 @@ class ValidateModel extends Model {
 
 
     /**
-     * 只能为数字
+     * 只能为数字  xx.xx
      * author luoyu
      * @param $str 要验证的字符串
      */

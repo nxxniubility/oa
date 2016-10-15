@@ -9,6 +9,11 @@ class OrderLogsModel extends BaseModel
         parent::_initialize();
     }
 
+    //自动验证
+    protected $_validate = array(
+        array('cost', 'checkFloatInt', array('code'=>'205','msg'=>'金额格式有误，只能为正整数！'), 0, 'callback'),
+    );
+
     /*
     |--------------------------------------------------------------------------
     | 获取记录列表

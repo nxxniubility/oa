@@ -50,6 +50,12 @@ class UserController extends SystemController
         $column_where['columntype'] = 1;
         $column_list = D('SystemUser','Service')->getColumnList($column_where);
         $data['column'] = $column_list['data'];
+        //获取部门
+        $departmentAll = D('Department', 'Service')->getDepartmentList();
+        $data['departmentAll'] = $departmentAll['data'];
+        //获取职位
+        $roleAll = D('Role', 'Service')->getRoleList();
+        $data['roleAll'] = $roleAll['data'];
         //课程列表
         $courseList = D('Course','Service')->getCourseList();
         $data['courseAll'] = $courseList['data']['data'];
@@ -281,36 +287,27 @@ class UserController extends SystemController
         $request = I('post.');
         $request['system_user_id'] = $this->system_user_id;
         if($request['type']=='getTemplate'){
-            $systemUserController = new SystemUserController();
-            $result = $systemUserController->getSmsTemplate($this->system_user_id);
+            $result = D('SystemUser', 'Service')->getSmsTemplate();
             //返回数据操作状态
             if ($result['code'] == 0) $this->ajaxReturn(0, $result['msg'], $result['data']);
             else  $this->ajaxReturn(1, $result['msg'], '', !empty($result['sign']) ? $result['sign'] : '');
         }elseif($request['type']=='createTemplate'){
-            $request['template'] = trim($request['template']);
-            $systemUserController = new SystemUserController();
-            $result = $systemUserController->createSmsTemplate($request);
+            $result = D('SystemUser', 'Service')->createSmsTemplate($request);
             //返回数据操作状态
             if ($result['code'] == 0) $this->ajaxReturn(0, $result['msg'], $result['data']);
             else  $this->ajaxReturn(1, $result['msg'], '', !empty($result['sign']) ? $result['sign'] : '');
         }elseif($request['type']=='editTemplate'){
-            $request['template'] = trim($request['template']);
-            $systemUserController = new SystemUserController();
-            $result = $systemUserController->editSmsTemplate($request);
+            $result = D('SystemUser', 'Service')->editSmsTemplate($request);
             //返回数据操作状态
             if ($result['code'] == 0) $this->ajaxReturn(0, $result['msg'], $result['data']);
             else  $this->ajaxReturn(1, $result['msg'], '', !empty($result['sign']) ? $result['sign'] : '');
         }elseif($request['type']=='delTemplate'){
-            $systemUserController = new SystemUserController();
-            $result = $systemUserController->delSmsTemplate($request);
+            $result = D('SystemUser', 'Service')->delSmsTemplate($request);
             //返回数据操作状态
             if ($result['code'] == 0) $this->ajaxReturn(0, $result['msg'], $result['data']);
             else  $this->ajaxReturn(1, $result['msg'], '', !empty($result['sign']) ? $result['sign'] : '');
         }elseif($request['type']=='send'){
-            $system_user = $this->system_user;
-            $request['myname'] = $system_user['realname'];
-            $systemUserController = new SystemUserController();
-            $result = $systemUserController->sendSmsUser($request);
+            $result = D('SystemUser', 'Service')->sendSmsUser($request);
             //返回数据操作状态
             if ($result['code'] == 0) $this->ajaxReturn(0, $result['msg'], $result['data']);
             else  $this->ajaxReturn(1, $result['msg'], '', !empty($result['sign']) ? $result['sign'] : '');
@@ -324,10 +321,7 @@ class UserController extends SystemController
     public function redeemUser()
     {
         $request = I('post.');
-        //获取转入申请不可分配的数据
-        $request['system_user_id'] = $this->system_user_id;
-        $ApiUser = new ApiUser();
-        $reflag = $ApiUser->redeemUser($request);
+        $reflag = D('User','Service')->redeemUser($request);
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -370,23 +364,14 @@ class UserController extends SystemController
     public function createOrder()
     {
         $request = I('post.');
-        $orderController = new OrderController();
         //是否提示
         if($request['type']=='ishint'){
-            $isAuditOrder = $orderController->isUserOrder($request);
-            if($isAuditOrder['code']!=0) $this->ajaxReturn('20', '该客户有未完成订单，请查询详情后再操作！');
-            $this->ajaxReturn('0', '创建订单时需注意检查客户名称是否有误！');
+            $isAuditOrder = D('Order','Service')->isUserOrder($request);
+            if($isAuditOrder['code']!=0) $this->ajaxReturn(20, '该客户有未完成订单，请查询详情后再操作！');
+            $this->ajaxReturn(0, '创建订单时需注意检查客户名称是否有误！');
         }
-        if (empty($request['realname'])) $this->ajaxReturn(1, '真实姓名不能为空', '', 'reserve_realname');
-        if (empty($request['username'])) $this->ajaxReturn(1, '手机号码不能为空', '', 'reserve_username');
-        if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['subscription'])){
-            $this->ajaxReturn(3,"请输入正确的订金金额");
-        }
-        //添加参数
-        $request['system_user_id'] = $this->system_user_id;
-        $request['zone_id'] = $this->system_user['zone_id'];
         //获取接口
-        $refalg = $orderController->createOrder($request);
+        $refalg = D('Order','Service')->createOrder($request);
         if ($refalg['code']==0){
             $this->ajaxReturn(0, '创建订单成功,请等待审核,并且客户已转到“交易中”状态');
         }else{
@@ -417,9 +402,7 @@ class UserController extends SystemController
     public function editUserMark()
     {
         $request = I('post.');
-        $request['system_user_id'] = $this->system_user_id;
-        $ApiUser = new ApiUser();
-        $reflag = $ApiUser->editUser($request);
+        $reflag = D('User','Service')->MarkUser($request);
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -450,9 +433,7 @@ class UserController extends SystemController
     public function affirmVisit()
     {
         $request = I('post.');
-        $request['system_user_id'] = $this->system_user_id;
-        $ApiUser = new ApiUser();
-        $reflag = $ApiUser->affirmVisit($request);
+        $reflag = D('User', 'Service')->affirmVisit($request);
         //返回数据操作状态
         if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
         else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -466,23 +447,30 @@ class UserController extends SystemController
     {
         $request = I('post.');
         if ($request['type'] == 'getSystemUser') {
+            $requestP = I('post.');
             $page = I('post.page',1);
-            $where['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-            $where['status'] = 1;
-            $where['usertype'] = array('neq', 10);
-            if(!empty($request['search'])) $where['realname'] = array('like','%'.$request['search'].'%');
-            $where['role_id'] = (!empty($request['role_id']))?$request['role_id']:0;
-            $systemUserMain = new SystemUserController();
-            $reSystemList = $systemUserMain->getListCache($where, null, (($page-1)*8).",8", 1);
+            //异步获取员工列表
+            $where_system['where']['usertype'] = array('NEQ',10);
+            $where_system['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+            $where_system['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+            if(!empty($request['search'])) $where_system['where']['realname'] = array('like',$request['search']);
+            $where_system['order'] = 'sign asc';
+            $where_system['page'] = $page.',15';
+            //员工列表
+            $reSystemList = D('SystemUser','Service')->getSystemUsersList($where_system);
             //返回数据操作状态
-            if ($reSystemList !== false) $this->ajaxReturn(0, '', $reSystemList);
-            else  $this->ajaxReturn(1);
-        } else if ($request['type'] == 'submit') {
+            if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList['data']);
+            else $this->ajaxReturn(1, '获取失败');
+        }else if ($request['type'] == 'getInfoquality') {
+            $where_system['systemUserId'] = I('post.systemUserId');
+            //获取员工渠道出库量统计
+            $reSystemList = D('SystemUser','Service')->getInfoqualityCount($where_system);
+            //返回数据操作状态
+            if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList);
+            else $this->ajaxReturn(1, '获取失败');
+        }else if ($request['type'] == 'submit') {
             $request['tosystem_user_id'] = $request['system_user_id'];
-            $ApiUser = new ApiUser();
-            $userInfo = $ApiUser->getUserInfo($request);
-            $request['system_user_id'] = $userInfo['data']['system_user_id'];
-            $reflag = $ApiUser->allocationUser($request);
+            $reflag = D('User','Service')->allocationUser($request);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
             else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -497,22 +485,30 @@ class UserController extends SystemController
     {
         $request = I('post.');
         if ($request['type'] == 'getSystemUser') {
+            $requestP = I('post.');
             $page = I('post.page',1);
-            $where['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-            $where['status'] = 1;
-            $where['usertype'] = array('neq', 10);
-            if(!empty($request['search'])) $where['realname'] = array('like','%'.$request['search'].'%');
-            $where['role_id'] = (!empty($request['role_id']))?$request['role_id']:0;
-            $systemUserMain = new SystemUserController();
-            $reSystemList = $systemUserMain->getListCache($where, null, (($page-1)*8).",8", 1);
+            //异步获取员工列表
+            $where_system['where']['usertype'] = array('NEQ',10);
+            $where_system['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+            $where_system['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+            if(!empty($request['search'])) $where_system['where']['realname'] = array('like',$request['search']);
+            $where_system['order'] = 'sign asc';
+            $where_system['page'] = $page.',15';
+            //员工列表
+            $reSystemList = D('SystemUser','Service')->getSystemUsersList($where_system);
             //返回数据操作状态
-            if ($reSystemList !== false) $this->ajaxReturn(0, '', $reSystemList);
-            else  $this->ajaxReturn(1);
-        } else if ($request['type'] == 'submit') {
+            if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList['data']);
+            else $this->ajaxReturn(1, '获取失败');
+        }else if ($request['type'] == 'getInfoquality') {
+            $where_system['systemUserId'] = I('post.systemUserId');
+            //获取员工渠道出库量统计
+            $reSystemList = D('SystemUser','Service')->getInfoqualityCount($where_system);
+            //返回数据操作状态
+            if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList);
+            else $this->ajaxReturn(1, '获取失败');
+        }else if ($request['type'] == 'submit') {
             $request['tosystem_user_id'] = $request['system_user_id'];
-            $request['system_user_id'] = $this->system_user_id;
-            $ApiUser = new ApiUser();
-            $reflag = $ApiUser->restartUser($request);
+            $reflag = D('User','Service')->restartUser($request);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
             else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -632,9 +628,10 @@ class UserController extends SystemController
             $requestP = I('post.');
             if($requestP['type']=='getSysUser'){
                 //异步获取员工列表
-                $whereSystem['where']['usertype'] = array('neq',10);
+                $whereSystem['where']['usertype'] = array('NEQ',10);
                 $whereSystem['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
                 $whereSystem['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+                $whereSystem['order'] = 'sign asc';
                 //员工列表
                 $reSystemList = D('SystemUser','Service')->getSystemUsersList($whereSystem);
                 //返回数据操作状态
@@ -689,22 +686,30 @@ class UserController extends SystemController
     {
         $request = I('post.');
         if ($request['type'] == 'getSystemUser') {
+            $requestP = I('post.');
             $page = I('post.page',1);
-            $where['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-            $where['status'] = 1;
-            $where['usertype'] = array('neq', 10);
-            if(!empty($request['search'])) $where['realname'] = array('like','%'.$request['search'].'%');
-            $where['role_id'] = (!empty($request['role_id']))?$request['role_id']:0;
-            $systemUserMain = new SystemUserController();
-            $reSystemList = $systemUserMain->getListCache($where, null, (($page-1)*8).",8", 1);
+            //异步获取员工列表
+            $where_system['where']['usertype'] = array('NEQ',10);
+            $where_system['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+            $where_system['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+            if(!empty($request['search'])) $where_system['where']['realname'] = array('like',$request['search']);
+            $where_system['order'] = 'sign asc';
+            $where_system['page'] = $page.',15';
+            //员工列表
+            $reSystemList = D('SystemUser','Service')->getSystemUsersList($where_system);
             //返回数据操作状态
-            if ($reSystemList !== false) $this->ajaxReturn(0, '', $reSystemList);
-            else  $this->ajaxReturn(1);
-        } else if ($request['type'] == 'submit') {
+            if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList['data']);
+            else $this->ajaxReturn(1, '获取失败');
+        }else if ($request['type'] == 'getInfoquality') {
+            $where_system['systemUserId'] = I('post.systemUserId');
+            //获取员工渠道出库量统计
+            $reSystemList = D('SystemUser','Service')->getInfoqualityCount($where_system);
+            //返回数据操作状态
+            if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList);
+            else $this->ajaxReturn(1, '获取失败');
+        }else if ($request['type'] == 'submit') {
             $request['tosystem_user_id'] = $request['system_user_id'];
-            $request['system_user_id'] = $this->system_user_id;
-            $ApiUser = new ApiUser();
-            $reflag = $ApiUser->restartUserManage($request);
+            $reflag = D('User','Service')->restartUser($request, 2);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
             else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');
@@ -736,22 +741,30 @@ class UserController extends SystemController
     {
         $request = I('post.');
         if ($request['type'] == 'getSystemUser') {
+            $requestP = I('post.');
             $page = I('post.page',1);
-            $where['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-            $where['status'] = 1;
-            $where['usertype'] = array('neq', 10);
-            if(!empty($request['search'])) $where['realname'] = array('like','%'.$request['search'].'%');
-            $where['role_id'] = (!empty($request['role_id']))?$request['role_id']:0;
-            $systemUserMain = new SystemUserController();
-            $reSystemList = $systemUserMain->getListCache($where, null, (($page-1)*8).",8", 1);
+            //异步获取员工列表
+            $where_system['where']['usertype'] = array('NEQ',10);
+            $where_system['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+            $where_system['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+            if(!empty($request['search'])) $where_system['where']['realname'] = array('like',$request['search']);
+            $where_system['order'] = 'sign asc';
+            $where_system['page'] = $page.',15';
+            //员工列表
+            $reSystemList = D('SystemUser','Service')->getSystemUsersList($where_system);
             //返回数据操作状态
-            if ($reSystemList !== false) $this->ajaxReturn(0, '', $reSystemList);
-            else  $this->ajaxReturn(1);
-        } else if ($request['type'] == 'submit') {
+            if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList['data']);
+            else $this->ajaxReturn(1, '获取失败');
+        }else if ($request['type'] == 'getInfoquality') {
+            $where_system['systemUserId'] = I('post.systemUserId');
+            //获取员工渠道出库量统计
+            $reSystemList = D('SystemUser','Service')->getInfoqualityCount($where_system);
+            //返回数据操作状态
+            if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList);
+            else $this->ajaxReturn(1, '获取失败');
+        }else if ($request['type'] == 'submit') {
             $request['tosystem_user_id'] = $request['system_user_id'];
-            $request['system_user_id'] = $this->system_user_id;
-            $ApiUser = new ApiUser();
-            $reflag = $ApiUser->allocationUserManage($request);
+            $reflag = D('User','Service')->allocationUser($request, 2);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
             else  $this->ajaxReturn(1, $reflag['msg'], '', !empty($reflag['sign']) ? $reflag['sign'] : '');

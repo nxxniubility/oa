@@ -142,35 +142,36 @@ class OrderService extends BaseService
     */
     public function createOrder($request)
     {
+        $request = array_filter($request);
+        $request['system_user_id'] = $this->system_user_id;
+        $request['zone_id'] = $this->system_user['zone_id'];
         //必要参数
-        if(empty($request['user_id']) || empty($request['zone_id']) || empty($request['system_user_id']) )
-        {
+        if(empty($request['user_id']) || empty($request['zone_id']) || empty($request['system_user_id']) ) {
             return array('code'=>301, 'msg'=>'缺少参数');
         }
-        if ($request['subscription'] > 3000){
-             return array('code'=>201, 'msg'=>'预报金额不能大于3000');
-        }
-        $field = 'system_user_id,username';
+        if ($request['subscription'] > 3000) return array('code'=>201, 'msg'=>'预报金额不能大于3000');
+        //验证所属人
         $where['user_id'] = $request['user_id'];
-        $userInfo = D('User')->getFind($where, $field);
-        if($userInfo['system_user_id']!=$request['system_user_id']){
-            return array('code'=>202, 'msg'=>'只有所属人才能提交预报订单');
+        $userInfo = D('User')->getFind($where, 'realname,system_user_id,username');
+        if($userInfo['system_user_id']!=$request['system_user_id']) return array('code'=>202, 'msg'=>'只有所属人才能提交预报订单');
+        //更新User
+        if(empty($userInfo['realname']) && empty($request['realname'])){
+            return array('code'=>300, 'msg'=>'真实姓名不能为空');
         }
-        //加密手机号，更新User
         if(!empty($request['realname'])){
             $user_save['realname'] = $request['realname'];
         }
+        //是否需要补全手机号码
+        if(empty($userInfo['username']) && empty($request['username'])){
+            return array('code'=>301, 'msg'=>'请输入手机号码');
+        }
         if(!empty($request['username'])){
-            if(!$this->checkMobile($request['username'])){
-                return array('code'=>203,'msg'=>'手机号码格式有误');
-            }
+            if(!$this->checkMobile($request['username'])) return array('code'=>203,'msg'=>'手机号码格式有误');
             $user_new_username = encryptPhone(trim($request['username']), C('PHONE_CODE_KEY'));
             if($user_new_username!=$userInfo['username']){
                 $where1['username'] = $user_new_username;
-                $isusername = D('User')->getFind($where1, $field);
-                if(!empty($isusername)){
-                    return array('code'=>204,'msg'=>'手机号码已存在');
-                }
+                $isusername = D('User')->getFind($where1, 'system_user_id,username');
+                if(!empty($isusername)) return array('code'=>204,'msg'=>'手机号码已存在');
                 $user_save['username'] = $user_new_username;
             }
         }
@@ -1024,4 +1025,22 @@ class OrderService extends BaseService
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 根据客户ID 该客户是否已有审核订单
+    |--------------------------------------------------------------------------
+    | user_id
+    | @author zgt
+    */
+    public function isUserOrder($data)
+    {
+        //必选参数
+        if(empty($data['user_id'])) return array('code'=>300,'msg'=>'参数异常！');
+        $isempty = D("Order")->getFind(array('user_id'=>$data['user_id'],'status'=>array('IN','10,30,40')),'order_id');
+        //返回数据与状态
+        if(!empty($isempty)) {
+            return array('code'=>1, 'msg'=>'该客户已有未完成订单');
+        }
+        return array('code'=>0, 'msg'=>'该客户无未完成订单');
+    }
 }

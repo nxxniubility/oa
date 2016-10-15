@@ -375,7 +375,7 @@
                     <foreach name="data['userAll']" item="v" key="k">
                         <tr class="dispost_li">
                             <td>
-                                <if condition="$userinfo['system_user_id'] EQ $v['system_user_id']">
+                                <if condition="$system_user['system_user_id'] EQ $v['system_user_id']">
                                     <a href="javascript:;" class="proSelect"><i></i></a>
                                     <div class="otherOperation">
                                         <div class="otherIcon">
@@ -789,9 +789,9 @@
             <div class="alRowRight" style="width: 360px;">
                 <select name="abandon_attitude_id" autocompolet="off">
                     <option value="0" selected="selected">请选择放弃原因</option>
-                    <foreach name="data['attitude']" item="v" key="k">
-                        <if condition="($v['num'] GT 2) && ($v['num'] NEQ 10)">
-                            <option value="{$v.num}">{$v.text}</option>
+                    <foreach name="data['USER_ATTITUDE']" item="v" key="k">
+                        <if condition="($k GT 2) && ($k NEQ 10)">
+                            <option value="{$k}">{$v}</option>
                         </if>
                     </foreach>
                 </select>
@@ -1071,7 +1071,7 @@
 <script src="__PUBLIC__/js/placeholder.js"></script>
 <script src="__PUBLIC__/js/ClientList.js?v=2016090511"></script>
 <script src="__PUBLIC__/js/common_ajax.js?v=201608231"></script>
-<script src="__PUBLIC__/js/userList.js?v=20160831"></script>
+<script src="__PUBLIC__/js/userList.js?v=20161015"></script>
 
 <script>
 $(function(){

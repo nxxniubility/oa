@@ -7,6 +7,15 @@ class OrderModel extends BaseModel
         parent::_initialize();
     }
 
+    //自动验证
+    protected $_validate = array(
+        array('paycount', 'checkFloatInt', array('code'=>'201','msg'=>'金额格式有误，只能为正整数！'), 0, 'callback'),
+        array('discountcost', 'checkFloatInt', array('code'=>'202','msg'=>'金额格式有误，只能为正整数！'), 0, 'callback'),
+        array('subscription', 'checkFloatInt', array('code'=>'204','msg'=>'金额格式有误，只能为正整数！'), 0, 'callback'),
+        array('cost', 'checkFloatInt', array('code'=>'205','msg'=>'金额格式有误，只能为正整数！'), 0, 'callback'),
+        array('sparecost', 'checkFloatInt', array('code'=>'206','msg'=>'金额格式有误，只能为正整数！'), 0, 'callback'),
+    );
+
     /*
     |--------------------------------------------------------------------------
     | 获取订单列表

@@ -85,6 +85,7 @@ $(document).on('click', '.btn_reserve', function(){
  * 发短信
  * */
 var sms_template_list = '';
+var msgBox = '';
 $(document).on('click','.btn_msg', function(){
     $(':input[name="temp_user_id"]').val($(this).parent('ul').attr('data-value'));
     var realname = $(this).parents('ul').attr('data-realname');
@@ -104,7 +105,7 @@ $(document).on('click','.btn_msg', function(){
     //    overlayClose: false,
     //    title: "发送短信"
     //});
-    var msgBox = layer.open({
+    msgBox = layer.open({
         type: 1, 					//  页面层
         title: '发送短信', 				//	不显示标题栏
         area: ['569px', 'auto'],
@@ -131,6 +132,7 @@ function template(reflag){
     };
 };
 $('.msgBtnCancel').on('click',function(){
+    layer.close(msgBox);
 	$('#setMsgBox').colorbox.close();
 });
 
