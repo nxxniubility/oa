@@ -63,19 +63,19 @@ class ProidService extends BaseService
     public function editServicecode($request,$servicecode_id)
     {
         if(!isset($servicecode_id)){
-            return array(301, 'msg'=>'参数异常');
+            return array('code'=>301, 'msg'=>'参数异常');
         }
         if(empty($request['title'])){
-            return array(302, 'msg'=>'标题不能为空');
+            return array('code'=>302, 'msg'=>'标题不能为空');
         }
         if(empty($request['terminal_id'])){
-            return array(303, 'msg'=>'请选择终端类型');
+            return array('code'=>303, 'msg'=>'请选择终端类型');
         }
         if(empty($request['url'])){
-            return array(304, 'msg'=>'链接不能为空');
+            return array('code'=>304, 'msg'=>'链接不能为空');
         }
         if(empty($request['servicecode'])){
-            return array(305, 'msg'=>'客服代码不能为空');
+            return array('code'=>305, 'msg'=>'客服代码不能为空');
         }
         $request['system_user_id'] = $this->system_user_id;
         $result = D("Servicecode")->editData($request, $servicecode_id);
@@ -92,9 +92,12 @@ class ProidService extends BaseService
      */
     public function detailServicecode($param)
     {
+        if(empty($param['servicecode_id'])){
+            return array('code'=>301, 'msg'=>'请求参数异常');
+        }
         $servicecodeInfo = D("Servicecode")->getFind($param);
         if (!$servicecodeInfo) {
-            return array('code'=>201, 'msg'=>'获取失败');
+            return array('code'=>201, 'msg'=>'暂无内容');
         }
         return array('code'=>'0', 'data'=>$servicecodeInfo);
     }
@@ -109,10 +112,25 @@ class ProidService extends BaseService
         if (F('Cache/Promote/terminal')) {
             $terminalAll = F('Cache/Promote/terminal');
         } else {
-            $terminalAll = D("Terminal")->where(array('status'=>1))->select();
+            $terminalAll = D("Terminal")->getList(array('status'=>1));
             F('Cache/Promote/terminal', $terminalAll);
         }
-        return array('code'=>'0', 'data'=>$terminalAll);
+        return array('code'=>0, 'data'=>$terminalAll);
+    }
+
+    /*
+    删除终端
+    @author nxx
+    */
+    public function delTerminal($terminal_id)
+    {
+        $result = D("Terminal")->delData($terminal_id);
+        if ($result['code'] != 0) {
+            return array('code'=>301, 'msg'=>'删除失败');
+        }
+        $terminalAll = D("Terminal")->getList(array('status'=>1));
+        F('Cache/Promote/terminal', $terminalAll);
+        return array('code'=>0, 'msg'=>'删除成功');
     }
 
     /*
@@ -123,9 +141,9 @@ class ProidService extends BaseService
     public function getPagesList($request)
     {
         if ($request['pagestype_id'] == 0) {
-            $pagesList['data'] = D('Pages')->where("terminal_id = $request[terminal_id] and status=1")->select();
+            $pagesList['data'] = D('Pages')->getList(array('terminal_id'=>$request['terminal_id'], 'status'=>1));
         }else{
-            $pagesList['data'] = D('Pages')->where($request)->select();
+            $pagesList['data'] = D('Pages')->getList($request);
         }
         return array('code'=>0, 'data'=>$pagesList);
     }
@@ -156,7 +174,11 @@ class ProidService extends BaseService
         return array('code'=>'0', 'data'=>$pagesAll);
     }
 
-
+    /*
+     * 获取备注
+     * @author nxx
+     * @return array
+     */
     public function getRemark($param)
     {
         $param['systemuser_id'] = $this->system_user_id;
@@ -164,7 +186,85 @@ class ProidService extends BaseService
         return array('code'=>0, 'data'=>$result);
     }
 
+    /*
+     * 终端快捷操作
+     * @author nxx
+     * @return array
+     */
+    public function operateTerminal($param)
+    {
+        if(empty($param['addTerminal']) && empty($param['editTerminal'])){
+             return array('code'=>301, 'msg'=>'未发现需要修改或添加内容');
+        }
+        if(!empty($param['addTerminal'])){
+            $addTerminal = explode('@@',$param['addTerminal']);
+            foreach($addTerminal as $k=>$v){
+                if(!empty($v) && $addFlag){
+                    $add_data['terminalname'] = $v;
+                    $addFlag = $this->addTerminal($add_data);
+                    if ($addFlag['code'] != 0) {
+                        return array('code'=>201, 'msg'=>'添加失败');
+                    }
+                }
+            }
+        }
+        if(!empty($param['editTerminal'])){
+            $editTerminal = explode('@@',$param['editTerminal']);
+            foreach($editTerminal as $k=>$v){
+                if(!empty($v) && $editFlag!==false){
+                    $new_v = explode('==',$v);
+                    $edit_data['terminalname'] = $new_v[1];
+                    $editFlag = $this->editTerminal($edit_data, $new_v[0]);
+                    if ($editFlag['code'] != 0) {
+                        return array('code'=>202, 'msg'=>'修改失败');
+                    }
+                }
+            }
+        }
+        return array('code'=>0, 'msg'=>'操作成功');
+    }
 
+    /*
+     * 模板分类快捷操作
+     * @author nxx
+     * @return array
+     */
+    public function operatePagesType($param)
+    {
+        if(empty($request['addPagesType']) && empty($request['editPagesType'])){
+           return array('code'=>301, 'msg'=>'未发现需要修改或添加内容');
+        }
+        if(!empty($request['addPagesType'])){
+            $addPagesType = explode('@@',$request['addPagesType']);
+            foreach($addPagesType as $k=>$v){
+                if(!empty($v) && $addFlag){
+                    $new_v = explode('==',$v);
+                    $add_data['typename'] = $new_v[0];
+                    $add_data['terminal_id'] = $new_v[1];
+                    $addFlag = D('Proid', 'Service')->addPagesType($add_data);
+                    if ($addFlag['code'] != 0) {
+                        return array('code'=>202, 'msg'=>'添加失败');
+                    }
+                }
+            }
+        }
+        if(!empty($request['editPagesType'])){
+            $editPagesType = explode('@@',$request['editPagesType']);
+            foreach($editPagesType as $k=>$v){
+                if(!empty($v) && $editFlag!==false){
+                    $new_v = explode('==',$v);
+                    $edit_data['typename'] = $new_v[1];
+                    $add_data['terminal_id'] = $new_v[2];
+                    $editFlag = D('Proid', 'Service')->editPagesType($edit_data, $new_v[0]);
+                    if ($editFlag['code'] != 0) {
+                        return array('code'=>202, 'msg'=>'修改失败');
+                    }
+                }
+            }
+        }
+        return array('code'=>0, 'msg'=>'操作成功');
+
+    }
 
     /*
      * 获取所有模板分类
@@ -174,7 +274,7 @@ class ProidService extends BaseService
     public function getPagesType($data)
     {
         $data['status'] = 1;
-        $datas = D("PagesType")->where($data)->select();
+        $datas = D("PagesType")->getList($data);
         return array('code'=>0,'data'=>$datas);
     }
 
@@ -185,6 +285,9 @@ class ProidService extends BaseService
      */
     public function getPagesInfo($param)
     {
+        if (!$param['pages_id']) {
+            return array('code'=>301, 'msg'=>'参数异常');
+        }
         if (F('Cache/Promote/pages')) {
             $pagesAll = F('Cache/Promote/pages');
             foreach($pagesAll['data'] as $k=>$v){
@@ -205,6 +308,9 @@ class ProidService extends BaseService
      */
     public function getPagesPromote($pages_id,$where=null,$limit='0,10')
     {
+        if ($pages_id) {
+            return array('code'=>301, 'msg'=>'参数异常');
+        }
         $DB_PREFIX = C('DB_PREFIX');
         $where["{$DB_PREFIX}promote.status"] = 1;
         $where["{$DB_PREFIX}promote.pc_pages_id|{$DB_PREFIX}promote.m_pages_id"] = $pages_id;
@@ -236,25 +342,25 @@ class ProidService extends BaseService
         return array('code'=>0,'data'=>$promoteList);
     }
 
-    /*
-     * 根据terminal_id获取模板内容-缓存
-     * @author nxx
-     * @return array
-     */
-    public function getPages($terminal_id)
-    {
-        if (F('Cache/Promote/pages')) {
-            $pagesAll = F('Cache/Promote/pages');
-            foreach($pagesAll['data'] as $k=>$v){
-                if($v['terminal_id']==$terminal_id){
-                    $pagesInfo = $v;
-                }
-            }
-        } else {
-            $pagesInfo = D("Pages")->where(array('terminal_id'=>$terminal_id))->find();
-        }
-        return $pagesInfo;
-    }
+    // /*
+    //  * 根据terminal_id获取模板内容-缓存
+    //  * @author nxx
+    //  * @return array
+    //  */
+    // public function getPages($terminal_id)
+    // {
+    //     if (F('Cache/Promote/pages')) {
+    //         $pagesAll = F('Cache/Promote/pages');
+    //         foreach($pagesAll['data'] as $k=>$v){
+    //             if($v['terminal_id']==$terminal_id){
+    //                 $pagesInfo = $v;
+    //             }
+    //         }
+    //     } else {
+    //         $pagesInfo = D("Pages")->where(array('terminal_id'=>$terminal_id))->find();
+    //     }
+    //     return $pagesInfo;
+    // }
 
     /**
      * 添加模板
@@ -300,6 +406,9 @@ class ProidService extends BaseService
      */
     public function editPages($data, $pages_id)
     {
+        if (!$pages_id) {
+            return array('code'=>301, 'msg'=>'参数异常');
+        }
         $data['litpic'] = $data['image'];
         if(empty($data['subject'])) {
             return array('code'=>301, 'msg'=>'模板主题不能为空');
@@ -319,7 +428,7 @@ class ProidService extends BaseService
         $result = D("Pages")->editData($data, $pages_id);
         if ($result['code'] == 0){
             if (F('Cache/Promote/pages')) {
-                $newInfo = D("Pages")->where(array('pages_id'=>$pages_id))->find();
+                $newInfo = D("Pages")->getFind(array('pages_id'=>$pages_id));
                 $pagesAll = F('Cache/Promote/pages');
                 foreach($pagesAll['data'] as $k=>$v){
                     if($v['pages_id'] == $pages_id){
@@ -352,6 +461,9 @@ class ProidService extends BaseService
      */
     public function createPagesNav($data,$pages_id)
     {
+        if ($pages_id) {
+            return array('code'=>301, 'msg'=>"参数异常");
+        }
         $add['pages_id'] = $pages_id;
         D('Pagesnav')->where(array('pages_id'=>$pages_id))->delete();
         if(!empty($data)){
@@ -363,7 +475,7 @@ class ProidService extends BaseService
                 $add['sort'] = ($k+1);
                 $result = D('Pagesnav')->addData($add);
                 if($result['code'] != 0) {
-                    return array('code'=>1, 'msg'=>"添加导航失败");
+                    return array('code'=>201, 'msg'=>"添加导航失败");
                 }
             }
         }
@@ -380,7 +492,7 @@ class ProidService extends BaseService
         if (F('Cache/Promote/pagesType')) {
             $pagesTypeAll = F('Cache/Promote/pagesType');
         } else {
-            $pagesTypeAll = D('PagesType')->where(array('status'=>1))->select();
+            $pagesTypeAll = D('PagesType')->getList(array('status'=>1));
             F('Cache/Promote/pagesType',$pagesTypeAll);
         }
 
@@ -413,10 +525,10 @@ class ProidService extends BaseService
      */
     public function editPagesType($data,$pagestype_id)
     {
-        $result = D('PagesType')->where(array('pagestype_id'=>$pagestype_id))->save($data);
-        if ($result!==false){
+        $result = D('PagesType')->editData($data, $pagestype_id);
+        if ($result['code'] == 0){
             if (F('Cache/Promote/pagesType')) {
-                $newInfo = D('PagesType')->where(array('pagestype_id'=>$pagestype_id))->find();
+                $newInfo = D('PagesType')->getFind(array('pagestype_id'=>$pagestype_id));
                 $cacheAll = F('Cache/Promote/pagesType');
                 foreach($cacheAll as $k=>$v){
                     if($v['pagestype_id'] == $pagestype_id){
@@ -431,7 +543,7 @@ class ProidService extends BaseService
             }
             return array('code'=>0,'msg'=>'修改模板分类成功');
         }
-        return array('code'=>1,'msg'=>'修改模板分类失败');
+        return array('code'=>201,'msg'=>'修改模板分类失败');
     }
     /**
      * 查看模板备注
@@ -439,7 +551,7 @@ class ProidService extends BaseService
      */
     public function getPagesRemark($pages_id,$system_user_id)
     {
-        $remarklt = D('PagesRemark')->where(array('pages_id'=>$pages_id,'system_user_id'=>$system_user_id))->find();
+        $remarklt = D('PagesRemark')->getFind(array('pages_id'=>$pages_id,'system_user_id'=>$system_user_id));
         return array('code'=>0, 'data'=>$remarklt);
     }
 
@@ -449,6 +561,9 @@ class ProidService extends BaseService
      */
     public function addPagesRemark($remark,$pages_id,$system_user_id)
     {
+        if ($pages_id) {
+            return array('code'=>301,'msg'=>'参数异常');
+        }
         $data['remark'] = $remark;
         $remarklt = D('PagesRemark')->where(array('pages_id'=>$pages_id,'system_user_id'=>$system_user_id))->find();
         if (empty($remarklt)){
@@ -461,11 +576,13 @@ class ProidService extends BaseService
         if($result!==false) {
             array('code'=>0,'msg'=>'备注添加成功');
         }else{
-            return array('code'=>1,'msg'=>'备注添加失败');
+            return array('code'=>201,'msg'=>'备注添加失败');
         }
     }
         
-
+    /**
+    模板导航
+    */
     public function getAllPagesnav($where,$field){
         return D('Pagesnav')->where($where)->field($field)->select();
     }
@@ -477,11 +594,14 @@ class ProidService extends BaseService
      */
     public function editTerminal($data, $terminal_id)
     {
+        if (!$terminal_id) {
+            return array('code'=>301,'msg'=>'参数异常');
+        }
         $TerminalDb = D('Terminal');
-        $result = $TerminalDb->where(array('terminal_id'=>$terminal_id))->save($data);
+        $result = $TerminalDb->editData($data, $terminal_id);
         if ($result!==false){
             if (F('Cache/Promote/terminal')) {
-                $newInfo = $TerminalDb->where(array('terminal_id'=>$terminal_id))->find();
+                $newInfo = $TerminalDb->getFind(array('terminal_id'=>$terminal_id));
                 $cacheAll = F('Cache/Promote/terminal');
                 foreach($cacheAll['data'] as $k=>$v){
                     if($v['terminal_id'] == $terminal_id){
@@ -496,7 +616,7 @@ class ProidService extends BaseService
             }
             return array('code'=>0,'msg'=>'成功');
         }
-        return array('code'=>1,'msg'=>'失败');
+        return array('code'=>201,'msg'=>'失败');
     }
 
 
@@ -507,8 +627,8 @@ class ProidService extends BaseService
     public function addTerminal($data)
     {
         $data['status'] = 1;
-        $result = D('Terminal')->data($data)->add();
-        if ($result!==false){
+        $result = D('Terminal')->addData($data);
+        if (!$result['data']){
             $data['terminal_id'] = $result;
             if (F('Cache/Promote/terminal')) {
                 $cacheAll = F('Cache/Promote/terminal');
@@ -517,7 +637,7 @@ class ProidService extends BaseService
             }
             return array('code'=>0,'data'=>$result);
         }
-        return array('code'=>1,'msg'=>'添加失败');;
+        return array('code'=>201,'msg'=>'添加失败');;
     }
 
     /*
@@ -622,8 +742,14 @@ class ProidService extends BaseService
     */
     public function getProInfo($param)
     {
+        if (!$param['pc_pages_id']) {
+            unset($param['pc_pages_id']);
+        }
+        if (!$param['m_pages_id']) {
+            unset($param['m_pages_id']);
+        }
         if (!$param['proid_id']) {
-             return array('code'=>301, 'msg'=>'访问存在异常');
+             return array('code'=>301, 'msg'=>'参数异常');
         }
         $param['satus'] = 1;
         $proInfo = D("Proid")->getFind($param);
@@ -633,14 +759,13 @@ class ProidService extends BaseService
         $channelInfo = D("Channel")->getFind(array('channel_id'=>$proInfo['channel_id']));
         $proInfo['channelName'] = $channelInfo['channelname'];
         if ($proInfo['pcservice_id']) {
-            $pcService = D("Servicecode")->where("servicecode_id = $proInfo[pcservice_id] and status =1")->find();
+            $pcService = D("Servicecode")->getFind(array('servicecode_id'=>$proInfo['pcservice_id'], 'status'=>1));
         }
         if ($proInfo['mservice_id']) {
-            $mService = D("Servicecode")->where("servicecode_id = $proInfo[mservice_id] and status = 1")->find();
-        }
+            $mService = D("Servicecode")->getFind(array('servicecode_id'=>$proInfo['mservice_id'], 'status'=>1));
+        }     
         $proInfo['pcservice'] = $pcService['title'];
         $proInfo['mservice'] = $mService['title'];
-    
         return array('code'=>0,'data'=>$proInfo);
     }
 
@@ -655,8 +780,8 @@ class ProidService extends BaseService
         }
         $proid['status'] = 0;
         $updateproid = D("Proid")->editData($proid, $proid_id);
-        if ($updateproid === false) {
-            return array("code"=>1,'msg'=>'删除推广账号失败');
+        if ($updateproid['code'] != 0) {
+            return array("code"=>201,'msg'=>'删除推广账号失败');
         }
         return array("code"=>0,'msg'=>'删除推广账号成功');
     }
@@ -668,9 +793,8 @@ class ProidService extends BaseService
     public function deletePro($pro)
     {   
         $promoteInfo = $this->getPromoteInfo($pro);
-        $promote['status'] = 0;
-        $updatepromote = D("Promote")->where("promote_id = $pro[promote_id] and status = 1")->save($promote);
-        if ($updatepromote === false) {
+        $reback = D("Promote")->delData($pro['promote_id']);
+        if ($reback === false) {
             return array("code"=>201,'msg'=>'删除推广计划失败');
         }
         return array("code"=>0,'msg'=>'删除推广计划成功');
@@ -685,7 +809,7 @@ class ProidService extends BaseService
         $prolev['status'] = 1;
         $prolevInfo = D("ProLev")->getFind($prolev);
         if (!$prolevInfo) {
-            return array('code'=>301, 'msg'=>'获取失败');
+            return array('code'=>301, 'msg'=>'暂无数据');
         }
         return array('code'=>0, 'data'=>$prolevInfo);
     }
@@ -729,20 +853,16 @@ class ProidService extends BaseService
         unset($promote['createtime']);
         $promote['status'] = 1;
         //若无则执行添加操作
-        $promoteInfo = $promoteDb->where($promote)->find();
+        $promoteInfo = $promoteDb->getFind($promote);
         if ($promoteInfo) {
             return array("code"=>0,'data'=>$promoteInfo['promote_id']);
         }else{
             $promote['createtime'] = time();
-            $promote_id = $promoteDb->data($promote)->add();
-            if (!$promote_id) {
-                $status['status'] = 0;
-                $proLevInfo = $proLevDb->where("pro_lev_id = $promote[pro_lev_id] and status=1")->find();
-                $dels = $proLevDb->where("pro_lev_id = $proLevInfo[pid] and status=1")->save($status);
-                $delProLev = $proLevDb->where("pro_lev_id == $promote[pro_lev_id] and status=1")->save($status);
-                return array("code"=>1,'msg'=>'添加推广计划失败');
+            $result['data'] = $promoteDb->addData($promote);
+            if (!$result['data']) {
+                return array("code"=>201,'msg'=>'添加推广计划失败');
             }
-            return array("code"=>0,'data'=>$promote_id);
+            return array("code"=>0,'data'=>$result['data']);
         }
     }
 
@@ -757,25 +877,25 @@ class ProidService extends BaseService
         $servicecodeDb = D("Servicecode");
         $promote['system_user_id'] = $this->system_user_id;
         $promote['status'] = 1;
-        $getPromoteListAll['count'] = $promoteDb->where($promote)->count();
-        $proid = D("Proid")->where("proid_id = $promote[proid_id] and status=1")->find();
-        $promotes =  $promoteDb->where($promote)->limit($limit)->select();
-        if (!$promotes) {
+        $getPromoteListAll['count'] = $promoteDb->getCount($promote);
+        $proid = D("Proid")->getFind(array('proid_id'=>$promote['proid_id'], 'status'=>1));
+        $promotes = $promoteDb->getList($promote, null, null, $limit);
+        if (!$promotes['data']) {
             return array('code'=>201, 'msg'=>'暂无数据');
         }
         foreach ($promotes as $key => $promote) {
             if ($promote['pcservice_id']) {
-                $pcservice = $servicecodeDb->where("servicecode_id = $promote[pcservice_id]")->find();
+                $pcservice = $servicecodeDb->getFind(array('servicecode_id'=>$promote['pcservice_id']));
                 $promote['pcservice'] = $pcservice['url'];
             }else{
-                $pcservice = $servicecodeDb->where("servicecode_id = $proid[pcservice_id]")->find();
+                $pcservice = $servicecodeDb->getFind(array('servicecode_id'=>$promote['pcservice_id']));
                 $promote['pcservice'] = $pcservice['url'];
             }
             if ($promote['mservice_id']) {
-                $mservice = $servicecodeDb->where("servicecode_id = $promote[mservice_id]")->find();
+                $mservice = $servicecodeDb->getFind(array('servicecode_id'=>$promote['mservice_id']));
                 $promote['mservice'] = $mservice['url'];
             }else{
-                $mservice = $servicecodeDb->where("servicecode_id = $proid[mservice_id]")->find();
+                $mservice = $servicecodeDb->getFind(array('servicecode_id'=>$promote['mservice_id']));
                 $promote['mservice'] = $mservice['url'];
             }
             $promote['pc_pages'] = "{$proid['domain']}/Home/Propage/index.html?promote={$promote['promote_id']}&dev=2";
@@ -832,7 +952,7 @@ class ProidService extends BaseService
     public function getSetPages($setPages)
     {
         $setPages['status'] = 1;
-        $pages = D("Setpages")->where($setPages)->select();
+        $pages = D("Setpages")->getList($setPages);
         return array('code'=>0,'data'=>$pages);
     }
 
@@ -854,20 +974,17 @@ class ProidService extends BaseService
             $setPages['sign'][$key] = explode('-',$sign);
         }            
         $setPages['system_user_id'] = $this->system_user_id;
-
-
-
         $set['system_user_id'] = $setPages['system_user_id'];
         $set['pagesname'] = $setPages['pagesname'];
         $set['status'] = 1;
-        $result = D("Setpages")->where($set)->find();   
+        $result = D("Setpages")->getFind($set);   
         if ($result) {
             return array('code'=>303, 'msg'=>'模板名已存在');
         }       
         $set['type'] = $setPages['type'];
         if ($setPages['channel_id']) {
-            $result = D("Setpages")->where("system_user_id = $set[system_user_id] and channel_id = $setPages[channel_id] and status=1 and type=$setPages[type]")->find();   
-            if ($result) {
+            $result = D("Setpages")->getFind(array('system_user_id'=>$set['system_user_id'], 'channel_id'=>$setPages['channel_id'], 'status'=>1, 'type'=>$setPages['type']));   
+            if ($result['data']) {
                 return array('code'=>304, 'msg'=>'该渠道已存在模板');
             }
             $set['channel_id'] = $setPages['channel_id'];
@@ -1000,40 +1117,40 @@ class ProidService extends BaseService
         return array('code'=>0,'data'=>$servicecode);
     }
 
-    /**
-     * 获取计划详情
-     * @author Nixx
-    */
-    public function getPromInfo($promote_id)
-    {
-        $proInfo = D("Promote")->where("promote_id = $promote_id and status=1")->find();
-        if (!$proInfo) {
-            return array('code'=>1,'msg'=>"获取详情失败");
-        }
-        return array('code'=>1,'data'=>$proInfo);
-    }
+    // /**
+    //  * 获取计划详情
+    //  * @author Nixx
+    // */
+    // public function getPromInfo($promote_id)
+    // {
+    //     $proInfo = D("Promote")->where("promote_id = $promote_id and status=1")->find();
+    //     if (!$proInfo) {
+    //         return array('code'=>201,'msg'=>"获取详情失败");
+    //     }
+    //     return array('code'=>0,'data'=>$proInfo);
+    // }
 
     /**
-     * 获取指定计划
+     * 获取指定计划,单条
      * @author Nixx
     */
     public function getPromoteInfo($promote)
     {
         $promote['status'] = 1;
-        $proInfo = D("Promote")->where($promote)->find();
+        $proInfo = D("Promote")->getFind($promote);
         if (!$proInfo) {
-            return array('code'=>1,'msg'=>'没有数据');
+            return array('code'=>201,'msg'=>'没有数据');
         }
-        $proid = D("Proid")->where("proid_id = $proInfo[proid_id] and status=1")->find();
+        $proid = D("Proid")->getFind(array('proid_id' => $proInfo['proid_id'], 'status'=>1));
         if (!$proInfo['pcservice_id']) {
             $proInfo['pcservice_id'] = $proid['pcservice_id'];
         }
         if (!$proInfo['mservice_id']) {
             $proInfo['mservice_id'] = $proid['mservice_id'];
         }
-        $pcservice = D("Servicecode")->where("servicecode_id = $proInfo[pcservice_id]")->find();
+        $pcservice = D("Servicecode")->getFind(array('servicecode_id'=>$proInfo['pcservice_id']));
         $proInfo['pcservice'] = $pcservice['url'];
-        $mservice = D("Servicecode")->where("servicecode_id = $proInfo[mservice_id]")->find();
+        $mservice = D("Servicecode")->getFind(array('servicecode_id'=>$proInfo['mservice_id']));
         $proInfo['mservice'] = $mservice['url'];
         $proInfo['pc_pages'] = "{$proid['domain']}/Home/Propage/index.html?promote={$proInfo['promote_id']}&dev=2";
         $proInfo['m_pages'] = "{$proid['domain']}/Home/Propage/index.html?promote={$proInfo['promote_id']}&dev=1";
@@ -1063,9 +1180,9 @@ class ProidService extends BaseService
         $promote["status"] = array("eq",1);
         $promote["proid_id"] = array("eq",$proid_id);
         $promote["keyword"] = array("like","%$keyword%");
-        $promoteList = D("Promote")->where($promote)->select(); 
+        $promoteList = D("Promote")->getList($promote); 
         if (!$promoteList) {
-            return array('code'=>1,'msg'=>'没有数据');
+            return array('code'=>201,'msg'=>'没有数据');
         }
         return array('code'=>0,'data'=>$promoteList);
     }
@@ -1100,13 +1217,13 @@ class ProidService extends BaseService
     }
 
     /**
-     * 获取指定计划
+     * 获取指定计划列表
      * @author Nixx
     */
     public function getPromoteInfos($promote)
     {
         $promote['status'] = 1;
-        $proInfos = D("Promote")->where($promote)->select();
+        $proInfos = D("Promote")->getList($promote);
         if (!$proInfos) {
             return array('code'=>0,'msg'=>'没有数据');
         }
@@ -1163,7 +1280,7 @@ class ProidService extends BaseService
 
             $updatepromote = D("Promote")->where($promotes)->save($promote);
             if ($updatepromote === false) {
-                return array('code'=>2,'msg'=>'修改失败');
+                return array('code'=>202,'msg'=>'修改失败');
             }
         }else{
             $proid_id = $promote['proid_id'];
@@ -1171,7 +1288,7 @@ class ProidService extends BaseService
             $proid['m_pages_id'] = $promote['m_pages_id'];
             $updatepromote = D("Promote")->where("proid_id = $proid_id")->save($proid);
             if ($updatepromote === false) {
-                return array('code'=>3,'msg'=>'修改失败');
+                return array('code'=>203,'msg'=>'修改失败');
             }
         }
         return array('code'=>0,'msg'=>'修改成功');
@@ -1218,5 +1335,12 @@ class ProidService extends BaseService
         return $includedString;
     }
 
+    // /*
+    // * 导入计划数据处理
+    // */
+    // public function importPromotes($datas, $param)
+    // {
+    //     # code...
+    // }
 
 }

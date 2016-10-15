@@ -18,8 +18,7 @@ return array(
     'DB_PREFIX' => 'zl_',
 
 
-//
-//	 'DB_TYPE'   => 'mysql',
+//	   'DB_TYPE'   => 'mysql',
 //     'DB_HOST'   => 'rds0q0x59aut678p041j.mysql.rds.aliyuncs.com',
 //     'DB_NAME'   => 'zelininfo',
 //     'DB_USER'   => 'zelininfo',
