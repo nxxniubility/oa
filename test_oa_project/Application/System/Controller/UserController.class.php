@@ -1336,8 +1336,8 @@ class UserController extends SystemController
         $where['admin_system_user_id'] = $this->system_user_id;
         $data['auditList'] = D('User', 'Service')->getApplyList($where, (($re_page - 1) * 15) . ',15');
         //获取区域下员工
-        $data['systemList'] = D('SystemUser', 'Service')->getSystemUserList(array('zone_id' => $this->system_user['zone_id']));
-        $data['systemList'] = $data['systemList']['data'];
+        $data['systemList'] = D('SystemUser', 'Service')->getSystemUsersList(array('where'=>array('zone_id' => $this->system_user['zone_id'])));
+        $data['systemList'] = $data['systemList']['data']['data'];
         //信息质量转换
         $data['USER_INFOQUALITY'] = C('USER_INFOQUALITY');
         //加载分页类
