@@ -1204,4 +1204,63 @@ class SystemUserService extends BaseService
         }
         return array('code'=>100, 'msg'=>$send_flag['msg']);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 员工获取下属职位对应 员工ID
+    |--------------------------------------------------------------------------
+    | $type
+    | @author zgt
+    */
+    public function getRoleSystemUser($system_user_id)
+    {
+        //获取所有职位集合
+        $roleList = D('Role','Service')->getRoleList();
+        $roleList = $roleList['data'];
+        $reroles = $this->getRoleUserList($system_user_id);
+        $rerolesUserList = $this->getRoleUserList();
+        if($reroles['code']==0){
+            $my_roles = array();
+            $new_roles = array();
+            foreach($reroles['data']['data'] as $k=>$v){
+                //数组分级
+                $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
+                $newZoneList = $Arrayhelps->subFinds($roleList['data'],$v['role_id'],'id','superiorid');
+                $my_roles = array_merge($my_roles,$newZoneList);
+                $my_roles[] = array('id'=>$v['role_id']);
+            }
+            foreach($my_roles as $k=>$v){
+                $new_roles[] = $v['id'];
+            }
+            //是否管理员权限
+            if(!in_array(C('ADMIN_SUPER_ROLE'),$new_roles)){
+                foreach($rerolesUserList['data']['data'] as $k=>$v){
+                    if(in_array($v['role_id'], $new_roles) ){
+                        $sysList[] = $v['user_id'];
+                    }
+                }
+            }else{
+                return array('code'=>'1', 'msg'=>'管理员');
+            }
+        }
+        return array('code'=>'0', 'msg'=>'操作成功', 'data'=>$sysList);
+    }
+    /*
+    * 获取员工对应职位关系列表
+    */
+    protected function getRoleUserList($system_user_id=null)
+    {
+        $role['data'] = D('RoleUser')->select();
+        if($system_user_id!==null){
+            $user_role = array();
+            foreach($role['data'] as $k=>$v){
+                if($v['user_id']==$system_user_id){
+                    $user_role['data'][] = $v;
+                }
+            }
+            $user_role['count'] = count($user_role['data']);
+            return array('code'=>'0', 'msg'=>'操作成功', 'data'=>$user_role);
+        }
+        return array('code'=>'0', 'msg'=>'操作成功', 'data'=>$role);
+    }
 }
