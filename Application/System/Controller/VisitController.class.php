@@ -28,21 +28,22 @@ class VisitController extends SystemController
                 $where_system['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
                 $where_system[C('DB_PREFIX').'system_user.usertype'] = array('neq',10);
                 $where_system['role_id'] = array('in',$marketArr);
-$systemUserList = D('SystemUser')->getSystemUsersList($where_system);
-                if(!empty($systemUserList)){
-                    $this->ajaxReturn('0','获取成功',$systemUserList);
+                $systemUserList = D('SystemUser', 'Service')->getSystemUserList($where_system);
+                if(!empty($systemUserList['data'])){
+                    $this->ajaxReturn('0','获取成功',$systemUserList['data']);
                 }else{
                     $this->ajaxReturn('1','获取失败');
                 }
             }else if($request['type']=='getUser'){
-$userInfo = D('User')->getUserInfo($request['user_id']);
+                $userInfo = D('User', 'Service')->getUserInfo(array('user_id'=>$request['user_id']));
+                $userInfo = $userInfo['data'];
                 if(!empty($userInfo) && $userInfo['status']==160){
                     $where_system[C('DB_PREFIX').'system_user.status'] = 1;
                     $where_system[C('DB_PREFIX').'system_user.zone_id'] = $this->system_user['zone_id'];
                     $where_system[C('DB_PREFIX').'system_user.usertype'] = array('neq',10);
                     $where_system[C('DB_PREFIX').'role.id'] = array('in',$marketArr);
                     $where_system[C('DB_PREFIX').'system_user_engaged.status'] = array('neq',1);
-$systemUserList = D('SystemUser')->getSystemUserVisit($where_system);
+                    $systemUserList = D('SystemUser', 'Service')->getSystemUserVisit($where_system);
                     foreach($systemUserList['data'] as $k=>$v){
                         if(empty($v['visitnum'])){
                             $systemVisitNum = 0;
@@ -59,16 +60,17 @@ $systemUserList = D('SystemUser')->getSystemUserVisit($where_system);
                             }
                         }
                     }
-                    $this->ajaxReturn('1','客户属于回库状态',$systemUserList['data'][$systemVisitKey]);
+                    $this->ajaxReturn(301,'客户属于回库状态',$systemUserList['data'][$systemVisitKey]);
                 }else{
-$systemInfo = D('SystemUser')->getSystemUserInfo($userInfo['system_user_id']);
+                    $systemInfo = D('SystemUser', 'Service')->getSystemUserInfo($userInfo['system_user_id']);
+                    $systemInfo = $systemInfo['data'];
                     //属于教务或者销售
                     if(in_array($systemInfo['role_id'],explode(',', $marketArr)) || in_array($systemInfo['role_id'],explode(',', $educationalArr))){
                         //是否本中心
                         if($userInfo['zone_id'] == $this->system_user['zone_id']){
-                            $this->ajaxReturn('2','该员工属于本中心员工',$systemInfo);
+                            $this->ajaxReturn(302,'该员工属于本中心员工',$systemInfo);
                         }else{
-                            $this->ajaxReturn('3','该员工不属于本中心',$systemInfo);
+                            $this->ajaxReturn(301,'该员工不属于本中心',$systemInfo);
                         }
                     }else{
                         $where_system[C('DB_PREFIX').'system_user.status'] = 1;
@@ -76,7 +78,7 @@ $systemInfo = D('SystemUser')->getSystemUserInfo($userInfo['system_user_id']);
                         $where_system[C('DB_PREFIX').'system_user.usertype'] = array('neq',10);
                         $where_system[C('DB_PREFIX').'role.id'] = array('in',$marketArr);
                         $where_system[C('DB_PREFIX').'system_user_engaged.status'] = array('neq',1);
-$systemUserList = D('SystemUser')->getSystemUserVisit($where_system);
+                        $systemUserList = D('SystemUser', 'Service')->getSystemUserVisit($where_system);
                         foreach($systemUserList['data'] as $k=>$v){
                             if(empty($v['visitnum'])){
                                 $systemVisitNum = 0;
@@ -93,56 +95,46 @@ $systemUserList = D('SystemUser')->getSystemUserVisit($where_system);
                                 }
                             }
                         }
-                        $this->ajaxReturn('4','操作者非销售/教务',!empty($systemUserList['data'][$systemVisitKey])?$systemUserList['data'][$systemVisitKey]:0);
+                        $this->ajaxReturn(303,'操作者非销售/教务',!empty($systemUserList['data'][$systemVisitKey])?$systemUserList['data'][$systemVisitKey]:0);
                     }
                 }
             }else if($request['type']=='submit'){
-$reflag = D('User')->addUserVisit($request['user_id'],$request['system_user_id'],$this->system_user_id);
-                if($reflag['code']==0){
-$visitLogs = D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$request['system_user_id']))->find();
-                    if(!empty($visitLogs)){
-                        $data['visitnum'] = array('exp','visitnum+1');
-D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$request['system_user_id']))->save($data);
-                    }else{
-                        $data['date'] = date('Ymd');
-                        $data['system_user_id'] = $request['system_user_id'];
-                        $data['visitnum'] = 1;
-D('UserVisitLogs')->data($data)->add();
-                    }
+                $reflag = D('User', 'Service')->addUserVisit($request['user_id'],$request['system_user_id'],$this->system_user_id);
+                if ($reflag['code'] == 0) {
                     $this->ajaxReturn('0','操作成功，请通知分配人员到前台接待',U('System/Visit/visitList'));
                 }else{
-                    $this->ajaxReturn('1',$reflag['msg']);
+                    $this->ajaxReturn($reflag['code'],$reflag['msg']);
                 }
             }
         }else{
             //获取参数 页码
             $request = I('get.');
-            $where[C('DB_PREFIX') . 'user.zone_id'] = $this->system_user['zone_id'];
+            $where['zone_id'] = $this->system_user['zone_id'];
             if(!empty($request['search'])){
                 $request['search'] = trim($request['search']);
                 if($request['keyname']=='username'){
-                    $where[C('DB_PREFIX') .'user.'. $request['keyname']] = encryptPhone($request['search'], C('PHONE_CODE_KEY'));
+                    $where[$request['keyname']] = encryptPhone($request['search'], C('PHONE_CODE_KEY'));
                 }else{
-                    $where[C('DB_PREFIX') .'user.'. $request['keyname']] = $request['search'];
+                    $where[$request['keyname']] = $request['search'];
                 }
-                unset($where[C('DB_PREFIX') . 'user.zone_id']);
+                unset($where['zone_id']);
             }else{
                 if ($request['status'] == 0) {
-                    $where[C('DB_PREFIX') . 'user.status'] = array('IN', array(20, 30));
+                    $where['status'] = array('IN', array(20, 30));
                     unset($request['status']);
                 }
                 if(!empty($request['visittime'])){
                     $_time = explode('@', str_replace('/', '-', $request['visittime']));
-                    $where[C('DB_PREFIX') . 'user.visittime'] = array(array('EGT', ($_time[0]==''?1: ($_time[0]== 'time' ? time() : strtotime($_time[0])) )), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1].' 23:59'))), 'AND');
+                    $where['visittime'] = array(array('EGT', ($_time[0]==''?1: ($_time[0]== 'time' ? time() : strtotime($_time[0])) )), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1].' 23:59'))), 'AND');
                 }
             }
             $re_page = isset($request['page']) ? $request['page'] : 1;
             unset($request['page']);
             //客户列表
-$re_userAll = D('User')->getAllUser($where, C('DB_PREFIX') . 'user.visittime desc', (($re_page - 1) * 15) . ',15');
-            $data['userAll'] = $re_userAll['data'];
+            $re_userAll = D('User', 'Service')->getList($where, 'visittime desc', (($re_page-1)*15).',15');
+            $data['userAll'] = $re_userAll['data']['data'];
             //加载分页类
-            $data['paging'] = $this->Paging($re_page, 15, $re_userAll['count'], $request);
+            $data['paging'] = $this->Paging($re_page, 15, $re_userAll['data']['count'], $request);
             $data['request'] = $request;
             if(empty($data['request']['visittime'])){
                 $data['request']['visittime'] = '@';

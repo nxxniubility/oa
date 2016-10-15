@@ -228,7 +228,11 @@
 				    layer.msg('请选择Excel文件！',{icon:2});
 		            return false;
 		        }
-				 layer.msg('正在导入，请稍候...',{icon:0,time:0});
+		        if( f.pcPagesType_id.value == '' || f.mPagesType_id.value == ''){
+				    layer.msg('请选择专题页',{icon:2});
+		            return false;
+		        }
+				layer.msg('正在导入，请稍候...',{icon:0,time:0});
 		    }
 			function get_file_name(str)
 			{

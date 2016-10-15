@@ -1,20 +1,18 @@
 <?php
-
 namespace Common\Model;
 use Common\Model\BaseModel;
-
-class ZoneModel extends BaseModel
+class SetpagesModel extends BaseModel
 {
-    protected $_id='zone_id';
+    protected $_id='setpages_id';
     public function _initialize(){
         parent::_initialize();
     }
 
-    //自动验证
-    protected $_validate = array(
-        array('channelname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
-        array('channelname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
-    );
+    // //自动验证
+    // protected $_validate = array(
+    //     array('channelname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
+    //     array('channelname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
+    // );
 
     /*
     |--------------------------------------------------------------------------

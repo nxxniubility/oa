@@ -40,7 +40,9 @@
                         <dl class="select">
                             <dt>
                                 <foreach name="data['terminalAll']" item="v" key="k" >
-                                    <if condition="$v['terminal_id'] eq $data['pagesInfo']['terminal_id']">
+                                    <if condition="($data['pagesInfo']['terminal_id'] eq 0)">
+                                        <div class="select_title l">请选择终端分类</div>
+                                    <elseif condition="($v['terminal_id'] eq $data['pagesInfo']['terminal_id'])"/>
                                         <div class="select_title l">{$v.terminalname}</div>
                                     </if>
                                 </foreach>
@@ -62,7 +64,10 @@
                         <dl class="select" id="pagestype_select">
                             <dt>
                                 <foreach name="data['pagesType']" item="v" key="k" >
-                                    <if condition="$v['pagestype_id'] eq $data['pagesInfo']['pagestype_id']">
+                                    <if condition="($data['pagesInfo']['pagestype_id'] eq 0)">
+                                        <div class="select_title l">请选择服务分类</div>
+                                        <?php break; ?>
+                                    <elseif condition="($v['pagestype_id'] eq $data['pagesInfo']['pagestype_id'])"/>
                                         <div class="select_title l">{$v.typename}</div>
                                     </if>
                                 </foreach>

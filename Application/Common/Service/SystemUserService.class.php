@@ -1263,4 +1263,84 @@ class SystemUserService extends BaseService
         }
         return array('code'=>'0', 'msg'=>'操作成功', 'data'=>$role);
     }
+
+
+
+
+    public function getSystemUserVisit($where=null,$order=null,$limit='0,10'){
+        $DB_PREFIX = C('DB_PREFIX');
+        $order = !empty($order)?$order:$DB_PREFIX.'system_user.system_user_id DESC';
+        if(!empty($where['zoneIds'])){
+            foreach($where['zoneIds'] as $k=>$v){
+                $arr[] = $v['zone_id'];
+            }
+            $arr[]=0;
+            $where[$DB_PREFIX.'system_user.zone_id'] = array('IN',$arr);
+//            $where[$DB_PREFIX.'role.status'] = 1;
+            unset($where['zoneIds']);
+        }
+        $redata['data'] =
+            $this
+                ->field(array(
+                    "{$DB_PREFIX}system_user.system_user_id",
+                    "{$DB_PREFIX}system_user.username",
+                    "{$DB_PREFIX}system_user.realname",
+                    "{$DB_PREFIX}system_user.face",
+                    "{$DB_PREFIX}system_user.email",
+                    "{$DB_PREFIX}system_user.sex",
+                    "{$DB_PREFIX}system_user.check_id",
+                    "{$DB_PREFIX}system_user.isuserinfo",
+                    "{$DB_PREFIX}system_user.usertype",
+                    "{$DB_PREFIX}system_user.logintime",
+                    "{$DB_PREFIX}system_user.loginip",
+                    "{$DB_PREFIX}zone.zone_id",
+                    "{$DB_PREFIX}zone.level as zonelevel",
+                    "{$DB_PREFIX}zone.name as zonename",
+                    "{$DB_PREFIX}department.department_id",
+                    "{$DB_PREFIX}department.departmentname",
+                    "{$DB_PREFIX}role.id as role_id",
+                    "{$DB_PREFIX}role.name as rolename",
+                    "{$DB_PREFIX}system_user.createtime",
+                    "{$DB_PREFIX}system_user.createip",
+                    "{$DB_PREFIX}system_user_engaged.status as engaged_status",
+                    "{$DB_PREFIX}user_visit_logs.visitnum"
+                ))
+                ->join('LEFT JOIN __ZONE__ on __ZONE__.zone_id=__SYSTEM_USER__.zone_id')
+                ->join('LEFT JOIN __ROLE_USER__ on __ROLE_USER__.user_id=__SYSTEM_USER__.system_user_id')
+                ->join('LEFT JOIN __ROLE__ on __ROLE__.id=__ROLE_USER__.role_id')
+                ->join('LEFT JOIN __DEPARTMENT__ on __DEPARTMENT__.department_id=__ROLE__.department_id')
+                ->join('LEFT JOIN __USER_VISIT_LOGS__ on __USER_VISIT_LOGS__.system_user_id=__SYSTEM_USER__.system_user_id')
+                ->join('LEFT JOIN __SYSTEM_USER_ENGAGED__ on __SYSTEM_USER_ENGAGED__.system_user_id=__SYSTEM_USER__.system_user_id')
+                ->group("{$DB_PREFIX}system_user.system_user_id")->Distinct(true)
+                ->where($where)
+                ->order($order)
+                ->limit($limit)
+                ->select();
+        //统计总数
+        if(!empty($redata['data'])){
+            $redata['count'] = $this
+                ->join('LEFT JOIN __ZONE__ on __ZONE__.zone_id=__SYSTEM_USER__.zone_id')
+                ->join('LEFT JOIN __ROLE_USER__ on __ROLE_USER__.user_id=__SYSTEM_USER__.system_user_id')
+                ->join('LEFT JOIN __ROLE__ on __ROLE__.id=__ROLE_USER__.role_id')
+                ->join('LEFT JOIN __DEPARTMENT__ on __DEPARTMENT__.department_id=__ROLE__.department_id')
+                ->join('LEFT JOIN __SYSTEM_USER_ENGAGED__ on __SYSTEM_USER_ENGAGED__.system_user_id=__SYSTEM_USER__.system_user_id')
+                ->where($where)
+                ->count("{$DB_PREFIX}system_user.system_user_id");
+
+            //添加多职位
+            foreach($redata['data'] as $k=>$v){
+                $roles = $this->getSystemUserRole(array('system_user_id'=>$v['system_user_id']));
+                $roleNames = '';
+                foreach($roles as $k2=>$v2){
+                    if($k2==0) $roleNames .= $v2['departmentname'].'/'.$v2['name'];
+                    else $roleNames .= '，'.$v2['departmentname'].'/'.$v2['name'];
+                }
+                $redata['data'][$k]['role_names'] = $roleNames;
+            }
+        }else{
+            $redata['count'] = 0;
+        }
+        return array('code'=>0, 'data'=>$redata);
+    }
+
 }

@@ -387,6 +387,74 @@ class UserService extends BaseService
         }
     }
 
+    /**
+     * 添加客户到访 并分配到员工
+     * @author zgt
+     */
+    public function addUserVisit($user_id,$tosystem_user_id,$system_user_id){
+//是否存在忙线记录
+//         $engaged = M('system_user_engaged')->where(array('system_user_id'=>$tosystem_user_id))->find();
+//         if(!empty($engaged)){
+//             if($engaged['status']==1){
+// //                return array('code'=>1,'msg'=>'该员工处于忙线状态');
+//             }
+//         }else{
+//             $flag_add = M('system_user_engaged')->data(array('system_user_id'=>$tosystem_user_id,'status'=>2))->add();
+//             if($flag_add===false){
+//                 return array('code'=>1,'msg'=>'新增忙线数据失败');
+//             }
+//         }
+        //客户分配
+        $userInfo = D('User')->getFind(array('user_id'=>$user_id), 'system_user_id,status');
+        if($tosystem_user_id!=$userInfo['system_user_id'] || $userInfo['status']=='160'){
+            $reflag_allocation = $this->allocationUser($user_id,$tosystem_user_id,$system_user_id,1);
+            $callbackDate['attitude_id'] = 0;
+            $callbackDate['remark'] = '前台操作: 客户于 '.date('Y-m-d',time()).' 上门到访！';
+            $callbackDate['nexttime'] = time();
+            $callbackDate['user_id'] = $user_id;
+            $callbackDate['system_user_id'] = $system_user_id;
+            $this->_addCallback($callbackDate);
+        }
+        if($reflag_allocation['code']==0){
+            $data_engaged['user_id'] = $user_id;
+            $data_engaged['createtime'] = time();
+            $data_engaged['status'] = 1;
+            $data_engaged['isovertime'] = 1;
+            $data_engaged['isget'] = 1;
+            D()->startTrans();
+            //添加记录
+            $flag_engaged_save = M('system_user_engaged')->where(array('system_user_id'=>$tosystem_user_id))->save($data_engaged);
+            //重置zone_id
+            $system = M('system_user')->field('system_user_id,zone_id')->where(array('system_user_id'=>$tosystem_user_id))->find();
+            $flag_user_save = M('user')->where(array('user_id'=>$user_id))->save(array('zone_id'=>$system['zone_id'],'visittime'=>time(),'lastvisit' => time()));
+            if($flag_engaged_save!==fasle && $flag_user_save!=false){
+                //添加数据记录
+                $dataLog['operattype'] = 12;
+                $dataLog['operator_user_id'] = $system_user_id;
+                $dataLog['user_id'] = $user_id;
+                $dataLog['logtime'] = time();
+                D('Data', 'Service')->addDataLogs($dataLog);
+                D()->commit();
+                $visitLogs = D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$request['system_user_id']))->find();
+                if(!empty($visitLogs)){
+                    $data['visitnum'] = array('exp','visitnum+1');
+                    D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$request['system_user_id']))->save($data);
+                }else{
+                    $data['date'] = date('Ymd');
+                    $data['system_user_id'] = $request['system_user_id'];
+                    $data['visitnum'] = 1;
+                    D('UserVisitLogs')->data($data)->add();
+                }
+                return  array('code'=>0,'msg'=>'分配到访客户成功');
+            }else{
+                D()->rollback();
+                return  array('code'=>0,'msg'=>'分配操作失败');
+            }
+        }else{
+            return  array('code'=>201,'msg'=>$reflag_allocation['msg']);
+        }
+    }
+
 
     /*
     |--------------------------------------------------------------------------
