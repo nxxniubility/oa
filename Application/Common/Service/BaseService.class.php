@@ -44,15 +44,22 @@ class BaseService extends BaseModel {
     }
 
     /*
-       * 对缓存数据进行处理
-       * $array =array('data'=>'', 'count'=>) $order="id asc"  $page="1,10" 页码,显示数 $where=array(''=>)
-       * @author zgt
-      */
+    * 对缓存数据进行处理
+    * $array =array('data'=>'', 'count'=>) $order="id asc"  $page="1,10" 页码,显示数 $where=array(''=>)
+    * @author zgt
+    */
     protected function disposeArray($array,$order=null,$page=null,$where=null){
         if(!empty($array['data'])){
             $array_list = $array['data'];
         }else{
             $array_list = $array;
+        }
+        //对缓存条件筛选 XXXX 模糊搜索
+        if(!empty($where)){
+            $where = array_filter($where);
+            foreach($where as $k=>$v){
+                $array_list = $this->disposeArray_where($array_list ,$k ,$v);
+            }
         }
         //对缓存数据进行排序
         if(!empty($order)){
@@ -64,22 +71,14 @@ class BaseService extends BaseModel {
                 if($order[1]=='asc')return ($al<$bl)?-1:1;
                 else return ($al>$bl)?-1:1;
             });
-        }
-        //对缓存条件筛选 XXXX 模糊搜索
-        if(!empty($where)){
-            $where = array_filter($where);
-            foreach($where as $k=>$v){
-                $array_list = $this->disposeArray_where($array_list ,$k ,$v);
-            }
+            $array_list = array_values($array_list);
         }
         if(!empty($array['count'])) $array['count'] = count($array_list);
         //对缓存进行分页
         if(!empty($page)){
             //分页数据
             $page = explode(',', $page);
-            foreach($array_list as $k=>$v){
-                $department_new[] = $v;
-            }
+            $department_new = $array_list;
             $array_list = null;
             foreach($department_new as $k=>$v){
                 if($k>=(($page[0]-1)*$page[1]) && $k<($page[0]*$page[1])){

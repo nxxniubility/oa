@@ -476,7 +476,7 @@ class SystemUserService extends BaseService
             $_zone_arr = $this->_getZoneIds($param['where']['zone_id']);
             $param['where']['zone_id'] = array('IN', $_zone_arr);
         }
-        $param['page'] = !empty($param['page'])?$param['page']:'1,30';
+        $param['page'] = !empty($param['page'])?$param['page']:null;
         if( F('Cache/systemUsers') ) {
             $systemUsers = F('Cache/systemUsers');
         }else{
@@ -487,12 +487,54 @@ class SystemUserService extends BaseService
         return array('code'=>'0', 'data'=>$systemUsers);
     }
 
+    /**
+     * 获取员工统计信息质量
+     * @author zgt
+     */
+    public function getInfoqualityCount($param)
+    {
+        $system_ids = explode(',', $param['systemUserId']);
+        //渠道列表
+        $channeList = D('Channel','Service')->getChannelList();
+        $channelList = $channeList['data']['data'];
+        $newChannelArr = array();
+        foreach ($channelList as $k => $v) {
+            $newChannelArr[$v['channelname']][] = $v['channel_id'];
+            if (!empty($v['children'])) {
+                foreach ($v['children'] as $k2 => $v2) {
+                    $newChannelArr[$v['channelname']][] = $v2['channel_id'];
+                }
+            }
+        }
+        $where_system['where']['system_user_id'] = array('IN',$system_ids);
+        $systemList = $this->getSystemUsersList($where_system);
+        if(empty($systemList['data']['data'])) array('code'=>'200','msg'=>'找不到员工数据');
+        foreach ($systemList['data']['data'] as $key => $sysUser) {
+            $i=0;
+            foreach($newChannelArr as $k2=>$v2){
+                $new_arr[$key]['system_user_id'] = $sysUser['system_user_id'];
+                $new_arr[$key]['count'][$i]['channelname'] = $k2;
+                $where['channel_id'] = array('IN',$v2);
+                $countA = D('DataLogs')->where(array('infoquality'=>1,'system_user_id'=>$sysUser['system_user_id'],'channel_id'=>$where['channel_id'],'operattype'=>array('IN','1,2,3'),'logtime'=>array('EGT',strtotime(date('Y-m-d'))) ))->count();
+                $countB = D('DataLogs')->where(array('infoquality'=>2,'system_user_id'=>$sysUser['system_user_id'],'channel_id'=>$where['channel_id'],'operattype'=>array('IN','1,2,3'),'logtime'=>array('EGT',strtotime(date('Y-m-d'))) ))->count();
+                $countC = D('DataLogs')->where(array('infoquality'=>3,'system_user_id'=>$sysUser['system_user_id'],'channel_id'=>$where['channel_id'],'operattype'=>array('IN','1,2,3'),'logtime'=>array('EGT',strtotime(date('Y-m-d'))) ))->count();
+                $countD = D('DataLogs')->where(array('infoquality'=>4,'system_user_id'=>$sysUser['system_user_id'],'channel_id'=>$where['channel_id'],'operattype'=>array('IN','1,2,3'),'logtime'=>array('EGT',strtotime(date('Y-m-d'))) ))->count();
+                $new_arr[$key]['count'][$i]['countA'] = (!empty($countA))?$countA:0;
+                $new_arr[$key]['count'][$i]['countB'] = (!empty($countB))?$countB:0;
+                $new_arr[$key]['count'][$i]['countC'] = (!empty($countC))?$countC:0;
+                $new_arr[$key]['count'][$i]['countD'] = (!empty($countD))?$countD:0;
+                $i++;
+            }
+        }
+        return $new_arr;
+    }
+
     /*
-  |--------------------------------------------------------------------------
-  | SystemUser 获取客户详情
-  |--------------------------------------------------------------------------
-  | @author zgt
-  */
+    |--------------------------------------------------------------------------
+    | SystemUser 获取客户详情
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
     public function getSystemUsersInfo($param)
     {
         if( F('Cache/systemUsers') ) {
@@ -1044,4 +1086,122 @@ class SystemUserService extends BaseService
         }
     }
 
+    /*
+   |--------------------------------------------------------------------------
+   | 员工获取短信模版
+   |--------------------------------------------------------------------------
+   | $type
+   | @author zgt
+   */
+    public function getSmsTemplate()
+    {
+        $templateList = D('SmsTemplate')->where(array('system_user_id'=>$this->system_user_id))->select();
+        if(!empty($templateList)){
+            foreach($templateList as $k=>$v){
+                $templateList[$k]['create_time'] = date('Y-m-d', $v['createtime']);
+            }
+        }
+        return array('code'=>'0', 'msg'=>'获取成功', 'data'=>$templateList);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 员工短信模版 创建
+    |--------------------------------------------------------------------------
+    | $type
+    | @author zgt
+    */
+    public function createSmsTemplate($data)
+    {
+        $data = array_filter($data);
+        if(empty($data['templatename'])) array('code'=>300, 'msg'=>'名称不能为空');
+        if(empty($data['template'])) array('code'=>301, 'msg'=>'模版不能为空');
+        $data['template'] = trim($data['template']);
+        $data['createtime'] = time();
+        $add_flag = D('SmsTemplate')->addData($data);
+        if($add_flag['code']==0){
+            return array('code'=>0, 'msg'=>'创建成功');
+        }
+        return array('code'=>$add_flag['code'], 'msg'=>$add_flag['msg']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 员工短信模版  修改
+    |--------------------------------------------------------------------------
+    | $type
+    | @author zgt
+    */
+    public function editSmsTemplate($data)
+    {
+        $data = array_filter($data);
+        $data['system_user_id'] = $this->system_user_id;
+        if(empty($data['sms_template_id'])) array('code'=>300, 'msg'=>'参数异常');
+        if(empty($data['templatename'])) array('code'=>301, 'msg'=>'名称不能为空');
+        if(empty($data['template'])) array('code'=>302, 'msg'=>'模版不能为空');
+        $own = D('SmsTemplate')->getFind(array('sms_template_id'=>$data['sms_template_id'],'system_user_id'=>$data['system_user_id']),'sms_template_id');
+        if(empty($own)) array('code'=>201, 'msg'=>'该模版不属于自己');
+        $data['template'] = trim($data['template']);
+        $save_flag = D('SmsTemplate')->editData($data,$data['sms_template_id']);
+        if($save_flag['code']==0){
+            return array('code'=>0, 'msg'=>'操作成功');
+        }
+        return array('code'=>$save_flag['code'], 'msg'=>$save_flag['msg']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 员工短信模版  删除
+    |--------------------------------------------------------------------------
+    | $type
+    | @author zgt
+    */
+    public function delSmsTemplate($data)
+    {
+        $data = array_filter($data);
+        $data['system_user_id'] = $this->system_user_id;
+        if(empty($data['sms_template_id'])) array('code'=>300, 'msg'=>'参数异常');
+        $own = D('SmsTemplate')->getFind(array('sms_template_id'=>$data['sms_template_id'],'system_user_id'=>$data['system_user_id']),'sms_template_id');
+        if(empty($own)) array('code'=>201, 'msg'=>'该模版不属于自己');
+        $del_flag = D('SmsTemplate')->delData(array('sms_template_id'=>$data['sms_template_id']));
+        if($del_flag!==false){
+            return array('code'=>0, 'msg'=>'操作成功');
+        }
+        return array('code'=>100, 'msg'=>'操作失败');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 员工短信发送
+    |--------------------------------------------------------------------------
+    | $type
+    | @author zgt
+    */
+    public function sendSmsUser($data)
+    {
+        if(empty($data['user_id'])) return array('code'=>300, 'msg'=>'参数异常');
+        $system_user = $this->system_user;
+        $request['myname'] = $system_user['realname'];
+        $userInfo = D('User')->getFind(array('user_id'=>$data['user_id']),'realname,username');
+        //短信发送
+        $query = array(
+            'mobile'=>decryptPhone($userInfo['username'], C('PHONE_CODE_KEY')),
+            'content'=>trim($data['sendTxt'])
+        );
+        $send_flag = D('Api','Service')->sendSmsGY($query);
+        //添加发送记录
+        $send_log = array(
+            "touser_id"=>$data['user_id'],
+            "system_user_id"=>$data['system_user_id'],
+            "sendtime"=>time(),
+            'content'=>$data['sendTxt'],
+            'sendstatus'=>$send_flag['code'],
+            'senderror'=>$send_flag['msg']
+        );
+        D('SmsLogs')->addData($send_log);
+        if($send_flag['code']==0){
+            return array('code'=>'0', 'msg'=>'短信发送成功');
+        }
+        return array('code'=>100, 'msg'=>$send_flag['msg']);
+    }
 }

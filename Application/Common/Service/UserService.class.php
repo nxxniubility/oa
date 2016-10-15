@@ -219,24 +219,26 @@ class UserService extends BaseService
     */
     public function allocationUser($data, $rank=1)
     {
+        $_time = time();
+        $data = array_filter($data);
+        $data['system_user_id'] = $this->system_user_id;
         //获取客户信息与被转出人信息
-        $userList = D('User')->field('user_id,status,channel_id,system_user_id,realname,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->select();
-        $_systemInfo = D('SystemUser')->where(array('system_user_id'=>$data['tosystem_user_id']))->find();
-        if(empty($userList)) return array('code'=>2,'msg'=>'查找不到客户信息');
+        $userList = D('User')->getList(array('user_id'=>array('IN',$data['user_id'])),'user_id,status,channel_id,system_user_id,realname,infoquality');
+        $_systemInfo = D('SystemUser')->getFind(array('system_user_id'=>$data['tosystem_user_id']));
+        if(empty($userList)) return array('code'=>200,'msg'=>'查找不到客户信息');
         //客户验证
         foreach($userList as $k=>$v){
             //是否交易中
-            if($v['status']=='70') return array('code'=>1,'msg'=>'客户'.$v['realname'].'状态不予许分配');
+            if($v['status']=='70') return array('code'=>201,'msg'=>'客户'.$v['realname'].'状态不予许分配');
             //普通员工判断归属人
             if($rank==1){
-                if($data['system_user_id']!=$v['system_user_id']) return array('code'=>1,'msg'=>'只有归属人才能分配该客户信息');
-                if($data['tosystem_user_id']==$v['system_user_id']) return array('code'=>1,'msg'=>'无法将客户转给自己哦');
+                if($data['system_user_id']!=$v['system_user_id']) return array('code'=>202,'msg'=>'只有归属人才能分配该客户信息');
+                if($data['tosystem_user_id']==$v['system_user_id']) return array('code'=>203,'msg'=>'无法将客户转给自己哦');
             }
             //该客户是否在申请转入审核中
-            $userApply = $this->isApply($v['user_id']);
-            if(!empty($userApply)) return array('code'=>1,'msg'=>'客户 '.$v['realname'].' 正在审核转入中，无法转出');
+            $userApply = $this->_isApply($v['user_id']);
+            if(!empty($userApply)) return array('code'=>203,'msg'=>'客户 '.$v['realname'].' 正在审核转入中，无法转出');
         }
-        $_time = time();
         $save_user['mark'] = 1;
         $save_user['nextvisit'] = $_time;
         $save_user['attitude_id'] = 0;
@@ -246,6 +248,28 @@ class UserService extends BaseService
         $save_user['system_user_id'] = $data['tosystem_user_id'];
         //数据更新
         D()->startTrans();
+        //获取各状态
+        if($rank==2){
+            //批量
+            if(count(explode(',',$data['user_id']))>1){
+                $data_callback['remark'] = '批量客户转出(管理操作)';
+                $data_callback['callbacktype'] = 11;
+            }else{
+                $data_callback['remark'] = '客户转出(管理操作)';
+                $data_callback['callbacktype'] = 10;
+            }
+            $dataLog['operattype'] = 15;
+        }else{
+            $data_callback['remark'] = '客户转出';
+            $data_callback['callbacktype'] = 1;
+            $dataLog['operattype'] = 5;
+        }
+        //操作添加数据记录
+        $dataLog['operattype'] = 3;
+        $dataLog['operator_user_id'] = $data['system_user_id'];
+        $dataLog['user_id'] = $data['user_id'];
+        $dataLog['logtime'] = $_time;
+        D('Data','Service')->addDataLogs($dataLog);
         //添加数据记录
         $save_user['zone_id'] = $_systemInfo['zone_id'];
         $where['user_id'] = array('IN',$data['user_id']);
@@ -257,27 +281,13 @@ class UserService extends BaseService
             $data_callback['user_id'] = $data['user_id'];
             $data_callback['nexttime'] = $_time;
             $data_callback['system_user_id'] = $data['system_user_id'];
-            if($rank==2){
-                //批量
-                if(count(explode(',',$data['user_id']))>1){
-                    $data_callback['remark'] = '批量客户转出(管理操作)';
-                    $data_callback['callbacktype'] = 11;
-                }else{
-                    $data_callback['remark'] = '客户转出(管理操作)';
-                    $data_callback['callbacktype'] = 10;
-                }
-            }else{
-                $data_callback['remark'] = '客户转出';
-                $data_callback['callbacktype'] = 1;
-            }
-            $this->addCallback($data_callback,2);
+            $this->_addCallback($data_callback);
             //操作添加数据记录
-            $dataLog['operattype'] = 3;
-            $dataLog['operator_user_id'] = $data['system_user_id'];
-            $dataLog['user_id'] = $data['user_id'];
-            $dataLog['logtime'] = $_time;
-            $DataService = new DataService();
-            $DataService->addDataLogs($dataLog);
+            $dataLog2['operattype'] = 3;
+            $dataLog2['operator_user_id'] = $data['system_user_id'];
+            $dataLog2['user_id'] = $data['user_id'];
+            $dataLog2['logtime'] = $_time;
+            D('Data','Service')->addDataLogs($dataLog2);
             D()->commit();
             return array('code'=>0,'msg'=>'数据分配成功');
         }else{
@@ -295,25 +305,28 @@ class UserService extends BaseService
     */
     public function restartUser($data, $rank=1)
     {
+        $_time = time();
+        $data = array_filter($data);
+        $data['system_user_id'] = $this->system_user_id;
+        if(empty($data['user_id']) || empty($data['tosystem_user_id'])) return array('code'=>300,'msg'=>'参数异常');
         //获取客户信息与被转出人信息
-        $userList = D('User')->field('user_id,status,channel_id,system_user_id,realname,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->select();
-        $_systemInfo = D('SystemUser')->where(array('system_user_id'=>$data['tosystem_user_id']))->find();
-        if(empty($userList)) return array('code'=>2,'msg'=>'查找不到客户信息');
+        $userList = D('User')->getList(array('user_id'=>array('IN',$data['user_id'])),'user_id,status,channel_id,system_user_id,realname,infoquality');
+        $_systemInfo = D('SystemUser')->getFind(array('system_user_id'=>$data['tosystem_user_id']));
+        if(empty($userList)) return array('code'=>201,'msg'=>'查找不到客户信息');
         //客户验证
         foreach($userList as $k=>$v){
             //是否交易中
-            if($v['status']=='70') return array('code'=>1,'msg'=>'客户'.$v['realname'].'状态不予许分配');
+            if($v['status']=='70') return array('code'=>202,'msg'=>'客户'.$v['realname'].'状态不予许出库');
             //普通员工判断归属人
             if($rank==1){
-                if($data['system_user_id']!=$v['system_user_id']) return array('code'=>1,'msg'=>'只有归属人才能分配该客户信息');
-                if($data['tosystem_user_id']==$v['system_user_id']) return array('code'=>1,'msg'=>'无法将客户转给自己哦');
+                if($data['system_user_id']!=$v['system_user_id']) return array('code'=>203,'msg'=>'只有归属人才能分配该客户信息');
+                if($data['tosystem_user_id']==$v['system_user_id']) return array('code'=>204,'msg'=>'无法将客户转给自己哦');
             }
             //该客户是否在申请转入审核中
-            $userApply = $this->isApply($v['user_id']);
-            if(!empty($userApply)) return array('code'=>1,'msg'=>'客户 '.$v['realname'].' 正在审核转入中，无法转出');
+            $userApply = $this->_isApply($v['user_id']);
+            if(!empty($userApply)) return array('code'=>205,'msg'=>'客户 '.$v['realname'].' 正在审核转入中，无法转出');
         }
-        //必要参数
-        $_time = time();
+        //出库参数
         $save_user['status'] = 20;
         $save_user['mark'] = 1;
         $save_user['nextvisit'] = $_time;
@@ -327,6 +340,26 @@ class UserService extends BaseService
         $save_user['remark'] = null;
         //数据更新
         D()->startTrans();
+        if($rank==2){
+            //批量
+            if(count(explode(',',$data['user_id']))>1){
+                $data_callback['remark'] = '批量客户出库(管理操作)';
+                $data_callback['callbacktype'] = 13;
+            }else{
+                $data_callback['remark'] = '客户出库(管理操作)';
+                $data_callback['callbacktype'] = 12;
+            }
+            $dataLog['operattype'] = 15;
+        }else{
+            $data_callback['remark'] = '客户出库';
+            $data_callback['callbacktype'] = 4;
+            $dataLog['operattype'] = 5;
+        }
+        //-- 添加被出库人 转出量/系统转出量
+        $dataLog['operator_user_id'] = $data['system_user_id'];
+        $dataLog['user_id'] = $data['user_id'];
+        $dataLog['logtime'] = $_time;
+        D('Data', 'Service')->addDataLogs($dataLog);
         $save_user['zone_id'] = $_systemInfo['zone_id'];
         $where['user_id'] = array('IN',$data['user_id']);
         $result = D('User')->where($where)->save($save_user);
@@ -337,31 +370,15 @@ class UserService extends BaseService
             $data_callback['user_id'] = $data['user_id'];
             $data_callback['nexttime'] = $_time;
             $data_callback['system_user_id'] = $data['system_user_id'];
-            if($rank==2){
-                //批量
-                if(count(explode(',',$data['user_id']))>1){
-                    $data_callback['remark'] = '批量客户出库(管理操作)';
-                    $data_callback['callbacktype'] = 13;
-                }else{
-                    $data_callback['remark'] = '客户出库(管理操作)';
-                    $data_callback['callbacktype'] = 12;
-                }
-                $log_operattype = 15;
-            }else{
-                $data_callback['remark'] = '客户出库';
-                $data_callback['callbacktype'] = 4;
-                $log_operattype = 5;
-            }
-            $this->addCallback($data_callback,2);
-            //添加数据记录
-            $dataLog['operattype'] = 3;
-            $dataLog['operator_user_id'] = $data['system_user_id'];
-            $dataLog['user_id'] = $data['user_id'];
-            $dataLog['logtime'] = $_time;
-            $DataService = new DataService();
-            $DataService->addDataLogs($dataLog,$userList,$log_operattype);
+            $this->_addCallback($data_callback);
+            //添加转出人 出库量
+            $dataLog2['operattype'] = 3;
+            $dataLog2['operator_user_id'] = $data['system_user_id'];
+            $dataLog2['user_id'] = $data['user_id'];
+            $dataLog2['logtime'] = $_time+1;
+            D('Data', 'Service')->addDataLogs($dataLog2);
             //出库隐藏历史回访记录
-            $this->heiddenOldInfo($data['user_id']);
+            $this->_heiddenOldInfo($data['user_id']);
             D()->commit();
             return array('code'=>0,'msg'=>'数据出库成功');
         }else{
@@ -375,19 +392,25 @@ class UserService extends BaseService
     |--------------------------------------------------------------------------
     | 确认到访
     |--------------------------------------------------------------------------
-    | user_id:客户 tosystem_user_id：被转员工 system_user_id：操作人 $rank：操作等级（1：普通员工，2：主管）
+    | user_id:客户
     | @author zgt
     */
     public function affirmVisit($data)
     {
         //必要参数
-        if(empty($data['user_id']) || empty($data['system_user_id'])) return array('code'=>2,'msg'=>'参数异常');
         $_time = time();
-        $info = D('User')->field('visittime,user_id,status,system_user_id')->where(array('user_id'=>$data['user_id']))->find();
-        if($data['system_user_id']!=$info['system_user_id']) return array('code'=>1,'msg'=>'只有归属人才能分配该客户信息');
+        $data['system_user_id'] = $this->system_user_id;
+        if(empty($data['user_id']) || empty($data['system_user_id'])) return array('code'=>300,'msg'=>'参数异常');
+        //获取数据
+        $info = D('User')->getFind(array('user_id'=>$data['user_id']),'visittime,user_id,status,system_user_id');
+        //是否归属人操作？
+        if($data['system_user_id']!=$info['system_user_id']) return array('code'=>201,'msg'=>'只有归属人才能分配该客户信息');
+        //是否第一次到访？
         if(empty($info['visittime']) || $info['visittime']==0){
             $save_data['visittime'] = $_time;
-            D('User')->where(array('user_id'=>$data['user_id']))->save($save_data);
+            D('User')->editData($save_data, $data['user_id']);
+        }else{
+            return array('code'=>202,'msg'=>'该客户已到访过');
         }
         //添加分配记录
         $data_callback['status'] = 1;
@@ -397,18 +420,17 @@ class UserService extends BaseService
         $data_callback['nexttime'] = $_time;
         $data_callback['system_user_id'] = $data['system_user_id'];
         $data_callback['remark'] = '客户上门到访,转出客户(前台操作)';
-        $reflag = $this->addCallback($data_callback);
+        $reflag = $this->_addCallback($data_callback);
         //添加数据记录
         $dataLog['operattype'] = 12;
         $dataLog['operator_user_id'] = $data['system_user_id'];
         $dataLog['user_id'] = $data['user_id'];
-        $dataLog['logtime'] = time();
-        $DataService = new DataService();
-        $DataService->addDataLogs($dataLog);
+        $dataLog['logtime'] = $_time;
+        D('Data', 'Service')->addDataLogs($dataLog);
         if($reflag['code']==0){
             return array('code'=>0,'msg'=>'确认到访成功');
         }
-        return array('code'=>1,'msg'=>'确认到访失败');
+        return array('code'=>100,'msg'=>'确认到访失败');
     }
 
     /*
@@ -495,27 +517,6 @@ class UserService extends BaseService
         }
     }
 
-    /*
-    * 隐藏客户旧数据
-    * @author zgt
-    */
-    protected function heiddenOldInfo($user_id){
-        D()->startTrans();
-        //隐藏历史回访记录
-        $data['status'] = 0;
-        $where['user_id'] = array('IN',$user_id);
-        $reflag_callback = D('UserCallback')->where($where)->save($data);
-        //隐藏短信发送记录
-        $sms_data['display'] = 0;
-        $sms_where['touser_id'] = array('IN',$user_id);
-        $reflag_sms = D('SmsLogs')->where($sms_where)->save($sms_data);
-        if($reflag_callback!==false && $reflag_sms!==false){
-            D()->commit();
-            return true;
-        }
-        D()->rollback();
-        return fasle;
-    }
 
     /*
     |--------------------------------------------------------------------------
@@ -854,20 +855,25 @@ class UserService extends BaseService
     */
     public function redeemUser($data)
     {
+        $data = array_filter($data);
         //当前操作人
         $data['system_user_id'] = $this->system_user_id;
+        //赎回客户
+        if (empty($data['nexttime'])) return array('code' => 300, 'msg' => '回访时间不能为空');
+        $data['nexttime'] = strtotime($data['nexttime']);
+        if (empty($data['remark'])) return array('code' => 301, 'msg' => '备注不能为空');
         //必要参数
         if(empty($data['user_id']) || empty($data['system_user_id'])  || empty($data['nexttime']) || empty($data['remark'])) return array('code'=>2,'msg'=>'参数异常');
         //该客户是否在申请转入审核中
         $userApply = $this->_isApply($data['user_id']);
-        if(!empty($userApply)) return array('code'=>1,'msg'=>'客户 正在审核转入中，无法赎回');
+        if(!empty($userApply)) return array('code'=>201,'msg'=>'客户 正在审核转入中，无法赎回');
         //获取客户信息与被转出人信息
-        $userInfo = D('User')->field('user_id,status,channel_id,system_user_id,realname,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->find();
-        if($data['system_user_id']!=$userInfo['system_user_id']) return array('code'=>1,'msg'=>'只有归属人才能分配该客户信息');
-        if($userInfo['status']!=160)  return array('code'=>1,'msg'=>'客户不属于回库状态,无法赎回');
+        $userInfo = D('User')->getFind(array('user_id'=>array('IN',$data['user_id'])),'user_id,status,channel_id,system_user_id,realname,infoquality');
+        if($data['system_user_id']!=$userInfo['system_user_id']) return array('code'=>202,'msg'=>'只有归属人才能分配该客户信息');
+        if($userInfo['status']!=160)  return array('code'=>203,'msg'=>'客户不属于回库状态,无法赎回');
         D()->startTrans();
         $save_data['status'] = 30;
-        D('User')->where(array('user_id'=>$data['user_id']))->save($save_data);
+        D('User')->editData($save_data, $data['user_id']);
         //添加分配记录
         $data_callback['status'] = 1;
         $data_callback['callbacktype'] = 3;
@@ -876,20 +882,19 @@ class UserService extends BaseService
         $data_callback['nexttime'] = $data['nexttime'];
         $data_callback['system_user_id'] = $data['system_user_id'];
         $data_callback['remark'] = $data['remark'];
-        $reflag = $this->addCallback($data_callback);
+        $reflag = $this->_addCallback($data_callback);
         //添加数据记录
         $dataLog['operattype'] = 9;
         $dataLog['operator_user_id'] = $data['system_user_id'];
         $dataLog['user_id'] = $data['user_id'];
         $dataLog['logtime'] = time();
-        $DataService = new DataService();
-        $DataService->addDataLogs($dataLog);
+        D('Data','Service')->addDataLogs($dataLog);
         if($reflag['code']==0){
             D()->commit();
             return array('code'=>0,'msg'=>'赎回客户成功');
         }
         D()->rollback();
-        return array('code'=>1,'msg'=>'赎回客户失败');
+        return array('code'=>100,'msg'=>'赎回客户失败');
     }
 
     /*
@@ -953,7 +958,33 @@ class UserService extends BaseService
             return array('code'=>0,'msg'=>'操作成功');
         }
         D()->rollback();
-        return array('code'=>1,'msg'=>'操作失败');
+        return array('code'=>100,'msg'=>'操作失败');
+    }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 更换客户标记  普通/重点
+   |--------------------------------------------------------------------------
+   | user_id:客户
+   | @author zgt
+   */
+    public function MarkUser($data)
+    {
+        //必要参数
+        if(empty($data['user_id'])) return array('code'=>300,'msg'=>'参数异常');
+        $user = D('User')->getFind(array('user_id'=>$data['user_id']),'system_user_id,status,mark');
+        if(empty($user)) return array('code'=>2,'msg'=>'查找不到客户信息');
+        if ($this->system_user_id != $user['system_user_id']) return array('code' => 200, 'msg' => '只有归属人才能分配该客户信息');
+        if($user['mark']==1){
+            $_save['mark'] = 2;
+        }else{
+            $_save['mark'] = 1;
+        }
+        $reflag = D('User')->editData($_save, $data['user_id']);
+        if($reflag['code']==0){
+            return array('code'=>0,'msg'=>'操作成功');
+        }
+        return array('code'=>100,'msg'=>'操作失败');
     }
 
     /**
@@ -989,6 +1020,7 @@ class UserService extends BaseService
             return array('code'=>1,'msg'=>'数据添加失败');
         }
     }
+
 
 
     /**
@@ -1129,7 +1161,7 @@ class UserService extends BaseService
      * 是否获取新渠道
      * @author zgt
      */
-    public function isNewChannel($data)
+    protected function isNewChannel($data)
     {
         //转介绍人获取渠道
         if(!empty($data['introducermobile'])) {
@@ -1172,5 +1204,20 @@ class UserService extends BaseService
     protected function _isApply($user_id)
     {
         return D('UserApply')->getFind(array('user_id'=>$user_id,'status'=>10),'user_id');
+    }
+
+    /*
+    * 隐藏客户旧数据
+    * @author zgt
+    */
+    protected function _heiddenOldInfo($user_id){
+        //隐藏历史回访记录
+        $data['status'] = 0;
+        $where['user_id'] = array('IN',$user_id);
+        D('UserCallback')->where($where)->save($data);
+        //隐藏短信发送记录
+        $sms_data['display'] = 0;
+        $sms_where['touser_id'] = array('IN',$user_id);
+        D('SmsLogs')->where($sms_where)->save($sms_data);
     }
 }

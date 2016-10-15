@@ -60,6 +60,11 @@ class DataService extends BaseService
             $add_arr = array();
             $userIds = array();
             foreach($userList as $k=>$v){
+                if($v['status']==160 && $data['operattype']==15){
+                    continue;
+                }elseif($v['status']==160 && $data['operattype']==5){
+                    continue;
+                }
                 $add_arr[] = array(
                     'zone_id'=>$v['zone_id'],
                     'course_id'=>$v['course_id'],
@@ -77,7 +82,6 @@ class DataService extends BaseService
                 $temp_system_user_id = $v['system_user_id'];
                 $temp_zone_id = $v['zone_id'];
                 $userIds[] = $v['user_id'];
-
             }
             $addLog_flag = D('DataLogs')->addAll($add_arr);
             //添加营销统计---------------------

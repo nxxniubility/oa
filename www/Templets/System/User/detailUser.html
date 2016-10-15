@@ -881,9 +881,7 @@
             <div class="alRowRight" style="width: 360px;">
                 <select name="recover_attitude_id" autocomplete="off">
                     <foreach name="data['ATTITUDE']" item="v" key="k">
-                        <!--<if condition="($v['num'] GT 2 && $v['num'] NEQ 10)">-->
                             <option value="{$k}">{$v}</option>
-                        <!--</if>-->
                     </foreach>
                 </select>
             </div>
