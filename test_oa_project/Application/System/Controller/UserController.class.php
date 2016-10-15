@@ -1290,8 +1290,7 @@ class UserController extends SystemController
         if(IS_POST){
             $post = I('post.');
             $post['system_user_id'] = $this->system_user_id;
-            $userMain = new UserMain();
-            $reflag = $userMain->auditTransfer($post);
+            $reflag = D("User","Service")->auditTransfer($post);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg'],U('System/User/auditList'));
             else  $this->ajaxReturn(1, $reflag['msg']);

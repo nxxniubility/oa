@@ -1278,14 +1278,13 @@ class UserService extends BaseService
                 $data_callback['system_user_id'] = $data['system_user_id'];
                 $data_callback['nexttime'] = $_time;
                 $data_callback['remark'] = '审核申请转入操作：申请人-'.$systemUser['realname'].(!empty($toSysUser['realname'])?'，预所属人-'.$toSysUser['realname'].'。':'。');
-                $this->addCallback($data_callback,2);
+                $this->_addCallback($data_callback);
                 //添加数据记录
                 $dataLog['operattype'] = '4';
                 $dataLog['operator_user_id'] = $data['system_user_id'];
                 $dataLog['user_id'] = $applyInfo['user_id'];
-                $dataLog['logtime'] = time();
-                $DataService = new DataService();
-                $DataService->addDataLogs($dataLog);
+                $dataLog['logtime'] = $_time;
+                D('Data', 'Service')->addDataLogs($dataLog);
 
                 D()->commit();
                 return array('code'=>0,'msg'=>'审核通过');
