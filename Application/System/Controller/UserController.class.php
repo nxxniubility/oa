@@ -1411,6 +1411,7 @@ class UserController extends SystemController
         if (IS_POST) {
             $setpages = I("post.");
             $setpages['setpages_id'] = $data['setpages_id'];
+            $setpages['type'] = $type;
             $result = D('Proid', 'Service')->editSetPages($setpages);
             if ($result['code'] != 0) {
                 $this->ajaxReturn($result['code'], $result['msg']);
@@ -1459,9 +1460,9 @@ class UserController extends SystemController
         $backInfo = D('Proid', 'Service')->delSetPages($setpages);
         if ($backInfo['code'] == 0) {
             if ($setpages['type'] == 2) {
-                $this->success(0, '删除模板成功', U('System/User/importTemplateList', array('type' => $setpages['type'])));
+                $this->ajaxReturn(0, '删除模板成功', U('System/User/importTemplateList', array('type' => $setpages['type'])));
             } else {
-                $this->success(0, '删除模板成功', U('System/User/outputTemplateList', array('type' => $setpages['type'])));
+                $this->ajaxReturn(0, '删除模板成功', U('System/User/outputTemplateList', array('type' => $setpages['type'])));
             }
         }
         $this->ajaxReturn(201, '删除失败');
@@ -1476,7 +1477,6 @@ class UserController extends SystemController
     public function importUser()
     {
         set_time_limit(0);
-        $system_user_id = $this->system_user_id;
         $zone_id = $this->system_user['zone_id'];
         $type = I("get.type");     
         if (IS_POST) {
@@ -1608,8 +1608,7 @@ class UserController extends SystemController
             session('success_import', $userList);
             $this->redirect('/System/User/importClient', array('type' => $type));
         } else {
-            $this->assign("system_user_id", $system_user_id);
-            $set['system_user_id'] = $system_user_id;
+            $this->assign("system_user_id", $this->system_user_id);
             $set['type'] = $type;
             $res = D('Proid', 'Service')->getSetPages($set);
             $setPages = $res['data'];
@@ -1626,7 +1625,6 @@ class UserController extends SystemController
     public function importUserLibrary()
     {
         set_time_limit(0);
-        $system_user_id = $this->system_user_id;
         $zone_id = $this->system_user['zone_id'];
         $type = I("get.type");
         if (IS_POST) {
@@ -1769,8 +1767,7 @@ class UserController extends SystemController
             $this->redirect('/System/User/importClient', array('type' => $type));
     
         } else {
-            $this->assign("system_user_id", $system_user_id);
-            $set['system_user_id'] = $system_user_id;
+            $this->assign("system_user_id", $this->system_user_id);
             $set['type'] = $type;
             $res = D('Proid', 'Service')->getSetPages($set);
             $setPages = $res['data'];
@@ -1814,13 +1811,11 @@ class UserController extends SystemController
      */
     public function outputTemplateList() 
     {
-        $channelMain = new ChannelController();
-        $setPages['system_user_id'] = $this->system_user_id;
-        $setPages['type'] = 3; //推广计划导入模板类型
+        $setPages['type'] = 3; 
         $result = D('Proid', 'Service')->getSetPages($setPages);
         $pages = $result['data'];
         foreach ($pages as $key => $page) {
-            $res = $channelMain->getChannel($page['channel_id']);
+            $res = D('Channel', 'Service')->getChannelInfo(array('channel_id'=>$page['channel_id']));
             $channel = $res['data'];
             $page['channelname'] = $channel['channelname'];
             $page['createtime'] = date('Y-m-d H:d:s', $page['createtime']);
@@ -2063,14 +2058,15 @@ class UserController extends SystemController
         }
         //跟进结果
         $data['attitude'] = C('USER_ATTITUDE');
-        $data['channel'] = D('Channel')->getAllChannel();
+        $dataChannel = D('Channel', 'Service')->getChannelList();
+        $data['channel'] = $dataChannel['data'];
         //学习平台：
         $data['learningtype'] = C('USER_LEARNINGTYPE');
         //学习方式
         $data['studytype'] = C('USER_STUDYTYPE');
         //课程列表
-        // $res = $courseMain->getAllCourse();
-        $data['courseAll'] = $res['data'];
+        $courseResult = D('Course', 'Service')->getCourseList();
+        $data['courseAll'] = $courseResult['data']['data'];
         $this->assign('data', $data);   
         $this->assign("setpagesList", $setpagesList);
         $this->display();
