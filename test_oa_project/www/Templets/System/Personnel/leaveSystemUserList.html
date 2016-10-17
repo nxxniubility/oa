@@ -153,7 +153,7 @@
 	                                <div class="triangle"></div>
 	                                <div class="otherIcon">
 	                                    <ul>
-	                                        <if condition="($v['system_user_info_id'] eq 0)">
+	                                        <if condition="($v['isuserinfo'] eq 0)">
 	                                            <li>
 	                                                <a href="javascript:;" onclick="layer.msg('改员工还未添加档案内容',{icon:2});">
 	                                                    <span class="fileDetail"></span>
@@ -162,7 +162,7 @@
 	                                            </li>
 	                                        <else />
 	                                            <li>
-	                                                <a href="{:$data['url_systemUserInfo'].'?user_id='.$v['system_user_id']}">
+	                                                <a href="{:U('System/Personnel/systemUserInfo').'?user_id='.$v['system_user_id']}">
 	                                                    <span class="fileDetail"></span>
 	                                                    <em>档案详情</em>
 	                                                </a>

@@ -181,7 +181,6 @@ class StatisticsController extends SystemController
     {
         //实例化
         $DataService = new DataService();
-        $SystemUser = new SystemUserService();
         $request = I('get.');
         if (empty($request['system_user_id'])) {
             $request['system_user_id'] = $this->system_user_id;
@@ -195,7 +194,7 @@ class StatisticsController extends SystemController
         }
         $where['system_user_id'] = $request['system_user_id'];
         $where['daytime'] = $request['startime'].','.$request['endtime'];
-        $result = $SystemUser->getListCache(array('system_user_id'=>$where['system_user_id']));
+        $result = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$where['system_user_id']));
         $systemUserInfo = $result['data'];
         $result = $DataService->getDataMarket($where);
         $dataMarket = $result['data'];
