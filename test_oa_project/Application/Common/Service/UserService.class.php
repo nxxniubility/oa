@@ -735,7 +735,7 @@ class UserService extends BaseService
             return array('code'=>0,'msg'=>'客户添加成功','data'=>$reUserId);
         }else{
             D()->rollback();
-            return array('code'=>100,'msg'=>'数据添加失败');
+            return array('code'=>$reUserId['code'],'msg'=>$reUserId['msg']);
         }
     }
 

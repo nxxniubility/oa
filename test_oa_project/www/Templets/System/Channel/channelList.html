@@ -56,12 +56,12 @@
                                             <em>修改</em>
                                         </a>
                                     </li>
-                                    <!--<li onclick="delZone('{$zoneList.zone_id}')">-->
-                                        <!--<a href="javascript:;">-->
-                                            <!--<span class="delete"></span>-->
-                                            <!--<em>删除</em>-->
-                                        <!--</a>-->
-                                    <!--</li>-->
+                                    <li class="del_btn" data-id="{$v.channel_id}">
+                                        <a href="javascript:;">
+                                            <span class="delete"></span>
+                                            <em>删除</em>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
         <input type="text" class="z_inp" name="create_pid" value="0" autocomplete="off">
     </div>
     <div class="z_rows clearfix">
-        <span><i>*</i>渠道排序：</span>
+        <span>渠道排序：</span>
         <input type="text" class="z_inp" name="ceate_sort" value="0" autocomplete="off">
     </div>
     <div class="z_rows txt_center mt35 clearfix">
@@ -142,7 +142,7 @@
         <input type="text" class="z_inp" name="edit_pid" value="0" autocomplete="off">
     </div>
     <div class="z_rows clearfix">
-        <span><i>*</i>渠道排序：</span>
+        <span>渠道排序：</span>
         <input type="text" class="z_inp" name="edit_sort" value="0" autocomplete="off">
     </div>
     <div class="z_rows txt_center mt35 clearfix">
@@ -163,7 +163,14 @@
     var del_channel_href = "{:U('System/Channel/delChannel')}";
     //添加窗口-----------------------------------------------
     $('.create_btn').click(function(){
+        $(':input[name="ceate_name"]').val('');
+        $(':input[name="ceate_sort"]').val('');
         $(':input[name="create_pid"]').val($(this).attr('data-pid'));
+        if($(this).attr('data-pid')==0){
+            $(':input[name="create_pid"]').parent('.z_rows').hide();
+        }else{
+            $(':input[name="create_pid"]').parent('.z_rows').show();
+        }
         layer.open({
             type: 1,					//  页面层
             title: '添加渠道',			//	显示标题栏
@@ -181,6 +188,20 @@
     });
     //添加提交
     $('.create_subtn').click(function(){
+        var parent_arr = [];
+        $('.regionContMiddle').find('.oneRegions').each(function(){
+            parent_arr.push($(this).children('dd').eq(1).text());
+        });
+        if($(':input[name="ceate_name"]').val().length==0){
+            layer.msg('渠道名称不能为空', {icon:2});
+            return false;
+        }else if($(':input[name="create_pid"]').val().length==0){
+            layer.msg('渠道父级ID不能为空', {icon:2});
+            return false;
+        }else if($(':input[name="create_pid"]').val()!=0 && parent_arr.indexOf($(':input[name="create_pid"]').val())=='-1'){
+            layer.msg('渠道父级ID只能输入一级渠道ID', {icon:2});
+            return false;
+        };
         var data = {
             channelname : $(':input[name="ceate_name"]').val(),
             pid : $(':input[name="create_pid"]').val(),
@@ -220,7 +241,13 @@
         $('.regionContMiddle').find('.oneRegions').each(function(){
             parent_arr.push($(this).children('dd').eq(1).text());
         });
-        if(parent_arr.indexOf($(':input[name="edit_pid"]').val())!=1){
+        if($(':input[name="edit_name"]').val().length==0){
+            layer.msg('渠道名称不能为空', {icon:2});
+            return false;
+        }else if($(':input[name="edit_pid"]').val().length==0){
+            layer.msg('渠道父级ID不能为空', {icon:2});
+            return false;
+        }else if($(':input[name="edit_pid"]').val()!=0 && parent_arr.indexOf($(':input[name="edit_pid"]').val())=='-1'){
             layer.msg('渠道父级ID只能输入一级渠道ID', {icon:2});
             return false;
         };

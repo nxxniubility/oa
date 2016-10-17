@@ -670,7 +670,7 @@ class SystemUserService extends BaseService
         $data['createip'] = get_client_ip();
         //启动事务
         D()->startTrans();
-        $result = D('SystemUser')->field('realname,username,email,sex,check_id,zone_id,usertype,createtime,createip,sign')->data($data)->add();
+        $result = D('SystemUser')->addData($data);
         if(!empty($data['role_id'])){
             $where_role = array();
             $add_role = explode(',',$data['role_id']);
@@ -684,7 +684,7 @@ class SystemUserService extends BaseService
         $data['system_user_id'] = $result;
         $flag_addinfo = D('SystemUserInfo')->field('system_user_id,entrytime,straightime')->data($data)->add();
         $flag_addengaged = D('SystemUserEngaged')->data(array('system_user_id'=>$result,'status'=>2))->add();
-        if($result && $flag_addrole && $flag_addinfo && $flag_addengaged){
+        if($result['code']==0 && $flag_addrole && $flag_addinfo && $flag_addengaged){
             D()->commit();
             $new_info = D('SystemUser')->getFind(array("system_user_id"=>$result));
             $new_info = $this->_addStatus($new_info);
@@ -695,7 +695,7 @@ class SystemUserService extends BaseService
             return array('code'=>'0', 'msg'=>'操作成功');
         }else{
             D()->rollback();
-            return array('code'=>'1', 'msg'=>'数据操作失败');
+            return array('code'=>$result['code'], 'msg'=>$result['msg']);
         }
     }
 
@@ -794,6 +794,9 @@ class SystemUserService extends BaseService
         if(empty($data['entrytime'])) return array('code'=>305, 'msg'=>'开始时间不能为空','data'=>array('sign'=>'entrytime'));
         if(empty($data['straightime'])) return array('code'=>305, 'msg'=>'结束时间不能为空','data'=>array('sign'=>'straightime'));
         if(empty($data['check_id'])) return array('code'=>305, 'msg'=>'指纹编号不能为空','data'=>array('sign'=>'check_id'));
+        $data['birthday'] = strtotime($data['birthday']);
+        $data['entrytime'] = strtotime($data['entrytime']);
+        $data['straightime'] = strtotime($data['straightime']);
         $system_user_id = !empty($data['system_user_id'])?$data['system_user_id']:$this->system_user_id;
         $userInfoCheck = D('SystemUser')->where(array('check_id'=>$data['check_id']))->find();
         if(!empty($userInfoCheck)) {
@@ -805,7 +808,6 @@ class SystemUserService extends BaseService
         D()->startTrans();
         $result = D('SystemUser')->editData($data, $system_user_id);
         $flag_userINfo = D('SystemUserInfo')->editData($data,$system_user_id);
-
         if($flag_userINfo['code']==0 && $result['code']==0){
             D()->commit();
             $new_info = D('SystemUser')->getFind(array("system_user_id"=>$system_user_id));
@@ -822,7 +824,7 @@ class SystemUserService extends BaseService
             return array('code'=>'0', 'msg'=>'操作成功');
         }else{
             D()->rollback();
-            return array('code'=>'1', 'msg'=>'数据操作失败');
+            return array('code'=>100, 'msg'=>$result['msg']);
         }
     }
 

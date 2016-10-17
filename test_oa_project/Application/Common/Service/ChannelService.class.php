@@ -39,6 +39,7 @@ class ChannelService extends BaseService
    */
     public function getChannelList($param)
     {
+        $param = array_filter($param);
         $param['where']['status'] = 1;
         $param['order'] = 'sort desc';
         $param['page'] = !empty($param['page'])?$param['page']:'1,30';
@@ -64,6 +65,7 @@ class ChannelService extends BaseService
     public function addChannel($param)
     {
         //必须参数
+        $param = array_filter($param);
         $param['system_user_id'] = $this->system_user_id;
         if(empty($param['channelname'])) return array('code'=>300,'msg'=>'缺少渠道名称');
         $result = D('Channel')->addData($param);
@@ -89,6 +91,7 @@ class ChannelService extends BaseService
     public function editChannel($param)
     {
         //必须参数
+        $param = array_filter($param);
         if(empty($param['channel_id'])) return array('code'=>300,'msg'=>'参数异常');
         $result = D('Channel')->editData($param,$param['channel_id']);
         //更新数据成功执行清除缓存
@@ -116,7 +119,10 @@ class ChannelService extends BaseService
     public function delChannel($param)
     {
         //必须参数
+        $param = array_filter($param);
         if(empty($param['channel_id'])) return array('code'=>300,'msg'=>'参数异常');
+        $childrens = D('Channel')->getFind(array("pid"=>$param['channel_id'],'status'=>1));
+        if (!empty($childrens)) return array('code'=>200,'msg'=>'请先删除渠道下的子集渠道');
         $param['status'] = 0;
         $result = D('Channel')->editData($param,$param['channel_id']);
         //更新数据成功执行清除缓存
