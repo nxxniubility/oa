@@ -867,7 +867,6 @@ class ProidController extends SystemController
     public function setPages()
     {   
         $proid_id = I("get.proid_id");
-        $setPages['system_user_id'] = $this->system_user_id;
         $setPages['type'] = 1;
         $res = D('Proid', 'Service')->getSetPages($setPages);
         foreach ($res['data'] as $key => $value) {

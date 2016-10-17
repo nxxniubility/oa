@@ -695,7 +695,7 @@ class UserService extends BaseService
         if (empty($data['infoquality'])) return array('code' => 312, 'msg' => '信息质量不能为空');
         if (empty($data['channel_id'])) return array('code' => 313, 'msg' => '所属渠道不能为空');
         if (empty($data['course_id']) && $data['course_id'] != 0) return array('code' => 314, 'msg' => '请选择意向课程');
-        if (empty($data['remark'])) return array('code' => 315, 'msg' => '备注不能为空');
+        // if (empty($data['remark'])) return array('code' => 315, 'msg' => '备注不能为空');
         $data['system_user_id'] = $this->system_user_id;
         $data['zone_id'] = $this->system_user['zone_id'];
         $data['allocationtime'] = time();
@@ -1632,6 +1632,70 @@ class UserService extends BaseService
         unset($where["{$this->DB_PREFIX}user_apply.key_value"]);
         unset($where["{$this->DB_PREFIX}user_apply.admin_system_user_id"]);
         return $where;
+    }
+
+
+    /**
+     * 添加设置模板
+     * @author   Nxx
+     */
+    public function createSetPages($setPages)
+    {
+        if (!$setPages['pagesname']) {
+            return array('code'=>301, 'msg'=>'请填写模板名称');
+        }
+        $setPages['system_user_id'] = $this->system_user_id;
+        $setPages['type'] = $type;
+        if ($setPages['type'] == 2) {
+            if (!$setPages['channel_id']) {
+                return array('code'=>302, 'msg'=>'请选择渠道');
+            }
+        }
+        if (!$setPages['sign']) {
+            return array('code'=>303, 'msg'=>'请至少选择1个表头');
+        }
+        $setPages['sign'] = explode(',', $setPages['sign']);
+
+        foreach ($setPages['sign'] as $key => $sign) {
+            $setPages['sign'][$key] = explode('-', $sign);
+            $array[] = $setPages['sign'][$key][1];
+        }
+        if (!in_array('username', $array) && !in_array('qq', $array) && !in_array('tel', $array)) {
+            return array('code'=>304, 'msg'=>'手机-QQ-固话至少有一个');
+        }
+        $set['system_user_id'] = $setPages['system_user_id'];
+        $set['pagesname'] = $setPages['pagesname'];
+        $set['type'] = $setPages['type'];
+        $set['status'] = 1;
+        if ($setPages['type'] == 2) {
+            $set['channel_id'] = $setPages['channel_id'];
+        }
+        $result = D('Setpages')->getFind($set);
+        if ($result) {
+            return array('code'=>201, 'msg'=>'模板名已存在');
+        }
+        $set['createtime'] = time();
+        foreach ($setPages['sign'] as $key => $pages) {
+            $arr[] = $pages[0];
+        }
+        if (count($arr)>count(array_unique($arr))) {
+            return array('code'=>202, 'msg'=>'请不要重复选择表头');
+        }
+        $setpages_id = M('setpages')->data($set)->add();
+        if (!$setpages_id) {
+            return array('code'=>203, 'msg'=>'模板添加失败');
+        }
+        foreach ($setPages['sign'] as $key => $pages) {
+            $page['pagehead'] = strtoupper($pages[0]);
+            $page['headname'] = $pages[1];
+            $page['setpages_id'] = $setpages_id;
+            $result = M("setpageinfo")->data($page)->add();
+            if (!$result) {
+                $updat = D('Setpages')->where("setpages_id = $setpages_id")->delete();
+                return array('code'=>204, 'msg'=>'模板表头设置失败');
+            }
+        }
+        return array('code'=>0, 'data'=>$setpages_id);
     }
 
 }
