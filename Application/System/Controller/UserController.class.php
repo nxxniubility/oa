@@ -1840,8 +1840,6 @@ class UserController extends SystemController
      */
     public function outputUser() {	
         set_time_limit(3600);    
-		$channelMain = new ChannelController();
-        $courseMain = new CourseController();
         $setpages['type'] = 3;
         $setpages['system_user_id'] = $this->system_user_id;
 		$user_mod=D("User");
@@ -2071,7 +2069,7 @@ class UserController extends SystemController
         //学习方式
         $data['studytype'] = C('USER_STUDYTYPE');
         //课程列表
-        $res = $courseMain->getAllCourse();
+        // $res = $courseMain->getAllCourse();
         $data['courseAll'] = $res['data'];
         $this->assign('data', $data);   
         $this->assign("setpagesList", $setpagesList);
