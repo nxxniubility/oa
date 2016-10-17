@@ -13,14 +13,13 @@ $(document).on('click', '.regionSelect',
 
 
 
-//  显示二级区域
+//  显示一级区域
 $('.osOperation').find('.switchBtnShow').on('click',function(){
 	var os = $(this).closest('dl.oneRegions');
 	var	pzone_id=$(this).attr('zone-id');
 	
 	var szc= os.nextAll('.pzone_'+pzone_id),
 		_this=$(this);
-	
 		szc.each(function (index,element){
 			if($(this).is(':hidden')){
 				$(this).removeClass('dn');
@@ -36,7 +35,7 @@ $('.osOperation').find('.switchBtnShow').on('click',function(){
 });
 
 
-//  显示三级区域
+//  显示二级区域
 $('.szOperation').find('.switchBtnShow').on('click',function(){
 	var sz = $(this).closest('dl.secondaryZoneRow');
 	var pzone_id=$(this).attr('zone-id');
@@ -49,12 +48,11 @@ $('.szOperation').find('.switchBtnShow').on('click',function(){
 			$(this).removeClass('dn');
 			_this.addClass('switchBtnHide');
 			_this.attr('title','收起');
+			$('.trOperation').find('.switchBtnShow').removeClass('switchBtnHide');
 		}else {
 			$(this).addClass('dn');
 			_this.removeClass('switchBtnHide');
 			_this.attr('title','展开');
-
-
 			//一级区域关闭同时关闭二级和三级
 			$(".regionalCenter").addClass('dn');
 
@@ -86,8 +84,6 @@ $('.trOperation').find('.switchBtnShow').on('click',function(){
 });
 
 
-
-/*选择PC/moblie模版*/
 $('.seeDetails').on('click',function(){
 	var detailInfo = $(this).attr('detailInfo');
 	detailInfo = detailInfo.split('_');
