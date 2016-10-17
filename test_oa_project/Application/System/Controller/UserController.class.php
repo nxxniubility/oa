@@ -1352,14 +1352,11 @@ class UserController extends SystemController
     */
     public function importTemplateList()
     {
-        $proidMain = new ProidController();
-        $channelMain = new ChannelController();
-        $setPages['system_user_id'] = $this->system_user_id;
         $setPages['type'] = 2; //推广计划导入模板类型
-        $result = $proidMain->getSetPages($setPages);
-        $pages = $result['msg'];
+        $result = D('Proid', 'Service')->getSetPages($setPages);
+        $pages = $result['data'];
         foreach ($pages as $key => $page) {
-            $result = $channelMain->getChannel($page['channel_id']);
+            $result = D('Channel', 'Service')->getChannelInfo(array('channel_id'=>$page['channel_id']));
             $channel = $result['data'];
             $page['channelname'] = $channel['channelname'];
             $page['createtime'] = date('Y-m-d H:d:s', $page['createtime']);
@@ -1379,47 +1376,23 @@ class UserController extends SystemController
      */
     public function addTemplate()
     {
-        $channelMain = new ChannelController();
-        $res = $channelMain->getAllChannel();
-        $channelList = $res['data'];
+        $res = D('Channel', 'Service')->getChannelList();
         $type = I("get.type");
         if (IS_POST) {
             $setPages = I("post.");
-            if (!$setPages['pagesname']) {
-                $this->ajaxReturn(1, '请填写模板名称');
-            }
-            $setPages['system_user_id'] = $this->system_user_id;
             $setPages['type'] = $type;
-            if ($setPages['type'] == 2) {
-                if (!$setPages['channel_id']) {
-                    $this->ajaxReturn(2, '请选择渠道');
-                }
-            }
-            if (!$setPages['sign']) {
-                $this->ajaxReturn(3, '请至少选择1个表头');
-            }
-            $setPages['sign'] = explode(',', $setPages['sign']);
-
-            foreach ($setPages['sign'] as $key => $sign) {
-                $setPages['sign'][$key] = explode('-', $sign);
-                $array[] = $setPages['sign'][$key][1];
-            }
-            if (!in_array('username', $array) && !in_array('qq', $array) && !in_array('tel', $array)) {
-                $this->ajaxReturn(4, '手机-QQ-固话至少有一个');
-            }
-            $result = D("User")->createSetPages($setPages);
+            $result = D("Proid", 'Service')->createSetPages($setPages);
             if ($result['code'] != 0) {
                 $this->ajaxReturn($result['code'], $result['msg']);
             }
-
             if ($setPages['type'] == 2) {
-                $this->success('设置模板成功', 0, U('System/User/importTemplateList', array('type' => $setPages['type'])));
+                $this->ajaxReturn(0, '设置模板成功', U('System/User/importTemplateList', array('type' => $setPages['type'])));
             } elseif ($setPages['type'] == 3) {
-                $this->success('设置模板成功', 0, U('System/User/outputTemplateList', array('type' => $setPages['type'])));
+                $this->ajaxReturn(0, '设置模板成功', U('System/User/outputTemplateList', array('type' => $setPages['type'])));
             }
         }
         $this->assign("type", $type);
-        $this->assign("channelList", $channelList);
+        $this->assign("channelList", $res['data']);
         $this->display();
 
     }
@@ -1431,54 +1404,22 @@ class UserController extends SystemController
      */
     public function editTemplate()
     {
-        $proidMain = new ProidController();
-        $channelMain = new ChannelController();
-        $result = $channelMain->getAllChannel();
-        $channelList = $result['data'];
+        $res = D('Channel', 'Service')->getChannelList();
         $data['setpages_id'] = I("get.setpages_id");
         $type = I("get.type");
         if (IS_POST) {
             $setpages = I("post.");
-            if (!$setpages['pagesname']) {
-                $this->ajaxReturn(1, '请填写模板名称');
-            }
-            $setpages['system_user_id'] = $this->system_user_id;
-            if ($type == 2) {
-                if (!$setpages['channel_id']) {
-                    $this->ajaxReturn(2, '请选择渠道');
-                }
-            }
-            if (!$setpages['sign']) {
-                $this->ajaxReturn(3, '请至少选择1个表头');
-            }
-            foreach ($setpages['sign'] as $key => $pages) {
-                
-            }
-            $setpages['sign'] = explode(',', $setpages['sign']);
-            foreach ($setpages['sign'] as $key => $sign) {
-                $setpages['sign'][$key] = explode('-', $sign);
-                $array[] = $setpages['sign'][$key][1];
-                $arr[] = $sign[0];
-            }
-            if (count($arr)>count(array_unique($arr))) {
-                $this->ajaxReturn(3, '请不要重复选择表头');
-            }
-            if (!in_array('username', $array) && !in_array('qq', $array) && !in_array('tel', $array)) {
-                $this->ajaxReturn(4, '手机-QQ-固话至少有一个');
-            }
             $setpages['setpages_id'] = $data['setpages_id'];
-            $setpages['type'] = $type;
-            $result = $proidMain->editSetPages($setpages);
+            $result = D('Proid', 'Service')->editSetPages($setpages);
             if ($result['code'] != 0) {
                 $this->ajaxReturn($result['code'], $result['msg']);
             }
             if ($type == 2) {
-                $this->success('修改模板成功', 0, U('System/User/importTemplateList', array('type' => $type)));
+                $this->ajaxReturn(0, '修改模板成功', U('System/User/importTemplateList', array('type' => $type)));
             } elseif ($type == 3) {
-                $this->success('修改模板成功', 0, U('System/User/outputTemplateList', array('type' => $type)));
+                $this->ajaxReturn(0, '修改模板成功', U('System/User/outputTemplateList', array('type' => $type)));
             }
-
-        }
+        }   
         $pagesInfos=$result[0];
         $head_info=D('Setpageinfo')->where(array('setpages_id'=> $data['setpages_id']))->select();  
         $head_name_arr=array();
@@ -1492,12 +1433,12 @@ class UserController extends SystemController
         $this->assign('pagesInfos', $pagesInfos);
 
         $setpages['system_user_id'] = $this->system_user_id;
-        $result = $proidMain->getSetPages($data);
-        $pagesInfo = $result['msg'];
-        $result = $channelMain->getChannel($pagesInfo[0]['channel_id']);
+        $result = D('Proid', 'Service')->getSetPages($data);
+        $pagesInfo = $result['data'];
+        $result = D('Channel', 'Service')->getChannelInfo(array('channel_id'=>$pagesInfo[0]['channel_id']));
         $channelInfo = $result['data'];
-        $this->assign("channelInfo", $channelInfo);
-        $this->assign('channelList', $channelList);
+        $this->assign("channelInfo", $result['data']);
+        $this->assign('channelList', $res['data']);
         $this->assign('pagesInfo', $pagesInfo);
         $this->assign('type', $type);
         $this->display();
@@ -1512,18 +1453,17 @@ class UserController extends SystemController
      */
     public function delSetPages()
     {
-        $proidMain = new ProidController();
         $setpages['setpages_id'] = I("post.setpages_id");
         $setpages['type'] = I("get.type");
-        $backInfo = $proidMain->delSetPages($setpages);
+        $backInfo = D('Proid', 'Service')->delSetPages($setpages);
         if ($backInfo['code'] == 0) {
             if ($setpages['type'] == 2) {
-                $this->success('删除模板成功', 0, U('System/User/importTemplateList', array('type' => $setpages['type'])));
+                $this->success(0, '删除模板成功', U('System/User/importTemplateList', array('type' => $setpages['type'])));
             } else {
-                $this->success('删除模板成功', 0, U('System/User/outputTemplateList', array('type' => $setpages['type'])));
+                $this->success(0, '删除模板成功', U('System/User/outputTemplateList', array('type' => $setpages['type'])));
             }
         }
-        $this->ajaxReturn(1, '删除失败');
+        $this->ajaxReturn(201, '删除失败');
 
     }
 
@@ -1535,7 +1475,6 @@ class UserController extends SystemController
     public function importUser()
     {
         set_time_limit(0);
-        $proidMain = new ProidController();
         $system_user_id = $this->system_user_id;
         $zone_id = $this->system_user['zone_id'];
         $type = I("get.type");     
@@ -1543,8 +1482,8 @@ class UserController extends SystemController
             session('faile_import', null);
             session('success_import', null);
             $setPages['setpages_id'] = I("post.setpages_id"); //模板ID
-            $res = $proidMain->getSetPages($setPages);
-            $setpagesInfo = $res['msg'];
+            $resSetPages = D('Proid', 'Service')->getSetPages($setPages);
+            $setpagesInfo = $resSetPages['data'];
             if (!empty($_FILES['file'])) {
                 $exts = array('xls', 'xlsx');
                 $rootPath = './Public/';
@@ -1557,8 +1496,8 @@ class UserController extends SystemController
             foreach ($datas as $key => $data) {
                 array_unique($data);
             }
-            $res = $proidMain->getSetPagesInfo($setPages['setpages_id']);
-            $letters = $res['msg'];
+            $resPagesInfo = D('Proid', 'Service')->getSetPagesInfo($setPages['setpages_id']);
+            $letters = $resPagesInfo['data'];
             foreach ($letters as $k1 => $letter) {
                 $k1 = $k1 + 1;
                 $users[$k1][] = $letter['pagehead'];
@@ -1671,8 +1610,8 @@ class UserController extends SystemController
             $this->assign("system_user_id", $system_user_id);
             $set['system_user_id'] = $system_user_id;
             $set['type'] = $type;
-            $res = $proidMain->getSetPages($set);
-            $setPages = $res['msg'];
+            $res = D('Proid', 'Service')->getSetPages($set);
+            $setPages = $res['data'];
             $this->assign('setPages', $setPages);
             $this->display();
         }
@@ -1688,14 +1627,13 @@ class UserController extends SystemController
         set_time_limit(0);
         $system_user_id = $this->system_user_id;
         $zone_id = $this->system_user['zone_id'];
-        $proidMain = new ProidController();
         $type = I("get.type");
         if (IS_POST) {
             session('faile_import', null);
             session('success_import', null);
             $setPages['setpages_id'] = I("post.setpages_id"); //模板ID
-            $res = $proidMain->getSetPages($setPages);
-            $setpagesInfo = $res['msg'];
+            $res = D('Proid', 'Service')->getSetPages($setPages);
+            $setpagesInfo = $res['data'];
             if (!empty($_FILES['file'])) {
                 //$exts = array('zip', 'xls', 'xlsx');
                 $exts = array('xls', 'xlsx');
@@ -1710,8 +1648,8 @@ class UserController extends SystemController
             foreach ($datas as $key => $data) {
                 array_unique($data);
             }
-            $result = $proidMain->getSetPagesInfo($setPages['setpages_id']);
-            $letters = $result['msg'];
+            $result = D('Proid', 'Service')->getSetPagesInfo($setPages['setpages_id']);
+            $letters = $result['data'];
             foreach ($letters as $k1 => $letter) {
                 $k1 = $k1 + 1;
                 $users[$k1][] = $letter['pagehead'];
@@ -1833,8 +1771,8 @@ class UserController extends SystemController
             $this->assign("system_user_id", $system_user_id);
             $set['system_user_id'] = $system_user_id;
             $set['type'] = $type;
-            $res = $proidMain->getSetPages($set);
-            $setPages = $res['msg'];
+            $res = D('Proid', 'Service')->getSetPages($set);
+            $setPages = $res['data'];
             $this->assign('setPages', $setPages);
             $this->display();
         }
@@ -1848,7 +1786,7 @@ class UserController extends SystemController
     public function importClient() {
         $type = I("get.type");
         $failes = session('faile_import');
-        $successs = session('success_import');
+        $successs = session('success_import');       
         foreach ($failes as $k1 => $f) {
             $k = $k1 + 2;
             $faile[$k] = $f;
@@ -1875,12 +1813,11 @@ class UserController extends SystemController
      */
     public function outputTemplateList() 
     {
-        $proidMain = new ProidController();
         $channelMain = new ChannelController();
         $setPages['system_user_id'] = $this->system_user_id;
         $setPages['type'] = 3; //推广计划导入模板类型
-        $result = $proidMain->getSetPages($setPages);
-        $pages = $result['msg'];
+        $result = D('Proid', 'Service')->getSetPages($setPages);
+        $pages = $result['data'];
         foreach ($pages as $key => $page) {
             $res = $channelMain->getChannel($page['channel_id']);
             $channel = $res['data'];
@@ -1903,13 +1840,12 @@ class UserController extends SystemController
     public function outputUser() {	
         set_time_limit(3600);    
 		$channelMain = new ChannelController();
-        $proidMain = new ProidController();
         $courseMain = new CourseController();
         $setpages['type'] = 3;
         $setpages['system_user_id'] = $this->system_user_id;
 		$user_mod=D("User");
-        $res = $proidMain->getSetPages($setpages);
-        $setpagesList = $res['msg'];
+        $res = D('Proid', 'Service')->getSetPages($setpages);
+        $setpagesList = $res['data'];
         if (IS_POST) {
             $request = I('post.');
             if($request['type']=='succ'){
@@ -1923,8 +1859,8 @@ class UserController extends SystemController
                 if (!$request['setpages_id']) {
                     $this->error("请选择模板");
                 }
-                $res = $proidMain->getSetPagesInfos($request['setpages_id']);
-                $letters = $res['msg'];
+                $res = D('Proid', 'Service')->getSetPagesInfos($request['setpages_id']);
+                $letters = $res['data'];
                 unset($request['setpages_id']);
                 $request['status'] = isset($request['status']) ? $request['status'] : 0;
                 if ($request['status'] == 0) {

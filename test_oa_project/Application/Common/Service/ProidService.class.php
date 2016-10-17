@@ -951,6 +951,7 @@ class ProidService extends BaseService
      */
     public function getSetPages($setPages)
     {
+        $setPages['system_user_id'] = $this->system_user_id;
         $setPages['status'] = 1;
         $pages = D("Setpages")->getList($setPages);
         return array('code'=>0,'data'=>$pages);
@@ -992,7 +993,8 @@ class ProidService extends BaseService
             $set['channel_id'] = 0;
         }
         $set['createtime'] = time();    
-        $setpages_id = D("Setpages")->data($set)->add();
+        $setpages_id = D("Setpages")->addData($set);
+        $setpages_id = $setpages_id['data'];
         if (!$setpages_id) {
             $error['code'] = 201;
             $error['msg'] = '模板添加失败';
@@ -1038,14 +1040,37 @@ class ProidService extends BaseService
      */
     public function editSetPages($setPages)
     {
+        if (!$setPages['pagesname']) {
+            return array('code'=>301, 'msg'=>'请填写模板名称');
+        }
+        $setPages['system_user_id'] = $this->system_user_id;
+        if ($type == 2) {
+            if (!$setPages['channel_id']) {
+                return array('code'=>302, 'msg'=>'请选择渠道');
+            }
+        }
+        if (!$setPages['sign']) {
+            return array('code'=>303, 'msg'=>'请至少选择1个表头');
+        }
+        foreach ($setPages['sign'] as $key => $pages) {
+            
+        }
+        $setPages['sign'] = explode(',', $setPages['sign']);
+        foreach ($setPages['sign'] as $key => $sign) {
+            $setPages['sign'][$key] = explode('-', $sign);
+            $array[] = $setPages['sign'][$key][1];
+            $arr[] = $sign[0];
+        }
+        if (count($arr)>count(array_unique($arr))) {
+            return array('code'=>304, 'msg'=>'请不要重复选择表头');
+        }
+        if (!in_array('username', $array) && !in_array('qq', $array) && !in_array('tel', $array)) {
+            return array('code'=>305, 'msg'=>'手机-QQ-固话至少有一个');
+        }
+        $setPages['type'] = $type;
         foreach ($setPages['sign'] as $key => $pages) {
             $page =strtoupper($pages[0]);
             $arr[] = $page;
-        }
-        if (count($arr)>count(array_unique($arr))) {
-            $error['code'] = 301;
-            $error['msg'] = '请不要重复选择表头';
-            return $error;
         }
         D("Setpageinfo")->startTrans();
         D("Setpageinfo")->where("setpages_id = $setPages[setpages_id]")->delete();
@@ -1057,9 +1082,7 @@ class ProidService extends BaseService
             if (!$result) {
                 D("Setpageinfo")->rollback();
                 $updat = D("Setpages")->where("setpages_id = $setPages[setpages_id]")->delete();
-                $error['code'] = 201;
-                $error['msg'] = '模板表头设置失败';
-                return $error;
+                return array('code'=>201, 'msg'=>'模板表头设置失败');
             }
         }
         D("Setpageinfo")->commit();     
@@ -1069,14 +1092,10 @@ class ProidService extends BaseService
             $upda = D("Setpages")->where("setpages_id = $setPages[setpages_id] and status=1")->save($set);
             if ($upda === false) {
                 $delInfo = D("Setpageinfo")->where("setpages_id = $setPages[setpages_id]")->delete();
-                $error['code'] = 202;
-                $error['msg'] = '模板修改失败';
-                return $error;
+                return array('code'=>202, 'msg'=>'修改模板失败');
             }
         }
-        $error['code'] = 0;
-        $error['msg'] = '模板修改成功';
-        return $error;
+        return array('code'=>0, 'msg'=>'修改成功');
     }
 
     /**
