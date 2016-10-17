@@ -76,7 +76,8 @@
 						username:"{$username}",
 						smsType:'pwdEdit'
 					};
-					common_ajax(data,"{:U('System/Admin/randVerifyCode')}",'no',codeTime);
+					codeTime();
+//					common_ajax(data,"{:U('System/Admin/randVerifyCode')}",'no',codeTime);
 				});
 			});
 
@@ -88,14 +89,15 @@
 				var time = 60;
 				thisObj.hide();
 				lodingObj.show();
-				setInterval(codeInterval,300);
+				sh = setInterval(codeInterval,300);
 				function codeInterval(){
 					if(time!=0){
 						var str = '等待'+time+'秒';
 						lodingObj.val(str);
-						time = time-1;
+						time--;
 						return time;
 					}else{
+						alert(time);
 						thisObj.show();
 						lodingObj.hide();
 						clearInterval(sh);

@@ -192,6 +192,11 @@
     $('.edit_btn').click(function(){
         $(':input[name="temp_id"]').val($(this).attr('data-id'));
         $(':input[name="edit_name"]').val($(this).attr('data-name'));
+        if($(this).attr('data-pid')==0){
+            $(':input[name="edit_pid"]').parent('.z_rows').hide();
+        }else{
+            $(':input[name="edit_pid"]').parent('.z_rows').show();
+        }
         $(':input[name="edit_pid"]').val($(this).attr('data-pid'));
         $(':input[name="edit_sort"]').val($(this).attr('data-sort'));
         layer.open({
@@ -211,6 +216,14 @@
     });
     //修改提交
     $('.edit_subtn').click(function(){
+        var parent_arr = [];
+        $('.regionContMiddle').find('.oneRegions').each(function(){
+            parent_arr.push($(this).children('dd').eq(1).text());
+        });
+        if(parent_arr.indexOf($(':input[name="edit_pid"]').val())!=1){
+            layer.msg('渠道父级ID只能输入一级渠道ID', {icon:2});
+            return false;
+        };
         var data = {
             channel_id : $(':input[name="temp_id"]').val(),
             channelname : $(':input[name="edit_name"]').val(),
