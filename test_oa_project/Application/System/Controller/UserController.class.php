@@ -430,14 +430,14 @@ class UserController extends SystemController
     {
         $request = I('post.');
         $request['system_user_id'] = $this->system_user_id;
-        $systemUserController = new SystemUserController();
-        $reflag = $systemUserController->editColumn($request);
+//        $systemUserController = new SystemUserController();
+//        $reflag = $systemUserController->editColumn($request);
         //返回数据操作状态
-        if ($reflag['code']==0) {
-            $this->ajaxReturn(0, '自定义显示列设置成功');
-        } else {
-            $this->ajaxReturn(1, '设置失败');
-        }
+//        if ($reflag['code']==0) {
+//            $this->ajaxReturn(0, '自定义显示列设置成功');
+//        } else {
+//            $this->ajaxReturn(1, '设置失败');
+//        }
     }
 
     /*
@@ -560,17 +560,18 @@ class UserController extends SystemController
                 //加载分页类
                 $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $result['data'], $where, __ACTION__, null, 'system');
                 $this->ajaxReturn(0, '', $paging_data);
-            }else if($requestP['type']=='getSysUser'){
+            }
+            if($requestP['type']=='getSysUser'){
                 //异步获取员工列表
-                $whereSystem['usertype'] = array('neq',10);
-                $whereSystem['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-                $whereSystem['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+                $whereSystem['where']['usertype'] = array('NEQ',10);
+                $whereSystem['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+                $whereSystem['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+                $whereSystem['order'] = 'sign asc';
                 //员工列表
-                $systemUserMain = new SystemUserController();
-                $systemUserAll = $systemUserMain->getList($whereSystem);
-                $systemList = $systemUserAll['data'];
-                if($systemList) $this->ajaxReturn(0, '', $systemList);
-                else $this->ajaxReturn(1, '');
+                $reSystemList = D('SystemUser','Service')->getSystemUsersList($whereSystem);
+                //返回数据操作状态
+                if ($reSystemList['code'] == 0) $this->ajaxReturn(0, '', $reSystemList['data']['data']);
+                else $this->ajaxReturn(1, '获取失败');
             }
         }
         $limit = (empty($requestG['page'])?'0':($requestG['page']-1)*30).',30';
