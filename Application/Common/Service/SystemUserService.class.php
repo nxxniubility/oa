@@ -1304,8 +1304,12 @@ class SystemUserService extends BaseService
         }
         return array('code'=>'0', 'msg'=>'操作成功', 'data'=>$sysList);
     }
+
     /*
-    * 获取员工对应职位关系列表
+    |--------------------------------------------------------------------------
+    | 获取员工对应职位关系列表
+    |--------------------------------------------------------------------------
+    | @author zgt
     */
     protected function getRoleUserList($system_user_id=null)
     {
@@ -1328,7 +1332,6 @@ class SystemUserService extends BaseService
     |--------------------------------------------------------------------------
     | 获取对应的员工信息
     |--------------------------------------------------------------------------
-    | $type
     | @author nxx
     */
     public function getSystemUserVisit($where=null,$order=null,$limit='0,10'){
