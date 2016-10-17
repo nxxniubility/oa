@@ -379,7 +379,7 @@
         });
         //离职设置-前置判断
         $(document).on('click','.usertypeBtn',function(){
-            var system_user_id = $(this).parents('.wEle').siblings('.wTwo').text();
+            var system_user_id = $(this).parents('tr').children('td').eq(1).text();
             var data = {
                 system_user_id:system_user_id,
                 type:'usertype'
@@ -392,7 +392,7 @@
         })
         //账号删除-前置判断
         $(document).on('click','.delSystemUser',function(){
-            var system_user_id = $(this).parents('.wEle').siblings('.wTwo').text();
+            var system_user_id = $(this).parents('tr').children('td').eq(1).text();
             var data = {
                 system_user_id:system_user_id,
                 type:'del'

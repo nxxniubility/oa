@@ -38,10 +38,10 @@ class StatisticsController extends SystemController
         $data['dataMarket'] = $data_market['data'];
         //获取职位及部门
         $DepartmentService = new DepartmentService();
-        $department_list = $DepartmentService->getList();
+        $department_list = $DepartmentService->getDepartmentList();
         $data['departmentList'] = $department_list['data'];
         $RoleService = new RoleService();
-        $role_list = $RoleService->getAllRole();
+        $role_list = $RoleService->getRoleList();
         $data['roleList'] = $role_list['data'];
         $ZoneService = new ZoneService();
         $zone_list = $ZoneService->getZoneList(1);
@@ -49,7 +49,7 @@ class StatisticsController extends SystemController
         $request['daytime'] = $request['startime'].','.$request['endtime'];
         $data['request'] = $request;
         $standardList = $DataService->getStandard();
-        foreach ($standardList['data'] as $key => $standard) {
+        foreach ($standardList as $key => $standard) {
             $infos = $DataService->getStandardInfos(array('standard_id'=>$standard['standard_id']));
             $standard['role_id'] = explode(',', $standard['role_id']);
             $infos['data']['role_ids'] = $standard['role_id'];

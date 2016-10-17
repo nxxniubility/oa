@@ -707,8 +707,8 @@ class SystemUserService extends BaseService
     */
     public function editSystemUser($data)
     {
+        $data = array_filter($data);
         if(empty($data['realname'])) return array('code'=>203, 'msg'=>'真实姓名不能为空');
-        if (strlen($data['realname'])>12)  return array('code'=>201, 'msg'=>'员工姓名不得超过12个字符');
         if(empty($data['username'])) return array('code'=>204, 'msg'=>'手机号码不能为空');
         if(!$this->checkMobile($data['username'])) return array('code'=>205, 'msg'=>'手机号码格式有误');
         if(!$this->checkIsCompanyEmail($data['email'])) return array('code'=>206, 'msg'=>'邮箱地址输入有误');
@@ -739,7 +739,7 @@ class SystemUserService extends BaseService
          //启动事务
         D()->startTrans();
         $result = D('SystemUser')->editData($data, $system_user_id);
-        $flag_userINfo = true;
+        $flag_userINfo['code'] = 0;
         if(!empty($data['role_id'])) {
             D('RoleUser')->delData($system_user_id);
             $edit_role = explode(',',$data['role_id']);
@@ -749,10 +749,10 @@ class SystemUserService extends BaseService
                     $where_role['user_id'] = $system_user_id;
                     D('RoleUser')->addData($where_role);
                 }
-                $flag_userINfo = D('SystemUserInfo')->editData($data,$system_user_id);
             }
         }
-        if($flag_userINfo!==false && $result!==false){
+        $flag_userINfo = D('SystemUserInfo')->editData($data,$system_user_id);
+        if($flag_userINfo['code']==0 && $result['code']==0){
             D()->commit();
             $new_info = D('SystemUser')->getFind(array("system_user_id"=>$system_user_id));
             $new_info = $this->_addStatus($new_info);
@@ -769,6 +769,60 @@ class SystemUserService extends BaseService
         }else{
             D()->rollback();
             return array('code'=>100, 'msg'=>$result['msg']);
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 修改员工详情信息
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function editSystemUserInfo($data)
+    {
+        $data = array_filter($data);
+        unset($data['username']);
+        unset($data['realnamename']);
+        unset($data['email']);
+        if(empty($data['birthday'])) return array('code'=>300, 'msg'=>'生日不能为空','data'=>array('sign'=>'birthday'));
+        if(empty($data['nativeplace'])) return array('code'=>301, 'msg'=>'籍贯不能为空','data'=>array('sign'=>'nativeplace'));
+        if(empty($data['education_id'])) return array('code'=>302, 'msg'=>'学历不能为空');
+        if(empty($data['school'])) return array('code'=>303, 'msg'=>'毕业学校不能为空','data'=>array('sign'=>'school'));
+        if(empty($data['plivatemail'])) return array('code'=>304, 'msg'=>'个人邮箱不能为空','data'=>array('sign'=>'plivatemail'));
+        if(empty($data['usertype'])) return array('code'=>305, 'msg'=>'用户状态不能为空');
+        if(empty($data['entrytime'])) return array('code'=>305, 'msg'=>'开始时间不能为空','data'=>array('sign'=>'entrytime'));
+        if(empty($data['straightime'])) return array('code'=>305, 'msg'=>'结束时间不能为空','data'=>array('sign'=>'straightime'));
+        if(empty($data['check_id'])) return array('code'=>305, 'msg'=>'指纹编号不能为空','data'=>array('sign'=>'check_id'));
+        $system_user_id = !empty($data['system_user_id'])?$data['system_user_id']:$this->system_user_id;
+        $userInfoCheck = D('SystemUser')->where(array('check_id'=>$data['check_id']))->find();
+        if(!empty($userInfoCheck)) {
+            if($userInfoCheck['system_user_id'] != $system_user_id){
+                return array('code'=>202, 'msg'=>'该指纹编号已存在', 'sign'=>'check_id');
+            }
+        }
+        //启动事务
+        D()->startTrans();
+        $result = D('SystemUser')->editData($data, $system_user_id);
+        $flag_userINfo = D('SystemUserInfo')->editData($data,$system_user_id);
+
+        if($flag_userINfo['code']==0 && $result['code']==0){
+            D()->commit();
+            $new_info = D('SystemUser')->getFind(array("system_user_id"=>$system_user_id));
+            $new_info = $this->_addStatus($new_info);
+            $cahce_all = F('Cache/systemUsers');
+            if(!empty($cahce_all['data'])){
+                foreach($cahce_all['data'] as $k => $v){
+                    if($v['system_user_id'] == $system_user_id){
+                        $cahce_all['data'][$k] = $new_info;
+                    }
+                }
+            }
+            F('Cache/systemUsers', $cahce_all);
+            return array('code'=>'0', 'msg'=>'操作成功');
+        }else{
+            D()->rollback();
+            return array('code'=>'1', 'msg'=>'数据操作失败');
         }
     }
 
