@@ -1324,8 +1324,13 @@ class SystemUserService extends BaseService
     }
 
 
-
-
+    /*
+    |--------------------------------------------------------------------------
+    | 获取对应的员工信息
+    |--------------------------------------------------------------------------
+    | $type
+    | @author nxx
+    */
     public function getSystemUserVisit($where=null,$order=null,$limit='0,10'){
         $DB_PREFIX = C('DB_PREFIX');
         $order = !empty($order)?$order:$DB_PREFIX.'system_user.system_user_id DESC';
