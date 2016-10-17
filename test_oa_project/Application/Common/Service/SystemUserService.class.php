@@ -791,12 +791,15 @@ class SystemUserService extends BaseService
         if(empty($data['school'])) return array('code'=>303, 'msg'=>'毕业学校不能为空','data'=>array('sign'=>'school'));
         if(empty($data['plivatemail'])) return array('code'=>304, 'msg'=>'个人邮箱不能为空','data'=>array('sign'=>'plivatemail'));
         if(empty($data['usertype'])) return array('code'=>305, 'msg'=>'用户状态不能为空');
-        if(empty($data['entrytime'])) return array('code'=>305, 'msg'=>'开始时间不能为空','data'=>array('sign'=>'entrytime'));
-        if(empty($data['straightime'])) return array('code'=>305, 'msg'=>'结束时间不能为空','data'=>array('sign'=>'straightime'));
+        if(empty($data['entrytime'])) return array('code'=>305, 'msg'=>'入职时间不能为空','data'=>array('sign'=>'entrytime'));
+        if(empty($data['straightime'])) return array('code'=>305, 'msg'=>'转正时间不能为空','data'=>array('sign'=>'straightime'));
         if(empty($data['check_id'])) return array('code'=>305, 'msg'=>'指纹编号不能为空','data'=>array('sign'=>'check_id'));
         $data['birthday'] = strtotime($data['birthday']);
         $data['entrytime'] = strtotime($data['entrytime']);
         $data['straightime'] = strtotime($data['straightime']);
+        if ($data['straightime'] <= $data['entrytime']) {
+            return array('code'=>306, 'msg'=>'转正时间不能小于入职时间');
+        }
         $system_user_id = !empty($data['system_user_id'])?$data['system_user_id']:$this->system_user_id;
         $userInfoCheck = D('SystemUser')->where(array('check_id'=>$data['check_id']))->find();
         if(!empty($userInfoCheck)) {
