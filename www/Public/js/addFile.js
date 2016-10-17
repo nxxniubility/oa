@@ -139,3 +139,11 @@ function otherSelectStatus() {
     $("[class^=select]").find("dd,.select_title3").hide();
     $("[class^=select]").find("dl").removeClass("zindex4");
 }
+
+// 限制字符长度
+function chkLength(el,size){
+	if(el.value.length > size){
+		layer.msg('已超出字数规定上限.',{icon:2});
+	}
+	el.value = el.value.substring(0,size);
+}
