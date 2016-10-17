@@ -847,7 +847,7 @@ class UserService extends BaseService
             return array('code'=>0,'msg'=>'添加成功');
         }else{
             D()->rollback();
-            return array('code'=>1,'msg'=>'数据添加失败');
+            return array('code'=>12,'msg'=>'数据添加失败');
         }
     }
 

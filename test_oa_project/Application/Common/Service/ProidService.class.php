@@ -979,7 +979,7 @@ class ProidService extends BaseService
         $set['pagesname'] = $setPages['pagesname'];
         $set['status'] = 1;
         $result = D("Setpages")->getFind($set);   
-        if ($result) {
+        if ($result['code'] != 0) {
             return array('code'=>303, 'msg'=>'模板名已存在');
         }       
         $set['type'] = $setPages['type'];
@@ -1044,7 +1044,7 @@ class ProidService extends BaseService
             return array('code'=>301, 'msg'=>'请填写模板名称');
         }
         $setPages['system_user_id'] = $this->system_user_id;
-        if ($type == 2) {
+        if ($setPages['type'] == 2) {
             if (!$setPages['channel_id']) {
                 return array('code'=>302, 'msg'=>'请选择渠道');
             }
@@ -1052,28 +1052,26 @@ class ProidService extends BaseService
         if (!$setPages['sign']) {
             return array('code'=>303, 'msg'=>'请至少选择1个表头');
         }
-        foreach ($setPages['sign'] as $key => $pages) {
-            
-        }
         $setPages['sign'] = explode(',', $setPages['sign']);
-        foreach ($setPages['sign'] as $key => $sign) {
-            $setPages['sign'][$key] = explode('-', $sign);
-            $array[] = $setPages['sign'][$key][1];
-            $arr[] = $sign[0];
+        foreach ($setPages['sign'] as $key => $pages) {
+            $setPages['sign'][$key] = explode('-', $pages);
+            $pages = strtoupper($pages[0]);
+            $arr[] =$pages[0];
         }
         if (count($arr)>count(array_unique($arr))) {
             return array('code'=>304, 'msg'=>'请不要重复选择表头');
         }
+        foreach ($setPages['sign'] as $key => $value) {
+            $array[] = $setPages['sign'][$key][1];
+            $value[0] = strtoupper($value[0]);
+            $setPages['sign'][$key] = $value;
+        }
         if (!in_array('username', $array) && !in_array('qq', $array) && !in_array('tel', $array)) {
             return array('code'=>305, 'msg'=>'手机-QQ-固话至少有一个');
         }
-        $setPages['type'] = $type;
-        foreach ($setPages['sign'] as $key => $pages) {
-            $page =strtoupper($pages[0]);
-            $arr[] = $page;
-        }
         D("Setpageinfo")->startTrans();
         D("Setpageinfo")->where("setpages_id = $setPages[setpages_id]")->delete();
+        $up = D('Setpages')->where("setpages_id = $setPages[setpages_id]")->save($setPages);
         foreach ($setPages['sign'] as $key => $pages) {
             $pageInfo['pagehead'] = strtoupper($pages[0]);
             $pageInfo['headname'] = $pages[1];
@@ -1086,15 +1084,6 @@ class ProidService extends BaseService
             }
         }
         D("Setpageinfo")->commit();     
-        $set['pagesname'] = $setPages['pagesname'];
-        if ($setPages['channel_id']) {
-            $set['channel_id'] = $setPages['channel_id'];
-            $upda = D("Setpages")->where("setpages_id = $setPages[setpages_id] and status=1")->save($set);
-            if ($upda === false) {
-                $delInfo = D("Setpageinfo")->where("setpages_id = $setPages[setpages_id]")->delete();
-                return array('code'=>202, 'msg'=>'修改模板失败');
-            }
-        }
         return array('code'=>0, 'msg'=>'修改成功');
     }
 
