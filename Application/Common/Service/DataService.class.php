@@ -241,7 +241,7 @@ class DataService extends BaseService
             if(empty($newArr['systemuser'][$v['system_user_id']]['system_user_id'])){
                 $sys_where['system_user_id'] = $v['system_user_id'];
                 $sys_where['usertype'] = 1;
-                $info = $SystemUserService->getListCache($sys_where);
+                $info = D('SystemUser','Service')->getSystemUsersInfo($sys_where);
                 $info = $info['data'];
                 $newArr['systemuser'][$v['system_user_id']]['realname'] = $info['realname'];
                 $newArr['systemuser'][$v['system_user_id']]['role_id'] = $info['roles'][0]['role_id'];
@@ -315,8 +315,7 @@ class DataService extends BaseService
         $_where['logtime'] = $where['daytime'];
         $redata = D('DataLogs')->where($_where)->order('logtime asc')->select();
 
-        $ChannelService = new ChannelService();
-        $channel_list = $ChannelService->getAllChannel();
+        $channel_list = D('Channel','Service')->getChannelList();
         $channel_list = $channel_list['data']['data'];
         $newArr = array();
         $channelArr = array();
@@ -341,7 +340,7 @@ class DataService extends BaseService
             $newArr['course_id'][$v['course_id']] = $newArr['course_id'][$v['course_id']]+1;
         }
         $CourseService = new CourseService();
-        $course_list = $CourseService->getList();
+        $course_list = $CourseService->getCourseList();
         foreach($newArr['course_id'] as $k=>$v){
             foreach($course_list['data'] as $v2){
                 if($v2['course_id'] == $k){
@@ -568,7 +567,7 @@ class DataService extends BaseService
             }
             $result[$k]['children'][] =$info_list;
             $result[$k]['status_names'] =$arr_status;
-            $department = $DepartmentService->getInfo($v['department_id']);
+            $department = $DepartmentService->getDepartmentInfo(array('department_id'=>$result['department_id']));
             $result[$k]['department_name'] = $department['data']['departmentname'];
         }
         return array('code'=>0,'data'=>$result);
@@ -598,7 +597,7 @@ class DataService extends BaseService
         }
         $result['children'] =$info_list;
         $result['status_names'] =$arr_status;
-        $department = $DepartmentService->getInfo($result['department_id']);
+        $department = $DepartmentService->getDepartmentInfo(array('department_id'=>$result['department_id']));
         $result['department_name'] = $department['data']['departmentname'];
         return array('code'=>0,'data'=>$result);
     }

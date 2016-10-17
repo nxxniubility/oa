@@ -200,6 +200,10 @@
         $('.nsDetermine').click(function(){
             var role_id = '';
             var role_name = ''
+            if($(':input[name="nsChk"]:checked').length>3){
+                layer.msg('职位添加不能超过三个', {icon:2});
+                return false;
+            }
             for(var i=0;i<$(':input[name="nsChk"]:checked').length;i++){
                 if(i==0){
                     role_id += $(':input[name="nsChk"]:checked').eq(i).val();

@@ -46,6 +46,7 @@
 		        			<div class="endtime_box fl">
 			        			<input type="text" class="afTime endtime" name="endtime" value="" readonly="readonly" placeholder="结束时间">
 		        			</div>
+							<input type="hidden" name="system_user_id" value="{$data.request.system_user_id}">
 			        		<input type="submit" class="search_btn fl" value="搜索">
 			        		<div class="search_des_area fl">{$systemUserInfo['zonename']}</div>
 		        		</div>
@@ -615,7 +616,7 @@
 		</div>
 
 		<script>
-			var get_info_url = '/Api/Data/getDataMarketInfo';
+			var get_info_url = '/SystemApi/Data/getDataMarketInfo';
 			var market_daytime = '{$data.request.daytime}';
 			var market_system_user_id = '{$data.request.system_user_id}';
 			var market_zone_id = '';
