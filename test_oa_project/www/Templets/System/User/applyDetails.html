@@ -439,17 +439,21 @@
 				if($(':input[name="atChannelSelect"]').val() == 0){
 					layer.msg('请选择渠道', {icon:2});
 					return;
-				}
+				};
 				if($(':input[name="alWhether"]:checked').val()==1){
 					if($(':input[name="recommendMan"]').val().length!=11){
 						layer.msg('请输入正确的转介绍人手机号码', {icon:2});
 						return;
-					}
-				}
+					};
+				};
 				if($(':input[name="apply_applyreason"]').val().length == 0){
 					layer.msg('请输入申请理由', {icon:2});
 					return;
-				}
+				};
+				if($(':input[name="apply_applyreason"]').val().length>150){
+					layer.msg('申请理由不能大于150个字符！',{icon:2});
+					return false;
+				};
 				common_ajax(data,"{:U('System/User/applyUser')}", 'reload');
 			});
 

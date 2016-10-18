@@ -11,6 +11,7 @@ class SystemUserModel extends BaseModel
 
     //自动验证
     protected $_validate = array(
+        array('realname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
         array('check_id', '0,10', array('code'=>'202','msg'=>'指纹编号不能大于十位数字！'), 0, 'length'),
         array('realname', '0,5', array('code'=>'203','msg'=>'姓名不能大于五位字符！'), 0, 'length'),
     );

@@ -139,7 +139,7 @@
 							</div>
 							<div class="addRow clearfix">
 								<div class="contenCol w100 hauto reason">
-									<div class="contenColLeft"><i>*</i>不通过原因&nbsp;:&nbsp;</div>
+									<div class="contenColLeft">不通过原因&nbsp;:&nbsp;</div>
 									<div class="contenColRight backrecord">
 										<script id="editor3" name="advantage" type="text/plain" ></script>
 									</div>
@@ -182,7 +182,11 @@
 				}else{
 					curStatus = 20; //不通过
 				}
-				var editContent = ue.getContent();  //获取编辑器的内容值
+				var editContent = ue.getContentTxt();  //获取编辑器的内容值
+				if(editContent.length>250){
+					layer.msg('原因不能大于250个字符！',{icon:2});
+					return false;
+				};
 				var data = {
 					user_id : {$auditDetails[0].user_id},
 					user_apply_id : {$auditDetails[0].user_apply_id},

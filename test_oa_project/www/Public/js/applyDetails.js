@@ -39,6 +39,16 @@ $(document).on('click', '.btn_apply_tosystem', function() {
         layer.close(index);
     });
 });
+
+//搜索职位相关-检索
+$('.nsSearchSubmit').on('click', function(){
+    var data_type = $('#panel3').find('.Capacity').attr('data-type');
+    getSystemUser(1,data_type);
+});
+$(':input[name="allocation_roleselect"]').change(function(){
+    var data_type = $('#panel3').find('.Capacity').attr('data-type');
+    getSystemUser(1,data_type);
+});
 //异步加载转出列表
 function getSystemUser(page,type){
     if(page>=2) {
