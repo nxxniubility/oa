@@ -9,6 +9,10 @@ class UserApplyModel extends BaseModel
     public function _initialize(){
         parent::_initialize();
     }
+    //自动验证
+    protected $_validate = array(
+        array('applyreason', '0,150', array('code'=>'203','msg'=>'姓名不能大于150位字符！'), 0, 'length'),
+    );
 
     /*
     |--------------------------------------------------------------------------

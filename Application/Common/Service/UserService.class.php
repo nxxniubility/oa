@@ -1076,7 +1076,9 @@ class UserService extends BaseService
         $data['system_user_id'] = $this->system_user_id;
         $_time = time();
         //必要参数
-        if(empty($data['user_id']) || empty($data['system_user_id']) || empty($data['channel_id']) || empty($data['infoquality'])) return array('code'=>300,'msg'=>'参数异常');
+        if(empty($data['user_id']) || empty($data['system_user_id']) ) return array('code'=>300,'msg'=>'参数异常');
+        if(empty($data['channel_id'])) return array('code'=>301,'msg'=>'渠道不能为空');
+        if(empty($data['infoquality'])) return array('code'=>302,'msg'=>'信息质量不能为空');
         //是否有转介绍人手机号码
         if(!empty($data['introducermobile'])){
             if($this->checkMobile($data['introducermobile'])){

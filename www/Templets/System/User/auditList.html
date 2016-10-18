@@ -39,7 +39,7 @@
 										<li {:$data['request']['applytime']==0?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime=0'">全部</li>
 										<li {:$data['request']['applytime']==(date('Y-m-d',time()).'@time')?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime={:(date('Y-m-d',time()).'@time')}'">今日申请</li>
 										<li {:$data['request']['applytime']==(date('Y-m-d',strtotime('-3 day')).'@time')?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime={:(date('Y-m-d',strtotime('-3 day')).'@time')}'">三日内申请</li>
-										<li {:$data['request']['applytime']==(date('Y-m-d',strtotime('-7 day')).'@time')?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime={:(date('Y-m-d',strtotime('-7 day')).'@time')}'">一周内申请</li>
+										<li {:$data['request']['applytime']==(date('Y-m-d',strtotime('-6 day')).'@time')?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/auditList\').'?'.http_build_query($request2)}&applytime={:(date('Y-m-d',strtotime('-6 day')).'@time')}'">一周内申请</li>
 
 										<if condition="(!empty($data['request']['applytime']) && $getapplytime[0]!='time' && $getapplytime[1]!='time')">
 											<li class="clickli twoCurr">自定义时间段</li>
