@@ -429,15 +429,13 @@ class UserController extends SystemController
     public function editColumn()
     {
         $request = I('post.');
-        $request['system_user_id'] = $this->system_user_id;
-//        $systemUserController = new SystemUserController();
-//        $reflag = $systemUserController->editColumn($request);
-        //返回数据操作状态
-//        if ($reflag['code']==0) {
-//            $this->ajaxReturn(0, '自定义显示列设置成功');
-//        } else {
-//            $this->ajaxReturn(1, '设置失败');
-//        }
+        $reflag = D('SystemUser','Service')->editColumn($request);
+//        返回数据操作状态
+        if ($reflag['code']==0) {
+            $this->ajaxReturn(0, '自定义显示列设置成功');
+        } else {
+            $this->ajaxReturn(1, '设置失败');
+        }
     }
 
     /*

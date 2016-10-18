@@ -772,7 +772,6 @@ class SystemUserService extends BaseService
         }
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | 修改员工详情信息
@@ -797,9 +796,7 @@ class SystemUserService extends BaseService
         $data['birthday'] = strtotime($data['birthday']);
         $data['entrytime'] = strtotime($data['entrytime']);
         $data['straightime'] = strtotime($data['straightime']);
-        if ($data['straightime'] <= $data['entrytime']) {
-            return array('code'=>306, 'msg'=>'转正时间不能小于入职时间');
-        }
+        if($data['entrytime']>$data['straightime']) return array('code'=>203, 'msg'=>'转正时间不能小于入职时间');
         $system_user_id = !empty($data['system_user_id'])?$data['system_user_id']:$this->system_user_id;
         $userInfoCheck = D('SystemUser')->where(array('check_id'=>$data['check_id']))->find();
         if(!empty($userInfoCheck)) {
@@ -891,7 +888,8 @@ class SystemUserService extends BaseService
         return array('code' => '100', 'msg' => '数据操作失败');
 
     }
-        /**
+
+    /**
      * 获取员工信息详情
      * @author nxx
      */
@@ -900,7 +898,6 @@ class SystemUserService extends BaseService
         $system_user_id = !empty($param['system_user_id'])?$param['system_user_id']:$this->system_user_id;
         $DB_PREFIX = C('DB_PREFIX');
         $where[C('DB_PREFIX').'system_user.system_user_id'] = $system_user_id;
-        $where[C('DB_PREFIX').'system_user.status'] = 1;
         $systemUserInfo = D('SystemUser')
             ->field(array(
                 "{$DB_PREFIX}system_user.system_user_id",
@@ -952,7 +949,6 @@ class SystemUserService extends BaseService
             ->join('LEFT JOIN __DEPARTMENT__ on __DEPARTMENT__.department_id=__ROLE__.department_id')
             ->join('LEFT JOIN __SYSTEM_USER_ENGAGED__ on __SYSTEM_USER_ENGAGED__.system_user_id=__SYSTEM_USER__.system_user_id')
             ->find();
-
         //添加多职位
         $roles = $this->getSystemUserRole(array('system_user_id'=>$systemUserInfo['system_user_id']));
         $systemUserInfo['user_roles'] = $roles['data'];
@@ -1024,9 +1020,46 @@ class SystemUserService extends BaseService
     */
     public function getColumnList($where)
     {
+        if(empty($where['columntype'])) return array('code'=>300, 'msg'=>'类型不能为空');
         $where['system_user_id'] = $this->system_user_id;
-        $result = D('SystemUserColumn')->getList($where);
+        if( session('columnList_'.$this->system_user_id.'_'.$where['columntype']) ){
+            $result = session('columnList_'.$this->system_user_id.'_'.$where['columntype']);
+        }else{
+            $result = D('SystemUserColumn')->getList($where);
+            session('columnList_'.$this->system_user_id.'_'.$where['columntype'],$result);
+        }
         return array('code'=>0, 'data'=>$result);
+    }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 修改员工自定义列信息
+   |--------------------------------------------------------------------------
+   | system_user_id columntype
+   | @author zgt
+   */
+    public function editColumn($data)
+    {
+        if(empty($data['columntype'])) return array('code'=>300, 'msg'=>'类型不能为空');
+        $data['system_user_id'] = $this->system_user_id;
+        D()->startTrans();
+        D('SystemUserColumn')->where(array('system_user_id'=>$data['system_user_id'],'columntype'=>$data['columntype']))->delete();
+        $columnNames = explode(',', $data['columnname']);
+        foreach($columnNames as $k=>$v){
+            $v = explode('-', $v);
+            $add_data[$k]['system_user_id'] = $data['system_user_id'];
+            $add_data[$k]['columntype'] = $data['columntype'];
+            $add_data[$k]['columnname'] = $v[0];
+            $add_data[$k]['sort'] = $v[1];
+        }
+        $reflag = D('SystemUserColumn')->addAll($add_data);
+        if($reflag!==false) {
+            D()->commit();
+            session('columnList_'.$this->system_user_id.'_'.$data['columntype'],null);
+            return array('code'=>'0', 'msg'=>'操作成功');
+        }
+        D()->rollback();
+        return array('code'=>100, 'msg'=>'操作失败');
     }
 
     /*
@@ -1304,40 +1337,6 @@ class SystemUserService extends BaseService
         return array('code'=>'0', 'msg'=>'操作成功', 'data'=>$sysList);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | 获取系统更新信息
-    |--------------------------------------------------------------------------
-    | @author nxx
-    */
-    public function getSystemUpdate($param)
-    {
-        $param = array_filter($param);
-        if( F('Cache/systemUpdate') ) {
-            $list = F('Cache/systemUpdate');
-        }else{
-            $list = $this->_getSystemUpdateList();
-            F('Cache/systemUpdate', $list);
-        }
-
-    }
-
-
-    /**
-     * 获取更新列表 + 状态转换
-     * @return array
-     */
-    protected function _getSystemUpdateList()
-    {
-        $list['data'] = D('SystemUpdate')->getList();
-        $list['count'] = D('SystemUpdate')->getCount();
-        if(!empty($list['data'])){
-            foreach($list['data'] as $k=>$v){
-
-            }
-        }
-        return $list;
-    }
 
     /*
     |--------------------------------------------------------------------------

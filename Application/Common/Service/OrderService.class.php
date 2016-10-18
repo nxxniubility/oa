@@ -218,19 +218,25 @@ class OrderService extends BaseService
             foreach($courseList['data'] as $k=>$v){
                 $courseArr[$v['course_id']] = $v['coursename'];
             }
+            foreach($courseList['data'] as $k=>$v){
+                $courseArr[$v['course_id']] = $v['coursename'];
+            }
             $studytypeArr = C('USER_STUDYTYPE');
             $loan_institutionsArr = C('USER_LOAN_INSTITUTIONS');
             $receivetypeArr = C('USER_RECEIVETYPE');
             $join2 = 'LEFT JOIN (select `system_user_id`,`realname` as `system_user_name` from zl_system_user)__SYSTEM_USER__ ON __SYSTEM_USER__.system_user_id=__ORDER_LOGS__.auditoruser_id';
             foreach($result as $k=>$v){
                 //添加类型名称
-                $result[$k]['course_name'] = (empty($v['course_id']) || $v['course_id']==0)?'':$courseArr[$v['course_id']];
+                $result[$k]['course_name'] = (empty($v['course_id']) || $v['course_id']==0)?'无':$courseArr[$v['course_id']];
                 if($v['status']<40){
                     $result[$k]['studytype_name'] = '';
                 }else{
                     $result[$k]['studytype_name'] = $studytypeArr[$v['studytype']]['text'];
                 }
-                $result[$k]['loan_institutions_name'] = ($v['status']>=40 && $v['loan_institutions_id']!=0)?$loan_institutionsArr[$v['loan_institutions_id']]['text']:'';
+                if(empty($v['subscription'])){
+                    $result[$k]['subscription'] = '0.00';
+                }
+                $result[$k]['loan_institutions_name'] = ($v['status']>=40 && $v['loan_institutions_id']!=0)?$loan_institutionsArr[$v['loan_institutions_id']]['text']:'无';
                 $result[$k]['payway_name'] = $receivetypeArr[$v['payway']]['text'];
                 $result[$k]['finish_time'] = ($v['finishtime']!=0)?date('Y-m-d H:i:s', $v['finishtime']):'';
                 $result[$k]['create_time'] = date('Y-m-d H:i:s', $v['createtime']);

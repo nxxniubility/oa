@@ -251,6 +251,10 @@
             }
         })
         $('.nsSubmit').click(function() {
+            $(':input').trigger('blur');
+            if($('.name-tip').css('display')=='block'){
+                return false;
+            };
             layer.load(2);
             var data = {
                 realname:$(':input[name="realname"]').val(),

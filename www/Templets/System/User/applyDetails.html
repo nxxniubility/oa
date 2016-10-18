@@ -216,7 +216,7 @@
 		            <div class="alRowLeft">预转出人:</div>
 		            <div class="alRowRight">
 		                <input type="text" class="alInp pre-transfer" name="apply_to_system_user_name" autocomplete="off" disabled="disabled">
-		                <button class="btn_apply_tosystem ">添加</button>
+		                <button class="btn_apply_tosystem2 ">添加</button>
 		                <input type="hidden" name="apply_to_system_user_id" value="" autocomplete="off">
 		                <input type="hidden" name="allocation_flag" value="1">
 		            </div>
@@ -359,6 +359,42 @@
 		<script src="__PUBLIC__/js/applyDetails.js"></script>
 
 		<script>
+			//申请转入
+			var applyUser_href = "{:U('System/User/applyUser')}";
+			//------------------------------------申请转入客户--------------------------------------
+			//添加预转出人
+			$(document).on('click', '.btn_apply_tosystem2', function() {
+				var index = layer.open({
+					type: 1, 					//  页面层
+					title: '选择操作者', 			//	不显示标题栏
+					area: ['1000px', '490px'],
+					closeBtn:2,
+					shade: .6, 					//	遮罩
+					time: 0, 					//  关闭自动关闭
+					shadeClose: true, 			//	遮罩控制关闭层
+					shift: 1, 					//	出现动画
+					content: $("#panel3")	//  加载主体内容
+				});
+				getSystemUser(1, 'apply');
+				//添加预转出人
+				$(document).on('click', '.apply_tosystemuser_submit', function() {
+					$(':input[name="apply_to_system_user_id"]').val($(this).attr('data-value'));
+					$(':input[name="apply_to_system_user_name"]').val($(this).siblings('.wOne').text());
+					layer.close(index);
+				});
+			});
+			var apply_remak = UE.getEditor('apply_remak',{
+				toolbars: [
+					['fullscreen', 'source','fontsize','fontfamily', 'undo', 'redo','underline', 'bold','simpleupload']
+				],
+				initialFrameWidth:358,
+				initialFrameHeight:116,
+				pasteplain:true,
+				autoHeightEnabled:false,
+				enableAutoSave:false,
+				elementPathEnabled:false,
+				autoFloatEnabled:false
+			});
 			$('#reApply').click(function() {
 				var obj;
 				if({$data['canReApply']}){
@@ -389,12 +425,16 @@
 			});
 			$('.alSubmit').click(function () {
 				var data = {
-					user_id: {$applyUserDetails[0].user_id},
-					channel_id: $(':input[name="atChannelSelect"]').val(),
-					searchword: $(':input[name="searchWord"]').val(),
-					interviewurl: $(':input[name="consultPage"]').val(),
-					introducermobile: $(':input[name="recommendMan"]').val(),
-					applyreason : $(':input[name="apply_applyreason"]').val()
+					type:'submit',
+					user_id:{$applyUserDetails[0].user_id},
+					infoquality: $(':input[name="apply_infoquality"]').val(),
+					channel_id: $(':input[name="apply_channel_id"]').val(),
+					searchword: $(':input[name="apply_searchword"]').val(),
+					interviewurl: $(':input[name="apply_interviewurl"]').val(),
+					introducermobile: $(':input[name="apply_introducermobile"]').val(),
+					applyreason : $(':input[name="apply_applyreason"]').val(),
+					remark : apply_remak.getContent(),
+					to_system_user_id : $(':input[name="apply_to_system_user_id"]').val(),
 				};
 				if($(':input[name="atChannelSelect"]').val() == 0){
 					layer.msg('请选择渠道', {icon:2});
@@ -410,7 +450,7 @@
 					layer.msg('请输入申请理由', {icon:2});
 					return;
 				}
-				common_ajax(data,"{:U('System/User/apply')}", 'reload');
+				common_ajax(data,"{:U('System/User/applyUser')}", 'reload');
 			});
 
 		</script>

@@ -152,9 +152,11 @@ $(function(){
                         setTimeout(function(){
                             location.reload();
                         },1000);
-                    }
+                    };
+                }else{
+                    layer.msg(reflag.msg, {icon:2});
                 };
-            }
+            };
         };
     });
 });

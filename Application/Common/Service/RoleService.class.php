@@ -115,7 +115,7 @@ class RoleService extends BaseService
         if(!empty($param['access'])){
             D('Access')->delData($param['role_id']);
             foreach($param['access'] as $k=>$v){
-                $v['role_id'] = $result['data'];
+                $v['role_id'] = $param['role_id'];
                 D('Access')->addData($v);
             }
         }

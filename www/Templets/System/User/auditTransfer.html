@@ -56,7 +56,7 @@
 								</div>
 								<div class="contenCol colWidth2">
 									<div class="contenColLeft">搜索&nbsp;:&nbsp;</div>
-									<div class="contenColRight auto">{$auditDetails[0].searchword}</div>
+									<div class="contenColRight auto">{:($auditDetails[0]['searchword']==0)?'':$auditDetails[0]['searchword']}</div>
 								</div>
 							</div>
 							<div class="addRow clearfix">

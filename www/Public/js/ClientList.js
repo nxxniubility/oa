@@ -642,6 +642,8 @@ function listBody(data_column){
             });
             _thisObj.empty().append(sortContent);
         });
+    }else{
+        $(':input[name="Fruit"]').prop('checked',true).parents('.wOne').siblings('.wThr').children('input').attr("disabled",false);
     };
     if($('.tr_title').length<=10){
         $('.tr_title,.tr_content').css('width',(parseInt($('.listBody').width())/$('.tr_title').length)+'px');
