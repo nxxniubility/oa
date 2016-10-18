@@ -96,7 +96,7 @@
                         <li><a href="javascript:;" data-value="1@0" {:empty($getlastvisit[0]) || $getlastvisit[0]==1?'class="on_hover"':''}>全部</a></li>
                         <li><a href="javascript:;" data-value="2@{:date('Y-m-d',time()).'@time'}" {:$getlastvisit[0]==2?'class="on_hover"':''}>今日已回访</a></li>
                         <li><a href="javascript:;" data-value="3@{:date('Y-m-d',strtotime('-1 day')).'@'.date('Y-m-d',strtotime('-1 day'))}" {:$getlastvisit[0]==3?'class="on_hover"':''}>昨日已回访</a></li>
-                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-7 day')).'@time'}" {:$getlastvisit[0]==4?'class="on_hover"':''}>一周内已回访</a></li>
+                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-6 day')).'@time'}" {:$getlastvisit[0]==4?'class="on_hover"':''}>一周内已回访</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getlastvisit[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getlastvisit[0]==5)?'style="display: block; visibility: visible;"':''} >
                         <input type="text" class="afTime" value="{$getlastvisit[1]}" placeholder="开始时间"  readonly="readonly">
@@ -114,7 +114,7 @@
                         <li><a href="javascript:;" data-value="6@{:date('Y-m-d',strtotime(date('Y-m-d',time()))).'@'.date('Y-m-d',strtotime(date('Y-m-d',time())))}" {:$getnextvisit[0]==6?'class="on_hover"':''}>今日回访</a></li>
                         <li><a href="javascript:;" data-value="2@{:date('Y-m-d',strtotime('+1 day')).'@'.date('Y-m-d',strtotime('+1 day'))}" {:$getnextvisit[0]==2?'class="on_hover"':''}>明日回访</a></li>
                         <li><a href="javascript:;" data-value="3@{:date('Y-m-d',strtotime('+1 day')).'@'.date('Y-m-d',strtotime('+3 day'))}" {:$getnextvisit[0]==3?'class="on_hover"':''}>未来三日内</a></li>
-                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('+1 day')).'@'.date('Y-m-d',strtotime('+7 day'))}" {:$getnextvisit[0]==4?'class="on_hover"':''}>未来一周内</a></li>
+                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('+1 day')).'@'.date('Y-m-d',strtotime('+6 day'))}" {:$getnextvisit[0]==4?'class="on_hover"':''}>未来一周内</a></li>
                         <li><a href="javascript:;" data-value="7@1" {:$getnextvisit[0]==7?'class="on_hover"':''}>跟进超时</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getnextvisit[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getnextvisit[0]==5)?'style="display: block; visibility: visible;"':''} >
@@ -132,7 +132,7 @@
                         <li><a href="javascript:;" data-value="1@0" {:empty($getvisittime[0]) || $getvisittime[0]==1?'class="on_hover"':''}>全部</a></li>
                         <li><a href="javascript:;" data-value="2@{:date('Y-m-d',time()).'@time'}" {:$getvisittime[0]==2?'class="on_hover"':''}>今日到访</a></li>
                         <li><a href="javascript:;" data-value="3@{:date('Y-m-d',strtotime('-3 day')).'@time'}" {:$getvisittime[0]==3?'class="on_hover"':''}>三日内到访</a></li>
-                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-7 day')).'@time'}" {:$getvisittime[0]==4?'class="on_hover"':''}>一周内到访</a></li>
+                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-6 day')).'@time'}" {:$getvisittime[0]==4?'class="on_hover"':''}>一周内到访</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getvisittime[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getvisittime[0]==5)?'style="display: block; visibility: visible;"':''} >
                         <input type="text" class="afTime" value="{$getvisittime[1]}" placeholder="开始时间"  readonly="readonly">
@@ -149,7 +149,7 @@
                         <li><a href="javascript:;" data-value="1@0" {:empty($getallocationtime[0]) || $getallocationtime[0]==1?'class="on_hover"':''}>全部</a></li>
                         <li><a href="javascript:;" data-value="2@{:date('Y-m-d',time()).'@time'}" {:$getallocationtime[0]==2?'class="on_hover"':''}>今日分配</a></li>
                         <li><a href="javascript:;" data-value="3@{:date('Y-m-d',strtotime('-1 day')).'@'.date('Y-m-d',strtotime('-1 day'))}" {:$getallocationtime[0]==3?'class="on_hover"':''}>昨日分配</a></li>
-                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-7 day')).'@time'}" {:$getallocationtime[0]==4?'class="on_hover"':''}>一周内分配</a></li>
+                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-6 day')).'@time'}" {:$getallocationtime[0]==4?'class="on_hover"':''}>一周内分配</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getallocationtime[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getallocationtime[0]==5)?'style="display: block; visibility: visible;"':''} >
                         <input type="text" class="afTime" value="{$getallocationtime[1]}" placeholder="开始时间"  readonly="readonly">
@@ -166,7 +166,7 @@
                         <li><a href="javascript:;" data-value="1@0" {:empty($getupdatetime[0]) || $getupdatetime[0]==1?'class="on_hover"':''}>全部</a></li>
                         <li><a href="javascript:;" data-value="2@{:date('Y-m-d',time()).'@time'}" {:$getupdatetime[0]==2?'class="on_hover"':''}>今日出库</a></li>
                         <li><a href="javascript:;" data-value="3@{:date('Y-m-d',strtotime('-1 day')).'@'.date('Y-m-d',strtotime('-1 day'))}" {:$getupdatetime[0]==3?'class="on_hover"':''}>昨日出库</a></li>
-                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-7 day')).'@time'}" {:$getupdatetime[0]==4?'class="on_hover"':''}>一周内出库</a></li>
+                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-6 day')).'@time'}" {:$getupdatetime[0]==4?'class="on_hover"':''}>一周内出库</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getupdatetime[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getupdatetime[0]==5)?'style="display: block; visibility: visible;"':''} >
                         <input type="text" class="afTime" value="{$getupdatetime[1]}" placeholder="开始时间"  readonly="readonly">
@@ -183,7 +183,7 @@
                         <li><a href="javascript:;" data-value="1@0" {:empty($getcreatetime[0]) || $getcreatetime[0]==1?'class="on_hover"':''}>全部</a></li>
                         <li><a href="javascript:;" data-value="2@{:date('Y-m-d',time()).'@time'}" {:$getcreatetime[0]==2?'class="on_hover"':''}>今日创建</a></li>
                         <li><a href="javascript:;" data-value="3@{:date('Y-m-d',strtotime('-1 day')).'@'.date('Y-m-d',strtotime('-1 day'))}" {:$getcreatetime[0]==3?'class="on_hover"':''}>昨日创建</a></li>
-                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-7 day')).'@time'}" {:$getcreatetime[0]==4?'class="on_hover"':''}>一周内创建</a></li>
+                        <li><a href="javascript:;" data-value="4@{:date('Y-m-d',strtotime('-6 day')).'@time'}" {:$getcreatetime[0]==4?'class="on_hover"':''}>一周内创建</a></li>
                         <li class="clickli"><a href="javascript:;" class="{:($getcreatetime[0]==5)?'on_hover':''} false" data-num="5">自定义时间段</a></li>
                         <li class="selectbox1 employeeStatus l start" {:($getcreatetime[0]==5)?'style="display: block; visibility: visible;"':''} >
                         <input type="text" class="afTime" value="{$getcreatetime[1]}" placeholder="开始时间"  readonly="readonly">

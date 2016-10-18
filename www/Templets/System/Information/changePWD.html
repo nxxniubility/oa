@@ -96,7 +96,8 @@
 						time--;
 						return time;
 					}else{
-						alert(time);
+						var str = '等待60秒';
+						lodingObj.val(str);
 						thisObj.show();
 						lodingObj.hide();
 						clearInterval(sh);

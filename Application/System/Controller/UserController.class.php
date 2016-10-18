@@ -279,7 +279,7 @@ class UserController extends SystemController
            $where[$keyname] = $search;
        }
        if($keyname!='user_id'){
-           $reUser = D('User')->getUser($where);
+           $reUser = D('User')->getFind($where);
            if (empty($reUser)) {
                $this->assign('search', $search);
                $this->display('Error/notSearch');
