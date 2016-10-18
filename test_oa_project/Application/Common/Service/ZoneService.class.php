@@ -89,6 +89,10 @@ class ZoneService extends BaseService
                     $newZoneList = $v;
                 }
             }
+        }  
+        if ($param['zone_id'] != 1) {
+            $pid = $newZoneList['parentid'];
+            $newZoneList['parent'] = D('Zone')->where("zone_id = $pid")->field('zone_id,name')->find();
         }
         return array('code'=>0,'data'=>$newZoneList);
     }
