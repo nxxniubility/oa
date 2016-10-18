@@ -33,14 +33,14 @@
                                         </if>
                                     </foreach>
                                 </if>
-                                <div class="arrow r"></div>
+                            <div class="arrow r"></div>
                             </dt>
                             <dt class="caption">
-                                <div class="select_title2 l dt_btn" data-name="role_id" data-value="0">全部职位</div>
+                            <div class="select_title2 l dt_btn" data-name="role_id" data-value="0">全部职位</div>
                             </dt>
                             <foreach name="data['departmentAll']['data']" item="v" key="k">
                                 <dt class="caption">
-                                    <div class="select_title2 l " data-name="role_id" data-value="{$v2.id}">{$v.departmentname}</div>
+                                <div class="select_title2 l " data-name="role_id" data-value="{$v2.id}">{$v.departmentname}</div>
                                 </dt>
                                 <foreach name="data['roleAll']['data']" item="v2" key="k2">
                                     <if condition="$v['department_id'] eq $v2['department_id']">
@@ -55,31 +55,31 @@
                     <div class="selectbox2 area l">
                         <dl class="select2">
                             <dt>
-                                <div class="select_title l">选择大区及城市</div>
-                                <div class="arrow r"></div>
+                            <div class="select_title l">选择大区及城市</div>
+                            <div class="arrow r"></div>
                             </dt>
                             <?php if(!empty($data['zoneAll']['level']) && $data['zoneAll']['level']==1){ ?>
-                                <dt class="caption2">
-                                    <div class="select_title3 l dt_btn" data-name='zone_id' onclick="getArea();" data-value="{$data['zoneAll']['zone_id']}">总部</div>
-                                </dt>
+                            <dt class="caption2">
+                            <div class="select_title3 l dt_btn" data-name='zone_id' onclick="getArea();" data-value="{$data['zoneAll']['zone_id']}">总部</div>
+                            </dt>
                             <?php } ?>
                             <?php if(!empty($data['zoneAll']['level']) && $data['zoneAll']['level']<4 ){ ?>
-                                <foreach name="data['zoneAll']['children']" item="v" key="k">
-                                    <?php if( $v['level'] == 2 ){ ?>
-                                        <?php if( !empty($v['children']) ){ ?>
-                                            <dt class="caption">
-                                                <div class="select_title2 l dt_btn" onclick="getArea();" data-name='zone_id' data-value="{$v.zone_id}">{$v.name}</div>
-                                            </dt>
-                                            <?php if( !empty($v['children']) ){ ?>
-                                                <foreach name="v['children']" item="v2" key="k2">
-                                                    <dd class="fxDone" onclick="getArea('{$v2.zone_id}');" data-name='zone_id' data-value="{$v2.zone_id}">{$v2.name}</dd>
-                                                </foreach>
-                                            <?php } ?>
-                                        <?php } ?>
-                                    <?php }else{ ?>
-                                        <dd class="fxDone" onclick="getArea('{$v.zone_id}');" data-name='zone_id' data-value="{$v.zone_id}">{$v.name}</dd>
-                                    <?php } ?>
+                            <foreach name="data['zoneAll']['children']" item="v" key="k">
+                                <?php if( $v['level'] == 2 ){ ?>
+                                <?php if( !empty($v['children']) ){ ?>
+                                <dt class="caption">
+                                <div class="select_title2 l dt_btn" onclick="getArea();" data-name='zone_id' data-value="{$v.zone_id}">{$v.name}</div>
+                                </dt>
+                                <?php if( !empty($v['children']) ){ ?>
+                                <foreach name="v['children']" item="v2" key="k2">
+                                    <dd class="fxDone" onclick="getArea('{$v2.zone_id}');" data-name='zone_id' data-value="{$v2.zone_id}">{$v2.name}</dd>
                                 </foreach>
+                                <?php } ?>
+                                <?php } ?>
+                                <?php }else{ ?>
+                                <dd class="fxDone" onclick="getArea('{$v.zone_id}');" data-name='zone_id' data-value="{$v.zone_id}">{$v.name}</dd>
+                                <?php } ?>
+                            </foreach>
                             <?php } ?>
                         </dl>
                     </div>
@@ -92,8 +92,8 @@
                         <div class="selectbox searchInp l">
                             <dl class="select">
                                 <dt>
-                                    <div class="select_title l"><?php echo $data['requery']['key_name']=='realname'?'真实姓名':($data['requery']['key_name']=='email'?'电子邮箱':($data['requery']['key_name']=='system_user_id'?'用户ID':'请选择搜索类型')) ?></div>
-                                    <div class="arrow r"></div>
+                                <div class="select_title l"><?php echo $data['requery']['key_name']=='realname'?'真实姓名':($data['requery']['key_name']=='email'?'电子邮箱':($data['requery']['key_name']=='system_user_id'?'用户ID':'请选择搜索类型')) ?></div>
+                                <div class="arrow r"></div>
                                 </dt>
                                 <dd class="fxDone" data-value="realname">真实姓名</dd>
                                 <dd class="fxDone" data-value="username">手机号码</dd>
@@ -109,6 +109,93 @@
             </div>
             
             <div id="pjax_body">
+
+                <table cellpadding="0" cellspacing="0" id="lUserTable">
+                    <tr>
+                        <th class="firItem">选中</th>
+                        <th>
+                            <span>ID</span>
+                        </th>
+                        <th>头像</th>
+                        <th>真实姓名</th>
+                        <th>所属区域</th>
+                        <th>所属部门及职位</th>
+                        <th>性别</th>
+                        <th>员工状态</th>
+                        <th>注册时间</th>
+                        <th>登录时间</th>
+                        <th>操作</th>
+                    </tr>
+
+                    <foreach name="data['systemUserAll']['data']" item="v" key="k">
+                        <tr>
+                            <td class="firItem">
+                                <input type="checkbox" name="feCheck" class="feCheckBox">
+                            </td>
+                            <td>{$v.system_user_id}</td>
+                            <if condition = "!empty($v[face])">
+                                <td class="sPic"><img src="{:$v[face].'@30w.jpg'}"></td>
+                                <elseif condition="$v[sex] eq 1"/>
+                                <td class="sPic"><img src="__PUBLIC__/images/personalInfo_01-02.jpg"></td>
+                                <else/>
+                                <td class="sPic"><img src="__PUBLIC__/images/personalInfo_01-01.jpg"></td>
+                            </if>
+                            <td>{$v.realname}</td>
+                            <td>{$v.zonename}</td>
+                            <td>{$v.role_names}</td>
+                            <td>{: $v['sex']==1?'男':($v['sex']==2?'女':'未知'); }</td>
+                            <td>{$v.usertype_name }</td>
+                            <td>{: date('Y-m-d H:i:s',$v['createtime']) }</td>
+                            <td>{: !empty($v['logintime'])?date('Y-m-d H:i:s',$v['logintime']):'--'; }</td>
+                            <td>
+                                <a href="javascript:;" class="proSelect"><i></i></a>
+                                <div class="otherOperation">
+                                    <div class="triangle"></div>
+                                    <div class="otherIcon">
+                                        <ul>
+                                            <if condition="($v['isuserinfo'] eq 0)">
+                                                <li>
+                                                    <a href="javascript:;" onclick="layer.msg('该员工还未添加档案内容',{icon:2});">
+                                                        <span class="fileDetail"></span>
+                                                        <em>档案详情</em>
+                                                    </a>
+                                                </li>
+                                                <else />
+                                                <li>
+                                                    <a href="{:U('System/Personnel/systemUserInfo').'?user_id='.$v['system_user_id']}">
+                                                        <span class="fileDetail"></span>
+                                                        <em>档案详情</em>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{:U('System/Personnel/editSystemUserInfo').'?user_id='.$v['system_user_id']}">
+                                                        <span class="fileChange"></span>
+                                                        <em>修改档案</em>
+                                                    </a>
+                                                </li>
+                                            </if>
+                                            <li>
+                                                <a href="<?php echo U('System/Personnel/editSystemUser').'?user_id='.$v['system_user_id']; ?>">
+                                                    <span class="modify"></span>
+                                                    <em>修改账号</em>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;" class="delSystemUser">
+                                                    <span class="delete"></span>
+                                                    <em>删除账号</em>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </foreach>
+                </table>
+
+
+
             	
             	<table cellpadding="0" cellspacing="0" id="lUserTable">
             		<tr>
@@ -196,6 +283,7 @@
             	
             	
             	
+                <dl class="feOptions clearfix">
             	<dl class="feOptions clearfix">
                     <div class="leftChoose">
                         <input type="checkbox" class="feCheckBox1" id="feCheckBox1">
@@ -207,9 +295,6 @@
                     </div>
                 </dl>
             </div>
-            
-            
-            
             
             <!--<div class="feMiddleList" id="pjax_body">
                 <dl class="feTit clearfix">
@@ -368,11 +453,11 @@
         $('#feCheckBox1').on('click',function(e){
             if($(this).is(':checked')){
                 $(":input[name='feCheck']").each(function(){
-                    $(this)[0].checked = true 
+                    $(this)[0].checked = true
                 });
             }else{
                 $(":input[name='feCheck']").each(function(){
-                   $(this).removeAttr("checked");
+                    $(this).removeAttr("checked");
                 });
                
             }
