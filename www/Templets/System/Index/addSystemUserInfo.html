@@ -44,7 +44,7 @@
             <div class="afRow clearfix">
                 <div class="afRowLeft"><i>&#42</i>生日:</div>
                 <div class="afRowRight">
-                    <input type="text" class="afTime" id="afBirthday" name="birthday" value="<?php echo isset($data['on_info']['birthday'])?$data['on_info']['birthday']:''; ?>" placeholder="请选择日期">
+                    <input type="text" class="afTime" id="afBirthday" name="birthday" value="<?php echo isset($data['on_info']['birthday'])?$data['on_info']['birthday_name']:''; ?>" placeholder="请选择日期">
                 </div>
             </div>
             <div class="afRow clearfix">
@@ -84,18 +84,14 @@
                         <dl class="select">
                             <dt>
                                 <if condition="(isset($data['on_info']['education_id']))">
-                                    <foreach name="data['educationAll']" item="v" key="k" >
-                                        <if condition="($v['education_id'] eq $data['on_info']['education_id'])">
-                                            <div class="select_title l">{$v.educationname}</div>
-                                        </if>
-                                    </foreach>
+                                    <div class="select_title l">{$v.education_name}</div>
                                 <else />
                                     <div class="select_title l">请选择学历</div>
                                 </if>
                                 <div class="arrow r"></div>
                             </dt>
                             <foreach name="data['educationAll']" item="v" key="k" >
-                                <dd class="fxDone" data-value="{$v.education_id}">{$v.educationname}</dd>
+                                <dd class="fxDone" data-value="{$k}">{$v}</dd>
                             </foreach>
                         </dl>
                         <input type="hidden" name="education_id" value="<?php echo isset($data['on_info']['education_id'])?$data['on_info']['education_id']:''; ?>">
@@ -118,7 +114,7 @@
             <div class="afRow clearfix">
                 <div class="afRowLeft"><i>&#42</i>手机号码:</div>
                 <div class="afRowRight">
-                    <input type="text" class="afInp afUnreadable" value="<?php echo decryptPhone($data['userInfo']['username'], C('PHONE_CODE_KEY')) ?>" disabled="disabled">
+                    <input type="text" class="afInp afUnreadable" value="<?php echo $data['userInfo']['username'] ?>" disabled="disabled">
                 </div>
             </div>
             <div class="afRow clearfix">

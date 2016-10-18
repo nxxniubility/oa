@@ -681,7 +681,7 @@ class SystemUserService extends BaseService
         }else{
             $flag_addrole = true;
         }
-        $data['system_user_id'] = $result;
+        $data['system_user_id'] = $result['data'];
         $flag_addinfo = D('SystemUserInfo')->field('system_user_id,entrytime,straightime')->data($data)->add();
         $flag_addengaged = D('SystemUserEngaged')->data(array('system_user_id'=>$result,'status'=>2))->add();
         if($result['code']==0 && $flag_addrole && $flag_addinfo && $flag_addengaged){
@@ -990,7 +990,6 @@ class SystemUserService extends BaseService
     public function editPwd($param)
     {
         $system_user_id = $this->system_user_id;
-        $username = decryptPhone($param['username'], C('PHONE_CODE_KEY'));
         if (empty($param['oldPassword']) || strlen($param['oldPassword'])<6){
             return array('code'=>301, 'msg'=>'旧密码不能为空,请输入密码');
         }
@@ -1307,6 +1306,41 @@ class SystemUserService extends BaseService
 
     /*
     |--------------------------------------------------------------------------
+    | 获取系统更新信息
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function getSystemUpdate($param)
+    {
+        $param = array_filter($param);
+        if( F('Cache/systemUpdate') ) {
+            $list = F('Cache/systemUpdate');
+        }else{
+            $list = $this->_getSystemUpdateList();
+            F('Cache/systemUpdate', $list);
+        }
+
+    }
+
+
+    /**
+     * 获取更新列表 + 状态转换
+     * @return array
+     */
+    protected function _getSystemUpdateList()
+    {
+        $list['data'] = D('SystemUpdate')->getList();
+        $list['count'] = D('SystemUpdate')->getCount();
+        if(!empty($list['data'])){
+            foreach($list['data'] as $k=>$v){
+
+            }
+        }
+        return $list;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | 获取员工对应职位关系列表
     |--------------------------------------------------------------------------
     | @author zgt
@@ -1317,7 +1351,13 @@ class SystemUserService extends BaseService
         if($system_user_id!==null){
             $user_role = array();
             foreach($role['data'] as $k=>$v){
-                if($v['user_id']==$system_user_id){
+                if($v['user_if(!empty($param['access'])){
+                D('Access')->delData($param['role_id']);
+                foreach($param['access'] as $k=>$v){
+                    $v['role_id'] = $result['data'];
+                    D('Access')->addData($v);
+                }
+            }d']==$system_user_id){
                     $user_role['data'][] = $v;
                 }
             }
@@ -1327,6 +1367,8 @@ class SystemUserService extends BaseService
         return array('code'=>'0', 'msg'=>'操作成功', 'data'=>$role);
     }
 
+<<<<<<< .mine
+=======
 
     /*
     |--------------------------------------------------------------------------
@@ -1334,6 +1376,7 @@ class SystemUserService extends BaseService
     |--------------------------------------------------------------------------
     | @author nxx
     */
+>>>>>>> .r10831
     public function getSystemUserVisit($where=null,$order=null,$limit='0,10'){
         $DB_PREFIX = C('DB_PREFIX');
         $order = !empty($order)?$order:$DB_PREFIX.'system_user.system_user_id DESC';

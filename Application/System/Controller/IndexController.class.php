@@ -205,7 +205,6 @@ class IndexController extends SystemController
     public function addSystemUserInfo()
     {
         //实例化
-        $SystemUserModel = D('SystemUser');
         if (IS_POST) {
             //获取参数 验证
             $checkform = new \Org\Form\Checkform();
@@ -224,12 +223,10 @@ class IndexController extends SystemController
             $this->ajaxReturn(0, '完善个人信息成功，请继续完善任职信息！', U('System/Index/addSystemUserInfoTwo'));
         } else {
             //获取基本信息
-            $data['userInfo'] = $SystemUserModel->getSystemUserInfo($this->system_user_id);
-            //学历
-            if ($data['systemUserInfo']['education_id']) {
-                $edu = D('Education')->getEducationInfo($data['systemUserInfo']['education_id']);
-                $data['systemUserInfo']['educationname'] = $edu;
-            }
+            $systemUserInfo = D('SystemUser','Service')->getSystemUserInfo(array('system_user_id'=>$this->system_user_id));
+            $data['userInfo'] = $systemUserInfo['data'];
+            //获取学历表
+            $data['educationAll'] = C('FIELD_STATUS.EDUCATION_ARRAY');
             //获取学历表
             $data['educationAll'] = D('Education')->getAllEducation();
             $data['on_info'] = session('addSystemUserInfo');
@@ -244,27 +241,25 @@ class IndexController extends SystemController
      */
     public function addSystemUserInfoTwo()
     {
-        //实例化
-        $SystemUserModel = D('SystemUser');
         if (IS_POST) {
             //获取参数 验证
             $session_request = session('addSystemUserInfo');
-            $system_user_id = $this->system_user_id;
             $request = array_merge($session_request, I('post.'));
             if (empty($system_user_id)) $this->ajaxReturn(1, '非法操作');
             //获取 数据判断
-            $addSystemUserInfo = $SystemUserModel->addSystemUserInfo($request, $system_user_id);
-            if (!empty($addSystemUserInfo)) {
+            $addSystemUserInfo = D('SystemUser','Service')->editSystemUserInfo($request);
+            if ($addSystemUserInfo['code']==1) {
                 $system_user = $this->system_user;
                 $system_user['isuserinfo'] = 1;
                 session('system_user', $system_user);
                 $this->ajaxReturn(0, '员工档案添加成功', U('System/Index/index'));
             } else {
-                $this->ajaxReturn(1, '数据操作失败');
+                $this->ajaxReturn($addSystemUserInfo['code'], $addSystemUserInfo['msg']);
             }
         } else {
             //获取基本信息
-            $data['userInfo'] = $SystemUserModel->getSystemUserInfo($this->system_user_id);
+            $systemUserInfo = D('SystemUser','Service')->getSystemUserInfo(array('system_user_id'=>$this->system_user_id));
+            $data['userInfo'] = $systemUserInfo['data'];
             //员工状态
             $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
             foreach($data['systemUserStatus'] as $k=>$v){
@@ -306,10 +301,9 @@ class IndexController extends SystemController
                 session('default_nodes_' . $this->system_user_role_id, null);
                 $this->success('添加成功', 0, U('System/Index/main'));
             }
-        } else {
-
-            $this->display();
         }
+
+        $this->display();
     }
 
     /*

@@ -62,6 +62,7 @@ class RoleService extends BaseService
     */
     public function addRole($param)
     {
+        $param = array_filter($param);
         //必须参数
         if(empty($param['name'])) return array('code'=>300,'msg'=>'职位名称不能为空');
         if(empty($param['remark'])) return array('code'=>301,'msg'=>'请添加该职位描述');
@@ -93,6 +94,7 @@ class RoleService extends BaseService
     */
     public function editRole($param)
     {
+        $param = array_filter($param);
         //必须参数
         if(empty($param['role_id'])) return array('code'=>300,'msg'=>'参数异常');
         if(empty($param['access'])) return array('code'=>301,'msg'=>'请先设置权限');
@@ -109,12 +111,12 @@ class RoleService extends BaseService
                 }
                 F('Cache/role', $cahce_all);
             }
-            if(!empty($param['access'])){
-                D('Access')->delData($param['role_id']);
-                foreach($param['access'] as $k=>$v){
-                    $v['role_id'] = $result['data'];
-                    D('Access')->addData($v);
-                }
+        }
+        if(!empty($param['access'])){
+            D('Access')->delData($param['role_id']);
+            foreach($param['access'] as $k=>$v){
+                $v['role_id'] = $result['data'];
+                D('Access')->addData($v);
             }
         }
         return $result;
