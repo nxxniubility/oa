@@ -1,5 +1,6 @@
 
 $(function(){
+	//  模拟select
 	selectbox();
 	selectbox2();
 });
@@ -146,4 +147,24 @@ function chkLength(el,size){
 		layer.msg('已超出字数规定上限.',{icon:2});
 	}
 	el.value = el.value.substring(0,size);
+}
+
+//  验证电子邮箱：格式
+$(document).ready(function(){
+	$('#edit-email').blur(function(){
+		chkEmail();
+	});
+});
+function chkEmail(){
+	var	reg = (/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/),
+		_email = $('#edit-email'),
+		_tip = $('.email-tips');
+　　if (!_email.val().match(reg)){
+		_tip.show()
+			.html('请输入正确的邮箱格式');
+		_email.focus();
+　　}else{
+		_tip.hide()
+			.html('');
+	}
 }
