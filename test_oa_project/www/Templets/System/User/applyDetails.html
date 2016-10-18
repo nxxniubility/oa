@@ -179,74 +179,170 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- 申请转入 S -->
+		<div class="reApplyBox popup dn" id="popup1">
+		    <div class="alBoxCont">
+		        <div class="alRow clearfix">
+		            <div class="alRowLeft"><i>&#42</i>所属渠道:</div>
+		            <div class="alRowRight">
+		                <select name="apply_channel_id">
+		                    <option value="0" selected="selected">请选择渠道</option>
+		                    <foreach name="data['channel']['data']" item="v" key="k">
+		
+		                        <optgroup label='{$v.channelname}'></optgroup>
+		                        <!--<option disabled value="{$v['channel_id']}">{$v.channelname}</option>-->
+		                        <if condition="!empty($v['children'])">
+		                            <foreach name = "v['children']" item = "v2">
+		                                <option value="{$v2['channel_id']}">&nbsp;&nbsp;├─ {$v2['channelname']}</option>
+		                            </foreach>
+		                        </if>
+		                    </foreach>
+		                </select>
+		            </div>
+		        </div>
+		        <div class="alRow clearfix">
+		            <div class="alRowLeft">信息质量:</div>
+		            <div class="alRowRight">
+		                <select name="apply_infoquality">
+		                    <option value="1" selected="selected">A</option>
+		                    <option value="2" selected="selected">B</option>
+		                    <option value="3" selected="selected">C</option>
+		                    <option value="4" selected="selected">D</option>
+		                </select>
+		            </div>
+		        </div>
+		        <div class="alRow clearfix">
+		            <div class="alRowLeft">预转出人:</div>
+		            <div class="alRowRight">
+		                <input type="text" class="alInp pre-transfer" name="apply_to_system_user_name" autocomplete="off" disabled="disabled">
+		                <button class="btn_apply_tosystem ">添加</button>
+		                <input type="hidden" name="apply_to_system_user_id" value="" autocomplete="off">
+		                <input type="hidden" name="allocation_flag" value="1">
+		            </div>
+		        </div>
+		        <div class="alRow clearfix">
+		            <div class="alRowLeft">搜索词:</div>
+		            <div class="alRowRight">
+		                <input type="text" class="alInp" name="apply_searchword">
+		            </div>
+		        </div>
+		        <div class="alRow clearfix">
+		            <div class="alRowLeft">咨询页面:</div>
+		            <div class="alRowRight">
+		                <input type="text" class="alInp" name="apply_interviewurl">
+		            </div>
+		        </div>
+		        <div class="alRow clearfix">
+		            <div class="alRowLeft">转介绍:</div>
+		            <div class="alRowRight singleBox">
+		                <label for="alCorrect">
+		                    <input type="radio" value="1" class="alRadio" id="alCorrect" name="apply_alWhether">
+		                    <span>是</span>
+		                </label>
+		                <label for="alWrong">
+		                    <input type="radio" value="0" class="alRadio" id="alWrong" name="apply_alWhether" checked="checked">
+		                    <span>否</span>
+		                </label>
+		            </div>
+		        </div>
+		        <div class="alRow clearfix dn">
+		            <div class="alRowLeft"><i>&#42</i>转介绍人手机:</div>
+		            <div class="alRowRight">
+		                <input type="tel" class="alInp" name="apply_introducermobile">
+		            </div>
+		        </div>
+		        <div class="alRow clearfix">
+		            <div class="alRowLeft"><i>&#42</i>申请理由:</div>
+		            <div class="alRowRight">
+		                <div class="reasonBox">
+		                    <textarea name="apply_applyreason"></textarea>
+		                </div>
+		            </div>
+		        </div>
+		        <div class="alRow clearfix">
+		            <div class="alRowLeft">客户备注:</div>
+		            <div class="alRowRight">
+		                <div class="reasonBox">
+		                    <script id="apply_remak" name="advantage" type="text/plain" ></script>
+		                </div>
+		            </div>
+		        </div>
+		        <div class="alRow clearfix" style="margin-top: 68px;">
+		            <div class="alRowLeft">&nbsp;</div>
+		            <div class="alRowRight">
+		                <input type="submit" class="alSubmit" id="apply_submit" value="提交">
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		<!-- 申请转入 E -->
+		
+		<!-- 用户转出 S -->
+		<div id="panel3" class="panel3 dn">
+		    <div class="panelConcent" style="height: 440px;">
+		        <div class="div clearfix" style="margin-top: 0px">
+		            <select name="allocation_roleselect" autocomplete="off">
+		                <option value="0">全部用户组</option>
+		                <foreach name="data['departmentAll']['data']" item="v" key="k">
+		                    <option value="$v['departmentname_id']" disabled>{$v.departmentname}</option>
+		                    <foreach name="data['roleAll']['data']" item="v2" key="k2">
+		                        <if condition="$v['department_id'] eq $v2['department_id']">
+		                            <option value="{$v2['id']}">&nbsp;&nbsp;├─ {$v2.name}</option>
+		                        </if>
+		                    </foreach>
+		                </foreach>
+		            </select>
+		            <input type="text" name="allocation_realname" value="" placeholder="输入姓名">
+		            <button class="nsSearchSubmit">搜索</button>
+		        </div>
+		
+		        <div class="Capacity" style="height: 344px;" data-type="apply">
+		            <div class="overflow">
+		                <dl class="proTit clearfix">
+		                    <dt class="wOne proSequence clearfix"><span>姓名</span></dt>
+		                    <dt class="wTwo">所属中心</dt>
+		                    <dt class="wThr">
+			                    <p>线上推广</p>
+			                    <p>A &nbsp;&nbsp; B &nbsp;&nbsp;C&nbsp;&nbsp; D</p>
+		                    </dt>
+		                    <dt class="wFou">
+			                    <p>招聘网站</p>
+			                    <p>A &nbsp;&nbsp; B &nbsp;&nbsp;C&nbsp;&nbsp; D</p>
+		                    </dt>
+		                    <dt class="wFiv">
+			                    <p>在线简历</p>
+			                    <p>A &nbsp;&nbsp; B &nbsp;&nbsp;C&nbsp;&nbsp; D</p>
+		                    </dt>
+		                    <dt class="wSix">
+			                    <p>线下院校</p>
+			                    <p>A &nbsp;&nbsp; B &nbsp;&nbsp;C&nbsp;&nbsp; D</p>
+		                    </dt>
+		                    <dt class="wSev">
+			                    <p>朋友/亲戚</p>
+			                    <p>A &nbsp;&nbsp; B &nbsp;&nbsp;C&nbsp;&nbsp; D</p>
+		                    </dt>
+		                    <dt class="wEig">
+			                    <p>自然网络</p>
+			                    <p>A &nbsp;&nbsp; B &nbsp;&nbsp;C&nbsp;&nbsp; D</p>
+		                    </dt>
+		                    <dt class="wNin">操作</dt>
+		                </dl>
+		                <div id="allocation_body">
+		
+		                </div>
+		
+		
+		            </div>
+		        </div>
+		
+		    </div>
+		</div>
+		<div id="search_body" class="dn"></div>
+		<!-- 用户转出 E -->
+		
+		
 		<div class="dn">
-			<!-- 可以重新申请转入客户 S -->
-			<div class="reApplyBox popup" id="popup1">
-					<div class="alBoxCont">
-						<div class="alRow clearfix">
-							<div class="alRowLeft"><i>&#42</i>所属渠道:</div>
-							<div class="alRowRight">
-								<select class="atChannelSelect" naatChannelSelectme="key" name="atChannelSelect">
-									<option value="0" selected="selected">--全部渠道--</option>
-									<foreach name="data['channel']['data']" item="v" key="k">
-										<option value="{$v['channel_id']}">{$v.channelname}</option>
-										<if condition="!empty($v['children'])">
-											<foreach name = "v['children']" item = "v2">
-												<option value="{$v2['channel_id']}">&nbsp;&nbsp;├─ {$v2['channelname']}</option>
-											</foreach>
-										</if>
-									</foreach>
-								</select>
-							</div>
-						</div>
-						<div class="alRow clearfix">
-							<div class="alRowLeft">搜索词:</div>
-							<div class="alRowRight">
-								<input type="text" class="alInp" name="searchWord">
-							</div>
-						</div>
-						<div class="alRow clearfix">
-							<div class="alRowLeft">咨询页面:</div>
-							<div class="alRowRight">
-								<input type="text" class="alInp"  name="consultPage">
-							</div>
-						</div>
-						<div class="alRow clearfix">
-							<div class="alRowLeft">转介绍:</div>
-							<div class="alRowRight singleBox">
-								<label for="alCorrect">
-									<input type="radio" value="1" class="alRadio" id="alCorrect" name="alWhether" checked="checked">
-									<span>是</span>
-								</label>
-								<label for="alWrong">
-									<input type="radio" value="0" class="alRadio" id="alWrong" name="alWhether">
-									<span>否</span>
-								</label>
-							</div>
-						</div>
-						<div class="alRow clearfix">
-							<div class="alRowLeft"><i>&#42</i>转介绍人手机:</div>
-							<div class="alRowRight">
-								<input type="tel" class="alInp" name="recommendMan">
-							</div>
-						</div>
-						<div class="alRow clearfix">
-							<div class="alRowLeft"><i>&#42</i>申请理由:</div>
-							<div class="alRowRight">
-								<div class="reasonBox">
-									<textarea name="apply_applyreason" cols="30" rows="10" class="reasonTxt"></textarea>
-								</div>
-							</div>
-						</div>
-						<div class="alRow clearfix">
-							<div class="alRowLeft">&nbsp;</div>
-							<div class="alRowRight">
-								<input type="submit" class="alSubmit" value="提交申请">
-							</div>
-						</div>
-					</div>
-			</div>
-			<!-- 可以重新申请转入客户 E -->
 			<!-- 不能重新申请传入客户 S -->
 			<div class="notApply popup" id="popup2">
 				<span>当前客户已经归属某位同事，不可申请转入</span>
@@ -257,10 +353,10 @@
 
 		<script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
 		<script src="__PUBLIC__/js/jquery.lib.min.js"></script>
-		<script src="__PUBLIC__/js/applyDetails.js"></script>
 		<include  file="Common@Html/ueditor_min" />
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script src="__PUBLIC__/js/common_ajax.js"></script>
+		<script src="__PUBLIC__/js/applyDetails.js"></script>
 
 		<script>
 			$('#reApply').click(function() {
@@ -279,12 +375,17 @@
 				 }else{
 					 obj = $("#popup2"); //设置提示不能申请的框
 				 }
-				 $.colorbox({
-				 inline: true,
-				 href: obj,//obj,
-				 overlayClose: false,
-				 title: "申请转入客户"
-				 });
+				layer.open({
+			        type: 1, 					//  页面层
+			        title: '重新申请转入客户', 		//	不显示标题栏
+			        area: ['600px', '580px'],
+			        shade: .6, 					//	遮罩
+			        time: 0, 					//  关闭自动关闭
+			        shadeClose: true, 			//	遮罩控制关闭层
+			        closeBtn:2,		 			//	不显示关闭按钮
+			        shift: 1, 					//	出现动画
+			        content: obj	//  加载主体内容
+			    });
 			});
 			$('.alSubmit').click(function () {
 				var data = {
