@@ -1351,13 +1351,7 @@ class SystemUserService extends BaseService
         if($system_user_id!==null){
             $user_role = array();
             foreach($role['data'] as $k=>$v){
-                if($v['user_if(!empty($param['access'])){
-                D('Access')->delData($param['role_id']);
-                foreach($param['access'] as $k=>$v){
-                    $v['role_id'] = $result['data'];
-                    D('Access')->addData($v);
-                }
-            }d']==$system_user_id){
+                if($v['user_id']==$system_user_id){
                     $user_role['data'][] = $v;
                 }
             }
@@ -1367,8 +1361,6 @@ class SystemUserService extends BaseService
         return array('code'=>'0', 'msg'=>'操作成功', 'data'=>$role);
     }
 
-<<<<<<< .mine
-=======
 
     /*
     |--------------------------------------------------------------------------
@@ -1376,7 +1368,6 @@ class SystemUserService extends BaseService
     |--------------------------------------------------------------------------
     | @author nxx
     */
->>>>>>> .r10831
     public function getSystemUserVisit($where=null,$order=null,$limit='0,10'){
         $DB_PREFIX = C('DB_PREFIX');
         $order = !empty($order)?$order:$DB_PREFIX.'system_user.system_user_id DESC';
