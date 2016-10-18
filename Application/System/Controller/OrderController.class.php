@@ -387,8 +387,8 @@ class OrderController extends SystemController
     public function banDiscount()
     {
         $request = I("post.");
-        
-
+        $result = D('Order', 'Service')->getBan($request);
+        $this->ajaxReturn($result['code'], $result['msg']);
     }
 
 

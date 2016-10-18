@@ -58,7 +58,7 @@ class ZoneController extends SystemController {
     public function editZone()
     {
         $zone['zone_id'] = I('get.zone_id');
-        $zone_id = $zone['zone_id'];
+        $sign = I('get.sign');
         if(IS_POST) {
             $zone['name'] = I('post.name');
             $zone['email'] = I('post.email');
@@ -66,21 +66,21 @@ class ZoneController extends SystemController {
             $zone['abstract'] = I('post.abstract');
             $zone['address'] = I('post.address');
             $zone['parentid'] = I("post.zone_id");
-            $result = D('Zone', 'Service')->editZone($zone, $zone_id);
+            $result = D('Zone', 'Service')->editZone($zone, $zone['zone_id']);
             if($result['code'] != 0){
                 $this->ajaxReturn($result['code'],$result['msg']);
             }
             $this->ajaxReturn(0, $result['msg'], U('System/Zone/zoneList'));
         }
         if ($zone['zone_id'] == 1) {
-            $zoneList = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone_id));
+            $zoneList = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone['zone_id']));
             $zoneList['data']['mark'] = 1;
         }else{
-            $zoneList = D('Zone', 'Service')->getPidZone(array('zone_id'=>$zone_id));
+            $zoneList = D('Zone', 'Service')->getPidZone(array('zone_id'=>$zone['zone_id']));
         }
-        $zone = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone_id));
+        $zone = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone['zone_id']));
         $this->assign("zone", $zone['data']);
-        $this->assign('zone_id', $zone_id);
+        $this->assign('zone_id', $zone['zone_id']);
         $this->assign('zoneList', $zoneList['data']);
         $this->display();
 
@@ -125,35 +125,6 @@ class ZoneController extends SystemController {
 
 
     }
-
-    /*
-    修改中心
-    @author Nixx
-    */
-    public function editCenter()
-    {
-        $zone['zone_id'] = I('get.zone_id');
-        if(IS_POST){
-            $zone['name'] = I('post.name');
-            $zone['email'] = I('post.email');
-            $zone['tel'] = I('post.tel');
-            $zone['abstract'] = I('post.abstract');
-            $zone['address'] = I('post.address');
-            $zone['addusr'] = $this->system_user_id;
-            
-            $res = D('Zone', 'Service')->editZone($zone);
-            if($res['code'] != 0){
-                $this->ajaxReturn($res['code'],'修改失败');
-            }
-            $this->success('修改成功', 0, U('System/Zone/zoneList'));
-        }
-        $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone['zone_id']));
-        $this->assign('zone_id', $zone['zone_id']);
-        $this->assign('zoneList', $zoneList['data']);
-        $this->display();
-
-    }
-
 
     /*
     获取区域详情
