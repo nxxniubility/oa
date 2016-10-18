@@ -95,3 +95,53 @@
 
 /*0922*/
 .wrListBox .listRight .wrBox2Cont .wrReason p img {float:none;width:80px;height:auto;margin:0 4px 0 0;border-radius:initial;}
+
+/*1018*/
+.reApplyBox { position: relative; width:465px; height: auto; background: #fff;}
+.alBoxCont { width: 490px; margin: 0 auto; padding-top: 35px;}
+.alBoxCont .alRow { margin-bottom: 20px;}
+.alRow .alRowLeft, .alRow .alRowRight { float: left; line-height: 30px;}
+.alRow .alRowLeft { width: 103px; margin-right: 18px; text-align: right; color: #333;}
+.alRow .alRowLeft i { color: #d00202;}
+.alRow .alRowRight {width:360px; color: #494949;}
+.alRow .alRowRight select, .alRow .alRowRight .alInp { text-indent: 12px; border: 1px solid #ccc; background: #fff;}
+.alRow .alRowRight select { width: 100%; height: 30px; line-height: 30px; color: #555;}
+.alRow .alRowRight .alInp { width: 358px; height: 28px; line-height: 28px; margin-top: -2px; text-indent: 16px;}
+.alRow .alRowRight label { float: left; width: 40px; height: 30px; margin-right: 20px; cursor: pointer;}
+.alRow .alRowRight .alRadio { width: 14px; height: 14px; vertical-align: middle;}
+.alRow .alRowRight span { color: #494949;}
+.alRow .alRowRight .reasonBox { width: 360px;height:auto;}
+.alRow .alRowRight .reasonBox textarea {width: 355px; height: 119px; border: 1px solid #ccc;resize:none;}
+.alRow .alRowRight .alSubmit { display: block; width: 65px; height: 30px; line-height: 30px; font-size: 12px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
+.btn_apply_tosystem {width:80px;height:30px;line-height:30px;color:#333;text-align:center;border:1px solid #ccc;background:#fff;cursor:pointer;}
+.alRow .alRowRight .pre-transfer {width:263px;margin-right:10px;background: #eee;}
+#apply_remak {width: 355px; height: 119px;}
+/*****************选择操作者弹框*********/
+.panel3>.panelConcent{ background-color: #fff; width:1000px; height:500px; }
+.panel3>.panelConcent>p{height: 40px; width: 930px; border-bottom: 1px solid #ccc;}
+.panel3>.panelConcent>p>span{font-size: 15px; color: #000; font-weight: bold; margin-left: 20px; line-height: 40px;}
+.panel3>.panelConcent>p>b{color: #ddd; margin-left: 780px; cursor: pointer;}
+.panel3>.panelConcent .div{width:95%; margin: 15px 2.5% 0px;}
+.panel3>.panelConcent .div select{width: 120px; height: 30px; float: left; margin-top: 13px; margin-right: 15px; border: 1px solid #ddd;}
+.panel3>.panelConcent .div input{width: 150px; height: 30px; float: left; margin-top: 13px; border: 1px solid #ddd; margin-right: 15px; color: #999; text-indent: 10px;}
+.panel3>.panelConcent .div button{width: 80px; line-height: 30px; float: left; margin-top: 13px; background-color: #53b567; font-size: 15px; color: #fff; border:none;}
+.panel3 .Capacity{width: 95%; height: 365px; margin: 20px auto 20px; font-size: 12px; border: 1px solid #e1e6eb; overflow-y: scroll;}
+.panel3 .overflow{overflow: hidden;}
+.panel3 .Capacity dl{border-bottom: 1px solid #e1e6eb;}
+.panel3 .Capacity dl.proTit{background: #f5f6fa;}
+.panel3 .Capacity dl:last-child{border-bottom: none;}
+.panel3 .Capacity dt, .Capacity dd{float: left; line-height: 43px; word-wrap: break-word; word-break: break-all;}
+.panel3 .Capacity dt{font-weight: bold; color: #717171;}
+.panel3 .Capacity dd{color: #696969;}
+.panel3 .Capacity .wOne{width: 8.5%; padding-left: 0; text-indent: 10px; font-weight: 500;}
+.panel3 .Capacity .wTwo{width: 9.2%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wThr{width: 12.57%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wFou{width: 12.57%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wFiv{width: 12.57%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wSix {width: 12.57%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wSev {width: 12.56%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wEig {width: 12.56%; padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wNin {width: 6.9%;padding-left: 0; text-align: center; font-weight: 500;}
+.panel3 .Capacity .wNin i{display: inline-block; width: 45px; line-height: 28px; cursor: pointer; background-color: #53b567; text-align: center; color: #fff;}
+.panel3 .Capacity dl.proTit dt { line-height: 25px;}
+.panel3 .Capacity .proSequence  span{margin-left: 10px;}

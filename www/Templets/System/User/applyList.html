@@ -68,6 +68,7 @@
 								</div>
 						</div>
 					</div>
+					<p class="viTips">鼠标左键双击客户信息打开对应的客户详情</p>
 					<div class="atList" >
 						<dl class="setTit clearfix">
 							<dt class="wOne">选中</dt>
@@ -86,7 +87,7 @@
 
 						<foreach name="applyList" item="apply_item"  >
 
-							<dl class="clearfix">
+							<dl class="content_li clearfix">
 								<dd class="wOne">
 									<input type="checkbox"  name="feCheck" class="atInpCheck" value="{$apply_item.user_apply_id}" autocomplete="off">
 								</dd>
@@ -120,7 +121,7 @@
 								<dd class="wEle">
 									<a href="{:U('applyDetails',array('id'=>$apply_item['user_apply_id']))}">{$apply_item.operate}</a>
 								</dd>
-								<a  href="{:U('System/User/detailUser', array('id'=>$apply_item['user_id']))}"  class="detailLink" target="_blank">详情</a>
+								<a  href="{:U('applyDetails',array('id'=>$apply_item['user_apply_id']))}"  class="hrefDetail dn" target="_blank">详情</a>
 							</dl>
 						</foreach>
 					</div>
@@ -144,6 +145,9 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- dblclick jump detail -->
+		<form id="hrefForm" action="" method="get" target="_blank"></form>
 		
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
