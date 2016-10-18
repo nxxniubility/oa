@@ -418,3 +418,11 @@ a.b-radio-checked {background-position: -14px 0px;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address {padding:0 40px 0 0;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address.pd10 {padding-bottom:10px;}
 .listRight#call-cont li .wrBox2 .wrBox2Top .call-address a, .listRight#call-cont li .wrBox2 .wrBox2Top .call-address span {text-indent:initial;}
+
+/*1018*/
+.alRow .alRowRight {width:360px;}
+.alRow .alRowRight .btn_apply_tosystem {width:80px;height:30px;line-height:30px;color:#333;text-align:center;border:1px solid #ccc;background:#fff;cursor:pointer;}
+.alRow .alRowRight select {width:100%;margin:0;}
+.alRow .alRowRight label {margin-right:20px;}
+.alRow .alRowRight .alInp {width:358px;}
+.alRow .alRowRight .pre-transfer {width:263px;margin-right:10px;background:#eee;}
