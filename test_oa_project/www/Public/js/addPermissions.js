@@ -71,7 +71,7 @@ $('.selectPermissions').on('click', function() {
     layer.open({
         type: 1, //  页面层
         title: false, //    不显示标题栏
-        area: ['500px', 'auto'],
+        area: ['500px', '500px'],
         shade: .6, //   遮罩
         time: 0, //  关闭自动关闭
         shadeClose: true, //    遮罩控制关闭层
