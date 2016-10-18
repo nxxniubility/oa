@@ -22,14 +22,16 @@
         <div class="nsMiddle">
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>真实姓名:</div>
-                <div class="nsRight">
-                    <input type="text" class="nsInp" name="realname" value="{$data['SystemUserInfo']['realname']}">
+                <div class="nsRight pr">
+                    <input type="text" id="real_name" class="nsInp" name="realname" value="{$data['SystemUserInfo']['realname']}" onkeyup="chkLength(this,20)">
+                    <span class="name-tip"></span>
                 </div>
             </div>
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>手机号:</div>
                 <div class="nsRight">
-                    <input type="tel" class="nsInp" maxlength="11" name="username" value="{$data['SystemUserInfo']['username']}">
+                    <input type="tel" id="phone" class="nsInp" name="username" value="{$data['SystemUserInfo']['username']}" onkeyup="chkLength(this,11)">
+                    <span class="phone-tip"></span>
                 </div>
             </div>
             <div class="nsRow clearfix">
@@ -158,7 +160,7 @@
                 </dl>
             </div>
             <input type="text" class="nsSelectSearch l" name="nsSelectSearch">
-            <input type="submit" class="nsSearchSubmit l">
+            <input type="submit" class="nsSearchSubmit l" value="搜索">
         </div>
         <div class="nsDeparMiddle">
             <dl class="nsTit clearfix department_title">

@@ -711,8 +711,8 @@
 
 <!-- 用户转出 S -->
 <div id="panel3" class="panel3 dn">
-    <div class="panelConcent" style="height: 440px;">
-        <div class="div clearfix" style="margin-top: 0px">
+    <div class="panelConcent">
+        <div class="div clearfix">
             <select name="allocation_roleselect" autocomplete="off">
                 <option value="0">全部用户组</option>
                 <foreach name="data['departmentAll']['data']" item="v" key="k">
@@ -728,7 +728,8 @@
             <button class="nsSearchSubmit">搜索</button>
         </div>
 
-        <div class="Capacity" style="height: 344px;">
+        <div class="Capacity">
+        	<div class="data-loading"><img src="/Public/images/loading.gif"></div>
             <div class="overflow">
                 <dl class="proTit clearfix channelname" >
                     <dt class="wOne proSequence clearfix"><span>姓名</span></dt>
