@@ -392,7 +392,7 @@ class UserService extends BaseService
      * @author zgt
      */
     public function addUserVisit($user_id,$tosystem_user_id,$system_user_id){
-//是否存在忙线记录
+            //是否存在忙线记录
 //         $engaged = M('system_user_engaged')->where(array('system_user_id'=>$tosystem_user_id))->find();
 //         if(!empty($engaged)){
 //             if($engaged['status']==1){
@@ -435,13 +435,13 @@ class UserService extends BaseService
                 $dataLog['logtime'] = time();
                 D('Data', 'Service')->addDataLogs($dataLog);
                 D()->commit();
-                $visitLogs = D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$request['system_user_id']))->find();
+                $visitLogs = D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$system_user_id))->find();
                 if(!empty($visitLogs)){
                     $data['visitnum'] = array('exp','visitnum+1');
-                    D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$request['system_user_id']))->save($data);
+                    D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$system_user_id))->save($data);
                 }else{
                     $data['date'] = date('Ymd');
-                    $data['system_user_id'] = $request['system_user_id'];
+                    $data['system_user_id'] = $system_user_id;
                     $data['visitnum'] = 1;
                     D('UserVisitLogs')->data($data)->add();
                 }
@@ -557,13 +557,19 @@ class UserService extends BaseService
                 $arrStr[$k]['createuser_realname'] = $createUser['data']['realname'];
             }
             if(!empty($v['channel_id'])){
-                $channe = D('Channel','Service')->getChannelInfo(array('channel_id'=>$v['channel_id']));
-                if($channe['data']['pid']!=0){
-                    $channe_parent = D('Channel','Service')->getChannelInfo(array('channel_id'=>$channe['data']['pid']));
-                    $arrStr[$k]['channelnames'] = $channe_parent['data']['channelname'].'-'.$channe['data']['channelname'];
+                $channel = D('Channel','Service')->getChannelInfo(array('channel_id'=>$v['channel_id']));
+                if($channel['data']['pid']!=0){
+                    $channel_parent = D('Channel','Service')->getChannelInfo(array('channel_id'=>$channel['data']['pid']));
+                    $arrStr[$k]['channel_names'] = $channel_parent['data']['channelname'].'-'.$channel['data']['channelname'];
                 }else{
-                    $arrStr[$k]['channelnames'] = $channe['data']['channelname'];
+                    $arrStr[$k]['channel_names'] = $channel['data']['channelname'];
                 }
+            }
+            if(!empty($v['course_id'])){
+                $course = D('Course','Service')->getCourseInfo(array('course_id'=>$v['course_id']));
+                $arrStr[$k]['course_name'] = $course['data']['coursename'];
+            }else{
+                $arrStr[$k]['course_name'] = '无';
             }
             if(!empty($v['visittime']) && $v['visittime']!=0)$arrStr[$k]['visit_time'] = date('Y-m-d H:i:s', $v['visittime']);
             if(!empty($v['nextvisit']) && $v['nextvisit']!=0)$arrStr[$k]['nextvisit_time'] = date('Y-m-d H:i:s', $v['nextvisit']);
@@ -571,7 +577,6 @@ class UserService extends BaseService
             if(!empty($v['allocationtime']) && $v['allocationtime']!=0)$arrStr[$k]['allocation_time'] = date('Y-m-d H:i:s', $v['allocationtime']);
             if(!empty($v['updatetime']) && $v['updatetime']!=0)$arrStr[$k]['update_time'] = date('Y-m-d H:i:s', $v['updatetime']);
             if(!empty($v['createtime']) && $v['createtime']!=0)$arrStr[$k]['create_time'] = date('Y-m-d H:i:s', $v['createtime']);
-            if(!empty($v['course_id']))$arrStr[$k]['coursename'] = $course_status[$v['course_id']];
             if(!empty($v['status']))$arrStr[$k]['status_name'] = $user_status[$v['status']];
             if(!empty($v['attitude_id']))$arrStr[$k]['attitude_name'] = $user_attitude[$v['attitude_id']];
             if(!empty($v['learningtype']))$arrStr[$k]['learningtype_name'] = $user_learningtype[$v['learningtype']];
@@ -1044,7 +1049,7 @@ class UserService extends BaseService
         if(empty($data['user_id'])) return array('code'=>300,'msg'=>'参数异常');
         $user = D('User')->getFind(array('user_id'=>$data['user_id']),'system_user_id,status,mark');
         if(empty($user)) return array('code'=>2,'msg'=>'查找不到客户信息');
-        if ($this->system_user_id != $user['system_user_id']) return array('code' => 200, 'msg' => '只有归属人才能分配该客户信息');
+        if ($this->system_user_id != $user['system_user_id']) return array('code' => 200, 'msg' => '只有归属人才能操作该客户信息');
         if($user['mark']==1){
             $_save['mark'] = 2;
         }else{

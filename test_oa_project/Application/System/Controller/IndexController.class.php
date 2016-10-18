@@ -302,6 +302,7 @@ class IndexController extends SystemController
                 $this->success('添加成功', 0, U('System/Index/main'));
             }
         }
+
         $this->display();
     }
 

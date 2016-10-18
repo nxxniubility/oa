@@ -42,7 +42,7 @@
         			</td>
         			<td class="role_id">{$v.id}</td>
         			<td>{$v.name}</td>
-        			<td>{$v.departmentname}</td>
+        			<td>{$v.department_name}</td>
         			<td>{$v.remark}</td>
         			<td><?php echo $v['display']==1?'启用':'禁用'; ?></td>
         			<td class="lastItem posOperation">
@@ -182,7 +182,7 @@
 				sort_data:ids_sort,
 				type:'sort'
 			};
-			common_ajax(data,'{$data[\'url_dispostPosition\']}','reload');
+			common_ajax(data,"{:U('System/Personnel/dispostPosition')}",'reload');
 			
 		});
 	

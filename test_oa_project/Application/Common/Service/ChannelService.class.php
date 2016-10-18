@@ -42,7 +42,7 @@ class ChannelService extends BaseService
         $param = array_filter($param);
         $param['where']['status'] = 1;
         $param['order'] = 'sort desc';
-        $param['page'] = !empty($param['page'])?$param['page']:'1,30';
+        $param['page'] = !empty($param['page'])?$param['page']:null;
         if( F('Cache/channel') ) {
             $channel = F('Cache/channel');
         }else{
@@ -179,6 +179,7 @@ class ChannelService extends BaseService
             $channe_list = $this->_getChannelList();
             F('Cache/channel', $channe_list);
         }
+        $channe_list = $this->disposeArray($channe_list,  null, null,  array('status'=>1));
         //数组分级
         $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
         $_channe_list['data'] = $Arrayhelps->subFinds($channe_list['data'],$param['channel_id'],'channel_id','pid');

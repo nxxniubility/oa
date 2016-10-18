@@ -1404,6 +1404,19 @@ class MoveController extends BaseController
         print_r(count($arr));
     }
 
+    public function Holiday(){
+        set_time_limit(3000);
+        for($i=70;$i<365;$i++){
+            $ymd = date('Ymd', strtotime('+'.$i.' day'));
+            $redata = D('Api','Service')->getApiHoliday($ymd);
+            if($redata['code']==0){
+                $add['day_time'] = strtotime($ymd);
+                $add['day_type'] = $redata['data'];
+                M('holiday')->add($add);
+            }
+        }
+    }
+
     public function delUser(){
 //        exit;
 //        $where['system_user_id'] = 34;

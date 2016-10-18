@@ -130,7 +130,7 @@
                     <foreach name="data['systemUserAll']['data']" item="v" key="k">
                         <tr>
                             <td class="firItem">
-                                <input type="checkbox" name="feCheck" class="feCheckBox">
+                                <input type="checkbox" name="feCheck" class="feCheckBox" value="{$v.system_user_id}">
                             </td>
                             <td>{$v.system_user_id}</td>
                             <if condition = "!empty($v[face])">
@@ -295,6 +295,9 @@
                     users += ','+$(this).val();
                 }
             });
+            if(users==''){
+                layer.msg('请先选择员工', {icon:2});
+            }
             var data = {
                 users:users,
                 type:'dels'

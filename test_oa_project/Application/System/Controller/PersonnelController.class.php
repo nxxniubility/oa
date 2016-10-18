@@ -70,8 +70,10 @@ class PersonnelController extends SystemController {
             $departmentname = I('post.departmentname',null);
             $result = D('Department','Service')->addDepartment(array('departmentname'=>$departmentname));
             //添加部门成功
-            if(empty($result)) $this->ajaxReturn(1, '数据添加失败');
-            else $this->ajaxReturn(0, '添加部门成功',  U('System/Personnel/department'));
+            if($result['code']==0){
+                $this->ajaxReturn(0,'添加部门成功',U('System/Personnel/department'));
+            }
+            $this->ajaxReturn($result['code'],$result['msg']);
         }
         $this->display();
     }
@@ -89,9 +91,11 @@ class PersonnelController extends SystemController {
             $requery_data['departmentname'] = $departmentname;
             $requery_data['department_id'] = $department_id;
             $result = D('Department','Service')->editDepartment($requery_data);
-            //添加部门成功
-            if(empty($result)) $this->ajaxReturn(1, '数据修改失败');
-            else $this->ajaxReturn(0, '部门修改成功',  U('System/Personnel/department'));
+            //修改部门
+            if($result['code']==0){
+                $this->ajaxReturn(0,'部门修改成功',U('System/Personnel/department'));
+            }
+            $this->ajaxReturn($result['code'],$result['msg']);
         }
         //获取相关部门详情
         $department = D('Department','Service')->getDepartmentInfo(array('department_id'=>$department_id));
@@ -113,8 +117,10 @@ class PersonnelController extends SystemController {
                 $requery_data['department_id'] = $department_id;
                 $result = D('Department','Service')->delDepartment($requery_data);
                 //删除部门
-                if(empty($result)) $this->ajaxReturn(1, '数据删除失败');
-                else $this->ajaxReturn(0, '删除部门成功', U('System/Personnel/department'));
+                if($result['code']==0){
+                    $this->ajaxReturn(0,'数据删除成功',U('System/Personnel/department'));
+                }
+                $this->ajaxReturn($result['code'],$result['msg']);
             }else if( isset($type) && $type=='sort' ){
                 $sort_data = I('post.sort_data','');
                 if(empty($sort_data)) $this->ajaxReturn(1, '请输入要修改的排序值');
@@ -218,9 +224,9 @@ class PersonnelController extends SystemController {
             $request['name'] = $request['positionname'];
             $request['access'] = $access_new;
             $result = D('Role','Service')->addRole($request);
-            //添加部门成功
+            //添加职位成功
             if($result['code']==0){
-                $this->ajaxReturn(0,'添加部门成功',U('System/Personnel/position'));
+                $this->ajaxReturn(0,'添加职位成功',U('System/Personnel/position'));
             }
             $this->ajaxReturn($result['code'],$result['msg']);
         }else{
@@ -249,6 +255,7 @@ class PersonnelController extends SystemController {
         if( empty($role_id) )$this->error('非法请求！');
         if(IS_POST) {
             $request = I('post.');
+            $access = explode(',', $request['access']);
             if(!empty($access)){
                 $access_new = array();
                 foreach($access as $v){
@@ -261,9 +268,9 @@ class PersonnelController extends SystemController {
             $request['access'] = $access_new;
             $request['role_id'] = $role_id;
             $result = D('Role','Service')->editRole($request);
-            //添加部门成功
+            //添加职位成功
             if($result['code']==0){
-                $this->ajaxReturn(0,'添加部门成功',U('System/Personnel/position'));
+                $this->ajaxReturn(0,'修改职位成功',U('System/Personnel/position'));
             }
             $this->ajaxReturn($result['code'],$result['msg']);
         }
@@ -342,8 +349,10 @@ class PersonnelController extends SystemController {
                 $request['role_id'] = $role_id;
                 $result = D('Role','Service')->editRole($request);
                 //权限修改
-                if(!empty($result)) $this->success('权限修改成功', 0, U('System/Personnel/department'));
-                else $this->ajaxReturn(1, '权限修改失败');
+                if($result['code']==0){
+                    $this->ajaxReturn(0,'权限修改成功',U('System/Personnel/position'));
+                }
+                $this->ajaxReturn($result['code'],$result['msg']);
             }
         }
     }
@@ -359,6 +368,7 @@ class PersonnelController extends SystemController {
         //获取参数 页码
         $requestG = I('get.');
         $where['usertype'] = !empty($requestG['usertype'])?$requestG['usertype']:array('neq',10);
+        $where['status'] = 1;
         $re_page = isset($requestG['page'])?$requestG['page']:1;
         //查询条件where处理
         if(!empty($requestG['key_value']) && !empty($requestG['key_name'])) {
@@ -410,6 +420,7 @@ class PersonnelController extends SystemController {
         //获取参数 页码
         $requestG = I('get.');
         $where['usertype'] = 10;
+        $where['status'] = 1;
         $re_page = isset($requestG['page'])?$requestG['page']:1;
         //查询条件where处理
         if(!empty($requestG['key_value']) && !empty($requestG['key_name'])) {
@@ -567,8 +578,8 @@ class PersonnelController extends SystemController {
             else $this->ajaxReturn(1, '数据操作失败');
         }else if($type=='dels'){
             $data['flag'] = 'del';
-            $data['system_user_id'] = $users = I('post.users');
-            if(empty($users)) $this->ajaxReturn(1, '请先选中所需删除项');
+            $data['system_user_id'] = I('post.users');
+            if(empty($data['system_user_id'])) $this->ajaxReturn(1, '请先选中所需删除项');
             $flag = D('SystemUser','Service')->delSystemUser($data);
             if($flag['code']==0) $this->ajaxReturn(0, '账号删除成功', U('System/Personnel/systemUserList'));
             else $this->ajaxReturn(1, '数据操作失败');
