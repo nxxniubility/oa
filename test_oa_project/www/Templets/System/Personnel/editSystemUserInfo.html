@@ -101,7 +101,7 @@
         <div class="afRow clearfix">
             <div class="afRowLeft"><i>&#42</i>毕业院校:</div>
             <div class="afRowRight clearfix">
-                <input type="text" class="afInp" name="school" value="{$data['systemUserInfo']['school']}">
+                <input type="text" class="afInp" name="school" value="{$data['systemUserInfo']['school']}" onkeyup="chkLength(this,20)">
             </div>
         </div>
     </div>
@@ -187,14 +187,14 @@
         <div class="afRow clearfix">
             <div class="afRowLeft">社保电脑号:</div>
             <div class="afRowRight clearfix">
-                <input type="text" class="afInp l" name="socialsecurity" value="{$data['systemUserInfo']['socialsecurity']}">
+                <input type="text" class="afInp l" name="socialsecurity" value="{$data['systemUserInfo']['socialsecurity']}" onkeyup="chkLength(this,20)">
                 <!--<span class="afNone l">暂无社保请填0</span>-->
             </div>
         </div>
         <div class="afRow clearfix">
             <div class="afRowLeft">公积金账号:</div>
             <div class="afRowRight clearfix">
-                <input type="text" class="afInp l" name="providentfund" value="{$data['systemUserInfo']['providentfund']}">
+                <input type="text" class="afInp l" name="providentfund" value="{$data['systemUserInfo']['providentfund']}" onkeyup="chkLength(this,10)">
                 <!--<span class="afNone l">暂无公积金请填0</span>-->
             </div>
         </div>
