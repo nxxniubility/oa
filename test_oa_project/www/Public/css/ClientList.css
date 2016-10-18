@@ -677,3 +677,10 @@ textarea{resize:none;}
 .topRight .return.refresh {margin-right:15px;}
 /*0922*/
 .alRow .alRowRight p {line-height:20px;margin-left:16px;font-size:12px;color:#ff0000;}
+
+/*1018*/
+.panel3>.panelConcent {height:auto;}
+.panel3>.panelConcent .div {margin-top:0;}
+.panel3 .Capacity {position:relative;height:337px;margin:20px auto 40px;}
+.panel3 .data-loading {position:fixed;top:300px;left:450px;width:24px;height:24px;}
+.panel3 .data-loading img {display:block;width:100%;}

@@ -328,7 +328,7 @@ $(function(){
             layer.open({
                 type: 1, 					//  页面层
                 title: '选择操作者', 			//	不显示标题栏
-                area: ['1000px', '490px'],
+                area: ['1000px', 'auto'],
                 closeBtn:2,
                 shade: .6, 					//	遮罩
                 time: 0, 					//  关闭自动关闭

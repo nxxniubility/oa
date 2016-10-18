@@ -1,6 +1,7 @@
 $(function(){
     selectbox();
 });
+//  几个时间初始化
 $('#atStar, #atEnd, #afBirthday, #afBirthday2').glDatePicker();
 
 //下拉框
@@ -185,7 +186,34 @@ $('.nsSelectPost').on('click', function() {
     });
 });
 
-//$('.nsDeparMiddle dd.wNsOne').find('input[type="checkbox"]').click(function(){
-//	$(this).attr('checked','checked').closest('dl').siblings().find('dd.wNsOne input[type="checkbox"]').removeAttr('checked');
-//});
+// 限制字符长度
+function chkLength(el,size){
+	if(el.value.length > size){
+		layer.msg('已超出字数规定上限.',{icon:2});
+	}
+	el.value = el.value.substring(0,size);
+}
+
+/*=======================================验证：姓名============================================*/  
+$(document).ready(function(){
+	// 姓名失去焦点
+	$('#real_name').blur(function(){ chkName(); })
+	
+});
+
+// 姓名
+function chkName(){
+	var reg = /^[\u4e00-\u9fa5a-z]+$/gi,
+		_name = $('#real_name'),
+		_val = $.trim(_name.val()),
+		tip = $('.name-tip');
+	if(_val.match(reg)){
+		tip.hide().html('');
+	}else{
+		tip.show().html('名字含有特殊符号或数字.');
+		_name.focus();
+		return false;
+	}
+}
+
 

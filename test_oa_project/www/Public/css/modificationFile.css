@@ -72,5 +72,5 @@
 .wrapBox#sUserIfoEditWrap .afRowRight {width:auto;}
 
 /*1018*/
-.position-rel {position:relative;}
+.pr {position:relative;}
 .email-tips {position:absolute;left:0;bottom:-18px;display:block;height:20px;line-height:20px;font-size:14px;color:#ff0000;text-align:left;}

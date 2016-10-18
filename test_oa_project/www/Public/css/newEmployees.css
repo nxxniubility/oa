@@ -85,3 +85,7 @@
 .wrapBox#sUserAddWrap .newEmployeesCont {width:auto;}
 .wrapBox#sUserAddWrap .nsLeft {width:120px;margin-right:17px;}
 .wrapBox#sUserAddWrap .nsRight {width:auto;}
+
+/*1018*/
+.pr {position:relative;}
+.name-tip, .phone-tip {position:absolute;top:0;right:-160px;display:none;height:30px;line-height:30px;font-size:14px;color:#ff0000;text-align:left;}
