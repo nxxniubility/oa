@@ -194,26 +194,4 @@ function chkLength(el,size){
 	el.value = el.value.substring(0,size);
 }
 
-/*=======================================验证：姓名============================================*/  
-$(document).ready(function(){
-	// 姓名失去焦点
-	$('#real_name').blur(function(){ chkName(); })
-	
-});
-
-// 姓名
-function chkName(){
-	var reg = /^[\u4e00-\u9fa5a-z]+$/gi,
-		_name = $('#real_name'),
-		_val = $.trim(_name.val()),
-		tip = $('.name-tip');
-	if(_val.match(reg)){
-		tip.hide().html('');
-	}else{
-		tip.show().html('名字含有特殊符号或数字.');
-		_name.focus();
-		return false;
-	}
-}
-
 
