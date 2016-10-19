@@ -117,6 +117,9 @@ class ZoneService extends BaseService
         $param['status'] = 1;
         $param['createtime'] = time();
         if(!(str_replace(' ','',$param['name']))) {
+            if ($param['centersign']) {
+                return array('code'=>301,'msg'=>'中心名称不能为空');
+            }
             return array('code'=>301,'msg'=>'区域名称不能为空');
         }
         if(empty($param['parentid'])) {
@@ -154,7 +157,7 @@ class ZoneService extends BaseService
     修改区域
     @author nxx
     */
-    public function editZone($param, $zone_id)
+    public function editZone($param, $zone_id, $center)
     {
         $param = array_filter($param);
         $param['addusr'] = $this->system_user_id;
@@ -163,6 +166,9 @@ class ZoneService extends BaseService
             return array('code'=>401,'msg'=>'无权限修改');
         }
         if(empty($param['name'])) {
+            if ($center) {
+                return array('code'=>301,'msg'=>'中心名称不能为空');
+            }
             return array('code'=>301,'msg'=>'区域名称不能为空');
         }
         if($zone_id != 1 && empty($param['parentid'])) {
