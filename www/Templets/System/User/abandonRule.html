@@ -134,7 +134,7 @@
                     <div class="holiday_box fl">
                         <!--<div data-value="0">工作日</div>-->
                         <!--<div data-value="1">休息日</div>-->
-                        <div data-value="2">节假日</div>
+                        <div data-value="2">开启</div>
                     </div>
                     <input type="hidden" name="holiday" value="" autocomplete="off">
                 </div>
@@ -196,7 +196,7 @@
             <foreach name="data['roleAll'][data]" item="v" key="k">
                 <dl class="clearfix department_content">
                     <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}" {:(in_array($v['id'],$data['is_roles']))?'checked="checked"':''}></dd>
-                    <dd class="wNsTwo">{$v.departmentname}</dd>
+                    <dd class="wNsTwo">{$v.department_name}</dd>
                     <dd class="wNsThr">{$v.name}</dd>
                 </dl>
             </foreach>

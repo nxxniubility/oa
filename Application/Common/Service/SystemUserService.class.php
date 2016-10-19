@@ -1072,7 +1072,7 @@ class SystemUserService extends BaseService
         $result = D('CallNumber')->getList($where,'call_number_id,number,number_type,number_start');
         foreach($result as $k=>$v){
             $result[$k]['number_type_name'] = $v['number_type']==1?'固定电话':'手机号码';
-            $result[$k]['number_start_name'] = $v['number_start']==1?'已启用':'未启用';
+            $result[$k]['number_start_name'] = $v['number_start']==1?'禁用':'启用';
         }
         //返回数据与状态
         return array('code'=>'0', 'data'=>$result);

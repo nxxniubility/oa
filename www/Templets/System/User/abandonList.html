@@ -30,8 +30,8 @@
                 <dl class="setTit clearfix">
                     <dt class="wOne">规则&nbsp;ID</dt>
                     <dt class="wTwo">回收规则名称</dt>
-                    <dt class="wEig">开始时间</dt>
-                    <dt class="wNin">间隔时间</dt>
+                    <dt class="wEig">回访次数</dt>
+                    <dt class="wNin">保护天数</dt>
                     <dt class="wThr">所属区域</dt>
                     <dt class="wFou">渠道</dt>
                     <dt class="wFiv">分配职位</dt>
@@ -44,10 +44,10 @@
                     <dl class="clearfix {:($v['start']==1)?'':'disabled'}">
                         <dd class="wOne">{$v.user_abandon_id}</dd>
                         <dd class="wTwo">{$v.abandonname}</dd>
-                        <dd class="wEig">开始时间</dd>
-                    	<dd class="wNin">间隔时间</dd>
+                        <dd class="wEig">{$v.callbacknum}</dd>
+                        <dd class="wNin">{$v.attaindays}</dd>
                         <dd class="wThr">{$v.zonename}</dd>
-                        <dd class="wFou">{$v.channelnames}</dd>
+                        <dd class="wFou">{$v.channel_names}</dd>
                         <dd class="wFiv">{$v.rolenames}</dd>
                         <dd class="wEig">{:empty($v['week_text'])?'无':$v['week_text']}</dd>
                         <dd class="wSix">{:date('Y-m-d H:i:s',$v['createtime'])}</dd>

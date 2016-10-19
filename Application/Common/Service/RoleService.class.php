@@ -22,7 +22,7 @@ class RoleService extends BaseService
      * 获取列表
      * @return array
      */
-    protected function getList()
+    protected function _getList()
     {
         $list['data'] = D('Role')->getList();
         $list['count'] = D('Role')->getCount();
@@ -47,7 +47,7 @@ class RoleService extends BaseService
         if( F('Cache/role') ){
             $roleAll = F('Cache/role');
         }else{
-            $roleAll = $this->getList();
+            $roleAll = $this->_getList();
             F('Cache/role', $roleAll);
         }
         $roleAll = $this->disposeArray($roleAll,  $param['order'], $param['page'],  $param['where']);
@@ -163,7 +163,7 @@ class RoleService extends BaseService
         if( F('Cache/role') ) {
             $role_list = F('Cache/role');
         }else{
-            $role_list = $this->getList();
+            $role_list = $this->_getList();
             F('Cache/role', $role_list);
         }
         foreach($role_list['data'] as $k=>$v){

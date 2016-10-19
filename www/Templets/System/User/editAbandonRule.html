@@ -128,7 +128,7 @@
             <div class="nsRow clearfix">
                 <div class="nsLeft2"><i>&#42</i>回收对应职位:</div>
                 <div class="nsRight2 clearfix">
-                    <input type="text" class="nsInp nsDepartment l" disabled="disabled" value="{$data['abandonAll']['rolesname']}" name="role_name" autocomplete="off">
+                    <input type="text" class="nsInp nsDepartment l" disabled="disabled" value="{$data['abandonAll']['roles_name']}" name="role_name" autocomplete="off">
                     <input type="button" class="nsSelectPost l" value="选择职位">
                     <input type="hidden" name="role_id" value="{$data['abandonAll']['abandon_roles']}" autocomplete="off">
                 </div>
@@ -207,7 +207,7 @@
             <foreach name="data['roleAll'][data]" item="v" key="k">
                 <dl class="clearfix department_content">
                     <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}" {:(in_array($v['id'],$data['is_roles']))?'checked="checked"':''}></dd>
-                    <dd class="wNsTwo">{$v.departmentname}</dd>
+                    <dd class="wNsTwo">{$v.department_name}</dd>
                     <dd class="wNsThr">{$v.name}</dd>
                 </dl>
             </foreach>
