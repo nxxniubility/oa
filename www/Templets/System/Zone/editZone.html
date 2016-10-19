@@ -23,7 +23,11 @@
 				</div>
 				<div class="newMiddle">
 					<div class="newRows clearfix">
-						<div class="newRowsLeft"><i>&#42</i>区域名称:</div>
+						<?php if($center) { ?>
+							<div class="newRowsLeft"><i>&#42</i>中心名称:</div>
+						<?php }else{ ?>
+							<div class="newRowsLeft"><i>&#42</i>区域名称:</div>
+						<?php } ?>
 						<div class="newRowsRight">
 							<input type="text" class="newInp" name="name" value="{$zone['name']}">
 						</div>

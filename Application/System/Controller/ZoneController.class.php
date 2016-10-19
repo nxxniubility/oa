@@ -67,7 +67,7 @@ class ZoneController extends SystemController {
             $zone['abstract'] = I('post.abstract');
             $zone['address'] = I('post.address');
             $zone['parentid'] = I("post.zone_id");
-            $result = D('Zone', 'Service')->editZone($zone, $zone['zone_id']);
+            $result = D('Zone', 'Service')->editZone($zone, $zone['zone_id'], $center);
             if($result['code'] != 0){
                 $this->ajaxReturn($result['code'],$result['msg']);
             }
