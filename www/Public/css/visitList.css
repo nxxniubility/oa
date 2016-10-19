@@ -76,8 +76,8 @@
 .selectbox dl dd.on{border-bottom:1px solid #ccc;}
 .selectbox dl dd:hover{background:#eaedf1 none repeat scroll 0 0;color:#555;}
 .selectbox dl dd:last-child { border-bottom: none;}
-.selectbox .arrow {background:transparent url(../images/Descending.png) no-repeat scroll 8px 12px;height:30px;width:30px;background-position-x: 8px;background-position-y: 12px;}
-.selectbox .arrow_on {background:transparent url(../images/Ascending.png) no-repeat scroll 8px 12px;background-position-x: 8px;background-position-y: 12px;}
+.selectbox .arrow {height:30px;width:30px;background:transparent url(../images/Descending.png) no-repeat scroll center center;}
+.selectbox .arrow_on {background:transparent url(../images/Ascending.png) no-repeat scroll center center;}
 .select_title {overflow: hidden;width: calc(100% - 30px);white-space: nowrap;word-break: keep-all;text-overflow: ellipsis;}
 .fxDone { display: none;}
 .rnSearch .rnSearchInp { display: block; width: 198px; height: 30px; line-height: 30px; text-indent: 20px; border: 1px solid #ccc; background: #fff;}
@@ -146,6 +146,12 @@
 .arrow i.hideIcon { background-position: -15px 0;}
 .exact_query {float:left;display:block;height:30px;width:100%;margin:20px auto;}
 
+/*1019*/
+.backToLibrary .btlBtnBox .viReassign {position:initial;padding:0;}
+.rnSearch .rnSearchBtn {cursor:pointer;}
+.select_title {width:auto;}
+.viReassign {height:auto;}
+.rnTableBox {height:358px;}
 
 
 
