@@ -168,6 +168,16 @@ class ZoneService extends BaseService
         if($zone_id != 1 && empty($param['parentid'])) {
             return array('code'=>302,'msg'=>'请选择所属区域');
         }
+        $result1 = $this->checkMobile($param['tel']);
+        $result2 = $this->checkTel($param['tel']);
+        if ($param['tel'] && $result1==false && $result2==false) {
+            return array('code'=>303,'msg'=>'请输入正确的联系方式');
+        }
+        $pattern = "/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i";
+        if ($param['email'] && !preg_match($pattern,$param['email']))
+        {
+            return array('code'=>304,'msg'=>'请输入正确的邮箱');
+        }
         $result = D("Zone")->editData($param, $zone_id);
         if ($result['code'] != 0) {
             return array('code'=>$result['code'],'msg'=>$result['msg']);
