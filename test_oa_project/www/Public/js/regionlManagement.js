@@ -107,5 +107,3 @@ $('.seeDetails').on('click',function(){
 		layer.closeAll(); 		// 关闭
 	});
 });
-
-//  去最后一行dl border
