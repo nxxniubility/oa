@@ -116,7 +116,7 @@ class ZoneService extends BaseService
         $param['addusr'] = $this->system_user_id;
         $param['status'] = 1;
         $param['createtime'] = time();
-        if(!(array_filter($param['name']))) {
+        if(!(str_replace(' ','',$param['name']))) {
             return array('code'=>301,'msg'=>'区域名称不能为空');
         }
         if(empty($param['parentid'])) {
@@ -134,7 +134,7 @@ class ZoneService extends BaseService
         }
         $parentZone = D("Zone")->getFind(array('zone_id'=>$param['parentid'],'status'=>1));
         $param['level']  = $parentZone['level']+1;
-        $sameZone = D("Zone")->getFind(array('name'=>$param['name'],'level'=>$param['level'],'status'=>1));
+        $sameZone = D("Zone")->getFind(array('name'=>$param['name'],'status'=>1));
         if ($sameZone) {
             $zoneAllList = D('Zone')->getList(array('status'=>1));
             F('Cache/zone', $zoneAllList);
