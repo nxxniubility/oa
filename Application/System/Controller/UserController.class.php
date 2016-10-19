@@ -574,22 +574,21 @@ class UserController extends SystemController
         }
         $limit = (empty($requestG['page'])?'0':($requestG['page']-1)*30).',30';
         //获取数据
-        $orderMainController = new OrderController();
-        $result = $orderMainController->getList($where, 'createtime DESC', $limit);
+        $orderList = D('Order', 'Service')->getOrderList($where, 'createtime DESC', $limit);
         //获取区域下
-        $zoneMain = new ZoneController();
-        $data['zoneAll']['children'] = $zoneMain->getZoneList($this->system_user['zone_id']);
-        //获取职位及部门
-        $departmentMain = new DepartmentController();
-        $data['departmentAll'] = $departmentMain->getList();
-        $roleMain = new RoleController();
-        $data['roleAll'] = $roleMain->getAllRole();
+        $resultZone = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
+        $data['zoneAll']['children'] = $resultZone['data'];
+        $departmentAll = D('Department', 'Service')->getDepartmentList();
+        $data['departmentAll'] = $departmentAll['data'];
+        //获取职位
+        $roleAll = D('Role', 'Service')->getRoleList();
+        $data['roleAll'] = $roleAll['data'];
         //获取配置状态值
         $data['order_status'] = C('ORDER_STATUS');
         $data['order_loan_institutions'] = C('USER_LOAN_INSTITUTIONS');
         $data['order_receivetype'] = C('USER_RECEIVETYPE');
         //模版赋值
-        $data['order_list'] = $result['data'];
+        $data['order_list'] = $orderList['data'];
         $data['request'] = $requestG;
         $this->assign('data', $data);
         $this->display();
