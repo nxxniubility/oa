@@ -317,7 +317,7 @@
                 if(reflag.code==0){
                     var html = '';
                     var html_if = '';
-                    $.each(reflag.data.data, function(k,v){
+                    $.each(reflag.data, function(k,v){
                         if(v.engaged_status && v.engaged_status==1){
                             html_if = '<td><a href="javascript:;" class="rnXian">忙线</a></td> <td><a href="javascript:;" onclick="subtn(0,'+ v.system_user_id+')" class="rnConfirm">确定</a></td>';
                         }else{
@@ -338,11 +338,16 @@
         });
     }
     function subtn(temp_user,temp_system){
+        if (temp_system.length == 0 || temp_system==0) {
+            layer.msg('操作人区域平级下没有销售人员',{icon:2});
+            return false;
+        }
         if(temp_user==0){
             if($(':input[name="temp_user"]').val().length>0){
                 temp_user = $(':input[name="temp_user"]').val();
             }else{
                 layer.msg('请重新选择要确认到访的客户',{icon:2});
+                return false;
             }
         }
         var data = {

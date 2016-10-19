@@ -31,14 +31,16 @@
 							<div class="selectbox2 l">
 		                        <dl class="select2">
 									<dt>
-			                            <div class="select_title l" >请选择所属区域</div>
+			                            <div class="select_title l" >{$zone['parent']['name']}</div>
 			                            <div class="arrow r" ></div>
 		                            </dt>
 									<foreach name = "zoneList" item = "v1">
-			                            <dd class="fxDone" data-value="{$v1['zone_id']}">{$v1['name']}</dd>
+										<if condition="($zone['parent']['zone_id'] != $v1['zone_id'])">
+			                            	<dd class="fxDone" data-value="{$v1['zone_id']}">{$v1['name']}</dd>
+			                            </if>
 									</foreach>
 		                        </dl>
-		                        <input type="hidden" name="zone_id">
+		                        <input type="hidden" name="zone_id" value="{$zone['parent']['zone_id']}">
 		                    </div>
 						</div>
 					</div>
@@ -46,25 +48,25 @@
 					<div class="newRows clearfix">
 						<div class="newRowsLeft">详情地址:</div>
 						<div class="newRowsRight">
-							<input type="text" class="newInp" name="address" value="{$zoneList['address']}">
+							<input type="text" class="newInp" name="address" value="{$zone['address']}">
 						</div>
 					</div>
 					<div class="newRows clearfix">
 						<div class="newRowsLeft">联系电话:</div>
 						<div class="newRowsRight">
-							<input type="tel" class="newInp" name="tel" value="{$zoneList['tel']}">
+							<input type="tel" class="newInp" name="tel" value="{$zone['tel']}">
 						</div>
 					</div>
 					<div class="newRows clearfix">
 						<div class="newRowsLeft">电子邮箱:</div>
 						<div class="newRowsRight">
-							<input type="email" class="newInp" name="email" value="{$zoneList['email']}">
+							<input type="email" class="newInp" name="email" value="{$zone['email']}">
 						</div>
 					</div>
 					<div class="newRows clearfix">
 						<div class="newRowsLeft">区域简介:</div>
 						<div class="newRowsRight">
-							<textarea class="newTxt" name="abstract" value="{$zoneList['abstract']}"></textarea>
+							<textarea class="newTxt" name="abstract" value="{$zone['abstract']}"></textarea>
 						</div>
 					</div>
 					<div class="newRows clearfix">
