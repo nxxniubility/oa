@@ -1451,11 +1451,12 @@ class UserService extends BaseService
     | @author zgt
     */
     public function addAllocation($data){
-        if (empty($data['zone_id'])) return array('code'=>301, '区域不能为空');
-        if (empty($data['allocationname'])) return array('code'=>302, '名称不能为空', 'data'=>'allocationname');
-        if (empty($data['allocationnum'])) return array('code'=>303, '分配数量不能为空', 'data'=>'allocationnum');
-        if (empty($data['channel_id'])) return array('code'=>304, '请选择渠道');
-        if (empty($data['allocation_roles'])) return array('code'=>305, '请添加分配职位', 'data'=>'role_name');
+        $data = array_filter($data);
+        if (empty($data['zone_id'])) return array('code'=>301, 'msg'=>'区域不能为空');
+        if (empty($data['allocationname'])) return array('code'=>302, 'msg'=>'名称不能为空', 'data'=>'allocationname');
+        if (empty($data['allocationnum'])) return array('code'=>303, 'msg'=>'分配数量不能为空', 'data'=>'allocationnum');
+        if (empty($data['channel_id'])) return array('code'=>304, 'msg'=>'请选择渠道');
+        if (empty($data['allocation_roles'])) return array('code'=>305, 'msg'=>'请添加分配职位', 'data'=>'role_name');
         $data['system_user_id'] = $this->system_user_id;
         $data['createtime'] = time();
         if(!empty($data['system_user_ids'])){
@@ -1503,11 +1504,12 @@ class UserService extends BaseService
     | @author zgt
     */
     public function editAllocation($data){
-        if (empty($data['zone_id'])) return array('code'=>301, '区域不能为空');
-        if (empty($data['allocationname'])) return array('code'=>302, '名称不能为空', 'data'=>'allocationname');
-        if (empty($data['allocationnum'])) return array('code'=>303, '分配数量不能为空', 'data'=>'allocationnum');
-        if (empty($data['channel_id'])) return array('code'=>304, '请选择渠道');
-        if (empty($data['allocation_roles'])) return array('code'=>305, '请添加分配职位', 'data'=>'role_name');
+        $data = array_filter($data);
+        if (empty($data['zone_id'])) return array('code'=>301, 'msg'=>'区域不能为空');
+        if (empty($data['allocationname'])) return array('code'=>302, 'msg'=>'名称不能为空', 'data'=>'allocationname');
+        if (empty($data['allocationnum'])) return array('code'=>303, 'msg'=>'分配数量不能为空', 'data'=>'allocationnum');
+        if (empty($data['channel_id'])) return array('code'=>304, 'msg'=>'请选择渠道');
+        if (empty($data['allocation_roles'])) return array('code'=>305, 'msg'=>'请添加分配职位', 'data'=>'role_name');
         $data['system_user_id'] = $this->system_user_id;
         //开启事务
         D()->startTrans();
@@ -1548,33 +1550,37 @@ class UserService extends BaseService
     }
 
     /*
-    * 删除分配规则
-    * @author zgt
-    * @return array('code'=>'','msg'=>'','data'=>'');
-    */
-    public function allocationDel($id){
-        $where['user_allocation_id'] = $id;
-        $data['status'] = 0;
-        $result = M('user_allocation')->where($where)->save($data);
+     |--------------------------------------------------------------------------
+     | 删除分配规则
+     |--------------------------------------------------------------------------
+     | @author zgt
+     */
+    public function allocationDel($data){
+        $data = array_filter($data);
+        if (empty($data['user_allocation_id'])) return array('code'=>300, 'msg'=>'参数异常');
+        $result = D('UserAllocation')->delData($data['user_allocation_id']);
         if($result!==false){
-            return true;
+            return array('code'=>0,'msg'=>'删除成功');
         }
-        return false;
+        return array('code'=>100,'msg'=>'删除失败');
     }
 
+
     /*
-    * 修改启动分配规则
-    * @author zgt
-    * @return array('code'=>'','msg'=>'','data'=>'');
-    */
-    public function allocationStart($id,$start){
-        $where['user_allocation_id'] = $id;
-        $data['start'] = $start;
-        $result = M('user_allocation')->where($where)->save($data);
-        if($result!==false){
-            return true;
+     |--------------------------------------------------------------------------
+     | 修改启动分配规则
+     |--------------------------------------------------------------------------
+     | @author zgt
+     */
+    public function allocationStart($data){
+        $data = array_filter($data);
+        if (empty($data['user_allocation_id'])) return array('code'=>300, 'msg'=>'参数异常');
+        $data['start'] = empty($data['start'])?0:$data['start'];
+        $result = D('UserAllocation')->editData($data, $data['user_allocation_id']);
+        if($result['code']==0){
+            return array('code'=>0,'msg'=>'操作成功');
         }
-        return false;
+        return $result;
     }
 
     /*
@@ -1704,6 +1710,7 @@ class UserService extends BaseService
     | @author zgt
     */
     public function addAbandon($param){
+        $param = array_filter($param);
         if (empty($param['abandonname'])) return array('code'=>300, 'msg'=>'名称不能为空', 'data'=>'abandonname');
         if ($param['callbacknum'] == "") return array('code'=>301, 'msg'=>'要求回访次数不能为空', 'data'=>'callbacknum');
         if(!is_numeric($param['callbacknum'])) return array('code'=>201, 'msg'=>'必须为数字', 'data'=>'callbacknum');
@@ -1724,6 +1731,7 @@ class UserService extends BaseService
     | @author zgt
     */
     public function editAbandon($param){
+        $param = array_filter($param);
         if(empty($param['user_abandon_id'])) return array('code'=>300, 'msg'=>'参数异常');
         if (empty($param['abandonname'])) return array('code'=>301, 'msg'=>'名称不能为空', 'data'=>'abandonname');
         if ($param['callbacknum'] == "") return array('code'=>302, 'msg'=>'要求回访次数不能为空', 'data'=>'callbacknum');
@@ -1763,6 +1771,39 @@ class UserService extends BaseService
         return $result;
     }
 
+    /*
+     |--------------------------------------------------------------------------
+     | 删除回收规则
+     |--------------------------------------------------------------------------
+     | @author zgt
+     */
+    public function abandonDel($data){
+        $data = array_filter($data);
+        if (empty($data['user_abandon_id'])) return array('code'=>300, 'msg'=>'参数异常');
+        $result = D('UserAbandon')->delData($data['user_abandon_id']);
+        if($result!==false){
+            return array('code'=>0,'msg'=>'删除成功');
+        }
+        return array('code'=>100,'msg'=>'删除失败');
+    }
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | 修改启动回收规则
+     |--------------------------------------------------------------------------
+     | @author zgt
+     */
+    public function abandonStart($data){
+        $data = array_filter($data);
+        if (empty($data['user_abandon_id'])) return array('code'=>300, 'msg'=>'参数异常');
+        $data['start'] = empty($data['start'])?0:$data['start'];
+        $result = D('UserAbandon')->editData($data, $data['user_abandon_id']);
+        if($result['code']==0){
+            return array('code'=>0,'msg'=>'操作成功');
+        }
+        return $result;
+    }
 
     /**
      * 参数过滤

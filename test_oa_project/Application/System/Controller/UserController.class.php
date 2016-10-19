@@ -794,13 +794,16 @@ class UserController extends SystemController
         if (IS_POST) {
             $request = I('post.');
             if ($request['type'] == 'del') {
-                $reflag = D('User')->allocationDel($request['user_allocation_id']);
-                if ($reflag !== false) $this->ajaxReturn(0, '分配规则删除成功');
-                else $this->ajaxReturn(1, '删除失败');
+                $where['user_allocation_id'] = $request['user_allocation_id'];
+                $reflag = D('User','Service')->allocationDel($where);
+                if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
+                else $this->ajaxReturn($reflag['code'], $reflag['msg']);
             }elseif($request['type'] == 'start'){
-                $reflag = D('User')->allocationStart($request['user_allocation_id'],$request['start']);
-                if ($reflag !== false) $this->ajaxReturn(0, '操作成功');
-                else $this->ajaxReturn(1, '操作失败');
+                $where['user_allocation_id'] = $request['user_allocation_id'];
+                $where['start'] = $request['start'];
+                $reflag = D('User','Service')->allocationStart($where);
+                if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
+                else $this->ajaxReturn($reflag['code'], $reflag['msg']);
             }
         }
         $re_page = I('get.page', 1);
@@ -826,7 +829,7 @@ class UserController extends SystemController
                 if(empty($request['zone_id'])) $this->ajaxReturn(1, '请先选择区域');
                 if(empty($request['role_id'])) $this->ajaxReturn(1, '请先选中职位');
                 $where['where']['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-                $where['where']['role_id'] = $request['role_id'];
+                $param['where']['role_id'] = array('IN', $request['role_id']);
                 //员工列表
                 $reflag = D('SystemUser','Service')->getSystemUsersList($where);
                 if ($reflag['code']==0) $this->ajaxReturn(0, '获取成功', $reflag['data']['data']);
@@ -868,7 +871,7 @@ class UserController extends SystemController
                 if(empty($request['zone_id'])) $this->ajaxReturn(1, '请先选择区域');
                 if(empty($request['role_id'])) $this->ajaxReturn(1, '请先选中职位');
                 $param['where']['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-                $param['where']['role_id'] = $request['role_id'];
+                $param['where']['role_id'] = array('IN', $request['role_id']);
                 $param['where']['usertype'] = array('NEQ', 10);
                 //员工列表
                 $reflag = D('SystemUser','Service')->getSystemUsersList($param);
@@ -910,15 +913,16 @@ class UserController extends SystemController
         if (IS_POST) {
             $request = I('post.');
             if ($request['type'] == 'del') {
-                $where['status'] = 0;
-                $reflag = D('User')->abandonEdit($where, $request['user_abandon_id']);
-                if ($reflag !== false) $this->ajaxReturn(0, '回收规则删除成功');
-                else $this->ajaxReturn(1, '删除失败');
+                $where['user_abandon_id'] = $request['user_abandon_id'];
+                $reflag = D('User','Service')->abandonDel($where);
+                if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
+                else $this->ajaxReturn($reflag['code'], $reflag['msg']);
             }elseif($request['type'] == 'start'){
+                $where['user_abandon_id'] = $request['user_abandon_id'];
                 $where['start'] = $request['start'];
-                $reflag = D('User')->abandonEdit($where, $request['user_abandon_id']);
-                if ($reflag !== false) $this->ajaxReturn(0, '操作成功');
-                else $this->ajaxReturn(1, '操作失败');
+                $reflag = D('User','Service')->abandonStart($where, $request['user_abandon_id']);
+                if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg']);
+                else $this->ajaxReturn($reflag['code'], $reflag['msg']);
             }
         }
         $re_page = I('get.page', 1);
@@ -973,8 +977,8 @@ class UserController extends SystemController
             $request = I('post.');
             $request['user_abandon_id'] = $id;
             $reflag = D('User', 'Service')->editAbandon($request);
-            if ($reflag !== false) $this->ajaxReturn(0, '回收规则修改成功', U('System/User/abandonList'));
-            else $this->ajaxReturn(1, '修改失败');
+            if ($reflag['code']==0) $this->ajaxReturn(0, '回收规则修改成功', U('System/User/abandonList'));
+            else $this->ajaxReturn(1, $reflag['msg']);
         }
         //详情
         $data['abandonAll'] = D('User', 'Service')->abandonDetail(array('user_abandon_id'=>$id));
