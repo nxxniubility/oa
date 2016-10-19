@@ -1509,7 +1509,6 @@ class UserService extends BaseService
         if (empty($data['channel_id'])) return array('code'=>304, '请选择渠道');
         if (empty($data['allocation_roles'])) return array('code'=>305, '请添加分配职位', 'data'=>'role_name');
         $data['system_user_id'] = $this->system_user_id;
-        print_r($data);exit;
         //开启事务
         D()->startTrans();
         $result = D('UserAllocation')->editData($data, $data['user_allocation_id']);
