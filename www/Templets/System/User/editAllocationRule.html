@@ -230,7 +230,7 @@
             </dl>
             <foreach name="data['roleAll'][data]" item="v" key="k">
                 <dl class="clearfix department_content">
-                    <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}" {:(in_array($v['id'],$data['departmentAll']['allocation_roles']))?'checked="checked"':''}></dd>
+                    <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}" {:(in_array($v['id'],expload(',', $data['departmentAll']['allocation_roles'])))?'checked="checked"':''}></dd>
                     <dd class="wNsTwo">{$v.department_name}</dd>
                     <dd class="wNsThr">{$v.name}</dd>
                 </dl>
