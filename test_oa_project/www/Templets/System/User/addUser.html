@@ -330,7 +330,7 @@
                 if(reflag.code==0){
                     var html = '';
                     var html_if = '';
-                    $.each(reflag.data.data, function(k,v){
+                    $.each(reflag.data, function(k,v){
                         if(v.engaged_status && v.engaged_status==1){
                             html_if = '<td><a href="javascript:;" class="rnXian">忙线</a></td> <td><a href="javascript:;" onclick="layer.msg(\'该员工正处于忙线状态\',{icon:2});" class="rnConfirm">确定</a></td>';
                         }else{
