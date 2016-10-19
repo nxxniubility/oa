@@ -1439,7 +1439,7 @@ class SystemUserService extends BaseService
             }
         }else{
             $redata['count'] = 0;
-        }
+        }      
         return array('code'=>0, 'data'=>$redata);
     }
 
