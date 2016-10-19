@@ -1,7 +1,7 @@
 <?php
 return array(
     /*'配置项'=>'配置值'*/
-    'LOAD_EXT_CONFIG' => 'db,rbac,status,alidayu,email,oss,site,var,mail,baidu,ordername,apistore,rds',//加载配置文件
+    'LOAD_EXT_CONFIG' => 'db,rbac,status,alidayu,email,oss,site,var,mail,baidu,ordername,apistore,rds,netease',//加载配置文件
     'URL_MODEL'=>'2',
     'DEFAULT_MODULE'=> 'System', //默认模块
     'PHONE_CODE_KEY'=>'123456',  //手机号码的密钥

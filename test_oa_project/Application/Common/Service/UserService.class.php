@@ -608,8 +608,6 @@ class UserService extends BaseService
         $re_data = D('User')->getFind(array('user_id'=>$param['user_id']), 'username,system_user_id,tel');
         if(empty($re_data)) return array('code'=>101,'msg'=>'找不到该客户信息');
         if($re_data['system_user_id']!=$param['system_user_id']) return array('code'=>102,'msg'=>'您不是该客户所属人，无该操作权限！');
-        //实例化接口
-        $NeteaseService = new NeteaseService();
         //获取操作人启用号码 无则获取手机号码
         $call_number = D('CallNumber')->getFind(array('system_user_id'=>$param['system_user_id'],'number_start'=>1,'number_status'=>1),'number,number_type');
         if(!empty($call_number)){
@@ -630,7 +628,7 @@ class UserService extends BaseService
         }else{
             return array('code'=>204,'msg'=>'该客户无可拨通电话');
         }
-        $re_flag = $NeteaseService->startcall($mobile_caller,$mobile_callee);
+        $re_flag = D('Netease', 'Service')->startcall($mobile_caller,$mobile_callee);
         if($re_flag['code']==0){
             $_add_data = array(
                 'call_key' => $re_flag['data'],
@@ -1373,6 +1371,400 @@ class UserService extends BaseService
         }
     }
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | 分配规则
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function allocationList($param=null){
+        $page = !empty($param['page'])?$param['page']:'0,10';
+        //限制区域级别
+        $zoneIds = D('Zone', 'Service')->getZoneIds($this->system_user['zone_id']);
+        foreach ($zoneIds['data'] as $key => $value) {
+            $zidString[] = $value['zone_id'];
+        }
+        $where[C('DB_PREFIX').'user_allocation.zone_id'] = array("IN", $zidString);
+        $DB_PREFIX = C('DB_PREFIX');
+        $where[$DB_PREFIX.'user_allocation.status'] = 1;
+        $result['data'] = D('UserAllocation')
+            ->field( "user_allocation_id,
+                allocationname,
+                allocationnum,
+                allocation_roles,
+                startnum,
+                intervalnum,
+                week_text,
+                {$DB_PREFIX}user_allocation.sort,
+                {$DB_PREFIX}user_allocation.channel_id,
+                {$DB_PREFIX}user_allocation.zone_id,
+                {$DB_PREFIX}user_allocation.createtime,
+                channelname,
+                weighttype,
+                start,
+                'specify_days',
+                'holiday',
+                name")
+            ->where($where)
+            ->join('LEFT JOIN __CHANNEL__ ON __CHANNEL__.channel_id=__USER_ALLOCATION__.channel_id')
+            ->join('LEFT JOIN __ZONE__ ON __ZONE__.zone_id=__USER_ALLOCATION__.zone_id')
+            ->order($DB_PREFIX.'user_allocation.user_allocation_id ASC')
+            ->limit($page)
+            ->select();
+        $result['count'] = D('UserAllocation')->getCount($where);
+        //转化状态
+        if(!empty($result['data'])){
+            foreach($result['data'] as $k=>$v){
+                if(!empty($v['channel_id'])){
+                    $channel = D('Channel','Service')->getChannelInfo(array('channel_id'=>$v['channel_id']));
+                    if($channel['data']['pid']!=0){
+                        $channel_parent = D('Channel','Service')->getChannelInfo(array('channel_id'=>$channel['data']['pid']));
+                        $result['data'][$k]['channel_names'] = $channel_parent['data']['channelname'].'-'.$channel['data']['channelname'];
+                    }else{
+                        $result['data'][$k]['channel_names'] = $channel['data']['channelname'];
+                    }
+                }
+                if(!empty($v['allocation_roles'])){
+                    $_roles = explode(',',$v['allocation_roles']);
+                    $_rolesName = '';
+                    foreach($_roles as $v2){
+                        $getRole = D('Role','Service')->getRoleInfo(array('role_id'=>$v2));
+                        if(empty($_rolesName)){
+                            $_rolesName = $getRole['data']['name'];
+                        }else{
+                            $_rolesName .= ','.$getRole['data']['name'];
+                        }
+                    }
+                }
+                $result['data'][$k]['rolenames'] = $_rolesName;
+                $result['data'][$k]['create_time'] = date('Y-m-d H:i', $v['createtime']);
+            }
+        }
+        return $result;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 添加分配规则
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function addAllocation($data){
+        if (empty($data['zone_id'])) return array('code'=>301, '区域不能为空');
+        if (empty($data['allocationname'])) return array('code'=>302, '名称不能为空', 'data'=>'allocationname');
+        if (empty($data['allocationnum'])) return array('code'=>303, '分配数量不能为空', 'data'=>'allocationnum');
+        if (empty($data['channel_id'])) return array('code'=>304, '请选择渠道');
+        if (empty($data['allocation_roles'])) return array('code'=>305, '请添加分配职位', 'data'=>'role_name');
+        $data['system_user_id'] = $this->system_user_id;
+        $data['createtime'] = time();
+        if(!empty($data['system_user_ids'])){
+            $ids = explode(',',$data['system_user_ids']);
+        }else{
+            if(!empty($data['allocation_roles'])){
+                $roles = explode(',',$data['allocation_roles']);
+                $_syswhere['where']["role_id"] = array('IN',$roles);
+            }
+            $_syswhere['where']["usertype"] = array('NEQ',10);
+            $zoneids = D('Zone', 'Service')->getZoneIds(array('zone_id'=>$data['zone_id']));
+            foreach($zoneids['data'] as $k => $v){
+                $zids[] = $v['zone_id'];
+            }
+            $_syswhere['where']["zone_id"] = array('IN',$zids);
+            $systemUserList = D('SystemUser', 'Service')->getSystemUsersList($_syswhere);
+            if(!empty($systemUserList['data'])){
+                foreach ($systemUserList['data'] as $k => $v) {
+                    $ids[] = $v['system_user_id'];
+                }
+            }
+        }
+        if($ids){
+            //开启事务
+            D()->startTrans();
+            $result = D('UserAllocation')->addData($data);
+            foreach ($ids as $v) {
+                $addData[] = array('user_allocation_id' => $result['data'],'system_user_id'=>$v);
+            }
+            $rflag_systemUser = D('AllocationSystemuser')->addAll($addData);
+        }
+        if($result['code']==0 && $rflag_systemUser!==false){
+            D()->commit();
+        }else{
+            D()->rollback();
+        }
+
+        return $result;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 修改分配规则
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function editAllocation($data){
+        if (empty($data['zone_id'])) return array('code'=>301, '区域不能为空');
+        if (empty($data['allocationname'])) return array('code'=>302, '名称不能为空', 'data'=>'allocationname');
+        if (empty($data['allocationnum'])) return array('code'=>303, '分配数量不能为空', 'data'=>'allocationnum');
+        if (empty($data['channel_id'])) return array('code'=>304, '请选择渠道');
+        if (empty($data['allocation_roles'])) return array('code'=>305, '请添加分配职位', 'data'=>'role_name');
+        $data['system_user_id'] = $this->system_user_id;
+        print_r($data);exit;
+        //开启事务
+        D()->startTrans();
+        $result = D('UserAllocation')->editData($data, $data['user_allocation_id']);
+        if(!empty($data['system_user_ids'])){
+            $ids = explode(',',$data['system_user_ids']);
+        }else{
+            if(!empty($data['allocation_roles'])){
+                $roles = explode(',',$data['allocation_roles']);
+                $_syswhere['where']["role_id"] = array('IN',$roles);
+            }
+            $_syswhere['where']["usertype"] = array('NEQ',10);
+            $zoneids = D('Zone', 'Service')->getZoneIds(array('zone_id'=>$data['zone_id']));
+            foreach($zoneids['data'] as $k => $v){
+                $zids[] = $v['zone_id'];
+            }
+            $_syswhere['where']["zone_id"] = array('IN',$zids);
+            $systemUserList = D('SystemUser', 'Service')->getSystemUsersList($_syswhere);
+            if(!empty($systemUserList['data'])){
+                foreach ($systemUserList['data'] as $k => $v) {
+                    $ids[] = $v['system_user_id'];
+                }
+            }
+        }
+        if($ids){
+            D('AllocationSystemuser')->delData($data['user_allocation_id']);
+            foreach ($ids as $v) {
+                $addData[] = array('user_allocation_id' => $data['user_allocation_id'],'system_user_id'=>$v);
+            }
+            $rflag_systemUser = D('AllocationSystemuser')->addAll($addData);
+        }
+        if($result['code']==0 && $rflag_systemUser!==false){
+            D()->commit();
+        }else{
+            D()->rollback();
+        }
+        return $result;
+    }
+
+    /*
+    * 删除分配规则
+    * @author zgt
+    * @return array('code'=>'','msg'=>'','data'=>'');
+    */
+    public function allocationDel($id){
+        $where['user_allocation_id'] = $id;
+        $data['status'] = 0;
+        $result = M('user_allocation')->where($where)->save($data);
+        if($result!==false){
+            return true;
+        }
+        return false;
+    }
+
+    /*
+    * 修改启动分配规则
+    * @author zgt
+    * @return array('code'=>'','msg'=>'','data'=>'');
+    */
+    public function allocationStart($id,$start){
+        $where['user_allocation_id'] = $id;
+        $data['start'] = $start;
+        $result = M('user_allocation')->where($where)->save($data);
+        if($result!==false){
+            return true;
+        }
+        return false;
+    }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 查看分配规则
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function allocationDetail($where)
+    {
+        $DB_PREFIX = C('DB_PREFIX');
+        $result = D('UserAllocation')->getFind($where);
+        //分配量状态转换
+        $arr_weighttype = C('FIELD_STATUS.ALLOCATION_WEIGHTTYPE');
+        $result['weightname'] = $arr_weighttype[$result['weighttype']];
+        //是否有分配职位
+        if(!empty($result['allocation_roles'])) {
+            $allocation_roles = explode(',', $result['allocation_roles']);
+            $_allocation_roles = array();
+            foreach($allocation_roles as $k=>$v){
+                $_allocation_roles[] = $v;
+            }
+            $role_where['where']['id']= array('IN',$_allocation_roles);
+            $role_list = D('Role', 'Service')->getRoleList($role_where);
+            $result['roles'] = $role_list['data']['data'];
+            if(!empty($result['roles'])){
+                foreach ($result['roles'] as $k => $v) {
+                    if ($k == 0) $result['roles_name'] = $v['department_name'].''.$v['name'];
+                    else $result['roles_name'] .= ',' . $v['department_name'].'.'.$v['name'];
+                }
+            }
+            $result['systemuser'] = D('AllocationSystemuser')->getList(array('user_allocation_id'=>$result['user_allocation_id']));
+            $systemUserIds = $realnames = null;
+            foreach ($result['systemuser'] as $key => $value) {
+                $systemuserInfo = D('SystemUser', 'Service')->getSystemUsersInfo(array('system_user_id'=>$value['system_user_id']));
+                if (!empty($realnames)) {
+                    $realnames = $realnames.",".$systemuserInfo['data']['realname'];
+                    $systemUserIds = $systemUserIds.",".$systemuserInfo['data']['system_user_id'];
+                }else{
+                    $realnames = $systemuserInfo['data']['realname'];
+                    $systemUserIds = $systemuserInfo['data']['system_user_id'];
+                }
+            }
+            $result['systemuser_names'] = $realnames;
+            $result['systemuser_ids'] = $systemUserIds;
+
+        }
+        return array('code'=>0, 'data'=>$result);
+    }
+
+
+    /*
+   |--------------------------------------------------------------------------
+   | 回收规则
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function abandonList($param=null){
+        $page = !empty($param['page'])?$param['page']:'0,10';
+        //限制区域级别
+        $zoneIds = D('Zone', 'Service')->getZoneIds($this->system_user['zone_id']);
+        foreach ($zoneIds['data'] as $key => $value) {
+            $zidString[] = $value['zone_id'];
+        }
+        $where[C('DB_PREFIX').'user_abandon.zone_id'] = array("IN", $zidString);
+        $DB_PREFIX = C('DB_PREFIX');
+        $where[$DB_PREFIX.'user_abandon.status'] = 1;
+        $result['data'] = M('user_abandon')
+            ->field(
+                "user_abandon_id,
+                abandonname,
+                {$DB_PREFIX}user_abandon.createtime,
+                abandon_roles,
+                {$DB_PREFIX}user_abandon.channel_id,
+                channelname,
+                callbacknum,
+                attaindays,
+                week_text,
+                start,
+                'specify_days',
+                'holiday',
+                {$DB_PREFIX}user_abandon.zone_id,
+                name as zonename"
+            )
+            ->where($where)
+            ->join('LEFT JOIN __CHANNEL__ ON __CHANNEL__.channel_id=__USER_ABANDON__.channel_id')
+            ->join('LEFT JOIN __ZONE__ ON __ZONE__.zone_id=__USER_ABANDON__.zone_id')
+            ->order('user_abandon_id ASC')
+            ->limit($page)
+            ->select();
+        $result['count'] = D('UserAbandon')->getCount($where);
+        //转化状态
+        if(!empty($result['data'])){
+            foreach($result['data'] as $k=>$v){
+                if(!empty($v['channel_id'])){
+                    $channel = D('Channel','Service')->getChannelInfo(array('channel_id'=>$v['channel_id']));
+                    if($channel['data']['pid']!=0){
+                        $channel_parent = D('Channel','Service')->getChannelInfo(array('channel_id'=>$channel['data']['pid']));
+                        $result['data'][$k]['channel_names'] = $channel_parent['data']['channelname'].'-'.$channel['data']['channelname'];
+                    }else{
+                        $result['data'][$k]['channel_names'] = $channel['data']['channelname'];
+                    }
+                }
+                if(!empty($v['abandon_roles'])){
+                    $_roles = explode(',',$v['abandon_roles']);
+                    $_rolesName = '';
+                    foreach($_roles as $v2){
+                        $getRole = D('Role','Service')->getRoleInfo(array('role_id'=>$v2));
+                        if(empty($_rolesName)){
+                            $_rolesName = $getRole['data']['name'];
+                        }else{
+                            $_rolesName .= ','.$getRole['data']['name'];
+                        }
+                    }
+                }
+                $result['data'][$k]['rolenames'] = $_rolesName;
+                $result['data'][$k]['create_time'] = date('Y-m-d H:i', $v['createtime']);
+            }
+        }
+        return array('code'=>0, 'data'=>$result);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 添加回收规则
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function addAbandon($param){
+        if (empty($param['abandonname'])) return array('code'=>300, 'msg'=>'名称不能为空', 'data'=>'abandonname');
+        if ($param['callbacknum'] == "") return array('code'=>301, 'msg'=>'要求回访次数不能为空', 'data'=>'callbacknum');
+        if(!is_numeric($param['callbacknum'])) return array('code'=>201, 'msg'=>'必须为数字', 'data'=>'callbacknum');
+        if (empty($param['unsatisfieddays'])) return array('code'=>302, 'msg'=>'未达到要求保护天数不能为空', 'data'=>'unsatisfieddays');
+        if (empty($param['attaindays'])) return array('code'=>303, 'msg'=>'达到要求保护天数不能为空', 'data'=>'attaindays');
+        if (empty($param['zone_id'])) return array('code'=>304, 'msg'=>'区域不能为空');
+        if (empty($param['channel_id'])) return array('code'=>305, 'msg'=>'请选择渠道');
+        if (empty($param['abandon_roles'])) return array('code'=>306, 'msg'=>'请添加回收职位', 'data'=>'role_name');
+        $param['system_user_id'] = $this->system_user_id;
+        $param['createtime'] = time();
+        return D('UserAbandon')->addData($param);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 修改回收规则
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function editAbandon($param){
+        if(empty($param['user_abandon_id'])) return array('code'=>300, 'msg'=>'参数异常');
+        if (empty($param['abandonname'])) return array('code'=>301, 'msg'=>'名称不能为空', 'data'=>'abandonname');
+        if ($param['callbacknum'] == "") return array('code'=>302, 'msg'=>'要求回访次数不能为空', 'data'=>'callbacknum');
+        if (empty($param['unsatisfieddays'])) return array('code'=>303, 'msg'=>'未达到要求保护天数不能为空', 'data'=>'unsatisfieddays');
+        if (empty($param['attaindays'])) return array('code'=>304, 'msg'=>'达到要求保护天数不能为空', 'data'=>'attaindays');
+        if (empty($param['zone_id'])) return array('code'=>305, 'msg'=>'区域不能为空');
+        if (empty($param['channel_id'])) return array('code'=>306, 'msg'=>'请选择渠道');
+        if (empty($param['abandon_roles'])) return array('code'=>307, 'msg'=>'请添加回收职位', 'data'=>'role_name');
+        $param['system_user_id'] = $this->system_user_id;
+        return D('UserAbandon')->editData($param, $param['user_abandon_id']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 查看回收规则
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function abandonDetail($where){
+        if(empty($where['user_abandon_id'])) return array('code'=>300, 'msg'=>'参数异常');
+        $result = D('UserAbandon')->getFind($where);
+        $_rolesName = null;
+        if(!empty($result['abandon_roles'])) {
+            $abandon_roles = explode(',', $result['abandon_roles']);
+            foreach($abandon_roles as $v){
+                $re_data = D('Role','Service')->getRoleInfo(array('role_id'=>$v['role_id']));
+                if(!empty($re_data['data'])) {
+                    if(empty($_rolesName)){
+                        $_rolesName = $re_data['data']['department_name'].'/'.$re_data['data']['name'];
+                    }else{
+                        $_rolesName .= ','.$re_data['data']['department_name'].'/'.$re_data['data']['name'];
+                    }
+                }
+            }
+        }
+        $result['roles_name'] = $_rolesName;;
+        return $result;
+    }
+
+
     /**
      * 参数过滤
      * @author zgt
@@ -1406,8 +1798,6 @@ class UserService extends BaseService
             return array('code'=>1,'msg'=>'数据添加失败');
         }
     }
-
-
 
     /**
      * 参数过滤

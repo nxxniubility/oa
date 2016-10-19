@@ -144,7 +144,7 @@
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>分配对应职位:</div>
                 <div class="nsRight clearfix" id="role_name">
-                    <input type="text" class="nsInp nsDepartment l" disabled="disabled" value="{$data['allocationAll']['rolesname']}" name="role_name" autocomplete="off">
+                    <input type="text" class="nsInp nsDepartment l" disabled="disabled" value="{$data['allocationAll']['roles_name']}" name="role_name" autocomplete="off">
                     <input type="button" class="nsSelectPost l" value="选择职位">
                     <input type="hidden" name="role_id" autocomplete="off" value="{$data['allocationAll']['allocation_roles']}" autocomplete="off">
                 </div>
@@ -152,7 +152,7 @@
             <div class="nsRow clearfix">
                 <div class="nsLeft">分配对应人员:</div>
                 <div class="nsRight clearfix">
-                    <input type="text" class="nsInp nsDepartment l" value="{$data['allocationAll']['realname']}" disabled="disabled" name="system_name">
+                    <input type="text" class="nsInp nsDepartment l" value="{$data['allocationAll']['systemuser_names']}" disabled="disabled" name="system_name">
                     <input type="button" class="nsSelectPostMan l" value="选择员工">
                     <input type="hidden" name="system_user_id" autocomplete="off" value="{$data['allocationAll']['systemuser_ids']}" autocomplete="off">
                 </div>
@@ -230,8 +230,8 @@
             </dl>
             <foreach name="data['roleAll'][data]" item="v" key="k">
                 <dl class="clearfix department_content">
-                    <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}" {:(in_array($v['id'],$data['is_roles']))?'checked="checked"':''}></dd>
-                    <dd class="wNsTwo">{$v.departmentname}</dd>
+                    <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}" {:(in_array($v['id'],$data['departmentAll']['allocation_roles']))?'checked="checked"':''}></dd>
+                    <dd class="wNsTwo">{$v.department_name}</dd>
                     <dd class="wNsThr">{$v.name}</dd>
                 </dl>
             </foreach>
@@ -258,23 +258,21 @@
         <div class="nsClose"></div>
     </div>
     <div class="nsCont">
-        <form method="post" action="#">
-            <div class="nsSelectTop clearfix">
-                <!-- <div class="selectbox nsSelectBox l">
-                    <dl class="select">
-                        <dt>
-                        <div class="select_title l">全部</div>
-                        <div class="arrow r"></div>
-                        </dt>
-                        <dd class="fxDone">咨询组</dd>
-                        <dd class="fxDone">邀约组</dd>
-                        <dd class="fxDone">销售组</dd>
-                    </dl>
-                </div> -->
-                <input type="text" class="nsSelectSearch l" placeholder="请输入人员姓名">
-                <input type="submit" class="nsSearchSubmit nsSearchSubmitSystem l" value="搜索">
-            </div>
-        </form>
+        <div class="nsSelectTop clearfix">
+            <!-- <div class="selectbox nsSelectBox l">
+                <dl class="select">
+                    <dt>
+                    <div class="select_title l">全部</div>
+                    <div class="arrow r"></div>
+                    </dt>
+                    <dd class="fxDone">咨询组</dd>
+                    <dd class="fxDone">邀约组</dd>
+                    <dd class="fxDone">销售组</dd>
+                </dl>
+            </div> -->
+            <input type="text" class="nsSelectSearch l" placeholder="请输入人员姓名">
+            <input type="submit" class="nsSearchSubmit nsSearchSubmitSystem l" value="搜索">
+        </div>
         <div class="nsDeparMiddle system_body">
             <dl class="nsTit clearfix">
                 <dt class="wNsOne">选中</dt>

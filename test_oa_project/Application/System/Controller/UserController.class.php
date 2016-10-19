@@ -348,23 +348,22 @@ class UserController extends SystemController
     public function callUser()
     {
         $param = I('post.');
-        $UserService = new UserService();
         if($param['type']=='getcall'){
-            $reflag = $UserService->getCall();
+            $reflag = D('User', 'Service')->getCall();
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg'], $reflag['data']);
             else  $this->ajaxReturn(1, $reflag['msg'], $reflag['data']);
         }elseif($param['type']=='calltel'){
             //只拨固定电话
             $param['system_user_id'] = $this->system_user_id;
-            $reflag = $UserService->callUser($param,2);
+            $reflag = D('User', 'Service')->callUser($param,2);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg'], $reflag['data']);
             else  $this->ajaxReturn(1, $reflag['msg'], $reflag['data']);
         }elseif($param['type']=='callphone'){
             //拨打电话
             $param['system_user_id'] = $this->system_user_id;
-            $reflag = $UserService->callUser($param);
+            $reflag = D('User', 'Service')->callUser($param);
             //返回数据操作状态
             if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg'], $reflag['data']);
             else  $this->ajaxReturn(1, $reflag['msg'], $reflag['data']);
@@ -805,28 +804,9 @@ class UserController extends SystemController
             }
         }
         $re_page = I('get.page', 1);
-        $zoneIds = D("Zone")->getZoneIds($this->system_user['zone_id']);
-        foreach ($zoneIds as $key => $value) {
-            $zidString[] = $value['zone_id'];
-        }
-        $where[C('DB_PREFIX').'user_allocation.zone_id'] = array("IN", $zidString);
-        $data['allocationList'] = D('User')->allocationList($where, (($re_page - 1) * 15) . ',15');
-        foreach($data['allocationList']['data'] as $k=>$v){
-            $data['allocationList']['data'][$k]['channelnames'] = D('Channel')->getChannelNames($v['channel_id']);
-            if(!empty($v['allocation_roles'])){
-                $_roles = explode(',',$v['allocation_roles']);
-                $_rolesName = '';
-                foreach($_roles as $v2){
-                    $getRole = D('Role')->getRoleInfo($v2);
-                    if(empty($_rolesName)){
-                        $_rolesName = $getRole['name'];
-                    }else{
-                        $_rolesName .= ','.$getRole['name'];
-                    }
-                }
-            }
-            $data['allocationList']['data'][$k]['rolenames'] = $_rolesName;
-        }
+        $where['page'] =  (($re_page - 1) * 15) . ',15';
+        $data['allocationList'] = D('User', 'Service')->allocationList($where);
+
         //加载分页类
         $data['paging'] = $this->Paging($re_page, 15, $data['allocationList']['count']);
         $this->assign('data', $data);
@@ -840,41 +820,35 @@ class UserController extends SystemController
     | @author zgt
     */
     public function allocationRule() {
-
         if (IS_POST) {
             $request = I('post.');
             if($request['type']=='getSystem'){
                 if(empty($request['zone_id'])) $this->ajaxReturn(1, '请先选择区域');
                 if(empty($request['role_id'])) $this->ajaxReturn(1, '请先选中职位');
-                $where['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-                $where['role_id'] = $request['role_id'];
-                $where[C('DB_PREFIX').'system_user.usertype'] = array('NEQ', 10);
+                $where['where']['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
+                $where['where']['role_id'] = $request['role_id'];
                 //员工列表
-                $reflag = D('SystemUser','Controller')->getListCache($where,'','0,80');
-                if ($reflag['data'] !== false) $this->ajaxReturn(0, '获取成功', $reflag['data']);
+                $reflag = D('SystemUser','Service')->getSystemUsersList($where);
+                if ($reflag['code']==0) $this->ajaxReturn(0, '获取成功', $reflag['data']['data']);
                 else $this->ajaxReturn(1);
             }else{
-                if (empty($request['zone_id'])) $this->ajaxReturn(1, '区域不能为空');
-                if (empty($request['allocationname'])) $this->ajaxReturn(1, '名称不能为空', '', 'allocationname');
-                if (empty($request['allocationnum'])) $this->ajaxReturn(1, '分配数量不能为空', '', 'allocationnum');
-                if (empty($request['channel_id'])) $this->ajaxReturn(1, '请选择渠道');
-                if (empty($request['allocation_roles'])) $this->ajaxReturn(1, '请添加分配职位', '', 'role_name');
-                $request['system_user_id'] = $this->system_user_id;
-                $request['zone_id'] = $request['zone_id'];
-                $request['createtime'] = time();
-                $reflag = D('User')->allocationAdd($request);
-                if ($reflag !== false) $this->ajaxReturn(0, '分配规则添加成功', U('System/User/allocationList'));
-                else $this->ajaxReturn(1, '添加失败');
+                $reflag = D('User', 'Service')->addAllocation($request);
+                if ($reflag['code'] == 0) $this->ajaxReturn(0, '分配规则添加成功', U('System/User/allocationList'));
+                else $this->ajaxReturn($reflag['code'], $reflag['msg']);
             }
         }
-
-        $data['zoneAll']['children'] = D("Zone")->getZoneList($this->system_user['zone_id']);
-
-        //获取职位及部门
-        $data['departmentAll'] = D('Department')->getAllDepartment();
-        $data['roleAll'] = D('Role')->getAllRole();
+        //区域
+        $zoneList = D("Zone", 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
+        $data['zoneAll']['children'] = $zoneList['data'];
+        //获取部门
+        $departmentAll = D('Department', 'Service')->getDepartmentList();
+        $data['departmentAll'] = $departmentAll['data'];
+        //获取职位
+        $roleAll = D('Role', 'Service')->getRoleList();
+        $data['roleAll'] = $roleAll['data'];
         //渠道列表
-        $data['channel'] = D('Channel')->getAllChannel();
+        $channeList = D('Channel','Service')->getChannelList();
+        $data['channel'] = $channeList['data'];
         $this->assign('data', $data);
         $this->display();
     }
@@ -893,68 +867,35 @@ class UserController extends SystemController
             if($request['type']=='getSystem'){
                 if(empty($request['zone_id'])) $this->ajaxReturn(1, '请先选择区域');
                 if(empty($request['role_id'])) $this->ajaxReturn(1, '请先选中职位');
-                $where['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-                $where['role_id'] = $request['role_id'];
-                $where[C('DB_PREFIX').'system_user.usertype'] = array('NEQ', 10);
+                $param['where']['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
+                $param['where']['role_id'] = $request['role_id'];
+                $param['where']['usertype'] = array('NEQ', 10);
                 //员工列表
-                $reflag = D('SystemUser','Controller')->getListCache($where,'','0,80');
-                if ($reflag['data'] !== false) $this->ajaxReturn(0, '获取成功', $reflag['data']);
+                $reflag = D('SystemUser','Service')->getSystemUsersList($param);
+                if ($reflag['code']== 0) $this->ajaxReturn(0, '获取成功', $reflag['data']['data']);
                 else $this->ajaxReturn(1);
             }else{
-                if (empty($request['zone_id'])) $this->ajaxReturn(1, '区域不能为空');
-                if (empty($request['allocationname'])) $this->ajaxReturn(1, '名称不能为空', '', 'allocationname');
-                if (empty($request['allocationnum'])) $this->ajaxReturn(1, '分配数量不能为空', '', 'allocationnum');
-                if (empty($request['channel_id'])) $this->ajaxReturn(1, '请选择渠道');
-                if (empty($request['allocation_roles'])) $this->ajaxReturn(1, '请添加分配职位', '', 'role_name');
-                $request['system_user_id'] = $this->system_user_id;
-                $request['zone_id'] = $request['zone_id'];
-                $reflag = D('User')->allocationEdit($request, $id);
-                if ($reflag !== false) $this->ajaxReturn(0, '分配规则修改成功', U('System/User/allocationList'));
-                else $this->ajaxReturn(1, '修改失败');
+                $request['user_allocation_id'] = $id;
+                $reflag = D('User','Service')->editAllocation($request);
+                if ($reflag['code']==0) $this->ajaxReturn(0, '分配规则修改成功', U('System/User/allocationList'));
+                else $this->ajaxReturn($reflag['code'], $reflag['msg']);
             }
         }
         //详情
-        $data['allocationAll'] = D('User')->allocationDetail($id);  
-        $systemUserId = M("allocation_systemuser")->where("user_allocation_id = {$id}")->select();
-        $systemUserIds = '';
-        foreach ($systemUserId as $key => $value) {
-            $systemuserInfo = M("system_user")->where("system_user_id = {$value['system_user_id']}")->find();
-            if (!empty($realnames)) {
-                $realnames = $realnames.",$systemuserInfo[realname]";
-                $systemUserIds = $systemUserIds.",$value[system_user_id]";
-            }else{
-                $realnames = $systemuserInfo['realname'];
-                $systemUserIds = $value['system_user_id'];
-            }
-        }
-        $data['allocationAll']['realname'] = $realnames;
-        $data['allocationAll']['systemuser_ids'] = $systemUserIds;
-
-
-        if($data['allocationAll']['roles']){
-            foreach ($data['allocationAll']['roles'] as $k => $v) {
-                if ($k == 0) $data['allocationAll']['rolesname'] = $v['name'];
-                else $data['allocationAll']['rolesname'] .= ',' . $v['name'];
-                $data['is_roles'][] = $v['id'];
-            }
-        }
-        if($data['allocationAll']['systemuser']){
-            foreach ($data['allocationAll']['systemuser'] as $k => $v) {
-                if($k==0){
-                    $data['allocationAll']['systemuser_names'] = $v['realname'];
-                    $data['allocationAll']['systemuser_ids'] = $v['system_user_id'];
-                }else{
-                    $data['allocationAll']['systemuser_names'] = $data['allocationAll']['systemuser_names'].','.$v['realname'];
-                    $data['allocationAll']['systemuser_ids'] = $data['allocationAll']['systemuser_ids'].','.$v['system_user_id'];
-                }
-            }
-        }
-        $data['zoneAll']['children'] = D("Zone")->getZoneList($this->system_user['zone_id']);
-        //获取职位及部门
-        $data['departmentAll'] = D('Department')->getAllDepartment();
-        $data['roleAll'] = D('Role')->getAllRole();
+        $allocation_list = D('User','Service')->allocationDetail(array('user_allocation_id'=>$id));
+        $data['allocationAll'] = $allocation_list['data'];
+        //区域
+        $zoneList = D("Zone", 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
+        $data['zoneAll']['children'] = $zoneList['data'];
+        //获取部门
+        $departmentAll = D('Department', 'Service')->getDepartmentList();
+        $data['departmentAll'] = $departmentAll['data'];
+        //获取职位
+        $roleAll = D('Role', 'Service')->getRoleList();
+        $data['roleAll'] = $roleAll['data'];
         //渠道列表
-        $data['channel'] = D('Channel')->getAllChannel();
+        $channeList = D('Channel','Service')->getChannelList();
+        $data['channel'] = $channeList['data'];
         $this->assign('data', $data);
         $this->display();
     }
@@ -981,31 +922,9 @@ class UserController extends SystemController
             }
         }
         $re_page = I('get.page', 1);
-        $zoneIds = D("Zone")->getZoneIds($this->system_user['zone_id']);
-        foreach ($zoneIds as $key => $value) {
-            $zidString[] = $value['zone_id'];
-        }
-        $where[C('DB_PREFIX').'user_abandon.zone_id'] = array("IN", $zidString);
-        $data['abandonList'] = D('User')->abandonList($where, (($re_page - 1) * 15) . ',15');
-        if(!empty($data['abandonList']['data'])){
-            foreach($data['abandonList']['data'] as $k=>$v){
-                $data['abandonList']['data'][$k]['channelnames'] = D('Channel')->getChannelNames($v['channel_id']);
-                if(!empty($v['abandon_roles'])){
-                    $_roles = explode(',',$v['abandon_roles']);
-                    $_rolesName = '';
-                    foreach($_roles as $v2){
-                        $getRole = D('Role')->getRoleInfo($v2);
-                        if(empty($_rolesName)){
-                            $_rolesName = $getRole['name'];
-                        }else{
-                            $_rolesName .= ','.$getRole['name'];
-                        }
-                    }
-                }
-                $data['abandonList']['data'][$k]['rolenames'] = $_rolesName;
-            }
-        }
-
+        $where['page'] = (($re_page - 1) * 15) . ',15';
+        $abandonList = D('User', 'Service')->abandonList($where);
+        $data['abandonList'] = $abandonList['data'];
         //加载分页类
         $data['paging'] = $this->Paging($re_page, 15, $data['abandonList']['count']);
         $this->assign('data', $data);
@@ -1021,27 +940,22 @@ class UserController extends SystemController
     public function abandonRule() {
         if (IS_POST) {
             $request = I('post.');
-            if (empty($request['abandonname'])) $this->ajaxReturn(1, '名称不能为空', '', 'abandonname');
-            if ($request['callbacknum'] == "") $this->ajaxReturn(1, '要求回访次数不能为空', '', 'callbacknum');
-            if(!is_numeric($request['callbacknum'])) $this->ajaxReturn(1, '必须为数字', '', 'callbacknum');
-            if (empty($request['unsatisfieddays'])) $this->ajaxReturn(1, '未达到要求保护天数不能为空', '', 'unsatisfieddays');
-            if (empty($request['attaindays'])) $this->ajaxReturn(1, '达到要求保护天数不能为空', '', 'attaindays');
-            if (empty($request['zone_id'])) $this->ajaxReturn(1, '区域不能为空');
-            if (empty($request['channel_id'])) $this->ajaxReturn(1, '请选择渠道');
-            if (empty($request['abandon_roles'])) $this->ajaxReturn(1, '请添加回收职位', '', 'role_name');
-            $request['system_user_id'] = $this->system_user_id;
-            $request['createtime'] = time();
-            $reflag = D('User')->abandonAdd($request);
-            if ($reflag !== false) $this->ajaxReturn(0, '回收规则添加成功', U('System/User/abandonList'));
-            else $this->ajaxReturn(1, '添加失败');
+            $reflag = D('User', 'Service')->addAbandon($request);
+            if ($reflag['code']==0) $this->ajaxReturn(0, '回收规则添加成功', U('System/User/abandonList'));
+            else $this->ajaxReturn($reflag['code'], $reflag['msg']);
         }
-
-        $data['zoneAll']['children'] = D("Zone")->getZoneList($this->system_user['zone_id']);
-        //获取职位及部门
-        $data['departmentAll'] = D('Department')->getAllDepartment();
-        $data['roleAll'] = D('Role')->getAllRole();
+        //区域
+        $zoneList = D("Zone", 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
+        $data['zoneAll']['children'] = $zoneList['data'];
+        //获取部门
+        $departmentAll = D('Department', 'Service')->getDepartmentList();
+        $data['departmentAll'] = $departmentAll['data'];
+        //获取职位
+        $roleAll = D('Role', 'Service')->getRoleList();
+        $data['roleAll'] = $roleAll['data'];
         //渠道列表
-        $data['channel'] = D('Channel')->getAllChannel();
+        $channeList = D('Channel','Service')->getChannelList();
+        $data['channel'] = $channeList['data'];
         $this->assign('data', $data);
         $this->display();
     }
@@ -1057,32 +971,25 @@ class UserController extends SystemController
         if (empty($id)) $this->error('非法操作', 1);
         if (IS_POST) {
             $request = I('post.');
-            if (empty($request['abandonname'])) $this->ajaxReturn(1, '名称不能为空', '', 'abandonname');
-            if ($request['callbacknum'] == "") $this->ajaxReturn(1, '要求回访次数不能为空', '', 'callbacknum');
-            if (empty($request['unsatisfieddays'])) $this->ajaxReturn(1, '未达到要求保护天数不能为空', '', 'unsatisfieddays');
-            if (empty($request['attaindays'])) $this->ajaxReturn(1, '达到要求保护天数不能为空', '', 'attaindays');
-            if (empty($request['zone_id'])) $this->ajaxReturn(1, '区域不能为空');
-            if (empty($request['channel_id'])) $this->ajaxReturn(1, '请选择渠道');
-            if (empty($request['abandon_roles'])) $this->ajaxReturn(1, '请添加回收职位', '', 'role_name');
-            $request['system_user_id'] = $this->system_user_id;
-            $reflag = D('User')->abandonEdit($request, $id);
+            $request['user_abandon_id'] = $id;
+            $reflag = D('User', 'Service')->editAbandon($request);
             if ($reflag !== false) $this->ajaxReturn(0, '回收规则修改成功', U('System/User/abandonList'));
             else $this->ajaxReturn(1, '修改失败');
         }
         //详情
-        $data['abandonAll'] = D('User')->abandonDetail($id);
-        foreach ($data['abandonAll']['roles'] as $k => $v) {
-            if ($k == 0) $data['abandonAll']['rolesname'] = $v['name'];
-            else $data['abandonAll']['rolesname'] .= ',' . $v['name'];
-            $data['is_roles'][] = $v['id'];
-        }
-
-        $data['zoneAll']['children'] = D("Zone")->getZoneList($this->system_user['zone_id']);
-        //获取职位及部门
-        $data['departmentAll'] = D('Department')->getAllDepartment();
-        $data['roleAll'] = D('Role')->getAllRole();
+        $data['abandonAll'] = D('User', 'Service')->abandonDetail(array('user_abandon_id'=>$id));
+        //区域
+        $zoneList = D("Zone", 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
+        $data['zoneAll']['children'] = $zoneList['data'];
+        //获取部门
+        $departmentAll = D('Department', 'Service')->getDepartmentList();
+        $data['departmentAll'] = $departmentAll['data'];
+        //获取职位
+        $roleAll = D('Role', 'Service')->getRoleList();
+        $data['roleAll'] = $roleAll['data'];
         //渠道列表
-        $data['channel'] = D('Channel')->getAllChannel();
+        $channeList = D('Channel','Service')->getChannelList();
+        $data['channel'] = $channeList['data'];
         $this->assign('data', $data);
         $this->display();
     }
