@@ -30,9 +30,7 @@ class ProidController extends SystemController
         }
         //获取数据
         $result = D('Proid', 'Service')->getOwnServicecode($own);
-        if ($result['code'] != 0) {
-            $this->ajaxReturn($result['code'], $result['msg']);
-        }
+        
         $data['servicecodeAll']['data'] = $result['data'];
         $data['url_addServ'] = U('System/Proid/addServ');
         $data['url_editServ'] = U('System/Proid/editServ');
