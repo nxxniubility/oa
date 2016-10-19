@@ -58,6 +58,7 @@ class ZoneController extends SystemController {
     public function editZone()
     {
         $zone['zone_id'] = I('get.zone_id');
+        $center = I("get.center");
         $sign = I('get.sign');
         if(IS_POST) {
             $zone['name'] = I('post.name');
@@ -80,6 +81,7 @@ class ZoneController extends SystemController {
         }
         $zone = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone['zone_id']));
         $this->assign("zone", $zone['data']);
+        $this->assign("center", $center);
         $this->assign('zone_id', $zone['zone_id']);
         $this->assign('zoneList', $zoneList['data']);
         $this->display();

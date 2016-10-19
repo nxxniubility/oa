@@ -11,7 +11,11 @@
 				<div class="newContTop clearfix">
 					<div class="topTit l">
 						<span class="masterList">区域列表</span>
-						<span><em>&gt;</em>修改区域</span>
+						<?php if($center) { ?>
+							<span><em>&gt;</em>修改中心</span>
+						<?php }else{ ?>
+							<span><em>&gt;</em>修改区域</span>
+						<?php } ?>
 					</div>
 					<div class="topRight r">
 						<a href="<?php echo U('System/Zone/zoneList'); ?>" class="return">返回</a>
