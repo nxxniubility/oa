@@ -60,7 +60,7 @@ class VisitController extends SystemController
                             }
                         }
                     }
-                    $this->ajaxReturn(301,'客户属于回库状态',$systemUserList['data'][$systemVisitKey]);
+                    $this->ajaxReturn(1,'客户属于回库状态',$systemUserList['data'][$systemVisitKey]);
                 }else{
                     $systemInfo = D('SystemUser', 'Service')->getSystemUserInfo($userInfo['system_user_id']);
                     $systemInfo = $systemInfo['data'];
@@ -68,9 +68,9 @@ class VisitController extends SystemController
                     if(in_array($systemInfo['role_id'],explode(',', $marketArr)) || in_array($systemInfo['role_id'],explode(',', $educationalArr))){
                         //是否本中心
                         if($userInfo['zone_id'] == $this->system_user['zone_id']){
-                            $this->ajaxReturn(302,'该员工属于本中心员工',$systemInfo);
+                            $this->ajaxReturn(2,'该员工属于本中心员工',$systemInfo);
                         }else{
-                            $this->ajaxReturn(301,'该员工不属于本中心',$systemInfo);
+                            $this->ajaxReturn(3,'该员工不属于本中心',$systemInfo);
                         }
                     }else{
                         $where_system[C('DB_PREFIX').'system_user.status'] = 1;
@@ -79,6 +79,7 @@ class VisitController extends SystemController
                         $where_system[C('DB_PREFIX').'role.id'] = array('in',$marketArr);
                         $where_system[C('DB_PREFIX').'system_user_engaged.status'] = array('neq',1);
                         $systemUserList = D('SystemUser', 'Service')->getSystemUserVisit($where_system);
+
                         foreach($systemUserList['data'] as $k=>$v){
                             if(empty($v['visitnum'])){
                                 $systemVisitNum = 0;
@@ -95,7 +96,7 @@ class VisitController extends SystemController
                                 }
                             }
                         }
-                        $this->ajaxReturn(303,'操作者非销售/教务',!empty($systemUserList['data'][$systemVisitKey])?$systemUserList['data'][$systemVisitKey]:0);
+                        $this->ajaxReturn(4,'所属人非教务/销售人员',!empty($systemUserList['data'][$systemVisitKey])?$systemUserList['data'][$systemVisitKey]:0);
                     }
                 }
             }else if($request['type']=='submit'){
@@ -103,7 +104,7 @@ class VisitController extends SystemController
                 if ($reflag['code'] == 0) {
                     $this->ajaxReturn('0','操作成功，请通知分配人员到前台接待',U('System/Visit/visitList'));
                 }else{
-                    $this->ajaxReturn($reflag['code'],$reflag['msg']);
+                    $this->ajaxReturn(1,$reflag['msg']);
                 }
             }
         }else{
