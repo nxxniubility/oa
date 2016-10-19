@@ -678,9 +678,8 @@ class PersonnelController extends SystemController {
      */
     public function getZoneList(){
         $zone_id = I('post.zone_id');
-        $zoneMain = new ZoneMain();
-        $zoneList = $zoneMain->getZoneList($zone_id);
-        $this->ajaxReturn(0, '数据获取成功', $zoneList);
+        $zoneList = D('Zone','Service')->getZoneList(array('zone_id'=>$zone_id));
+        $this->ajaxReturn(0, '数据获取成功', $zoneList['data']);
     }
     /**
      * 生成节点列表HTML
