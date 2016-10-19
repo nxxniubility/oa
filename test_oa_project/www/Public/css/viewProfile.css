@@ -31,4 +31,6 @@
 .wrapBox#sUserDesWrap, .wrapBox#sUserDesWrap .vfRowRight {width:auto;}
 .wrapBox#sUserDesWrap .vfRowLeft {width:200px;}
 
-
+/*1019*/
+.vfBoxLeft {width:54%;}
+.vfBoxRight {width:46%;}
