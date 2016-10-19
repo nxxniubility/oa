@@ -17,7 +17,7 @@ class ZoneController extends SystemController {
     }
 
     /*
-	  | 添加区域
+	| 添加区域
     | @author Nixx
 	*/
     public function addZone()

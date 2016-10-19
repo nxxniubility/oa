@@ -11,8 +11,10 @@ class ZoneModel extends BaseModel
 
     //自动验证
     protected $_validate = array(
-        array('channelname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
-        array('channelname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
+        array('name', 'checkSpecialCharacter', array('code'=>'301','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
+        array('name', '0,15', array('code'=>'302','msg'=>'名称不能大于15字符！'), 0, 'length'),
+        array('abstract', '0,100', array('code'=>'303','msg'=>'区域简介不能大于100字符！'), 0, 'length'),
+        array('address', '0,50', array('code'=>'304','msg'=>'地址不能大于50字符！'), 0, 'length'),
     );
 
     /*

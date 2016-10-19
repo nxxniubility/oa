@@ -108,7 +108,7 @@ class ZoneService extends BaseService
     }
 
     /*
-    获取中心列表
+    创建区域
     @author nxx
     */
     public function createZone($param)
@@ -116,12 +116,21 @@ class ZoneService extends BaseService
         $param['addusr'] = $this->system_user_id;
         $param['status'] = 1;
         $param['createtime'] = time();
-        
-        if(empty($param['name'])) {
-            return array('code'=>1,'msg'=>'区域名称不能为空');
+        if(!(array_filter($param['name']))) {
+            return array('code'=>301,'msg'=>'区域名称不能为空');
         }
         if(empty($param['parentid'])) {
-            return array('code'=>2,'msg'=>'请选择所属区域');
+            return array('code'=>302,'msg'=>'请选择所属区域');
+        }
+        $result1 = $this->checkMobile($param['tel']);
+        $result2 = $this->checkTel($param['tel']);
+        if ($param['tel'] && $result1==false && $result2==false) {
+            return array('code'=>303,'msg'=>'请输入正确的联系方式');
+        }
+        $pattern = "/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i";
+        if ($param['email'] && !preg_match($pattern,$param['email']))
+        {
+            return array('code'=>304,'msg'=>'请输入正确的邮箱');
         }
         $parentZone = D("Zone")->getFind(array('zone_id'=>$param['parentid'],'status'=>1));
         $param['level']  = $parentZone['level']+1;
@@ -129,11 +138,11 @@ class ZoneService extends BaseService
         if ($sameZone) {
             $zoneAllList = D('Zone')->getList(array('status'=>1));
             F('Cache/zone', $zoneAllList);
-            return array('code'=>3,'msg'=>'该区域已被创建');
+            return array('code'=>201,'msg'=>'该区域已被创建');
         }
         $result = D("Zone")->addData($param);
         if ($result['code'] != 0) {
-            return array('code'=>4,'msg'=>'创建失败');
+            return array('code'=>$result['code'],'msg'=>$result['msg']);
         }
         $zoneAllList = D('Zone')->getList(array('status'=>1));
         F('Cache/zone', $zoneAllList);
