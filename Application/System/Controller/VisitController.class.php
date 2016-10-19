@@ -29,7 +29,6 @@ class VisitController extends SystemController
                 $where_system['usertype'] = array('neq',10);
                 $where_system['role_id'] = array('in',$marketArr);
                 $systemUserList = D('SystemUser', 'Service')->getSystemUserList($where_system);
-
                 if(!empty($systemUserList['data'])){
                     $this->ajaxReturn('0','获取成功',$systemUserList['data']);
                 }else{

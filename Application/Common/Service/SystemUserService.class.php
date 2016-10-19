@@ -258,14 +258,15 @@ class SystemUserService extends BaseService
             "{$this->DB_PREFIX}system_user.createip",
             "{$this->DB_PREFIX}system_user_engaged.status as engaged_status"
         );
-        
+        $join = 'LEFT JOIN __ZONE__ on __ZONE__.zone_id=__SYSTEM_USER__.zone_id
+                 LEFT JOIN __SYSTEM_USER_ENGAGED__ on __SYSTEM_USER_ENGAGED__.system_user_id=__SYSTEM_USER__.system_user_id';
         if(!empty($order)){
             $order = "{$this->DB_PREFIX}system_user.".$order;
         }else{
             $order = "{$this->DB_PREFIX}system_user.sign";
         }
     
-        $result = D('SystemUser')->where($where)->select();
+        $result = D('SystemUser')->join($join)->where($where)->order($order)->select();
         //添加多职位
         if(!empty($result)){
             foreach($result as $k=>$v){
