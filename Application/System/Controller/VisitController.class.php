@@ -24,11 +24,12 @@ class VisitController extends SystemController
             $educationalArr = C('ADMIN_EDUCATIONAL_ROLE');
             $request = I('post.');
             if($request['type']=='getSystemList') {
-                $where_system[C('DB_PREFIX').'system_user.status'] = 1;
+                $where_system['status'] = 1;
                 $where_system['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-                $where_system[C('DB_PREFIX').'system_user.usertype'] = array('neq',10);
+                $where_system['usertype'] = array('neq',10);
                 $where_system['role_id'] = array('in',$marketArr);
                 $systemUserList = D('SystemUser', 'Service')->getSystemUserList($where_system);
+
                 if(!empty($systemUserList['data'])){
                     $this->ajaxReturn('0','获取成功',$systemUserList['data']);
                 }else{
@@ -79,8 +80,7 @@ class VisitController extends SystemController
                         $where_system[C('DB_PREFIX').'role.id'] = array('in',$marketArr);
                         $where_system[C('DB_PREFIX').'system_user_engaged.status'] = array('neq',1);
                         $systemUserList = D('SystemUser', 'Service')->getSystemUserVisit($where_system);
-
-                        foreach($systemUserList['data'] as $k=>$v){
+                        foreach($systemUserList['data']['data'] as $k=>$v){
                             if(empty($v['visitnum'])){
                                 $systemVisitNum = 0;
                                 $systemVisitKey = $k;
@@ -96,7 +96,7 @@ class VisitController extends SystemController
                                 }
                             }
                         }
-                        $this->ajaxReturn(4,'所属人非教务/销售人员',!empty($systemUserList['data'][$systemVisitKey])?$systemUserList['data'][$systemVisitKey]:0);
+                        $this->ajaxReturn(4,'所属人非教务/销售人员',!empty($systemUserList['data']['data'][$systemVisitKey])?$systemUserList['data']['data'][$systemVisitKey]:0);
                     }
                 }
             }else if($request['type']=='submit'){

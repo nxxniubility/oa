@@ -170,7 +170,7 @@ class ZoneService extends BaseService
         }
         $result = D("Zone")->editData($param, $zone_id);
         if ($result['code'] != 0) {
-            return array('code'=>201,'msg'=>'修改失败');
+            return array('code'=>$result['code'],'msg'=>$result['msg']);
         }
         $zoneAllList = D('Zone')->getList(array('status'=>1));
         F('Cache/zone', $zoneAllList);

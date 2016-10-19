@@ -258,14 +258,14 @@ class SystemUserService extends BaseService
             "{$this->DB_PREFIX}system_user.createip",
             "{$this->DB_PREFIX}system_user_engaged.status as engaged_status"
         );
-        $join = 'LEFT JOIN __ZONE__ on __ZONE__.zone_id=__SYSTEM_USER__.zone_id
-                 LEFT JOIN __SYSTEM_USER_ENGAGED__ on __SYSTEM_USER_ENGAGED__.system_user_id=__SYSTEM_USER__.system_user_id';
+        
         if(!empty($order)){
             $order = "{$this->DB_PREFIX}system_user.".$order;
         }else{
             $order = "{$this->DB_PREFIX}system_user.sign";
         }
-        $result = D('SystemUser')->getList($where, $order, $limit, $field, $join);
+    
+        $result = D('SystemUser')->where($where)->select();
         //添加多职位
         if(!empty($result)){
             foreach($result as $k=>$v){
@@ -273,10 +273,10 @@ class SystemUserService extends BaseService
                 $user_role = $this->getSystemUserRole(array('system_user_id'=>$v['system_user_id']));
                 foreach($user_role['data'] as $k2=>$v2){
                     if($k2==0) {
-                        $roleNames = $v2['departmentname'].'/'.$v2['name'];
+                        $roleNames = $v2['department_name'].'/'.$v2['name'];
                         $roleName = $v2['name'];
                     }else{
-                        $roleNames .= '，'.$v2['departmentname'].'/'.$v2['name'];
+                        $roleNames .= '，'.$v2['department_name'].'/'.$v2['name'];
                         $roleName .= '，'.$v2['name'];
                     }
                 }
@@ -285,9 +285,6 @@ class SystemUserService extends BaseService
                 $result[$k]['roles'] = $user_role['data'];
             }
         }
-
-        // 是否添加分配渠道统计
-        if(!empty($type)) $result = $this->getInfoqualityCount($result);
         //返回数据与状态
         return array('code'=>'0', 'data'=>$result);
     }
@@ -1411,7 +1408,7 @@ class SystemUserService extends BaseService
                 ->join('LEFT JOIN __DEPARTMENT__ on __DEPARTMENT__.department_id=__ROLE__.department_id')
                 ->join('LEFT JOIN __USER_VISIT_LOGS__ on __USER_VISIT_LOGS__.system_user_id=__SYSTEM_USER__.system_user_id')
                 ->join('LEFT JOIN __SYSTEM_USER_ENGAGED__ on __SYSTEM_USER_ENGAGED__.system_user_id=__SYSTEM_USER__.system_user_id')
-                ->group("{$DB_PREFIX}system_user.system_user_id")->Distinct(true)
+                ->group("{$DB_PREFIX}system_user.system_user_id")
                 ->where($where)
                 ->order($order)
                 ->limit($limit)
@@ -1426,7 +1423,6 @@ class SystemUserService extends BaseService
                 ->join('LEFT JOIN __SYSTEM_USER_ENGAGED__ on __SYSTEM_USER_ENGAGED__.system_user_id=__SYSTEM_USER__.system_user_id')
                 ->where($where)
                 ->count("{$DB_PREFIX}system_user.system_user_id");
-
             //添加多职位
             foreach($redata['data'] as $k=>$v){
                 $roles = $this->getSystemUserRole(array('system_user_id'=>$v['system_user_id']));

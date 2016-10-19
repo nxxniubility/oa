@@ -403,11 +403,14 @@ class UserService extends BaseService
 //             if($flag_add===false){
 //                 return array('code'=>1,'msg'=>'新增忙线数据失败');
 //             }
-//         }
+//         } 
         //客户分配
         $userInfo = D('User')->getFind(array('user_id'=>$user_id), 'system_user_id,status');
         if($tosystem_user_id!=$userInfo['system_user_id'] || $userInfo['status']=='160'){
-            $reflag_allocation = $this->allocationUser($user_id,$tosystem_user_id,$system_user_id,1);
+            $param['user_id'] = $user_id;
+            $param['tosystem_user_id'] = $tosystem_user_id;
+            $param['system_user_id'] = $system_user_id;
+            $reflag_allocation = $this->allocationUser($param,10);
             $callbackDate['attitude_id'] = 0;
             $callbackDate['remark'] = '前台操作: 客户于 '.date('Y-m-d',time()).' 上门到访！';
             $callbackDate['nexttime'] = time();
