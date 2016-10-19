@@ -134,3 +134,7 @@
 .zidingyi_box .z_rows .z_confirm:hover {background:#4da45e;}
 .zidingyi_box .z_rows .z_cancel {color:#333;background:#dbdbdb;}
 .zidingyi_box .z_rows .z_cancel:hover {background:#c8c8c8;}
+
+/*1019*/
+.container .desContBox {height:auto;}
+.regionContMiddle {border-bottom:none;}

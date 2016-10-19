@@ -95,7 +95,7 @@ $('.seeDetails').on('click',function(){
 	layer.open({
 		type: 1,					//  页面层
 		title: false,				//	不显示标题栏
-		area: ['600px','560px'],	
+		area: ['600px','auto'],	
 		shade: .6,					//	遮罩
 		time: 0,					//  关闭自动关闭
 		shadeClose: true,			//	遮罩控制关闭层
@@ -107,3 +107,5 @@ $('.seeDetails').on('click',function(){
 		layer.closeAll(); 		// 关闭
 	});
 });
+
+//  去最后一行dl border
