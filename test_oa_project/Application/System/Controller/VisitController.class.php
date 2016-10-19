@@ -63,7 +63,7 @@ class VisitController extends SystemController
                     }
                     $this->ajaxReturn(1,'客户属于回库状态',$systemUserList['data'][$systemVisitKey]);
                 }else{
-                    $systemInfo = D('SystemUser', 'Service')->getSystemUserInfo($userInfo['system_user_id']);
+                    $systemInfo = D('SystemUser', 'Service')->getSystemUserInfo(array('system_user_id'=>$userInfo['system_user_id']));
                     $systemInfo = $systemInfo['data'];
                     //属于教务或者销售
                     if(in_array($systemInfo['role_id'],explode(',', $marketArr)) || in_array($systemInfo['role_id'],explode(',', $educationalArr))){
