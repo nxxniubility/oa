@@ -164,7 +164,7 @@
                     <dd class="fxDone">销售部</dd>
                 </dl>
             </div>
-            <input type="text" class="rnSearchInp l" name="nsSelectSearch">
+            <input type="text" class="rnSearchInp l" name="nsSelectSearch" placeholder="请输入员工姓名">
             <input type="button" class="rnSearchBtn l nsSearchSubmit" value="搜索">
         </div>
         <div class="rnTableBox">
@@ -210,6 +210,7 @@
         });
         //搜索职位相关-检索
         $('.nsSearchSubmit').on('click', function(){
+        	layer.load(2);
             var val = $(':input[name="nsSelectSearch"]').val();
             var d_val = $('.nsSelectSearch_d').text();
             $('#rnTable .system_ajax').remove();
