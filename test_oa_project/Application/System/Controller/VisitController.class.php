@@ -39,12 +39,11 @@ class VisitController extends SystemController
                 $userInfo = $userInfo['data'];
                 if(!empty($userInfo) && $userInfo['status']==160){
                     $where_system[C('DB_PREFIX').'system_user.status'] = 1;
-                    $where_system[C('DB_PREFIX').'system_user.zone_id'] = $this->system_user['zone_id'];
                     $where_system[C('DB_PREFIX').'system_user.usertype'] = array('neq',10);
                     $where_system[C('DB_PREFIX').'role.id'] = array('in',$marketArr);
                     $where_system[C('DB_PREFIX').'system_user_engaged.status'] = array('neq',1);
                     $systemUserList = D('SystemUser', 'Service')->getSystemUserVisit($where_system);
-                    foreach($systemUserList['data'] as $k=>$v){
+                    foreach($systemUserList['data']['data'] as $k=>$v){
                         if(empty($v['visitnum'])){
                             $systemVisitNum = 0;
                             $systemVisitKey = $k;
@@ -60,7 +59,7 @@ class VisitController extends SystemController
                             }
                         }
                     }
-                    $this->ajaxReturn(1,'客户属于回库状态',$systemUserList['data'][$systemVisitKey]);
+                    $this->ajaxReturn(1,'客户属于回库状态',$systemUserList['data']['data'][$systemVisitKey]);
                 }else{
                     $systemInfo = D('SystemUser', 'Service')->getSystemUserInfo(array('system_user_id'=>$userInfo['system_user_id']));
                     $systemInfo = $systemInfo['data'];
@@ -81,9 +80,9 @@ class VisitController extends SystemController
                         }
                     }else{
                         $where_system[C('DB_PREFIX').'system_user.status'] = 1;
-                        // $where_system[C('DB_PREFIX').'system_user.zone_id'] = 4;//$this->system_user['zone_id'];
                         $where_system[C('DB_PREFIX').'system_user.usertype'] = array('neq',10);
                         $where_system[C('DB_PREFIX').'role.id'] = array('in',$marketArr);
+                        $where_system[C('DB_PREFIX').'system_user_engaged.status'] = array('neq',1);
                         $systemUserList = D('SystemUser', 'Service')->getSystemUserVisit($where_system);
                         foreach($systemUserList['data']['data'] as $k=>$v){
                             if(empty($v['visitnum'])){

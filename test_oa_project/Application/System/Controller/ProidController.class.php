@@ -522,9 +522,6 @@ class ProidController extends SystemController
     public function editPro()
     {
         $proid_id = I("get.proid_id");
-        if (!$proid_id) {
-            $this->ajaxReturn(301, '参数丢失');
-        }
         if(IS_POST) {
             $proid['proid_id'] = $proid_id;
             $proid['channel_id'] = I("post.channel_id");
@@ -538,7 +535,7 @@ class ProidController extends SystemController
             $proid['remark'] = I("post.remark");
             $backInfo = D('Proid', 'Service')->editProid($proid);
             if ($backInfo['code'] != 0) {
-                return array('code'=>$backInfo['code'], 'msg'=>'修改失败');
+                return array('code'=>$backInfo['code'], 'msg'=>$backInfo['msg']);
             }
             $this->ajaxReturn(0, '修改成功', U('System/Proid/id'));
         }
