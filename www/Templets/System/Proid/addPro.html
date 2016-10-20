@@ -34,7 +34,7 @@
 							<select class="addSelect" name="channel_id">
 								<option value="0" selected="selected">选择渠道</option>
 								<foreach name = "proList['channelList']['data']" item = "channel">
-									<option value="{$channel['channel_id']}">{$channel['channelname']}</option>
+									<option value="{$channel['channel_id']}" disabled="false">{$channel['channelname']}</option>
 									<if condition="!empty($channel['children'])">
 										<foreach name = "channel['children']" item = "channel2">
 											<option value="{$channel2['channel_id']}">&nbsp;&nbsp;├─ {$channel2['channelname']}</option>
@@ -105,7 +105,7 @@
 				</div>
 			</div>
 		</div>
-		<Zelin:js  src="jquery-1.7.2.min,common_ajax"  />
+		<Zelin:js  src="jquery-1.7.2.min,common"  />
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script type="text/javascript">
 		    $(document).ready(function() {
