@@ -698,7 +698,7 @@ class ProidService extends BaseService
         if (!str_replace(' ', '', $proid['channel_id'])) {
             return array('code'=>302,'msg'=>'请选择渠道');
         }
-        $parant = "[a-zA-z]+://[^\s]*";
+        $parant = "#http://(.*?)\.#i";
         if (!preg_match($parant, $proid['domain'])) {
             return array('code'=>303, 'msg'=>'请输入正确的域名');
         }
@@ -739,7 +739,7 @@ class ProidService extends BaseService
         if (!str_replace(' ', '', $proid['channel_id'])) {
             return array('code'=>302,'msg'=>'请选择渠道');
         }
-        $parant = "^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+"; 
+        $parant = "#http://(.*?)\.#i"; 
         if (!preg_match($parant, $proid['domain'])) {
             return array('code'=>303, 'msg'=>'请输入正确的域名');
         }

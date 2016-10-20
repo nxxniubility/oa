@@ -535,7 +535,7 @@ class ProidController extends SystemController
             $proid['remark'] = I("post.remark");
             $backInfo = D('Proid', 'Service')->editProid($proid);
             if ($backInfo['code'] != 0) {
-                return array('code'=>$backInfo['code'], 'msg'=>$backInfo['msg']);
+                $this->ajaxReturn($backInfo['code'], $backInfo['msg']);
             }
             $this->ajaxReturn(0, '修改成功', U('System/Proid/id'));
         }
