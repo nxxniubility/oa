@@ -6,6 +6,9 @@
 		<title>查找客户-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/examine.css">
+		<script>
+			var jump_code = "{$jump_code}";
+		</script>
 	</head>
 	<body>
 		<div class="wrapBox">
@@ -160,7 +163,7 @@
 		<script type="text/javascript" src="__PUBLIC__/js/examine.js"></script>
 		<include  file="Common@Html/ueditor_simple" />
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
-		<script src="__PUBLIC__/js/common_ajax.js"></script>
+		<script src="__PUBLIC__/js/common.js"></script>
 
 		<script>
 			var ue = UE.getEditor('editor3',{

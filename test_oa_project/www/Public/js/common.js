@@ -75,11 +75,10 @@ $(document).ready(function() {
 });
 
 //  跳转登录页
-$(document).read(function(){
 	if(jump_code == 501){
-		window.location.href = 'http://www.oa.com/system/index';
+		window.location.href = '/system/admin/index';
 	}
-});
+
 
 function common_ajax(data,url,loca,fun){
     layer.load(2);
