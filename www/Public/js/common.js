@@ -74,4 +74,10 @@ $(document).ready(function() {
     }
 });
 
-
+//  跳转登录页
+$(document).read(function(){
+	var jump_code;
+	if(jump_code == 501){
+		window.location.href = 'http://www.oa.com/system/index';
+	}
+});
