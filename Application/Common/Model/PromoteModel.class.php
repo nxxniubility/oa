@@ -8,11 +8,15 @@ class PromoteModel extends BaseModel
         parent::_initialize();
     }
 
-    // //自动验证
-    // protected $_validate = array(
-    //     array('channelname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
-    //     array('channelname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
-    // );
+    //自动验证
+    protected $_validate = array(
+        array('plan', 'checkSpecialCharacter', array('code'=>'201','msg'=>'推广计划不能含有特殊字符！'), 0, 'callback'),
+        array('plan', '0,15', array('code'=>'202','msg'=>'推广计划不能大于15字符！'), 0, 'length'),
+        array('planunit', 'checkSpecialCharacter', array('code'=>'201','msg'=>'推广单元不能含有特殊字符！'), 0, 'callback'),
+        array('planunit', '0,15', array('code'=>'202','msg'=>'推广单元不能大于15字符！'), 0, 'length'),
+        array('keyword', 'checkSpecialCharacter', array('code'=>'201','msg'=>'关键词不能含有特殊字符！'), 0, 'callback'),
+        array('keyword', '0,15', array('code'=>'202','msg'=>'关键词不能大于15字符！'), 0, 'length'),
+    );
 
     /*
     |--------------------------------------------------------------------------
