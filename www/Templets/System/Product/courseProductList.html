@@ -74,7 +74,6 @@
 		        <span><i>*</i>价格：</span>
 		        <div class="l">
 			        <input type="text" class="z_inp" name="create_price" value="0" autocomplete="off">
-		        	<p class="price_tips">仅保留小数点后2位</p>
 		        </div>
 		    </div>
 		    <div class="z_rows clearfix">
@@ -106,7 +105,6 @@
 		        <span><i>*</i>价格：</span>
 		        <div class="l">
 			        <input type="text" class="z_inp" name="edit_price" value="0" autocomplete="off">
-			        <p class="price_tips">仅保留小数点后2位</p>
 		        </div>
 		    </div>
 		    <div class="z_rows clearfix">
@@ -169,6 +167,9 @@
 					return false;
 				}else if(!chkInt($(':input[name="create_price"]').val())){
 					layer.msg('请输入正确的价格', {icon:2});
+					return false;
+				}else if($(':input[name="create_price"]').val()==0){
+					layer.msg('价格不能为 “0”', {icon:2});
 					return false;
 				}else if($(':input[name="create_description"]').val().length>50){
 					layer.msg('产品描述不能大于30字数', {icon:2});

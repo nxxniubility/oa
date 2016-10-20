@@ -288,7 +288,7 @@ class CourseService extends BaseService
         if(empty($param['productname'])) return array('code'=>300,'msg'=>'缺少课程名称');
         if(!isset($param['price'])) return array('code'=>301,'msg'=>'金额不能为空');
         if(!isset($param['productplatform']) || $param['productplatform']=='0') return array('code'=>302,'msg'=>'请选择产品类型');
-        if($param['price']==0) return array('code'=>301,'msg'=>'金额不能 "0"');
+        if($param['price']==0) return array('code'=>301,'msg'=>'金额不能为 "0"');
         $result = D('CourseProduct')->editData($param,$param['course_product_id']);
         //更新数据成功执行清除缓存
         if ($result['code']==0){

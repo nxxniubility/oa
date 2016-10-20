@@ -5,18 +5,14 @@
 *
 */
 namespace Common\Service;
-use Common\Service\DataService;
 use Common\Service\BaseService;
 
 class SystemUpdateService extends BaseService
 {
     //³õÊ¼»¯
-    protected $DB_PREFIX;
-
     public function _initialize()
     {
         parent::_initialize();
-        $this->DB_PREFIX = C('DB_PREFIX');
     }
 
     /*
@@ -113,9 +109,9 @@ class SystemUpdateService extends BaseService
                     foreach($cahce_all['data'] as $k=>$v){
                         if($v['system_update_id'] == $param['system_update_id']){
                             unset($cahce_all['data'][$k]);
+                            $cahce_all['count'] =  $cahce_all['count']-1;
                         }
                     }
-                    $cahce_all['count'] =  $cahce_all['count']-1;
                 }
                 F('Cache/systemUpdate', $cahce_all);
             }
@@ -159,9 +155,9 @@ class SystemUpdateService extends BaseService
             foreach($list['data'] as $k=>$v){
                 if(!empty($v['system_user_id'])){
                     $systemUser = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v['system_user_id']));
-                    $list[$k]['system_realname'] = $systemUser['data']['realname'];
+                    $list['data'][$k]['system_realname'] = $systemUser['data']['realname'];
                 }
-                $list[$k]['create_time'] = date('Y-m-d H:i', $v['createtime']);
+                $list['data'][$k]['create_time'] = date('Y-m-d H:i', $v['createtime']);
             }
         }
         return $list;

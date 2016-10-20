@@ -48,11 +48,6 @@ function common_ajax(data,url,loca,fun){
         }
     });
 };
-//setTimeout(function(){
-////            var loca_url = window.location.href;
-////            window.location.href = loca_url+'#main';
-//    parent.main.location.reload();
-//},4000)
 function common_ajax2(data,url,loca,fun,showload){
     if(!showload){
         layer.load(2);
