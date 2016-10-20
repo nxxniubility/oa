@@ -692,3 +692,25 @@ $(document).on('click','.on_btn',function(){
     $(this).parents('tr').siblings('.sr_li').remove();
     $(this).parents('table').append(sortTitle);
 });
+
+//  统计报表
+$(document).ready(function(){
+	//  表头
+	$('#sr_everyday th').each(function(k,v){
+		var _index = $(this).index();
+		
+		if(_index == 0){
+			$(this).addClass('one-item');
+		}
+		if(_index == 6){
+			$(this).addClass('one-item');
+		}
+		if(_index == 8){
+			$(this).addClass('one-item');
+		}
+		if(_index == 9){
+			$(this).addClass('one-item');
+		}
+	});
+});
+

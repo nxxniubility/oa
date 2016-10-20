@@ -165,4 +165,8 @@
 
 /*0929*/
 .statistics_report .sr_table .tab-container {overflow-x:auto;overflow-y:hidden;}
-#sr_everyday th, #sr_everyday td, #sr_staff th, #sr_staff td {min-width:130px;}
+#sr_everyday th, #sr_everyday td, #sr_staff th, #sr_staff td {min-width:80px;}
+
+/*1019*/
+#sr_everyday th.one-item, #sr_everyday td.one-item {min-width:110px;}
+#sr_everyday .container i {width:20px;}
