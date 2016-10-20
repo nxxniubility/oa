@@ -70,6 +70,7 @@ class VisitController extends SystemController
                             $theTure = 'ture';
                         }
                     }  
+                    
                     //属于教务或者销售
                     if($theTure){
                         //是否本中心
@@ -84,7 +85,23 @@ class VisitController extends SystemController
                         $where_system[C('DB_PREFIX').'system_user.usertype'] = array('neq',10);
                         $where_system[C('DB_PREFIX').'role.id'] = array('in',$marketArr);
                         $systemUserList = D('SystemUser', 'Service')->getSystemUserVisit($where_system);
-                        $this->ajaxReturn(4,'所属人非教务/销售人员',!empty($systemUserList['data']['data'][0])?$systemUserList['data']['data'][0]:0);
+                        foreach($systemUserList['data']['data'] as $k=>$v){
+                            if(empty($v['visitnum'])){
+                                $systemVisitNum = 0;
+                                $systemVisitKey = $k;
+                            }else{
+                                if(empty($systemVisitNum)){
+                                    $systemVisitNum = $v['visitnum'];
+                                    $systemVisitKey = $k;
+                                }else{
+                                    if($systemVisitNum>$v['visitnum']){
+                                        $systemVisitNum = $v['visitnum'];
+                                        $systemVisitKey = $k;
+                                    }
+                                }
+                            }
+                        }
+                        $this->ajaxReturn(4,'所属人非教务/销售人员',!empty($systemUserList['data']['data'][$systemVisitKey])?$systemUserList['data']['data'][$systemVisitKey]:0);
                     }
                 }
             }else if($request['type']=='submit'){

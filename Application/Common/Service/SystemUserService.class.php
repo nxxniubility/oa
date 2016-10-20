@@ -1374,7 +1374,7 @@ class SystemUserService extends BaseService
 
     /*
     |--------------------------------------------------------------------------
-    | 获取对应的员工信息
+    | 获取对应的员工到访信息
     |--------------------------------------------------------------------------
     | @author nxx
     */
@@ -1382,6 +1382,7 @@ class SystemUserService extends BaseService
         $DB_PREFIX = C('DB_PREFIX');
         $order = !empty($order)?$order:$DB_PREFIX.'user_visit_logs.visitnum';
         $where[$DB_PREFIX.'system_user.zone_id'] = 4;
+        $where[$DB_PREFIX.'user_visit_logs.date'] = date('Ymd');
         $redata['data'] =
             $this
                 ->field(array(
@@ -1402,9 +1403,10 @@ class SystemUserService extends BaseService
                     "{$DB_PREFIX}department.department_id",
                     "{$DB_PREFIX}department.departmentname",
                     "{$DB_PREFIX}role.id as role_id",
-                    "{$DB_PREFIX}role.name as role_name",
+                    "{$DB_PREFIX}role.name as rolename",
                     "{$DB_PREFIX}system_user.createtime",
                     "{$DB_PREFIX}system_user.createip",
+                    "{$DB_PREFIX}system_user_engaged.status as engaged_status",
                     "{$DB_PREFIX}user_visit_logs.visitnum"
                 ))
                 ->join('LEFT JOIN __ZONE__ on __ZONE__.zone_id=__SYSTEM_USER__.zone_id')
@@ -1412,12 +1414,14 @@ class SystemUserService extends BaseService
                 ->join('LEFT JOIN __ROLE__ on __ROLE__.id=__ROLE_USER__.role_id')
                 ->join('LEFT JOIN __DEPARTMENT__ on __DEPARTMENT__.department_id=__ROLE__.department_id')
                 ->join('LEFT JOIN __USER_VISIT_LOGS__ on __USER_VISIT_LOGS__.system_user_id=__SYSTEM_USER__.system_user_id')
-               
-                ->group("{$DB_PREFIX}system_user.system_user_id")
+                ->join('LEFT JOIN __SYSTEM_USER_ENGAGED__ on __SYSTEM_USER_ENGAGED__.system_user_id=__SYSTEM_USER__.system_user_id')
+                ->group("{$DB_PREFIX}system_user.system_user_id")->Distinct(true)
                 ->where($where)
                 ->order($order)
+                ->limit($limit)
                 ->select();
         //统计总数
+        unset($where[$DB_PREFIX.'user_visit_logs.date']);
         if(!empty($redata['data'])){
             $redata['count'] = $this
                 ->join('LEFT JOIN __ZONE__ on __ZONE__.zone_id=__SYSTEM_USER__.zone_id')
