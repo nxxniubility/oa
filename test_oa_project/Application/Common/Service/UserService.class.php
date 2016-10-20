@@ -689,7 +689,13 @@ class UserService extends BaseService
         if (empty($data['username']) && empty($data['tel']) && empty($data['qq'])) return array('code' => 311, 'msg' => '手机号码 / 固定电话 / QQ 至少填写一项');
         if (empty($data['infoquality'])) return array('code' => 312, 'msg' => '信息质量不能为空');
         if (empty($data['channel_id'])) return array('code' => 313, 'msg' => '所属渠道不能为空');
-        if (empty($data['course_id']) && $data['course_id'] != 0) return array('code' => 314, 'msg' => '请选择意向课程');
+
+        if (empty($data['course_id']) && $data['course_id'] != 9999) {
+            return array('code' => 314, 'msg' => '请选择意向课程');
+        }
+        if ($data['course_id'] == 9999) {
+            $data['course_id'] = 0;
+        }
         // if (empty($data['remark'])) return array('code' => 315, 'msg' => '备注不能为空');
         $data['system_user_id'] = $this->system_user_id;
         $data['zone_id'] = $this->system_user['zone_id'];
@@ -727,7 +733,7 @@ class UserService extends BaseService
         //添加分配记录
         if($reUserId['code']==0 && $reUserInfo['code']==0){
             D()->commit();
-            return array('code'=>0,'msg'=>'客户添加成功','data'=>$reUserId);
+            return array('code'=>0,'msg'=>'客户添加成功','data'=>$reUserId['data']);
         }else{
             D()->rollback();
             return array('code'=>$reUserId['code'],'msg'=>$reUserId['msg']);
