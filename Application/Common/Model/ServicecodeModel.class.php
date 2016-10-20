@@ -12,6 +12,7 @@ class ServicecodeModel extends BaseModel
     protected $_validate = array(
         array('title', 'checkSpecialCharacter', array('code'=>'201','msg'=>'标题不能含有特殊字符！'), 0, 'callback'),
         array('title', '0,15', array('code'=>'202','msg'=>'标题不能大于15字符！'), 0, 'length'),
+        array('servicecode', '0,1000', array('code'=>'204','msg'=>'客服代码不能大于1000字符！'), 0, 'length'),
         array('remark', '0,100', array('code'=>'203','msg'=>'备注不能大于100字符！'), 0, 'length'),
     );
     /*
