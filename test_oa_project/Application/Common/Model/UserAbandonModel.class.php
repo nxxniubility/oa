@@ -33,6 +33,11 @@ class UserAbandonModel extends BaseModel
         return $this->field($field)->where($where)->join($join)->find();
     }
 
+    public function getAbandonList($where="",$fields=""){
+        $where['status'] = 1;
+        return $this->field($fields)->where($where)->select();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | ��ȡ�б�
