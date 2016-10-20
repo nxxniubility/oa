@@ -18,7 +18,7 @@
                 <if condition="$system_user_role_id==C('ADMIN_SUPER_ROLE')">
                     <a href="{:U('addService')}" class="proExport">添加系统更新</a>
                 </if>
-                <a href="{:U('main')}" class="return">返回</a>
+                <a href="{:U('/system/index/main')}" class="return">返回</a>
             </div>
         </div>
 
@@ -35,14 +35,14 @@
 					<th>操作</th>
 				</if>
 			</tr>
-			<foreach name="sysUpdateData" item="update_item" key="k">
+			<foreach name="data['systemUpdateList']['data']" item="v" key="k">
 				<tr>
 					<td class="firNum">
-						<span class="system_update_id">{$update_item.system_update_id}</span>
+						<span class="system_update_id">{$v.system_update_id}</span>
 					</td>
-					<td><a href="{:U('updateDetail',array('system_update_id'=>$update_item['system_update_id']))}">{$update_item.uptitle}</a></td>
-					<td>{$update_item.createtime}</td>
-					<td>{$update_item.realname}</td>
+					<td><a href="{:U('updateDetail',array('system_update_id'=>$v['system_update_id']))}">{$v.uptitle}</a></td>
+					<td>{$v.create_time}</td>
+					<td>{$v.system_realname}</td>
 					<if  condition="$system_user_role_id eq  C('ADMIN_SUPER_ROLE')">
 						<td class="updateOperation">
 							<a href="javascript:;" class="proSelect"><i></i></a>
@@ -67,55 +67,8 @@
 			
 		</table>
 
-        <!--<div class="proContMiddle">
-            <dl class="proTit clearfix">
-                <dt class="wOne proSequence clearfix">
-                    <span>ID</span>
-                    <i class="proListID"></i>
-                </dt>
-                <dt class="wTwo">标题</dt>
-                <dt class="wThr">创建时间</dt>
-                <dt class="wFou">创建者</dt>
-
-                <if condition="$system_user_role_id eq  C('ADMIN_SUPER_ROLE')">
-                     <dt class="wFiv">操作</dt>
-                </if>
-            </dl>
-
-            <foreach name="sysUpdateData" item="update_item" key="k">
-                <dl class="clearfix fw">
-                    <dd class="wOne" >
-                        <span class="system_update_id">{$update_item.system_update_id}</span>
-                    </dd>
-                    <dd class="wTwo"><a href="{:U('updateDetail',array('system_update_id'=>$update_item['system_update_id']))}">{$update_item.uptitle}</a></dd>
-                    <dd class="wThr">{$update_item.createtime}</dd>
-                    <dd class="wFou">{$update_item.realname}</dd>
-                    <if  condition="$system_user_role_id eq  C('ADMIN_SUPER_ROLE')">
-                    <dd class="wFiv">
-                        <a href="javascript:;" class="proSelect"><i></i></a>
-                        <div class="otherOperation">
-                            <div class="otherIcon">
-                                    <ul>
-                                        <li class="edit">
-                                            <span class="setEdit"></span>
-                                            <em>修改</em>
-                                        </li>
-                                        <li class="del" >
-                                            <span class="setDel"></span>
-                                            <em>删除</em>
-                                        </li>
-                                    </ul>
-                                </div>
-                          </div>
-                       </dd>
-                    </if>
-                </dl>
-            </foreach>
-
-        </div>-->
-
         <div class="collegaPage clearfix">
-            {$paging}
+            {$data['paging_data']}
         </div>
     </div>
 </div>

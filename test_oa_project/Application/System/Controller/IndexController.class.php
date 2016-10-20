@@ -303,6 +303,11 @@ class IndexController extends SystemController
             }
         }
 
+        //获取系统更新
+        $where_systemUpdate['page'] = '1,5';
+        $systemUpdateList = D('SystemUpdate', 'Service')->getSystemUpdateList($where_systemUpdate);
+        $data['systemUpdateList'] = $systemUpdateList['data'];
+        $this->assign('data', $data);
         $this->display();
     }
 
@@ -359,25 +364,16 @@ class IndexController extends SystemController
                     $this->ajaxReturn(1, '删除失败');
                 }
             }
-        } else {
-            session('curUpdateInfo', null);
-            //获取参数 页码
-            $request = I('get.');
-            $re_page = isset($request['page']) ? $request['page'] : 1;
-            unset($request['page']);
-
-            $perPageNum = C('PER_PAGE_NUM');
-            $perPageNumLimit = ','.$perPageNum;
-            $limit = (($re_page - 1) * $perPageNum).$perPageNumLimit; //分页显示,每页显示30条
-            $sysUpdateData = $this->getCurSystemUpdateInfo('',$limit);
-
-            //加载分页类
-            $paging = $this->Paging($re_page,$perPageNum,$sysUpdateData['count'],$request);
-            $this->assign('paging', $paging);
-            $this->assign('system_user_role_id', $this->system_user_role_id);
-
-            $this->display();
         }
+        $re_page = I('get.page', 1);
+        //获取系统更新
+        $where_systemUpdate['page'] = '1,30';
+        $systemUpdateList = D('SystemUpdate', 'Service')->getSystemUpdateList($where_systemUpdate);
+        $data['systemUpdateList'] = $systemUpdateList['data'];
+        //加载分页类
+        $data['paging_data'] = $this->Paging($re_page, 30,$data['systemUpdateList']['count'], null, __ACTION__, null, 'system');
+        $this->assign('data', $data);
+        $this->display();
     }
 
     /**
@@ -387,9 +383,8 @@ class IndexController extends SystemController
     {
         $updateItemId = I('get.system_update_id');
         $where = array('system_update_id' =>$updateItemId);
-        $updateItem = D('SystemUpdate')->getSystemUpdateInfo($where);
-
-        $this->assign('updateItem',  $updateItem['data'][0]);
+        $updateItem = D('SystemUpdate','Service')->getSystemUpdateInfo($where);
+        $this->assign('updateItem',  $updateItem['data']);
         $this->display();
     }
 

@@ -50,16 +50,12 @@
             </div>
 
             <ul class="msgBoxCont clearfix">
-                <foreach name="sysUpdateData" item="update_item" key="k">
+                <foreach name="data['systemUpdateList']['data']" item="v" key="k">
                     <li>
-                        <a href="{:U('updateDetail',array('system_update_id'=>$update_item['system_update_id']))}">
-                            <if condition="$k lt 5">
-                                <div class="msgNum">{$k+1}</div>
-                                <div class="msgHint">{$update_item.uptitle}</div>
-                                <!-- <div class="msgDate">{$update_item.createtime|date='Y-m-d H:m:s',###}</div>-->
-                                <div class="msgDate">{:substr($update_item['createtime'],0,10)}</div>
-                            </if>
-
+                        <a href="{:U('updateDetail',array('system_update_id'=>$v['system_update_id']))}">
+                            <div class="msgNum">{$k+1}</div>
+                            <div class="msgHint">{$v.uptitle}</div>
+                            <div class="msgDate">{$v.create_time}</div>
                         </a>
                     </li>
                 </foreach>
