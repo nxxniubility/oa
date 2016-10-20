@@ -16,39 +16,33 @@ class SystemController extends BaseController{
     public function _initialize()
     {
         parent::_initialize();
-        $jump_code = 501;
-        if(!session(C('USER_AUTH_KEY'))){
-            $jump_code = 501;
-        }else{
-            $this->system_user_id = session('system_user_id');
-            $this->system_user = session('system_user');
-            //系统登录判断
-            $this->isLogin();
-            $this->assign('system_user', $this->system_user);
-            //是否已完善信息
-            if(ACTION_NAME!='addSystemUserInfo' && ACTION_NAME!='addSystemUserInfoTwo' && $this->system_user['isuserinfo']==0) $this->redirect('System/Index/addSystemUserInfo');
-            //登陆告警
-            if(session('login_alarm')) $this->redirect('/System/Admin/loginAlarm');
-            //职位ID
-            $this->assign('system_user_role', session('system_user_role'));
-            //权限验证
-            if(C('USER_AUTH_ON') && !in_array(MODULE_NAME, explode(',',C('NOT_AUTH_MODULE')))){
-                if(!Rbac::AccessDecision()){
-                    if(C('RBAC_ERROR_PAGE')){
-                        $this->redirect('暂无权限', 1);
-                    }
-                }
-                $result = D('SystemUser','Service')->proveToken($this->system_user_id);
-                if ($result['code'] != 0) {
-                    $this->redirect(C('USER_AUTH_GATEWAY'), '请重新登录');
+        $this->system_user_id = session('system_user_id');
+        $this->system_user = session('system_user');
+        //系统登录判断
+        $this->isLogin();
+        $this->assign('system_user', $this->system_user);
+        //是否已完善信息
+        if(ACTION_NAME!='addSystemUserInfo' && ACTION_NAME!='addSystemUserInfoTwo' && $this->system_user['isuserinfo']==0) $this->redirect('System/Index/addSystemUserInfo');
+        //登陆告警
+        if(session('login_alarm')) $this->redirect('/System/Admin/loginAlarm');
+        //职位ID
+        $this->assign('system_user_role', session('system_user_role'));
+        //权限验证
+        if(C('USER_AUTH_ON') && !in_array(MODULE_NAME, explode(',',C('NOT_AUTH_MODULE')))){
+            if(!Rbac::AccessDecision()){
+                if(C('RBAC_ERROR_PAGE')){
+                    $this->redirect('暂无权限', 1);
                 }
             }
-            //当前Controller 权限列表
-            $_access_list = $_SESSION['_ACCESS_LIST'];
-            $_access_list = $_access_list[strtoupper(MODULE_NAME)][strtoupper(CONTROLLER_NAME)];
-            $this->assign('access_list', $_access_list);
+            $result = D('SystemUser','Service')->proveToken($this->system_user_id);
+            if ($result['code'] != 0) {
+                $this->redirect(C('USER_AUTH_GATEWAY'), '请重新登录');
+            }
         }
-        $this->assign('jump_code', $jump_code);
+        //当前Controller 权限列表
+        $_access_list = $_SESSION['_ACCESS_LIST'];
+        $_access_list = $_access_list[strtoupper(MODULE_NAME)][strtoupper(CONTROLLER_NAME)];
+        $this->assign('access_list', $_access_list);
     }
 
     /**
