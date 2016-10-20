@@ -698,7 +698,7 @@ class ProidService extends BaseService
         if (!str_replace(' ', '', $proid['channel_id'])) {
             return array('code'=>302,'msg'=>'请选择渠道');
         }
-        $parant = "/^(https?:\/\/)?(((www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)?\.([a-zA-Z]+))|(([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5]))(\:\d{0,4})?)(\/[\w- .\/?%&=]*)?$/i";
+        $parant = "[a-zA-z]+://[^\s]*";
         if (!preg_match($parant, $proid['domain'])) {
             return array('code'=>303, 'msg'=>'请输入正确的域名');
         }
@@ -730,7 +730,7 @@ class ProidService extends BaseService
     public function editProid($proid)
     {
         if (!$proid['proid_id']) {
-            return('code'=>301, 'msg'=>'参数丢失');
+            return array('code'=>301, 'msg'=>'参数丢失');
         }
         $proid['system_user_id'] = $this->system_user_id;
         if (!str_replace(' ', '', $proid['accountname'])) {
@@ -739,7 +739,7 @@ class ProidService extends BaseService
         if (!str_replace(' ', '', $proid['channel_id'])) {
             return array('code'=>302,'msg'=>'请选择渠道');
         }
-        $parant = "/^(https?:\/\/)?(((www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)?\.([a-zA-Z]+))|(([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5]))(\:\d{0,4})?)(\/[\w- .\/?%&=]*)?$/i";
+        $parant = "^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+"; 
         if (!preg_match($parant, $proid['domain'])) {
             return array('code'=>303, 'msg'=>'请输入正确的域名');
         }
