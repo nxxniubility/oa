@@ -1380,16 +1380,8 @@ class SystemUserService extends BaseService
     */
     public function getSystemUserVisit($where=null,$order=null,$limit='0,10'){
         $DB_PREFIX = C('DB_PREFIX');
-        $order = !empty($order)?$order:$DB_PREFIX.'system_user.system_user_id DESC';
-        if(!empty($where['zoneIds'])){
-            foreach($where['zoneIds'] as $k=>$v){
-                $arr[] = $v['zone_id'];
-            }
-            $arr[]=0;
-            $where[$DB_PREFIX.'system_user.zone_id'] = array('IN',$arr);
-//            $where[$DB_PREFIX.'role.status'] = 1;
-            unset($where['zoneIds']);
-        }
+        $order = !empty($order)?$order:$DB_PREFIX.'user_visit_logs.visitnum';
+        $where[$DB_PREFIX.'system_user.zone_id'] = 4;
         $redata['data'] =
             $this
                 ->field(array(
@@ -1410,10 +1402,9 @@ class SystemUserService extends BaseService
                     "{$DB_PREFIX}department.department_id",
                     "{$DB_PREFIX}department.departmentname",
                     "{$DB_PREFIX}role.id as role_id",
-                    "{$DB_PREFIX}role.name as rolename",
+                    "{$DB_PREFIX}role.name as role_name",
                     "{$DB_PREFIX}system_user.createtime",
                     "{$DB_PREFIX}system_user.createip",
-                    "{$DB_PREFIX}system_user_engaged.status as engaged_status",
                     "{$DB_PREFIX}user_visit_logs.visitnum"
                 ))
                 ->join('LEFT JOIN __ZONE__ on __ZONE__.zone_id=__SYSTEM_USER__.zone_id')
@@ -1421,11 +1412,10 @@ class SystemUserService extends BaseService
                 ->join('LEFT JOIN __ROLE__ on __ROLE__.id=__ROLE_USER__.role_id')
                 ->join('LEFT JOIN __DEPARTMENT__ on __DEPARTMENT__.department_id=__ROLE__.department_id')
                 ->join('LEFT JOIN __USER_VISIT_LOGS__ on __USER_VISIT_LOGS__.system_user_id=__SYSTEM_USER__.system_user_id')
-                ->join('LEFT JOIN __SYSTEM_USER_ENGAGED__ on __SYSTEM_USER_ENGAGED__.system_user_id=__SYSTEM_USER__.system_user_id')
+               
                 ->group("{$DB_PREFIX}system_user.system_user_id")
                 ->where($where)
                 ->order($order)
-                ->limit($limit)
                 ->select();
         //统计总数
         if(!empty($redata['data'])){
@@ -1442,8 +1432,8 @@ class SystemUserService extends BaseService
                 $roles = $this->getSystemUserRole(array('system_user_id'=>$v['system_user_id']));
                 $roleNames = '';
                 foreach($roles as $k2=>$v2){
-                    if($k2==0) $roleNames .= $v2['departmentname'].'/'.$v2['name'];
-                    else $roleNames .= '，'.$v2['departmentname'].'/'.$v2['name'];
+                    if($k2==0) $roleNames .= $v2['department_name'].'/'.$v2['name'];
+                    else $roleNames .= '，'.$v2['department_name'].'/'.$v2['name'];
                 }
                 $redata['data'][$k]['role_names'] = $roleNames;
             }
