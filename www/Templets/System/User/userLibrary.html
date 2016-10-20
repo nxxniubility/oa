@@ -897,7 +897,7 @@
             data:{type:'getSysUser',zone_id:zone_id,role_id:role_id},
             success:function(reflag){
                 var html2 = '';
-                if(reflag.code==0){
+                if(reflag.data){
                     $.each(reflag.data,function(k,v){
                         if(v.system_user_id==system_id){
                             var sel = "selected='selected'";
@@ -906,13 +906,13 @@
                         }
                         html2+=' <option value="'+v.system_user_id+'" '+sel+'>'+v.sign_realname+'</option>';
                     });
-                }
+                };
                 if(html2!=''){
                     html += html2;
                     $(':input[name="system_sele"]').html(html).siblings('a').hide().parent().show();
                     $(':input[name="createsystem_sele"]').html(html_create+=html2);
                 }else{
-                    $(':input[name="system_sele"]').empty().html(html);
+                    $(':input[name="system_sele"]').empty().html(html).siblings('a').hide();
                     $(':input[name="createsystem_sele"]').empty().html(html_create);
                 }
             }
