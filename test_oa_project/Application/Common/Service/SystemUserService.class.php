@@ -706,19 +706,19 @@ class SystemUserService extends BaseService
     public function editSystemUser($data)
     {
         $data = array_filter($data);
-        if(empty($data['realname'])) return array('code'=>203, 'msg'=>'真实姓名不能为空');
-        if(empty($data['username'])) return array('code'=>204, 'msg'=>'手机号码不能为空');
-        if(!$this->checkMobile($data['username'])) return array('code'=>205, 'msg'=>'手机号码格式有误');
-        if(!$this->checkIsCompanyEmail($data['email'])) return array('code'=>206, 'msg'=>'邮箱地址输入有误');
-        if(empty($data['zone_id'])) return array('code'=>300, 'msg'=>'请选择所属区域');
-        if(empty($data['role_id'])) return array('code'=>301, 'msg'=>'请选择所属部门及职位');
-        if(empty($data['usertype'])) return array('code'=>302, 'msg'=>'请选择员工状态');
-        if(empty($data['check_id'])) return array('code'=>303, 'msg'=>'指纹编号不能为空');
-        if(empty($data['entrytime'])) return array('code'=>304, 'msg'=>'入职时间不能为空');
-        if(empty($data['straightime'])) return array('code'=>305, 'msg'=>'转正时间不能为空');
+        if(empty($data['realname'])) return array('code'=>301, 'msg'=>'真实姓名不能为空');
+        if(empty($data['username'])) return array('code'=>302, 'msg'=>'手机号码不能为空');
+        if(!$this->checkMobile($data['username'])) return array('code'=>303, 'msg'=>'手机号码格式有误');
+        if(!$this->checkIsCompanyEmail($data['email'])) return array('code'=>304, 'msg'=>'邮箱地址输入有误');
+        if(empty($data['zone_id'])) return array('code'=>305, 'msg'=>'请选择所属区域');
+        if(empty($data['role_id'])) return array('code'=>306, 'msg'=>'请选择所属部门及职位');
+        if(empty($data['usertype'])) return array('code'=>307, 'msg'=>'请选择员工状态');
+        if(empty($data['check_id'])) return array('code'=>308, 'msg'=>'指纹编号不能为空');
+        if(empty($data['entrytime'])) return array('code'=>309, 'msg'=>'入职时间不能为空');
+        if(empty($data['straightime'])) return array('code'=>310, 'msg'=>'转正时间不能为空');
         $data['entrytime'] = strtotime($data['entrytime']);
         $data['straightime'] = strtotime($data['straightime']);
-        if($data['entrytime']>$data['straightime']) return array('code'=>203, 'msg'=>'转正时间不能小于入职时间');
+        if($data['entrytime']>$data['straightime']) return array('code'=>201, 'msg'=>'转正时间不能小于入职时间');
         $system_user_id = !empty($data['system_user_id'])?$data['system_user_id']:$this->system_user_id;
         $data['username'] = encryptPhone($data['username'], C('PHONE_CODE_KEY'));
         //是否修改手机号码 是：清空密码
@@ -726,12 +726,12 @@ class SystemUserService extends BaseService
         if($userInfo['username']!=$data['username']){
             $data['password'] == '';
             $isUsername = D('SystemUser')->where(array('username'=>$data['username']))->find();
-            if(!empty($isUsername)) return array('code'=>201, 'msg'=>'该手机号码已被注册');
+            if(!empty($isUsername)) return array('code'=>202, 'msg'=>'该手机号码已被注册');
         }
         $userInfoCheck = D('SystemUser')->where(array('check_id'=>$data['check_id']))->find();
         if(!empty($userInfoCheck)) {
             if($userInfoCheck['system_user_id'] != $system_user_id){
-                return array('code'=>202, 'msg'=>'该指纹编号已存在', 'sign'=>'check_id');
+                return array('code'=>203, 'msg'=>'该指纹编号已存在', 'sign'=>'check_id');
             }
         }
          //启动事务
@@ -1058,6 +1058,19 @@ class SystemUserService extends BaseService
         }
         D()->rollback();
         return array('code'=>100, 'msg'=>'操作失败');
+    }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 修改员工自定义列信息
+   |--------------------------------------------------------------------------
+   | system_user_id columntype
+   | @author zgt
+   */
+    public function editSystemUserFace($data)
+    {
+        $result = D('SystemUser')->editData($data, $this->system_user_id);
+        return array('code'=>0, 'data'=>$result);
     }
 
     /*

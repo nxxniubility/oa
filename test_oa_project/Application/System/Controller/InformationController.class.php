@@ -23,8 +23,8 @@ class InformationController extends SystemController
     {
         if (IS_POST) {
             $user['face'] = I("post.face");
-            $updat = D('SystemUser', 'Service')->editSystemUser($user);
-            if ($updat['code'] != 0) {
+            $updat = D('SystemUser', 'Service')->editSystemUserFace($user);
+            if ($updat['data']['code'] != 0) {
                 $this->ajaxReturn($updat['code'], '修改失败');
             }
             $this->system_user['face'] = $user['face'];

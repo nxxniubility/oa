@@ -7,6 +7,12 @@ class PagesModel extends BaseModel
         parent::_initialize();
     }
 
+    //自动验证
+    protected $_validate = array(
+        array('subject', 'checkSpecialCharacter', array('code'=>'301','msg'=>'主题不能含有特殊字符！'), 0, 'callback'),
+        array('subject', '0,15', array('code'=>'302','msg'=>'主题不能大于15字符！'), 0, 'length'),
+    );
+
     /*
      * 获取模板列表
      * @author nxx
