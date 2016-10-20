@@ -685,21 +685,18 @@ class ProidService extends BaseService
     {   
         $proidDb = D("Proid");
         $proid['system_user_id'] = $this->system_user_id;
-        if (!$proid['accountname']) {
+        if (!str_replace(' ', '', $proid['accountname'])) {
             return array('code'=>301,'msg'=>'请填写账号名称');
         }
-        if (!$proid['channel_id']) {
+        if (!str_replace(' ', '', $proid['channel_id'])) {
             return array('code'=>302,'msg'=>'请选择渠道');
         }
-        if (!$proid['domain']) {
-            return array('code'=>303,'msg'=>'请填写域名');
-        }else{
-            $test = '/[。]/';
-            if (preg_match($test, $proid['domain'])) {
-                return array('code'=>304,'msg'=>'请填写正确的域名');
-            }
+        $parant = "/^(https?:\/\/)?(((www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)?\.([a-zA-Z]+))|(([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5]))(\:\d{0,4})?)(\/[\w- .\/?%&=]*)?$/i";
+        if (!preg_match($parant, $proid['domain'])) {
+            return array('code'=>303, 'msg'=>'请输入正确的域名');
         }
-        if (!$proid['totalcode']) {
+
+        if (!str_replace(' ', '', $proid['totalcode'])) {
             return array('code'=>305,'msg'=>'请填写统计代码');
         }
         if (!$proid['pcservice_id'] || !$proid['mservice_id']) {
@@ -713,7 +710,7 @@ class ProidService extends BaseService
         $proid['createtime'] = time();
         $proid_id = $proidDb->addData($proid);
         if ($proid_id['code'] != 0) {
-            return array('code'=>202, 'msg'=>'创建推广账号失败');
+            return array('code'=>202, 'msg'=>$proid_id['msg']);
         }
         return array('code'=>0, 'msg'=>'创建推广账号成功');
 
@@ -726,19 +723,27 @@ class ProidService extends BaseService
     public function editProid($proid)
     {
         $proid['system_user_id'] = $this->system_user_id;
-        if (!$proid['channel_id']) {
-            return array('code'=>301 , 'msg'=>'请选择渠道');
+        if (!str_replace(' ', '', $proid['accountname'])) {
+            return array('code'=>301,'msg'=>'请填写账号名称');
+        }
+        if (!str_replace(' ', '', $proid['channel_id'])) {
+            return array('code'=>302,'msg'=>'请选择渠道');
+        }
+        $parant = "/^(https?:\/\/)?(((www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)?\.([a-zA-Z]+))|(([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5]))(\:\d{0,4})?)(\/[\w- .\/?%&=]*)?$/i";
+        if (!preg_match($parant, $proid['domain'])) {
+            return array('code'=>303, 'msg'=>'请输入正确的域名');
+        }
+
+        if (!str_replace(' ', '', $proid['totalcode'])) {
+            return array('code'=>305,'msg'=>'请填写统计代码');
         }
         if (!$proid['pcservice_id'] || !$proid['mservice_id']) {
-            return array('code'=>302 , 'msg'=>'请选择客服代码');
-        }
-        if (!$proid['domain']) {
-            return array('code'=>303 , 'msg'=>'请填写域名');
+            return array('code'=>306,'msg'=>'请选择PC客服代码或移动客服代码');
         }
         $proid['status'] = 1;
         $backInfo = D('Proid')->editData($proid, $proid['proid_id']);
         if ($backInfo['code'] != 0) {
-            return array('code'=>'201', 'msg'=>'修改推广账号失败');
+            return array('code'=>$backInfo['code'], 'msg'=>$backInfo['msg']);
         }
         return array('code'=>'0', 'msg'=>'修改推广账号成功');
 
@@ -843,14 +848,19 @@ class ProidService extends BaseService
     */
     public function createPromote($promote)
     {
+        $promote['plan'] = str_replace(' ', '', $promote['plan']);
+        $promote['planunit'] = str_replace(' ', '', $promote['planunit']);
         if (!$promote['plan'] && $promote['planunit']) {
             return array('code'=>301, 'msg'=>'请填写计划');
         }
         if ($promote['plan'] && !$promote['planunit']) {
             return array('code'=>302, 'msg'=>'请填写计划单元');
         }
-        if (!$promote['keyword']) {
+        if (!str_replace(' ', '', $promote['keyword'])) {
             return array('code'=>303, 'msg'=>'请填写关键词');
+        }
+        if (!$promote['pc_pages_id'] || !$promote['m_pages_id']) {
+            return array('code'=>304, 'msg'=>'PC或者移动专题页不能为空');
         }
         $promoteDb = D("Promote");
         $proLevDb = D("ProLev");
@@ -859,6 +869,12 @@ class ProidService extends BaseService
         unset($promote['pc_pages']);
         unset($promote['m_pages']);
         unset($promote['createtime']);
+        if (!$promote['plan']) {
+            unset($promote['plan']);
+        }
+        if (!$promote['planunit']) {
+            unset($promote['planunit']);
+        }
         $promote['status'] = 1;
         //若无则执行添加操作
         $promoteInfo = $promoteDb->getFind($promote);
@@ -866,9 +882,9 @@ class ProidService extends BaseService
             return array("code"=>0,'data'=>$promoteInfo['promote_id']);
         }else{
             $promote['createtime'] = time();
-            $result['data'] = $promoteDb->addData($promote);
-            if (!$result['data']) {
-                return array("code"=>201,'msg'=>'添加推广计划失败');
+            $result = $promoteDb->addData($promote);
+            if ($result['code'] != 0) {
+                return array("code"=>$result['code'],'msg'=>$result['msg']);
             }
             return array("code"=>0,'data'=>$result['data']);
         }
@@ -879,7 +895,7 @@ class ProidService extends BaseService
      * 获取计划列表
      * @author Nixx
     */
-    public function getPromoteList($promote, $limit="0,100000")
+    public function getPromoteList($promote, $limit="0,15")
     {
         $promoteDb = D("Promote");
         $servicecodeDb = D("Servicecode");
@@ -888,7 +904,7 @@ class ProidService extends BaseService
         $getPromoteListAll['count'] = $promoteDb->getCount($promote);
         $proid = D("Proid")->getFind(array('proid_id'=>$promote['proid_id'], 'status'=>1));
         $promotes = $promoteDb->getList($promote, null, null, $limit);
-        if (!$promotes['data']) {
+        if (!$promotes) {
             return array('code'=>201, 'msg'=>'暂无数据');
         }
         foreach ($promotes as $key => $promote) {

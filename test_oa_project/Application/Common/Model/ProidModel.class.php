@@ -9,10 +9,13 @@ class ProidModel extends BaseModel
 
     //自动验证
     protected $_validate = array(
-        array('channelname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
-        array('channelname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
+        array('accountname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'推广账号名称不能含有特殊字符！'), 0, 'callback'),
+        array('accountname', '0,15', array('code'=>'202','msg'=>'推广账号名称不能大于15字符！'), 0, 'length'),
+        array('totalcode', '0,500', array('code'=>'203','msg'=>'统计代码不能大于500字符！'), 0, 'length'),
+        array('moffcode', '0,500', array('code'=>'204','msg'=>'离线宝移动代码不能大于500字符！'), 0, 'length'),
+        array('pcoffcode', '0,500', array('code'=>'205','msg'=>'离线宝PC代码不能大于500字符！'), 0, 'length'),
+        array('remark', '0,1000', array('code'=>'206','msg'=>'备注不能大于1000字符！'), 0, 'length'),
     );
-
     /*
     |--------------------------------------------------------------------------
     | 获取单条记录

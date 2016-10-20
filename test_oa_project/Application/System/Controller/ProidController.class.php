@@ -636,7 +636,7 @@ class ProidController extends SystemController
         $data['paging'] = $this->Paging($re_page,15,$promList['data']['count'],$proid);
         $data['proid_id'] = $proid['proid_id'];
         $proidInfo = D('Proid', 'Service')->getProInfo(array('proid_id'=>$proid['proid_id']));
-        $this->assign('proid_id', $proid['proid_id']);    
+        $this->assign('proid_id', $proid['proid_id']);   
         $this->assign('promoteList', $promList['data']);  
         $this->assign('data', $data);
         $this->assign('proidInfo', $proidInfo['data']);
@@ -692,7 +692,7 @@ class ProidController extends SystemController
             }
             $reback = D('Proid', 'Service')->createPromote($promote);
             if($reback['code'] != 0) {
-                $this->ajaxReturn($reback['code'],'添加推广计划失败');
+                $this->ajaxReturn($reback['code'], $reback['msg']);
             }
             $this->ajaxReturn(0, '添加计划成功', U('System/Proid/index', array('proid_id'=>$promote['proid_id'])));
         }
@@ -734,7 +734,7 @@ class ProidController extends SystemController
             $promote['mservice_id'] = I("post.mservice_id");
             $backInfo = D('Proid', 'Service')->editPromote($promote);
             if($backInfo['code'] != 0){
-                $this->ajaxReturn(3, '修改失败');
+                $this->ajaxReturn($backInfo['code'], $backInfo['msg']);
             }
             $this->ajaxReturn(0, '修改成功', U('System/Proid/index', array('proid_id'=>$promoteInfo['proid_id'])));
         }
@@ -780,7 +780,7 @@ class ProidController extends SystemController
             }
             $backInfo = D('Proid', 'Service')->editPromoteInfo($promote);
             if($backInfo['code'] != 0){
-                $this->ajaxReturn($backInfo['code'], '修改失败');
+                $this->ajaxReturn($backInfo['code'], $backInfo['code']);
             }
             $this->ajaxReturn(0, '修改成功', U('System/Proid/index',array('proid_id'=>$promote['proid_id'])));
         }else{
