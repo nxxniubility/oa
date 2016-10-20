@@ -22,7 +22,7 @@ class ProidService extends BaseService
             }
             return array('code'=>'0', 'data'=>$servicecodeList);
         }
-        return array('code'=>'1', 'msg'=>"么有客服代码哎");
+        return array('code'=>'201', 'msg'=>"么有客服代码哎");
 
     }
 
