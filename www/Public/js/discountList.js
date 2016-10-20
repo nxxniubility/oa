@@ -92,7 +92,7 @@ $('.fbBtn').on('click',function(){
 // 限制字符长度
 function chkLength(el,size){
 	if(el.value.length > size){
-		layer.msg('已超出字数规定上限.',{icon:2});
+		layer.msg('不能超过'+ size +'字数限制.',{icon:2});
 	}
 	el.value = el.value.substring(0,size);
 }

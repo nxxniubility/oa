@@ -162,7 +162,7 @@
 		    	var price = $(':input[name="create_price"]').val();
 		    	var createprice = price.split('.');
 				if($(':input[name="create_name"]').val().length>20){
-					layer.msg('产品名称不能大于20位字符', {icon:2});
+					layer.msg('产品名称不能大于20字数', {icon:2});
 					return false;
 				}else if(createprice[0].length>8){
 					layer.msg('产品价格整数位不能大于8位数', {icon:2});
@@ -171,7 +171,7 @@
 					layer.msg('请输入正确的价格', {icon:2});
 					return false;
 				}else if($(':input[name="create_description"]').val().length>50){
-					layer.msg('产品描述不能大于50位字符', {icon:2});
+					layer.msg('产品描述不能大于30字数', {icon:2});
 					return false;
 				}else if($(':input[name="create_name"]').val().length==0){
 					layer.msg('请输入产品名称', {icon:2});
@@ -220,7 +220,7 @@
 		    	var editprice = $(':input[name="edit_price"]').val();
 		    	var editprice = editprice.split('.');
 				if($(':input[name="edit_name"]').val().length>20){
-					layer.msg('产品名称不能大于20位字符', {icon:2});
+					layer.msg('产品名称不能大于20字数', {icon:2});
 					return false;
 				}else if(editprice[0].length>8){
 					layer.msg('产品价格整数位不能大于8位数', {icon:2});
@@ -229,7 +229,7 @@
 					layer.msg('请输入正确的价格', {icon:2});
 					return false;
 				}else if($(':input[name="edit_description"]').val().length>50){
-					layer.msg('产品描述不能大于50位字符', {icon:2});
+					layer.msg('产品描述不能大于30字数', {icon:2});
 					return false;
 				}else if($(':input[name="edit_name"]').val().length==0){
 					layer.msg('请输入产品名称', {icon:2});
