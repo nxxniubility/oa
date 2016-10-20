@@ -42,7 +42,7 @@ class ProidService extends BaseService
         if(!str_replace(' ', '', $param['url'])) {
             return array('code'=>303, 'msg'=>'链接不能为空');
         }
-        $parant = "/^(https?:\/\/)?(((www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)?\.([a-zA-Z]+))|(([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5]))(\:\d{0,4})?)(\/[\w- .\/?%&=]*)?$/i";
+        $parant = "#http://(.*?)\.#i";
         if (!preg_match($parant, $param['url'])) {
             return array('code'=>305, 'msg'=>'请输入正确的链接');
         }
@@ -85,7 +85,7 @@ class ProidService extends BaseService
         if(!str_replace(' ', '', $request['url'])) {
             return array('code'=>304, 'msg'=>'链接不能为空');
         }
-        $parant = "/^(https?:\/\/)?(((www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)?\.([a-zA-Z]+))|(([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5]))(\:\d{0,4})?)(\/[\w- .\/?%&=]*)?$/i";
+        $parant = "#http://(.*?)\.#i";
         if (!preg_match($parant, $request['url'])) {
             return array('code'=>305, 'msg'=>'请输入正确的链接');
         }
