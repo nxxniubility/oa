@@ -62,8 +62,8 @@ class NodeService extends BaseService
     public function addNode($param)
     {
         //必须参数
-        if(empty($param['name'])) return array('code'=>300,'msg'=>'缺少方法名称');
-        if(empty($param['title'])) return array('code'=>301,'msg'=>'缺少方法标题');
+        if(empty($param['name'])) return array('code'=>300,'msg'=>'请输入方法名称');
+        if(empty($param['title'])) return array('code'=>301,'msg'=>'请输入方法标题');
         $result = D('Node')->addData($param);
         //插入数据成功执行清除缓存
         if ($result['code']==0){
@@ -88,6 +88,8 @@ class NodeService extends BaseService
     {
         //必须参数
         if(empty($param['node_id'])) return array('code'=>300,'msg'=>'参数异常');
+        if(empty($param['name'])) return array('code'=>301,'msg'=>'请输入方法名称');
+        if(empty($param['title'])) return array('code'=>302,'msg'=>'请输入方法标题');
         $result = D('Node')->editData($param,$param['node_id']);
         //更新数据成功执行清除缓存
         if ($result['code']==0){
@@ -115,16 +117,15 @@ class NodeService extends BaseService
     {
         //必须参数
         if(empty($param['node_id'])) return array('code'=>300,'msg'=>'参数异常');
-        $param['status'] = 0;
-        $result = D('Node')->editData($param,$param['node_id']);
+        $result = D('Node')->delete($param['node_id']);
         //更新数据成功执行清除缓存
         if ($result['code']==0){
             if (F('Cache/node')) {
-                $new_info = D('Node')->getFind(array("id"=>$param['node_id']));
                 $cahce_all = F('Cache/node');
                 foreach($cahce_all['data'] as $k=>$v){
                     if($v['id'] == $param['node_id']){
-                        $cahce_all['data'][$k] = $new_info;
+                        unset($cahce_all['data'][$k]);
+                        $cahce_all['count'] = $cahce_all['count']-1;
                     }
                 }
                 F('Cache/node', $cahce_all);

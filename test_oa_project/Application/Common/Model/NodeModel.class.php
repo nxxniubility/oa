@@ -12,7 +12,7 @@ class NodeModel extends BaseModel
 
     //自动验证
     protected $_validate = array(
-        array('name', 'checkSpecialCharacter', array('code'=>'201','msg'=>'节点方法名不能含有特殊字符！'), 0, 'callback'),
+        array('name', 'getStrMonogram', array('code'=>'201','msg'=>'节点方法名只能是字母组合！'), 0, 'callback'),
         array('title', 'checkSpecialCharacter', array('code'=>'202','msg'=>'节点名称不能含有特殊字符！'), 0, 'callback'),
         array('sort', 'checkInt', array('code'=>'203','msg'=>'排序只能为正整数！'), 0, 'callback'),
         array('pid', 'checkInt', array('code'=>'204','msg'=>'父级ID只能为正整数！'), 0, 'callback'),

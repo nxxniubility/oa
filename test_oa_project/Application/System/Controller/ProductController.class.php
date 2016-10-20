@@ -80,9 +80,8 @@ class ProductController extends SystemController
         //获取数据
         $data = I("post.");
         //执行操作
-        $courseProductController = new CourseProductController();
         $data['status'] = 0;
-        $reflag = $courseProductController->edit_courseProduct($data);
+        $reflag = D('Course', 'Service')->delCourseProduct($data);
         if($reflag['code']==0){
             $this->ajaxReturn('0', '产品删除成功');
         }
