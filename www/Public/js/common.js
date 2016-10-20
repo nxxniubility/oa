@@ -74,10 +74,11 @@ $(document).ready(function() {
     }
 });
 
-//  跳转登录页
-	if(jump_code == 501){
-		window.location.href = '/system/admin/index';
-	}
+//  iframe跳转登录页
+if(jump_code == 501){
+	//window.location.href = '/system/admin/index';
+	top.location.href = '/system/admin/index';
+}
 
 
 function common_ajax(data,url,loca,fun){
