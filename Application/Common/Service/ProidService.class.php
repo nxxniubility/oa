@@ -33,20 +33,20 @@ class ProidService extends BaseService
      */
     public function addServicecode($param)
     {
-        if(empty($param['title'])){
+        if(!str_replace(' ', '', $param['title'])) {
             return array('code'=>301, 'msg'=>'标题不能为空');
         }
-        if(empty($param['terminal_id'])){
+        if(!str_replace(' ', '', $param['terminal_id'])) {
             return array('code'=>302, 'msg'=>'请选择终端类型');
         }
-        if(empty($param['url'])){
+        if(!str_replace(' ', '', $param['url'])) {
             return array('code'=>303, 'msg'=>'链接不能为空');
         }
         $parant = "/^(https?:\/\/)?(((www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)?\.([a-zA-Z]+))|(([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5]))(\:\d{0,4})?)(\/[\w- .\/?%&=]*)?$/i";
         if (!preg_match($parant, $param['url'])) {
             return array('code'=>305, 'msg'=>'请输入正确的链接');
         }
-        if(empty($param['servicecode'])){
+        if(!str_replace(' ', '', $param['servicecode'])){
             return array('code'=>304, 'msg'=>'客服代码不能为空');
         }
         $param['system_user_id'] = $this->system_user_id;
@@ -69,20 +69,20 @@ class ProidService extends BaseService
         if(!isset($servicecode_id)){
             return array('code'=>301, 'msg'=>'参数异常');
         }
-        if(empty($request['title'])){
+        if(!str_replace(' ', '', $request['title'])) {
             return array('code'=>302, 'msg'=>'标题不能为空');
         }
-        if(empty($request['terminal_id'])){
+        if(!str_replace(' ', '', $request['terminal_id'])) {
             return array('code'=>303, 'msg'=>'请选择终端类型');
         }
-        if(empty($request['url'])){
+        if(!str_replace(' ', '', $request['url'])) {
             return array('code'=>304, 'msg'=>'链接不能为空');
         }
         $parant = "/^(https?:\/\/)?(((www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)?\.([a-zA-Z]+))|(([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5]))(\:\d{0,4})?)(\/[\w- .\/?%&=]*)?$/i";
         if (!preg_match($parant, $request['url'])) {
             return array('code'=>305, 'msg'=>'请输入正确的链接');
         }
-        if(empty($request['servicecode'])){
+        if(!str_replace(' ', '', $request['servicecode'])){
             return array('code'=>306, 'msg'=>'客服代码不能为空');
         }
         $request['system_user_id'] = $this->system_user_id;
