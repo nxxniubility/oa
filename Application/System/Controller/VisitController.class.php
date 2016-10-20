@@ -80,28 +80,11 @@ class VisitController extends SystemController
                         }
                     }else{
                         $where_system[C('DB_PREFIX').'system_user.status'] = 1;
-                        $where_system[C('DB_PREFIX').'system_user.zone_id'] = $this->system_user['zone_id'];
+                        // $where_system[C('DB_PREFIX').'system_user.zone_id'] = 4;//$this->system_user['zone_id'];
                         $where_system[C('DB_PREFIX').'system_user.usertype'] = array('neq',10);
                         $where_system[C('DB_PREFIX').'role.id'] = array('in',$marketArr);
-                        $where_system[C('DB_PREFIX').'system_user_engaged.status'] = array('neq',1);
                         $systemUserList = D('SystemUser', 'Service')->getSystemUserVisit($where_system);
-                        foreach($systemUserList['data']['data'] as $k=>$v){
-                            if(empty($v['visitnum'])){
-                                $systemVisitNum = 0;
-                                $systemVisitKey = $k;
-                            }else{
-                                if(empty($systemVisitNum)){
-                                    $systemVisitNum = $v['visitnum'];
-                                    $systemVisitKey = $k;
-                                }else{
-                                    if($systemVisitNum>$v['visitnum']){
-                                        $systemVisitNum = $v['visitnum'];
-                                        $systemVisitKey = $k;
-                                    }
-                                }
-                            }
-                        }
-                        $this->ajaxReturn(4,'所属人非教务/销售人员',!empty($systemUserList['data']['data'][$systemVisitKey])?$systemUserList['data']['data'][$systemVisitKey]:0);
+                        $this->ajaxReturn(4,'所属人非教务/销售人员',!empty($systemUserList['data']['data'][0])?$systemUserList['data']['data'][0]:0);
                     }
                 }
             }else if($request['type']=='submit'){
