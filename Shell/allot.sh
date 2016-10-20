@@ -1,6 +1,6 @@
 #!/bin/bash
-result=`/usr/local/php/bin/php /mnt/www/didazp/www/cmd.php refuse`
-spath='/mnt/www/didazp/Shell/log/Refuse/'
+result=`/usr/bin/php /mnt/www/oa_project/www/cmd.php allot`
+spath='/mnt/www/oa_project/Shell/log/allot/'
 if [  "${result}" != ""  ]
 then
 
