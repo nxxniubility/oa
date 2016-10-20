@@ -590,7 +590,7 @@ class ProidController extends SystemController
         if ($backInfo['code'] != 0) {
             $this->ajaxReturn($backInfo['code'], $backInfo['msg']);
         }
-        $this->ajaxReturn(0, '删除成功', U('System/Proid/id'));
+        $this->success('删除成功', 2, U('System/Proid/id'));
     }
 
     /**
