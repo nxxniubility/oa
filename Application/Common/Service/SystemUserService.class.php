@@ -1381,7 +1381,7 @@ class SystemUserService extends BaseService
     public function getSystemUserVisit($where=null,$order=null,$limit='0,10'){
         $DB_PREFIX = C('DB_PREFIX');
         $order = !empty($order)?$order:$DB_PREFIX.'user_visit_logs.visitnum';
-        $where[$DB_PREFIX.'system_user.zone_id'] = 4;
+        $where[$DB_PREFIX.'system_user.zone_id'] = $This->system_user['zone_id'];
         $where[$DB_PREFIX.'user_visit_logs.date'] = date('Ymd');
         $redata['data'] =
             $this
