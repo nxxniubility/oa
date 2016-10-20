@@ -118,6 +118,7 @@ class ProidController extends SystemController
     public function delServ()
     {
         $servicecode_id = I('post.serv_id',null);
+        $requery['sign'] = 'del';
         $result = D('Proid', 'Service')->editServicecode($requery,$servicecode_id);
         $this->ajaxReturn($result['code'], $result['msg']);
     }
