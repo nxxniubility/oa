@@ -41,7 +41,6 @@ class VisitController extends SystemController
                     $where_system[C('DB_PREFIX').'system_user.status'] = 1;
                     $where_system[C('DB_PREFIX').'system_user.usertype'] = array('neq',10);
                     $where_system[C('DB_PREFIX').'role.id'] = array('in',$marketArr);
-                    $where_system[C('DB_PREFIX').'system_user_engaged.status'] = array('neq',1);
                     $systemUserList = D('SystemUser', 'Service')->getSystemUserVisit($where_system);
                     foreach($systemUserList['data']['data'] as $k=>$v){
                         if(empty($v['visitnum'])){
@@ -82,7 +81,6 @@ class VisitController extends SystemController
                         $where_system[C('DB_PREFIX').'system_user.status'] = 1;
                         $where_system[C('DB_PREFIX').'system_user.usertype'] = array('neq',10);
                         $where_system[C('DB_PREFIX').'role.id'] = array('in',$marketArr);
-                        $where_system[C('DB_PREFIX').'system_user_engaged.status'] = array('neq',1);
                         $systemUserList = D('SystemUser', 'Service')->getSystemUserVisit($where_system);
                         foreach($systemUserList['data']['data'] as $k=>$v){
                             if(empty($v['visitnum'])){
