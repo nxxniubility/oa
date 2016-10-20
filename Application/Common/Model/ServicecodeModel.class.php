@@ -8,12 +8,12 @@ class ServicecodeModel extends BaseModel
         parent::_initialize();
     }
 
-    // //自动验证
-    // protected $_validate = array(
-    //     array('channelname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
-    //     array('channelname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
-    // );
-
+    //自动验证
+    protected $_validate = array(
+        array('title', 'checkSpecialCharacter', array('code'=>'201','msg'=>'标题不能含有特殊字符！'), 0, 'callback'),
+        array('title', '0,15', array('code'=>'202','msg'=>'标题不能大于15字符！'), 0, 'length'),
+        array('remark', '0,100', array('code'=>'203','msg'=>'备注不能大于100字符！'), 0, 'length'),
+    );
     /*
     |--------------------------------------------------------------------------
     | 获取单条记录

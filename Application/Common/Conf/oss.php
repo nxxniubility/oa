@@ -28,3 +28,4 @@ return array(
 		'ALIOSS_USER_DIR'=>array('user_dir/','user_image/','user_image/photo/','template/','user_file/','user-dir/','excel/')//用户允许上传的目录
 	)
 );
+

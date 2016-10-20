@@ -42,6 +42,10 @@ class ProidService extends BaseService
         if(empty($param['url'])){
             return array('code'=>303, 'msg'=>'链接不能为空');
         }
+        $parant = "/^(https?:\/\/)?(((www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)?\.([a-zA-Z]+))|(([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5]))(\:\d{0,4})?)(\/[\w- .\/?%&=]*)?$/i";
+        if (!preg_match($parant, $param['url'])) {
+            return array('code'=>305, 'msg'=>'请输入正确的链接');
+        }
         if(empty($param['servicecode'])){
             return array('code'=>304, 'msg'=>'客服代码不能为空');
         }
@@ -52,7 +56,7 @@ class ProidService extends BaseService
         if ($result['code']==0){
             return array('code'=>'0', 'data'=>$result['data']);
         }
-        return array('code'=>'201', 'msg'=>"添加客服代码失败");
+        return array('code'=>$result['code'], 'msg'=>$result['msg']);
     }
 
     /**
@@ -74,8 +78,12 @@ class ProidService extends BaseService
         if(empty($request['url'])){
             return array('code'=>304, 'msg'=>'链接不能为空');
         }
+        $parant = "/^(https?:\/\/)?(((www\.)?[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)?\.([a-zA-Z]+))|(([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5])\.([0-1]?[0-9]?[0-9]|2[0-5][0-5]))(\:\d{0,4})?)(\/[\w- .\/?%&=]*)?$/i";
+        if (!preg_match($parant, $request['url'])) {
+            return array('code'=>305, 'msg'=>'请输入正确的链接');
+        }
         if(empty($request['servicecode'])){
-            return array('code'=>305, 'msg'=>'客服代码不能为空');
+            return array('code'=>306, 'msg'=>'客服代码不能为空');
         }
         $request['system_user_id'] = $this->system_user_id;
         $result = D("Servicecode")->editData($request, $servicecode_id);

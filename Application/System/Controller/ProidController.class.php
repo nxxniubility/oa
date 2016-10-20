@@ -78,7 +78,7 @@ class ProidController extends SystemController
             if($result['code'] != 0){
                 $this->ajaxReturn($result['code'], $result['msg']);
             }else{
-                $this->ajaxReturn(0, U('System/Proid/servJsList'));
+                $this->ajaxReturn(0, '修改成功', U('System/Proid/servJsList'));
             }
         }else{
             //终端列表
