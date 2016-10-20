@@ -104,17 +104,18 @@ class IndexController extends SystemController
             if(strstr($get_url,'crm.didazp')){
                 $is_dida = 1;
             }
-            //获取左侧边栏
-            $newSideber = $this->_sideMenu();
-            //获取员工忙线状态
-            $engagedStatus =  D('SystemUser','Service')->getSystemEngagedStatus();
 
-            $this->getCurSystemUpdateInfo();
-
-            $this->assign('is_dida', $is_dida);
-            $this->assign('engagedStatus', $engagedStatus);
-            //模板变量赋值
-            $this->assign('sidebar',$newSideber);
+            if(session(C('USER_AUTH_KEY'))){
+                //获取左侧边栏
+                $newSideber = $this->_sideMenu();
+                //获取员工忙线状态
+                $engagedStatus =  D('SystemUser','Service')->getSystemEngagedStatus();
+                $this->getCurSystemUpdateInfo();
+                //模板变量赋值
+                $this->assign('is_dida', $is_dida);
+                $this->assign('engagedStatus', $engagedStatus);
+                $this->assign('sidebar',$newSideber);
+            }
             $this->display();
         }
     }
