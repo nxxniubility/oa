@@ -66,6 +66,13 @@ class ProidService extends BaseService
      */
     public function editServicecode($request,$servicecode_id)
     {
+        if ($request['sign'] == 'del') {
+            $result = D('Servicecode')->delData($servicecode_id);
+            if ($result['code'] == 0) {
+                return array('code'=>0, 'msg'=>'删除成功');
+            }
+            return array('code'=>$result['code'], 'msg'=>'删除失败');
+        }
         if(!isset($servicecode_id)){
             return array('code'=>301, 'msg'=>'参数异常');
         }
@@ -88,9 +95,9 @@ class ProidService extends BaseService
         $request['system_user_id'] = $this->system_user_id;
         $result = D("Servicecode")->editData($request, $servicecode_id);
         if ($result['code'] == 0) {
-            return array('code'=>0, 'msg'=>"操作成功");
+            return array('code'=>0, 'msg'=>"修改成功");
         }
-        return array('code'=>201, 'msg'=>"操作失败");
+        return array('code'=>201, 'msg'=>$result['msg']);
     }
 
     /**
@@ -104,7 +111,7 @@ class ProidService extends BaseService
             return array('code'=>301, 'msg'=>'请求参数异常');
         }
         $servicecodeInfo = D("Servicecode")->getFind($param);
-        if (!$servicecodeInfo) {
+        if ($servicecodeInfo['code'] != 0) {
             return array('code'=>201, 'msg'=>'暂无内容');
         }
         return array('code'=>'0', 'data'=>$servicecodeInfo);
