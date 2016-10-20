@@ -473,18 +473,18 @@ class ProidController extends SystemController
         $pc['terminal_id'] = 2;
         $pcser = D('Proid', 'Service')->getOwnServicecode($pc);
         if ($pcser['code'] != 0) {
-            $this->ajaxReturn($pcser['code'], '么有PC客服代码');
+            $this->error('么有PC客服代码,请先添加');
         }else{
             $pcserviceList['data'] = $pcser['data'];
         }
         $m['terminal_id'] = 1;
         $mser = D('Proid', 'Service')->getOwnServicecode($m);
         if ($mser['code'] != 0) {
-            $this->ajaxReturn($mser['code'], '么有移动客服代码');
+            $this->error('么有移动客服代码,请先添加');
         }else{
             $mserviceList['data'] = $mser['data'];
         }
-        if(IS_POST) {              
+        if(IS_POST) {
             $proid['accountname'] = I("post.accountname");
             $proid['channel_id'] = I("post.channel_id");
             $proid['domain'] = I("post.domain");
@@ -500,12 +500,10 @@ class ProidController extends SystemController
             }
             $this->ajaxReturn(0, '创建成功', U('System/Proid/id'));
         }
-
         $res = D('Channel', 'Service')->getChannelList();
         if (!$res['data']){
-            $this->ajaxReturn(301,'没有渠道可供选择');
+            $this->error('没有渠道可供选择,请先添加');
         }
-        
         $result = D('Proid', 'Service')->proidList($pro);
         $proList = $result['data'];
         $proList['channelList'] = $res['data'];
