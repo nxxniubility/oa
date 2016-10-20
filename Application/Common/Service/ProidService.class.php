@@ -729,6 +729,9 @@ class ProidService extends BaseService
     */
     public function editProid($proid)
     {
+        if (!$proid['proid_id']) {
+            return('code'=>301, 'msg'=>'参数丢失');
+        }
         $proid['system_user_id'] = $this->system_user_id;
         if (!str_replace(' ', '', $proid['accountname'])) {
             return array('code'=>301,'msg'=>'请填写账号名称');
