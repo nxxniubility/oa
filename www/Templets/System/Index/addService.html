@@ -5,6 +5,9 @@
     <title>系统首页-{$siteinfo.sitename}</title>
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
     <link rel="stylesheet" href="__PUBLIC__/css/addService.css">
+    <script>
+        var jump_code = "{$jump_code}";
+    </script>
 </head>
 <body>
 <div class="wrapBox" id="addWrap">
@@ -49,7 +52,7 @@
 <script src="__PUBLIC__/js/main.js"></script>
 <include  file="Common@Html/ueditor_simple" />
 <script src="__PUBLIC__/js/layer/layer.js"></script>
-<script src="__PUBLIC__/js/common_ajax.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
 <script>
     var ue = UE.getEditor('editor3'); //实例化编辑器
     //需要ready后执行，否则可能报错
