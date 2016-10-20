@@ -70,7 +70,7 @@ class NodeController extends SystemController
         //获取数据
         $data = I("post.");
         //执行操作
-        $param['zone_id'] = $data['id'];
+        $param['node_id'] = $data['id'];
         $reflag = D('Node','Service')->delNode($param);
         if($reflag['code']==0){
             $this->ajaxReturn('0', '节点删除成功');

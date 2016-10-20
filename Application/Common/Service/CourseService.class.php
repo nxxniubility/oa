@@ -254,10 +254,11 @@ class CourseService extends BaseService
     public function addCourseProduct($param)
     {
         //必须参数
+        $param = array_filter($param);
         if(empty($param['productname'])) return array('code'=>300,'msg'=>'缺少课程名称');
-        if(empty($param['price'])) return array('code'=>301,'msg'=>'金额不能为空');
+        if(!isset($param['price'])) return array('code'=>301,'msg'=>'金额不能为空');
         if(!isset($param['productplatform']) || $param['productplatform']=='0') return array('code'=>302,'msg'=>'请选择产品类型');
-        if(!$this->checkFloatInt($param['price']))  return array('code'=>301,'msg'=>'金额只能为数字');
+        if($param['price']==0) return array('code'=>301,'msg'=>'金额不能 "0"');
         $result = D('CourseProduct')->addData($param);
         //插入数据成功执行清除缓存
         if ($result['code']==0){
@@ -282,11 +283,12 @@ class CourseService extends BaseService
     public function editCourseProduct($param)
     {
         //必须参数
+        $param = array_filter($param);
         if(empty($param['course_product_id'])) return array('code'=>300,'msg'=>'参数异常');
         if(empty($param['productname'])) return array('code'=>300,'msg'=>'缺少课程名称');
-        if(empty($param['price'])) return array('code'=>301,'msg'=>'金额不能为空');
+        if(!isset($param['price'])) return array('code'=>301,'msg'=>'金额不能为空');
         if(!isset($param['productplatform']) || $param['productplatform']=='0') return array('code'=>302,'msg'=>'请选择产品类型');
-        if(!$this->checkFloatInt($param['price']))  return array('code'=>301,'msg'=>'金额只能为数字');
+        if($param['price']==0) return array('code'=>301,'msg'=>'金额不能 "0"');
         $result = D('CourseProduct')->editData($param,$param['course_product_id']);
         //更新数据成功执行清除缓存
         if ($result['code']==0){
@@ -323,6 +325,7 @@ class CourseService extends BaseService
                 foreach($cahce_all['data'] as $k=>$v){
                     if($v['course_product_id'] == $param['course_product_id']){
                         unset($cahce_all['data'][$k]);
+                        $cahce_all['count'] = $cahce_all['count']-1;
                     }
                 }
                 F('Cache/courseProduct', $cahce_all);

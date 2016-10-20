@@ -1419,14 +1419,14 @@ class MoveController extends BaseController
 
     public function delUser(){
 //        exit;
-//        $where['system_user_id'] = 34;
-//        $where['status'] = 160;
-//        $where['createtime'] = array('EGT',strtotime(date('Y-m-d').' 11:00:00'));
+//        $where['system_user_id'] = 2;
+////        $where['status'] = 160;
+//        $where['createtime'] = array('EGT',strtotime(date('2016-10-19').' 20:00:00'));
 //        $list = M('user','zl_','DB_CONFIG1')->where($where)->select();
-//        F('20161017-deluser',$list);
+//        F('20161020-deluser',$list);
 //        print_r($list);
 //        exit;
-        $list = F('20161017-deluser');
+        $list = F('20161020-deluser');
         foreach($list as $k=>$v){
             $arr[] = M('user','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->delete();
             M('user_info','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->delete();

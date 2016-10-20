@@ -17,7 +17,8 @@ class ValidateModel extends Model {
          "chinese"=>"/[^u4E00-u9FA5]/g/",
          "special_character"=>"/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",
          "float_int"=>"/^[0-9]*+.?+[0-9]*$/",
-         "int"=>"/^[0-9]+$/u"
+         "int"=>"/^[0-9]+$/u",
+         "monogram"=>"/^[A-Za-z]+$/u"
 	);
 	 /**
      * 验证手机号码
@@ -145,6 +146,7 @@ class ValidateModel extends Model {
         return $arr[0][0];
     }
 
+
     /**
      * 验证身份证
      * @param unknown $idcard
@@ -215,6 +217,14 @@ class ValidateModel extends Model {
         return preg_match($this->regexArr['int'],$str) ? true : false;
     }
 
+    /**
+     * 只能为字母组合
+     * @author  zgt
+     * @return mixed
+     */
+    public function getStrMonogram($str){
+        return preg_match($this->regexArr['monogram'],$str) ? true : false;
+    }
 
     /**
      * 验证手机号或者固定电话

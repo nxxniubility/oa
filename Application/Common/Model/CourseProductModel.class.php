@@ -12,10 +12,12 @@ class CourseProductModel extends BaseModel
 
     //自动验证
     protected $_validate = array(
+        array('productname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称已经存在,请重新输入！'), 0, 'unique'),
         array('productname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
-        array('productname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length'),
-         array('price', '0,10', array('code'=>'204','msg'=>'价格不能大于10位！'), 0, 'length'),
-        array('description', '0,350', array('code'=>'205','msg'=>'内容不能大于350字符！'), 0, 'length'),
+        array('price', 'checkInt', array('code'=>'202','msg'=>'价格只能为数字！'), 0, 'callback'),
+        array('productname', '0,20', array('code'=>'211','msg'=>'名称不能大于20字符！'), 0, 'length'),
+        array('price', '0,10', array('code'=>'212','msg'=>'价格不能大于10位！'), 0, 'length'),
+        array('description', '0,350', array('code'=>'213','msg'=>'内容不能大于350字符！'), 0, 'length'),
     );
 
     /*
