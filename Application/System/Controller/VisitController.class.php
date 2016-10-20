@@ -64,8 +64,14 @@ class VisitController extends SystemController
                 }else{
                     $systemInfo = D('SystemUser', 'Service')->getSystemUserInfo(array('system_user_id'=>$userInfo['system_user_id']));
                     $systemInfo = $systemInfo['data'];
+                    $newRoles = array_merge(explode(',', $marketArr),explode(',', $educationalArr));
+                    foreach ($systemInfo['user_roles'] as $key => $value) {
+                        if (in_array($value['id'], $newRoles)) {
+                            $theTure = 'ture';
+                        }
+                    }  
                     //属于教务或者销售
-                    if(in_array($systemInfo['role_id'],explode(',', $marketArr)) || in_array($systemInfo['role_id'],explode(',', $educationalArr))){
+                    if($theTure){
                         //是否本中心
                         if($userInfo['zone_id'] == $this->system_user['zone_id']){
                             $this->ajaxReturn(2,'该员工属于本中心员工',$systemInfo);
