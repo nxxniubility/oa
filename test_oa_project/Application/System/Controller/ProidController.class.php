@@ -736,7 +736,7 @@ class ProidController extends SystemController
         }
         $res_accountname=D('Proid', 'Service')->getProInfo(array('proid_id'=>$promoteInfo['proid_id'])); 
         if(!$res_accountname['data']){
-            $this->ajaxReturn($res_accountname['code'], $res_accountname['msg']);  
+            $this->ajaxReturn($res_accountname['code'], $res_accountname['data']);  
         }
         $promoteInfo['accountname']=$res_accountname['data']['accountname']; 
         $pc['terminal_id'] = 2;
@@ -747,12 +747,12 @@ class ProidController extends SystemController
         $promoteInfo['mServicecode']['data'] = $mser['data'];
         $pc_pages=D('Proid', 'Service')->getPagesInfo(array('pages_id'=>$promoteInfo['pc_pages_id']));
         $promoteInfo['pc_page'] = $pc_pages['data'];
-        $m_pages['m_page']=D('Proid', 'Service')->getPagesInfo(array('pages_id'=>$promoteInfo['m_pages_id']));
+        $m_pages=D('Proid', 'Service')->getPagesInfo(array('pages_id'=>$promoteInfo['m_pages_id']));
         $promoteInfo['m_page'] = $m_pages['data'];
         $pcPagesTypeList = D('Proid', 'Service')->getPagesType($pc);
-        $promoteInfo['pcPagesTypeList'] = $pcPagesTypeList['msg'];
+        $promoteInfo['pcPagesTypeList'] = $pcPagesTypeList['data'];
         $mPagesTypeList = D('Proid', 'Service')->getPagesType($m);
-        $promoteInfo['mPagesTypeList'] = $mPagesTypeList['msg'];
+        $promoteInfo['mPagesTypeList'] = $mPagesTypeList['data'];
         $this->assign('promoteInfo', $promoteInfo);
         $this->display();
         
@@ -776,7 +776,7 @@ class ProidController extends SystemController
             }
             $backInfo = D('Proid', 'Service')->editPromoteInfo($promote);
             if($backInfo['code'] != 0){
-                $this->ajaxReturn($backInfo['code'], $backInfo['code']);
+                $this->ajaxReturn($backInfo['code'], $backInfo['msg']);
             }
             $this->ajaxReturn(0, '修改成功', U('System/Proid/index',array('proid_id'=>$promote['proid_id'])));
         }else{
@@ -845,7 +845,7 @@ class ProidController extends SystemController
         if (!$pro_lev_id) {
             $this->ajaxReturn(301, '参数丢失');
         }
-        $res = D('Proid', 'Service')->getProLevPlanunitList($pro_lev_id);
+        $res = D('Proid', 'Service')->getProLevPlanunitList(array('pid'=>$pro_lev_id));
         if (!$res['data']) {
             $this->ajaxReturn($res['code'], '获取失败');
         }  
