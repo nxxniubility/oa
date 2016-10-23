@@ -974,7 +974,7 @@ class ProidService extends BaseService
         $proLevPlanList = D("ProLev")->where("proid_id = $proid_id and pid = 0 and pro_lev_id!=0 and status=1")->select();
 
         if (!$proLevPlanList) {
-            return array('code'=>1, 'msg'=>'获取条件失败');
+            return array('code'=>1, 'msg'=>'获取计划失败');
         }       
         return array('code'=>0, 'data'=>$proLevPlanList);
     }
@@ -1206,8 +1206,8 @@ class ProidService extends BaseService
     public function editPromote($promote)
     {
         $updatepromote = D("Promote")->editData($promote, $promote['promote_id']);
-        if ($updatepromote === false) {
-            return array('code'=>1,'msg'=>'修改失败');
+        if ($updatepromote['code'] != 0) {
+            return array('code'=>$updatepromote['code'],'msg'=>$updatepromote['msg']);
         }
         return array('code'=>0,'msg'=>'修改成功');
     }
@@ -1312,7 +1312,7 @@ class ProidService extends BaseService
             }
             $includedString = $this->getPromoteidString($proList);      
             if (!$includedString) {
-                return array('code'=>1,'msg'=>'没有数据');
+                return array('code'=>301,'msg'=>'没有数据');
             }
             $promotes['promote_id'] = array("IN", $includedString);
             $promotes['status'] = 1;

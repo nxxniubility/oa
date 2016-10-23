@@ -199,7 +199,6 @@
 					$('#planunitselect').show();
 		            //获取node_id
 		           var pro_lev_id = $(this).val();
-
 		           $.ajax({
 		           		url:"<?php echo U('System/Proid/prolevPlanunitList');?>",
 		           		dataType:'json',
@@ -288,10 +287,10 @@
 		            }
 		            if(!$('#planunitselect').find('.imSelect').val() || $('#planunitselect').find('.imSelect').val()==0){
 		            	var mark = 1;//计划标示
-			            var pro_lev_id = $('#planselect').find('.imSelect').val()
+			            var pro_lev_id = $('#planselect').find('.imSelect').val();
 			        }else{
 			        	var mark = 2;//单元标示
-			            var pro_lev_id = $('#planunitselect').find('.imSelect').val()
+			            var pro_lev_id = $('#planunitselect').find('.imSelect').val();
 			        }
 
 		            var data = {
