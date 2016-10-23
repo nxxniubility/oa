@@ -68,7 +68,7 @@ class OrderController extends SystemController
         //获取数据
         $result = D('Order', 'Service')->getOrderList($where, 'createtime DESC', $limit);
         //获取区域下
-        $res1 = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
+        $res1 = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
         $data['zoneAll']['children'] = $res1['data'];
         $centersign = 10;
         $res2 = D('Zone', 'Service')->getZoneCenter($centersign);
@@ -115,7 +115,7 @@ class OrderController extends SystemController
         $courseList = D('Course', 'Service')->getCourseProductList();
         $data['courseList'] = $courseList['data']['data'];
         //获取区域下
-        $zoneList = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
+        $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
         $data['zoneAll']['children'] = $zoneList['data'];
         $centersign = 10;
         $centerList = D('Zone', 'Service')->getZoneCenter($centersign);
@@ -252,7 +252,7 @@ class OrderController extends SystemController
 
         }
         //获取区域下
-        $zoneList = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
+        $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
         $data['zoneAll']['children'] = $zoneList['data'];
         //获取职位及部门
         $department = D('Department', 'Service')->getDepartmentList();

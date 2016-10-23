@@ -48,32 +48,15 @@ class RecoverController extends BaseController {
         foreach($abandons as $k => $abandon){
             $time_now = time();
             //是否有指定日期
+            $specify_days = array();
             if(!empty($abandon['specify_days'])){
                 //转化时间戳匹配  防止一些浏览器时间格式不一致
                 $specify_days = explode(',', $abandon['specify_days']);
                 foreach($specify_days as $_days_k=>$_days_v){
                     $specify_days[$_days_k] = strtotime($_days_v);
                 }
-                if(!in_array(strtotime(date('Y-m-d',$time_now)), $specify_days)){
-                    if(!empty($abandon['holiday'])){
-                        //是否有节假日限制？
-                        $holiday = explode(',', $abandon['holiday']);
-                        $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd',$time_now));
-                        if($get_holiday['code']==0){
-                            if(in_array($get_holiday['data'], $holiday)){
-                                $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
-                            }
-                        }
-                    }
-                    if(!empty($abandon['week_text']) && $abandon['week_text']!=0){
-                        //是否有星期限制？
-                        $week_text = explode(',', $abandon['week_text']);
-                        if(!in_array(date('N',$time_now), $week_text)){
-                            $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$abandon['abandonname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
-                        }
-                    }
-                }
-            }else{
+            }
+            if(!in_array(strtotime(date('Y-m-d',$time_now)), $specify_days)){
                 if(!empty($abandon['holiday'])){
                     //是否有节假日限制？
                     $holiday = explode(',', $abandon['holiday']);
@@ -183,9 +166,11 @@ class RecoverController extends BaseController {
         if(!empty($abandon_id)){
             $this->success($falg_msg[0]);
         }elseif(!empty($falg_msg)){
-            foreach($falg_msg as $msg_v){
-                echo $msg_v.'<br/>';
+            echo '自动回收---------------------------start:<br/>';
+            foreach($falg_msg as $k=>$msg_v){
+                echo '  '.($k+1).'、'.$msg_v.'<br/>';
             }
+            echo '自动回收---------------------------end;<br/>';
         }
     }
     

@@ -46,12 +46,14 @@ class SystemUpdateService extends BaseService
         //必须参数
         $param = array_filter($param);
         $param['system_user_id'] = $this->system_user_id;
+        $param['createtime'] = time();
         if(empty($param['uptitle'])) return array('code'=>300,'msg'=>'缺少系统更新名称');
         $result = D('SystemUpdate')->addData($param);
         //插入数据成功执行清除缓存
         if ($result['code']==0){
             if (F('Cache/systemUpdate')) {
                 $new_info = D('SystemUpdate')->getFind(array("system_update_id"=> $result['data']));
+                $new_info = $this->_addStatus($new_info);
                 $cahce_all = F('Cache/systemUpdate');
                 $cahce_all['data'][] = $new_info;
                 $cahce_all['count'] =  $cahce_all['count']+1;
@@ -77,6 +79,7 @@ class SystemUpdateService extends BaseService
         if ($result['code']==0){
             if (F('Cache/systemUpdate')) {
                 $new_info = D('SystemUpdate')->getFind(array("system_update_id"=>$param['system_update_id']));
+                $new_info = $this->_addStatus($new_info);
                 $cahce_all = F('Cache/systemUpdate');
                 foreach($cahce_all['data'] as $k=>$v){
                     if($v['system_update_id'] == $param['system_update_id']){
@@ -102,7 +105,7 @@ class SystemUpdateService extends BaseService
         if(empty($param['system_update_id'])) return array('code'=>300,'msg'=>'参数异常');
         $result = D('SystemUpdate')->delData($param['system_update_id']);
         //更新数据成功执行清除缓存
-        if ($result['code']==0){
+        if ($result!==false) {
             if (F('Cache/systemUpdate')) {
                 $cahce_all = F('Cache/systemUpdate');
                 if(!empty($cahce_all)){
@@ -115,8 +118,9 @@ class SystemUpdateService extends BaseService
                 }
                 F('Cache/systemUpdate', $cahce_all);
             }
+            return array('code'=>0, 'msg'=>'删除成功');
         }
-        return $result;
+        return array('code'=>100, 'msg'=>'删除失败');
     }
 
     /*
@@ -152,15 +156,36 @@ class SystemUpdateService extends BaseService
         $list['data'] = D('SystemUpdate')->getList();
         $list['count'] = D('SystemUpdate')->getCount();
         if(!empty($list['data'])){
-            foreach($list['data'] as $k=>$v){
-                if(!empty($v['system_user_id'])){
-                    $systemUser = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v['system_user_id']));
-                    $list['data'][$k]['system_realname'] = $systemUser['data']['realname'];
-                }
-                $list['data'][$k]['create_time'] = date('Y-m-d H:i', $v['createtime']);
-            }
+            $list['data'] = $this->_addStatus($list['data']);
         }
         return $list;
     }
 
+    /**
+     * 添加状态
+     * @return array
+     */
+    protected function _addStatus($array=null){
+        //添加多职位
+        if(!empty($array)) {
+            if ((count($array) == count($array, 1))) {
+                $_array[] = $array;
+            } else {
+                $_array = $array;
+            }
+            foreach($_array as $k=>$v){
+                if(!empty($v['system_user_id'])){
+                    $systemUser = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v['system_user_id']));
+                    $_array[$k]['system_realname'] = $systemUser['data']['realname'];
+                }
+                $_array[$k]['create_time'] = date('Y-m-d H:i', $v['createtime']);
+            }
+        }
+        //原格式返回
+        if ((count($array) == count($array, 1))) {
+            return $_array[0];
+        } else {
+            return $_array;
+        }
+    }
 }

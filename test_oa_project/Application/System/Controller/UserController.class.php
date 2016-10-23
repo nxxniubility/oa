@@ -660,7 +660,7 @@ class UserController extends SystemController
         $column_list = D('SystemUser','Service')->getColumnList($column_where);
         $data['column'] = $column_list['data'];
         //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
+        $zoneAll = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
         $data['zoneAll']['children'] = $zoneAll['data'];
         //获取部门
         $departmentAll = D('Department', 'Service')->getDepartmentList();
@@ -829,7 +829,8 @@ class UserController extends SystemController
                 if(empty($request['zone_id'])) $this->ajaxReturn(1, '请先选择区域');
                 if(empty($request['role_id'])) $this->ajaxReturn(1, '请先选中职位');
                 $where['where']['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-                $param['where']['role_id'] = array('IN', $request['role_id']);
+                $where['where']['role_id'] = array('IN', $request['role_id']);
+                $where['where']['realname'] = !empty($request['keyname'])?array('LIKE', $request['keyname']):null;
                 //员工列表
                 $reflag = D('SystemUser','Service')->getSystemUsersList($where);
                 if ($reflag['code']==0) $this->ajaxReturn(0, '获取成功', $reflag['data']['data']);
@@ -842,7 +843,7 @@ class UserController extends SystemController
         }
         //区域
         $zoneList = D("Zone", 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
-        $data['zoneAll']['children'] = $zoneList['data'];
+        $data['zoneAll'] = $zoneList['data'];
         //获取部门
         $departmentAll = D('Department', 'Service')->getDepartmentList();
         $data['departmentAll'] = $departmentAll['data'];
@@ -873,6 +874,7 @@ class UserController extends SystemController
                 $param['where']['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
                 $param['where']['role_id'] = array('IN', $request['role_id']);
                 $param['where']['usertype'] = array('NEQ', 10);
+                $param['where']['realname'] = !empty($request['keyname'])?array('LIKE', $request['keyname']):null;
                 //员工列表
                 $reflag = D('SystemUser','Service')->getSystemUsersList($param);
                 if ($reflag['code']== 0) $this->ajaxReturn(0, '获取成功', $reflag['data']['data']);
@@ -889,7 +891,7 @@ class UserController extends SystemController
         $data['allocationAll'] = $allocation_list['data'];
         //区域
         $zoneList = D("Zone", 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
-        $data['zoneAll']['children'] = $zoneList['data'];
+        $data['zoneAll'] = $zoneList['data'];
         //获取部门
         $departmentAll = D('Department', 'Service')->getDepartmentList();
         $data['departmentAll'] = $departmentAll['data'];
@@ -950,7 +952,7 @@ class UserController extends SystemController
         }
         //区域
         $zoneList = D("Zone", 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
-        $data['zoneAll']['children'] = $zoneList['data'];
+        $data['zoneAll'] = $zoneList['data'];
         //获取部门
         $departmentAll = D('Department', 'Service')->getDepartmentList();
         $data['departmentAll'] = $departmentAll['data'];
@@ -984,7 +986,7 @@ class UserController extends SystemController
         $data['abandonAll'] = D('User', 'Service')->abandonDetail(array('user_abandon_id'=>$id));
         //区域
         $zoneList = D("Zone", 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
-        $data['zoneAll']['children'] = $zoneList['data'];
+        $data['zoneAll'] = $zoneList['data'];
         //获取部门
         $departmentAll = D('Department', 'Service')->getDepartmentList();
         $data['departmentAll'] = $departmentAll['data'];

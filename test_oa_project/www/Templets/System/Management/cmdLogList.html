@@ -32,7 +32,7 @@
                 <dt class="wThr"></dt>
                 <dt class="wFou"></dt>
             </dl>
-            <foreach name = "data['path_log']['allot']" item="v" key="k">
+            <foreach name = "data['path_log']['allot']['children']" item="v" key="k">
                 <dl class="oneRegions clearfix libody">
                     <dd class="wOne regionSequence clearfix">
                         <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
@@ -40,67 +40,25 @@
                     <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
                     <dd class="wThr">{$v.name}</dd>
                     <dd class="wFou osOperation clearfix">
-
-                        <if condition = "!empty($v['children'])">
-                            <span class="switchBtnShow" title="展开"  node-id="{$k}" ><i></i></span>
+                        <a href="javascript:;" class="regionSelect"><i></i></a>
+                        <div class="otherOperation">
+                            <div class="triangle"></div>
+                            <div class="otherIcon" data-value="{$v.path}" data-level="{$v.type}">
+                                <ul>
+                                    <li class="sel_subtn">
+                                        <a href="javascript:;">
+                                            <span class="sel"></span>
+                                            <em>查看</em>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <if condition = "!empty($v2['children'])">
+                            <span class="switchBtnShow" title="展开"  node-id="1{$k2}" ><i></i></span>
                         </if>
                     </dd>
                 </dl>
-                <!-- controller-->
-                <foreach name = "v['children']" item = "v2" key="k2">
-                    <dl class="secondaryZoneRow dn clearfix libody parent_{$k}">
-                        <dd class="wOne regionSequence clearfix">
-                            <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-                        </dd>
-                        <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
-                        <dd class="wThr szName"><span >{$v2.name}</span></dd>
-                        <dd class="wFou szOperation clearfix">
-                            <a href="javascript:;" class="regionSelect"><i></i></a>
-                            <div class="otherOperation">
-                                <div class="triangle"></div>
-                                <div class="otherIcon" data-value="{$v2.path}" data-level="{$v2.type}">
-                                    <ul>
-                                        <li class="sel_subtn">
-                                            <a href="javascript:;">
-                                                <span class="sel"></span>
-                                                <em>查看</em>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <if condition = "!empty($v2['children'])">
-                                <span class="switchBtnShow" title="展开"  node-id="1{$k2}" ><i></i></span>
-                            </if>
-                        </dd>
-                    </dl>
-                    <!-- function-->
-                    <foreach name = "v2['children']" item="v3" key="k3">
-                        <dl class="threeRegionsRow dn clearfix libody parent_1{$k2}">
-                            <dd class="wOne regionSequence clearfix">
-                                <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-                            </dd>
-                            <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
-                            <dd class="wThr trName"><span>{$v3.name}</span></dd>
-                            <dd class="wFou trOperation clearfix"  >
-                                <a href="javascript:;" class="regionSelect"><i></i></a>
-                                <div class="otherOperation">
-                                    <div class="triangle"></div>
-                                    <div class="otherIcon" data-value="{$v2.path}/{$v3.name}" data-level="{$v3.type}">
-                                        <ul>
-                                            <li class="sel_subtn">
-                                                <a href="javascript:;">
-                                                    <span class="sel"></span>
-                                                    <em>查看</em>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </dd>
-                        </dl>
-                    </foreach>
-                </foreach>
             </foreach>
         </div>
 
@@ -117,7 +75,7 @@
                 <dt class="wThr"></dt>
                 <dt class="wFou"></dt>
             </dl>
-            <foreach name = "data['path_log']['recover']" item="v" key="k">
+            <foreach name = "data['path_log']['recover']['children']" item="v" key="k">
                 <if condition = "$k EGT 2">
                     <dl class="oneRegions clearfix libody">
                         <dd class="wOne regionSequence clearfix">
@@ -126,71 +84,25 @@
                         <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
                         <dd class="wThr">{$v.name}</dd>
                         <dd class="wFou osOperation clearfix">
-
-                            <if condition = "!empty($v['children'])">
-                                <span class="switchBtnShow" title="展开"  node-id="{$k}" ><i></i></span>
+                            <a href="javascript:;" class="regionSelect"><i></i></a>
+                            <div class="otherOperation">
+                                <div class="triangle"></div>
+                                <div class="otherIcon" data-value="{$v.path}" data-level="{$v.type}">
+                                    <ul>
+                                        <li class="sel_subtn">
+                                            <a href="javascript:;">
+                                                <span class="sel"></span>
+                                                <em>查看</em>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <if condition = "!empty($v2['children'])">
+                                <span class="switchBtnShow" title="展开"  node-id="1{$k2}" ><i></i></span>
                             </if>
                         </dd>
                     </dl>
-                    <!-- controller-->
-                    <foreach name = "v['children']" item = "v2" key="k2">
-                        <if condition = "$k2 EGT 2">
-                            <dl class="secondaryZoneRow dn clearfix libody parent_{$k}">
-                                <dd class="wOne regionSequence clearfix">
-                                    <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-                                </dd>
-                                <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
-                                <dd class="wThr szName"><span >{$v2.name}</span></dd>
-                                <dd class="wFou szOperation clearfix">
-                                    <a href="javascript:;" class="regionSelect"><i></i></a>
-                                    <div class="otherOperation">
-                                        <div class="triangle"></div>
-                                        <div class="otherIcon" data-value="{$v2.path}" data-level="{$v2.type}">
-                                            <ul>
-                                                <li class="sel_subtn">
-                                                    <a href="javascript:;">
-                                                        <span class="sel"></span>
-                                                        <em>查看</em>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <if condition = "!empty($v2['children'])">
-                                        <span class="switchBtnShow" title="展开"  node-id="1{$k2}" ><i></i></span>
-                                    </if>
-                                </dd>
-                            </dl>
-                        </if>
-                        <!-- function-->
-                        <foreach name = "v2['children']" item="v3" key="k3">
-                            <if condition = "$k3 EGT 2">
-                                <dl class="threeRegionsRow dn clearfix libody parent_1{$k2}">
-                                    <dd class="wOne regionSequence clearfix">
-                                        <input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-                                    </dd>
-                                    <dd class="wTwo regionSequence clearfix">&nbsp;</dd>
-                                    <dd class="wThr trName"><span>{$v3.name}</span></dd>
-                                    <dd class="wFou trOperation clearfix"  >
-                                        <a href="javascript:;" class="regionSelect"><i></i></a>
-                                        <div class="otherOperation">
-                                            <div class="triangle"></div>
-                                            <div class="otherIcon" data-value="{$v2.path}/{$v3.name}" data-level="{$v3.type}">
-                                                <ul>
-                                                    <li class="sel_subtn">
-                                                        <a href="javascript:;">
-                                                            <span class="sel"></span>
-                                                            <em>查看</em>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </dd>
-                                </dl>
-                            </if>
-                        </foreach>
-                    </foreach>
                 </if>
             </foreach>
         </div>
@@ -216,6 +128,7 @@
             };
             common_ajax2(data, log_href, 'no', deldiv);
             function deldiv(reflag){
+                reflag.data = reflag.data.replace(/[\r\n]/g,"").replace(/<b\/>/g,"<br/>");
                 //页面层
                 layer.open({
                     type: 1,
