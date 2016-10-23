@@ -143,7 +143,7 @@ class NodeService extends BaseService
     public function getNodeInfo($param)
     {
         //必须参数
-        if(empty($param['node_id'])) return array('code'=>300,'msg'=>'参数异常');
+        if(empty($param['node_id'])) return array('code'=>301,'msg'=>'参数异常');
         if( F('Cache/node') ) {
             $node_list = F('Cache/node');
         }else{
@@ -156,6 +156,74 @@ class NodeService extends BaseService
             }
         }
         return array('code'=>'0', 'data'=>$node_info);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取父节点
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function getNodeParentInfo($param)
+    {
+        //必须参数
+        if(empty($param['id'])) {
+            return array('code'=>301,'msg'=>'参数异常');
+        }
+        $info = D("Node")->where("id = $param[id]")->find();
+        $node_info = D("Node")->where("id = $info[pid]")->find();
+        return array('code'=>0, 'data'=>$node_info);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 提交自定义节点操作
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function subNodes($nodes, $role_id)
+    {
+        if(empty($nodes)){
+                $this->ajaxReturn(301, '没有选择节点');
+            }
+            $nodes = explode(',', $nodes);
+            $system_user_id = $this->system_user_id;
+            D('DefineNodes')->where("system_user_id = $system_user_id")->delete();
+            foreach ($nodes as $k => $v) {
+                if (!empty($v)) {
+                    $data = array('system_user_id'=>$system_user_id, 'role_id'=>$role_id, 'node_id'=>$v, 'sort'=>$k);
+                    $result = D('DefineNodes')->addData($data);
+                    if ($result['code'] != 0) {
+                        session('default_nodes', null);
+                        return array($result['code'], '数据添加失败');
+                    }
+                }
+            }
+            session('default_nodes', null);
+            $userDefaultNodes = D('SystemUser', 'Service')->getUserDefaultNodes();
+            session('default_nodes', $userDefaultNodes['data']);
+            return array('code'=>0, 'data'=>$userDefaultNodes['data']);
+    }
+
+    /*
+    获取自身的自定义节点
+    nxx
+    */
+    public function getUserInfoNodes()
+    {
+        $userDefaultNodes = D('SystemUser', 'Service')->getUserDefaultNodes();
+        if (empty($userDefaultNodes['data'])) {
+            $tempData = session('user_child_nodes');
+            //如果孩子节点数大于8则默认取前面8个,否则取全部
+            if (count($tempData) <= 8) {
+                $userDefaultNodes['data'] = $tempData;
+            } else {
+                for ($i = 0; $i < 8; $i++) {
+                    $userDefaultNodes['data'][$i] = $tempData[$i];
+                }
+            }
+        }
+        return array('code'=>0, 'data'=>$userDefaultNodes['data']);
     }
 
 }

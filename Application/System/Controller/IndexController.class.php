@@ -277,34 +277,34 @@ class IndexController extends SystemController
      */
     public function  main()
     {
+        $system_user_info = D("SystemUser", 'Service')->getSystemUserInfo(array('system_user_id'=>$this->system_user_id));
+        $role_id = $system_user_info['role_id'];
         if (IS_POST) {
             //获得提交的自定义节点
             $nodes = I('post.nodes');
-            if (empty($nodes)) $this->ajaxReturn('1', '没有选择节点');
-            $nodes = explode(',', $nodes);
-
-            D('DefineNodes')->delDefineNodes($this->system_user_id);
-            foreach ($nodes as $k => $v) {
-                if (!empty($v)) {
-                    $data = array('system_user_id' => $this->system_user_id, 'role_id' => $this->system_user_role_id, 'node_id' => $v, 'sort'=>$k);
-                    //新增导航节点
-                    $result = D('DefineNodes')->addDefineNode($this->system_user_id, $data);
-                }
+            $result = D("Node", 'Service')->subNodes($nodes, $role_id);
+            if ($result['code'] != 0) {
+                $this->ajaxReturn($result['code'], $result['msg']);
             }
-            //判断返回数据
-            if (!$result) {
-                $this->ajaxReturn(1, '数据添加失败');
-            } else {
-                session('default_nodes_' . $this->system_user_role_id, null);
-                $this->success('添加成功', 0, U('System/Index/main'));
-            }
+            $this->ajaxReturn(0, '添加成功', U('System/Index/main'));
         }
-
-        //获取系统更新
-        $where_systemUpdate['page'] = '1,5';
-        $systemUpdateList = D('SystemUpdate', 'Service')->getSystemUpdateList($where_systemUpdate);
-        $data['systemUpdateList'] = $systemUpdateList['data'];
-        $this->assign('data', $data);
+        //自定义导航class
+        $navClass = array('0' => 'sbOne', '1' => 'sbTwo', '2' => 'sbThr', '3' => 'sbFou', '4' => 'sbFiv', '5' => 'sbSix', '6' => 'sbSev', '7' => 'sbEig');
+        $userDefaultNodes = $this->_getUserDefineNodes();
+        foreach ($userDefaultNodes as $k => $v) {
+            $in_array[] = $v['node_id'];
+            $nodeData = D('Node', 'Service')->getNodeParentInfo(array('id'=>$v['node_id']));
+            $url = U('System/' . $nodeData['data']['name'] . '/' . $v['name']);
+            $userDefaultNodes[$k]['url'] = $url;
+        }
+        $siderbar = session('sidebar');
+        $sysUpdateData = session('sysUpdateData');
+        $this->assign('sysUpdateData', $sysUpdateData);
+        $this->assign('navClass', $navClass);
+        $this->assign('in_array', $in_array);
+        $this->assign('default_nodes', $userDefaultNodes);
+        $this->assign('siderbar', $siderbar);
+        $this->assign('system_user_role_id', $role_id);
         $this->display();
     }
 
@@ -312,30 +312,15 @@ class IndexController extends SystemController
     *获取用户自定义的节点;
     * @author  cq
     */
-    public function  getUserDefineNodes()
+    protected function  _getUserDefineNodes()
     {
-//        session('default_nodes_' . $this->system_user_role_id, null);//cq
-        if (session('default_nodes_' . $this->system_user_role_id)) {
-            $userDefaultNodes = session('default_nodes_'.$this->system_user_role_id);
+        if (session('default_nodes')) {
+            $result['data'] = session('default_nodes');
         } else {
-            /* $userDefaultNodes = D('DefineNodes')->where(array('system_user_id' => $this->system_user_id, 'role_id' => $this->system_user_role_id))
-                 ->join('LEFT JOIN zl_node on zl_node.id = zl_define_nodes.node_id')->select();*/
-            $userDefaultNodes = D('DefineNodes')->getUserDefaultNodes($this->system_user_id, $this->system_user_role_id);
-
-            if (empty($userDefaultNodes)) {
-                $tempData = session('user_child_nodes');
-                //如果孩子节点数大于8则默认取前面8个,否则取全部
-                if (count($tempData) <= 8) {
-                    $userDefaultNodes = $tempData;
-                } else {
-                    for ($i = 0; $i < 8; $i++) {
-                        $userDefaultNodes[$i] = $tempData[$i];
-                    }
-                }
-            }
-            session('default_nodes_' . $this->system_user_role_id, $userDefaultNodes);
+            $result = D('Node', 'Service')->getUserInfoNodes();
+            session('default_nodes', $result['data']);
         }
-        return $userDefaultNodes;
+        return $result['data'];
     }
 
     /**

@@ -126,7 +126,7 @@ class SystemUserService extends BaseService
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getUserDefaultNodes($param){
+    public function getUserDefaultNodes(){
         $_where['system_user_id'] = $this->system_user_id;
         $result = D('DefineNodes')->getList($_where,'node_id','sort asc');
         if(!empty($result)){
