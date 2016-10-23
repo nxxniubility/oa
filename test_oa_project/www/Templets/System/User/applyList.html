@@ -29,30 +29,30 @@
 								<div class="boxRow clearfix">
 									<span class="oneSp">审核状态：</span>
 									<ul class="listOne clearfix">
-										<li {:($request['status']!=10 && $request['status']!=20 && $request['status']!=30)?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/applyList\',array(\'applytime\'=>$request[\'applytime\'])).'?dateStart='.$request[dateStart2].'&dateEnd='.$request[dateEnd2]}'">全部</li>
-										<li {:$request['status']==10?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/applyList\',array(\'status\'=>\'10\',\'applytime\'=>$request[\'applytime\'])).'?dateStart='.$request[dateStart2].'&dateEnd='.$request[dateEnd2]}'">待审核</li>
-										<li {:$request['status']==20?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/applyList\',array(\'status\'=>\'20\',\'applytime\'=>$request[\'applytime\'])).'?dateStart='.$request[dateStart2].'&dateEnd='.$request[dateEnd2]}'">不通过</li>
-										<li {:$request['status']==30?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/applyList\',array(\'status\'=>\'30\',\'applytime\'=>$request[\'applytime\'])).'?dateStart='.$request[dateStart2].'&dateEnd='.$request[dateEnd2]}'">通过</li>
+										<li {:$data['request']['status']==0?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/applyList\').'?'.http_build_query($request1)}&status=0'">全部</li>
+										<li {:$data['request']['status']==10?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/applyList\').'?'.http_build_query($request1)}&status=10'">待审核</li>
+										<li {:$data['request']['status']==20?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/applyList\').'?'.http_build_query($request1)}&status=20'">不通过</li>
+										<li {:$data['request']['status']==30?'class="oneCurr"':''} onclick="location.href='{:U(\'System/User/applyList\').'?'.http_build_query($request1)}&status=30'">通过</li>
 									</ul>
 								</div>
 								<div class="boxRow clearfix">
 									<span>申请时间：</span>
 									<ul class="listTwo clearfix">
-										<li {:($request['applytime']!=1 && $request['applytime']!=3 && $request['applytime']!=7  && empty($request['dateStart2'])&& empty($request['dateEnd2']))?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/applyList\',array(\'status\'=>$request[\'status\']))}'">全部</li>
-										<li {:$request['applytime']==1?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/applyList\',array(\'status\'=>$request[\'status\'],\'applytime\'=>1))}'">今日申请</li>
-										<li {:$request['applytime']==3?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/applyList\',array(\'status\'=>$request[\'status\'],\'applytime\'=>3))}'">三日内申请</li>
-										<li {:$request['applytime']==7?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/applyList\',array(\'status\'=>$request[\'status\'],\'applytime\'=>7))}'">一周内申请</li>
+										<li {:$data['request']['applytime']==0?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/applyList\').'?'.http_build_query($request2)}&applytime=0'">全部</li>
+										<li {:$data['request']['applytime']==(date('Y-m-d',time()).'@time')?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/applyList\').'?'.http_build_query($request2)}&applytime={:(date('Y-m-d',time()).'@time')}'">今日申请</li>
+										<li {:$data['request']['applytime']==(date('Y-m-d',strtotime('-3 day')).'@time')?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/applyList\').'?'.http_build_query($request2)}&applytime={:(date('Y-m-d',strtotime('-3 day')).'@time')}'">三日内申请</li>
+										<li {:$data['request']['applytime']==(date('Y-m-d',strtotime('-6 day')).'@time')?'class="twoCurr"':''} onclick="location.href='{:U(\'System/User/applyList\').'?'.http_build_query($request2)}&applytime={:(date('Y-m-d',strtotime('-6 day')).'@time')}'">一周内申请</li>
 										<li class="clickli {:(!empty($request) && !empty($request['dateStart2'])&& !empty($request['dateEnd2']))?'twoCurr':''}">自定义时间段</li>
 									</ul>
 									<div class="timeBox" >
 										<if condition="(!empty($request) && !empty($request['dateStart2'])&& !empty($request['dateEnd2']))">
-											<input type="text" class="afTime start" id="atStar" value="{$request['dateStart2']}" placeholder="" style="display: block; visibility: visible;">
+											<input type="text" class="afTime start" value="{$getapplytime[0]}" placeholder="开始时间"  readonly="readonly">
 											<span>  </span>
-											<input type="text" class="afTime end" id="atEnd" value="{$request['dateEnd2']}" data-url="{:U('System/User/applyList',array('status'=>$request['status']))}" placeholder="" style="display: block; visibility: visible;">
+											<input type="text" class="afTime endTiem" value="{$request['dateEnd2']}" data-url="{:U('System/User/applyList',array('status'=>$request['status']))}" placeholder="" style="display: block; visibility: visible;">
 										<else/>
-											<input type="text" class="afTime start" id="atStar" value="开始时间" placeholder=""  readonly="readonly" >
+											<input type="text" class="afTime start" value="" placeholder="开始时间" autocomplete="off"  readonly="readonly">
 											<span>  </span>
-											<input type="text" class="afTime end" id="atEnd" value="结束时间" data-url="{:U('System/User/applyList',array('status'=>$request['status']))}" placeholder=""  readonly="readonly" >
+											<input type="text" class="afTime endTiem" data-url="{:U(\'System/User/applyList\').'?'.http_build_query($request2)}&applytime=" value="" placeholder="结束时间" autocomplete="off"  readonly="readonly">
 										</if>
 									</div>
 								</div>
@@ -60,12 +60,12 @@
 								<div class="atKeyword clearfix">
 									<form action="{:U('System/User/applyList')}" method="get">
 									<select class="atSearchSelect" name="key_name" >
-										<option value="qq" {:$request['key_name']=='qq'?'selected="true"':''}>QQ</option>
-										<option value="username" {:$request['key_name']=='username'?'selected="true"':''}>手机号码</option>
-										<option value="tel" {:$request['key_name']=='tel'?'selected="true"':''}>固定电话</option>
-										<option value="realname" {:$request['key_name']=='realname'?'selected="true"':''}>真实姓名</option>
+										<option value="qq" {:$data['request']['key_name']=='qq'?'selected="true"':''}>QQ</option>
+										<option value="username" {:$data['request']['key_name']=='username'?'selected="true"':''}>手机号码</option>
+										<option value="tel" {:$data['request']['key_name']=='tel'?'selected="true"':''}>固定电话</option>
+										<option value="realname" {:$data['request']['key_name']=='realname'?'selected="true"':''}>真实姓名</option>
 									</select>
-									<input type="text" class="atSearchInp" name="key_value" value="{$request['key_value']}" placeholder="请输入关键词"/>
+									<input type="text" class="atSearchInp" name="key_value" value="{$data['request']['key_value']}" placeholder="请输入关键词"/>
 									<input type="submit" class="atSearchBtn" value="搜索">
 									</form>
 								</div>
@@ -87,40 +87,20 @@
 							<dt class="wEle">操作</dt>
 						</dl>
 
-
 						<foreach name="data['applyList']" item="v"  >
-
 							<dl class="content_li clearfix">
 								<dd class="wOne">
 									<input type="checkbox"  name="feCheck" class="atInpCheck" value="{$v.user_apply_id}" autocomplete="off">
 								</dd>
-								<dd class="wTwo" isShow="true">
-									<a href="javascript:;">{$v.realname}</a>
-								</dd>
-								<dd class="wThr">
-									<a href="javascript:;">{$v.username}</a>
-								</dd>
-								<dd class="wFou">
-									<a href="javascript:;">{$v.qq}</a>
-								</dd>
-								<dd class="wFiv">
-									<a href="javascript:;">{$v.tel}</a>
-								</dd>
-								<dd class="wSix">
-									<a href="javascript:;">{$v.infoquality_name}</a>
-								</dd>
-								<dd class="wSev">
-									<a href="javascript:;">{$v.affiliation_channel_names}</a>
-								</dd>
-								<dd class="wEig">
-									<a href="javascript:;">{$v.affiliation_realname}</a>
-								</dd>
-								<dd class="wNin">
-									<a href="javascript:;">{$v.apply_time}</a>
-								</dd>
-								<dd class="wTen">
-									<a href="javascript:;">{$v.status_name}</a>
-								</dd>
+								<dd class="wTwo" isShow="true"><a href="javascript:;">{$v.realname}</a></dd>
+								<dd class="wThr"><a href="javascript:;">{$v.username}</a></dd>
+								<dd class="wFou"><a href="javascript:;">{$v.qq}</a></dd>
+								<dd class="wFiv"><a href="javascript:;">{$v.tel}</a></dd>
+								<dd class="wSix"><a href="javascript:;">{$v.infoquality_name}</a></dd>
+								<dd class="wSev"><a href="javascript:;">{$v.affiliation_channel_names}</a></dd>
+								<dd class="wEig"><a href="javascript:;">{$v.affiliation_realname}</a></dd>
+								<dd class="wNin"><a href="javascript:;">{$v.apply_time}</a></dd>
+								<dd class="wTen"><a href="javascript:;">{$v.status_name}</a></dd>
 								<dd class="wEle">
 									<a href="{:U('applyDetails',array('id'=>$v['user_apply_id']))}">查看</a>
 								</dd>
@@ -129,11 +109,6 @@
 						</foreach>
 					</div>
 					<dl class="feOptions clearfix">
-						<!--<div class="leftChoose">
-							<input type="checkbox" class="feCheckBox1" name="fullche" value="1" autocomplete="off">
-							<span>全选</span>
-							<input type="button" value="删除所选" class="delInp">
-						</div>-->
 						<div class="collegaPage" style="height: 28px;">
 							<div class="feLeft">
 								<label for="feChk">
@@ -151,7 +126,6 @@
 		
 		<!-- dblclick jump detail -->
 		<form id="hrefForm" action="" method="get" target="_blank"></form>
-		
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
 		<script src="__PUBLIC__/js/applyToTransferList.js"></script>
@@ -160,13 +134,6 @@
 
 	<script >
 		$(function() {
-			/*$('.atSearchBtn').click(function () {
-				var data = {
-					key: $('.atSearchSelect option:selected').val(),
-					keyValue: $(':input[name="key_value"]').val()
-				};
-				common_ajax(data);   //获取输入的内容
-			});*/
 			//全选
 			$('.feCheckBox1').click(function () {
 				if ($(this).is(':checked')) {

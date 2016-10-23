@@ -105,7 +105,7 @@ class RoleService extends BaseService
                 $new_info = D('Role')->getFind(array("id"=>$param['role_id']));
                 $cahce_all = F('Cache/role');
                 foreach($cahce_all['data'] as $k=>$v){
-                    if($v['role_id'] == $param['role_id']){
+                    if($v['id'] == $param['role_id']){
                         $cahce_all['data'][$k] = $new_info;
                     }
                 }
@@ -140,7 +140,7 @@ class RoleService extends BaseService
                 $new_info = D('Role')->getFind(array("id"=>$param['role_id']));
                 $cahce_all = F('Cache/role');
                 foreach($cahce_all['data'] as $k=>$v){
-                    if($v['role_id'] == $param['role_id']){
+                    if($v['id'] == $param['role_id']){
                         $cahce_all['data'][$k] = $new_info;
                     }
                 }

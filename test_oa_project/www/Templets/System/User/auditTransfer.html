@@ -28,96 +28,85 @@
 						<div class="content-child">
 							<div class="addRow clearfix">
 								<div class="contenCol">
-									<div class="contenColLeft"><i>*</i>真实姓名&nbsp;:&nbsp;</div>
-									<div class="contenColRight">{$auditDetails[0].realname}</div>
-								</div>
-								<div class="contenCol">
-									<div class="contenColLeft"><i>*</i>手机号码&nbsp;:&nbsp;</div>
-									<div class="contenColRight">{$auditDetails[0].username}</div>
-								</div>
-								<div class="contenCol">
-									<div class="contenColLeft">固定电话&nbsp;:&nbsp;</div>
-									<div class="contenColRight">{$auditDetails[0].tel}</div>
+									<div class="contenColLeft">真实姓名&nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$data.info.realname}</div>
 								</div>
 							</div>
 							<div class="addRow clearfix">
 								<div class="contenCol">
-									<div class="contenColLeft">QQ&nbsp;:&nbsp;</div>
-									<div class="contenColRight">{$auditDetails[0].qq}</div>
+									<div class="contenColLeft">手机号码&nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$data.info.username}</div>
 								</div>
 								<div class="contenCol">
-									<div class="contenColLeft">邮箱&nbsp;:&nbsp;</div>
-									<div class="contenColRight">{$auditDetails[0].email}</div>
+									<div class="contenColLeft">QQ&nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$data.info.qq}</div>
+								</div>
+								<div class="contenCol">
+									<div class="contenColLeft">固定电话&nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$data.info.tel}</div>
 								</div>
 							</div>
 						</div>
 						<div class="content-child">
 							<div class="addRow clearfix">
 								<div class="contenCol">
-									<div class="contenColLeft"><i>*</i>所属渠道 &nbsp;:&nbsp;</div>
-									<div class="contenColRight">{$auditDetails[0].channelname}</div>
+									<div class="contenColLeft">所属渠道 &nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$data.info.channel_names}</div>
 								</div>
-								<div class="contenCol colWidth2">
-									<div class="contenColLeft">搜索&nbsp;:&nbsp;</div>
-									<div class="contenColRight auto">{:($auditDetails[0]['searchword']==0)?'':$auditDetails[0]['searchword']}</div>
+								<div class="contenCol">
+									<div class="contenColLeft">信息质量 &nbsp;:&nbsp;</div>
+									<div class="contenColRight">{$data.info.infoquality_name}</div>
+								</div>
+								<div class="contenCol">
+									<div class="contenColLeft">搜索词&nbsp;:&nbsp;</div>
+									<div class="contenColRight auto">{$data.info.searchword}</div>
 								</div>
 							</div>
 							<div class="addRow clearfix">
 								<div class="contenCol w100">
 									<div class="contenColLeft">咨询页面 &nbsp;:&nbsp;</div>
-									<div class="contenColRight auto">{$auditDetails[0].interviewurl}</div>
+									<div class="contenColRight auto">{$data.info.interviewurl}</div>
 								</div>
 							</div>
 						</div>
+						<if condition="!empty($data['info']['introducermobile']) && $data['info']['introducermobile']!=0">
+							<div class="content-child">
+								<div class="addRow clearfix">
+									<!-- 是否转介绍： 是 -->
+									<div class="contenCol">
+										<div class="contenColLeft">转介绍 &nbsp;:&nbsp;</div>
+										<div class="contenColRight">是</div>
+									</div>
+									<div class="contenCol colWidth2">
+										<div class="contenColLeft"><i>*</i>转介绍人手机 &nbsp;:&nbsp;</div>
+										<div class="contenColRight auto">{$data.info.introducermobile}</div>
+									</div>
+								</div>
+							</div>
+						</if>
 						<div class="content-child">
 							<div class="addRow clearfix">
 								<div class="contenCol">
-									<div class="contenColLeft"><i>*</i>信息质量 &nbsp;:&nbsp;</div>
-									<div class="contenColRight">{$auditDetails[0].infoquality}</div>
+									<div class="contenColLeft">申请时间&nbsp;:&nbsp;</div>
+									<div class="contenColRight auto">{$data.info.apply_time}</div>
 								</div>
-								<div class="contenCol colWidth2">
-									<div class="contenColLeft">意向课程&nbsp;:&nbsp;</div>
-									<div class="contenColRight auto">{$auditDetails[0].coursename}</div>
-								</div>
-							</div>
-						</div>
-						<div class="content-child">
-							<div class="addRow clearfix">
-								<!-- 是否转介绍： 是 -->
-								<div class="contenCol">
-									<div class="contenColLeft">转介绍 &nbsp;:&nbsp;</div>
-									<div class="contenColRight">{:$auditDetails[0][introducermobile] ? '是' : '否' }</div>
-								</div>
-								<div class="contenCol colWidth2">
-									<div class="contenColLeft"><i>*</i>转介绍人手机 &nbsp;:&nbsp;</div>
-									<div class="contenColRight auto">{$auditDetails[0].introducermobile}</div>
-								</div>
-								<!-- 是否转介绍： 否 -->
-								<!--<div class="contenCol">
-									<div class="contenColLeft">转介绍 &nbsp;:&nbsp;</div>
-									<div class="contenColRight">否</div>
-								</div>-->
-							</div>
-						</div>
-						<div class="content-child">
-							<div class="addRow clearfix">
 								<div class="contenCol">
 									<div class="contenColLeft">申请人 &nbsp;:&nbsp;</div>
-									<div class="contenColRight">{$auditDetails[0].apply_realname}</div>
+									<div class="contenColRight">{$data.info.system_realname}</div>
 								</div>
-								<div class="contenCol">
-									<div class="contenColLeft">预所属人 &nbsp;:&nbsp;</div>
-									<div class="contenColRight">{$auditDetails[0].to_system_user}</div>
-								</div>
-								<div class="contenCol colWidth2">
-									<div class="contenColLeft">申请时间&nbsp;:&nbsp;</div>
-									<div class="contenColRight auto">{$auditDetails[0].applytime|date='Y-m-d H:i:s',###}</div>
-								</div>
+								<if condition="!empty($data['info']['last_realname'])">
+									<div class="contenCol">
+										<div class="contenColLeft">预所属人 &nbsp;:&nbsp;</div>
+										<div class="contenColRight">{$data.info.last_realname}</div>
+									</div>
+								</if>
 							</div>
+						</div>
+						<div class="content-child">
 							<div class="addRow clearfix">
 								<div class="contenCol w100 hauto">
-									<div class="contenColLeft"><i>*</i>申请理由&nbsp;:&nbsp;</div>
-									<div class="contenColRight remark">{$auditDetails[0].applyreason|htmlspecialchars_decode}</div>
+									<div class="contenColLeft">申请理由&nbsp;:&nbsp;</div>
+									<div class="contenColRight remark">{$data.info.applyreason|htmlspecialchars_decode}</div>
 								</div>
 							</div>
 						</div>
@@ -128,14 +117,14 @@
 									<div class="contenColLeft"><i>*</i>审核转入&nbsp;:&nbsp;</div>
 									<div class="contenColRight l-row">
 										<div class="b-radio-wrapper">
-											<a href="javascript:void(0)" data-value="1" class="b-radio b-radio-checked"></a>
+											<a href="javascript:void(0)" data-value="30" class="b-radio b-radio-checked"></a>
 											<label>通过</label>
-											<input type="radio" value="1" name="view" class="hidden" checked="checked">
+											<input type="radio" value="30" name="view" class="hidden" checked="checked">
 										</div>
 									    <div class="b-radio-wrapper">
-									    	<a href="javascript:void(0)" data-value="0" class="b-radio"></a>
+									    	<a href="javascript:void(0)" data-value="20" class="b-radio"></a>
 									    	<label>不通过</label>
-									    	<input type="radio" value="0" name="view" class="hidden">
+									    	<input type="radio" value="20" name="view" class="hidden">
 									    </div>
 									</div>
 								</div>
@@ -179,22 +168,14 @@
 			}); //实例化编辑器
 
 			$('.nsSubmit').click(function() {
-				var curStatus;
-				if(	1 == $('.b-radio-checked').attr('data-value')){
-					curStatus = 30; //通过
-				}else{
-					curStatus = 20; //不通过
-				}
+				var curStatus = $('.b-radio-checked').attr('data-value');
 				var editContent = ue.getContentTxt();  //获取编辑器的内容值
 				if(editContent.length>250){
 					layer.msg('原因不能大于250个字符！',{icon:2});
 					return false;
 				};
 				var data = {
-					user_id : {$auditDetails[0].user_id},
-					user_apply_id : {$auditDetails[0].user_apply_id},
-					system_user_id : {$auditDetails[0].system_user_id},
-					to_system_user_id : {:!empty($auditDetails[0]['to_system_user_id'])?$auditDetails[0]['to_system_user_id']:0},
+					user_apply_id : "{$data.info.user_apply_id}",
 					status: curStatus,
 					auditorreason : editContent
 				};
