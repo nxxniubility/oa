@@ -152,7 +152,7 @@
                 //获取node_id
                 var access='';
                 if($('.radio:checked').length>0){
-                    $('.radio:checked').each(function(){
+                    $('.radio:checked').each(function(i){
                         if(i==0){
                             access+=$(this).val()+'-'+$(this).attr('pid')+'-'+$(this).attr('level');
                         }else{
