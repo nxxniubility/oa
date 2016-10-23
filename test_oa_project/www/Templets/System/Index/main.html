@@ -69,15 +69,7 @@
                 <span>通知公告</span>
                 <em onclick="location.href='javascript:;'" id="informMore">更多&gt;&gt;  </em>
             </div>
-            <ul class="msgBoxCont clearfix">
-               <!-- <li>
-                    <a href="javascript:;">
-                        <div class="msgIcon"></div>
-                        <div class="msgHint">通知消息xxxxxxxs</div>
-                        <div class="msgDate">2015-4-25</div>
-                    </a>
-                </li>-->
-            </ul>
+            <ul class="msgBoxCont clearfix"></ul>
         </div>
     </div>
 </div>
@@ -91,7 +83,7 @@
         <h4>拖动区块调整显示顺序</h4>
         <ul class="clearfix" id="show_node">
             <foreach name="default_nodes" item="defineBtn" key="k">
-                <li class="show_node_{$defineBtn.id}" node_id="{$defineBtn.id}">
+                <li class="show_node_{$defineBtn.node_id} on_btn" node_id="{$defineBtn.node_id}">
                     {$defineBtn.title}
                 </li>
             </foreach>

@@ -32,14 +32,14 @@ $(function () {
         } else {
             if ($('#show_node').children('li').length < 8) {
                 $(this).addClass('on_btn');
-                var str = "<li class='show_node_" + node_id + "' node_id='" + node_id + "><a href='javascript:;' >" + $(this).text() + "</a></li>";
+                var str = "<li class='show_node_"+node_id+" on_btn' node_id='"+node_id+"' draggable='true'>"+$(this).text()+"</li>";
                 $('#show_node').append(str);
+                $('#show_node').sortable();
             } else {
                 layer.msg('最多添加8个自定义导航项', {icon: 2});
             }
         }
     });
-
 
     //自定义导航提交
     $('.submitBtn').click(function () {
@@ -66,9 +66,10 @@ $(function () {
         var str = '';
         $.each(json_arr,function(k,v){
             $('.li_'+v.node_id).addClass('on_btn');
-            str += '<li class="show_node_'+v.node_id+'" node_id="'+v.node_id+'"><a href="javascript:;" >'+v.title+'</a></li>';
+            str += '<li class="show_node_'+v.node_id+' on_btn" node_id="'+v.node_id+'">'+v.title+'</li>';
         });
         $('#show_node').html(str);
+        $('#show_node').sortable();
     });
 
 
