@@ -105,7 +105,7 @@
 							<dt class="wEle">操作</dt>
 						</dl>
 						<foreach name="data['auditList']" item="v" key="k">
-						<dl class="clearfix">
+						<dl class="content_li clearfix">
 							<dd class="wOne"><input type="checkbox" class="atInpCheck"></dd>
 							<dt class="wTwo">{$v.realname}</dt>
 							<dt class="wThr">{$v.username}</dt>
@@ -136,7 +136,10 @@
 				</div>
 			</div>
 		</div>
-
+		
+		<form id="hrefForm" action="" method="get" target="_blank"></form>
+		
+		
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
     	<script src="__PUBLIC__/js/auditTransferred.js"></script>

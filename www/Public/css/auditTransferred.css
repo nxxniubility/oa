@@ -75,4 +75,5 @@
 #atListBox { position: relative;}
 
 /*1023*/
+.atList dl {cursor:pointer;}
 .audit-tip {margin-bottom:6px;font-size:12px;color:#ff0000;}

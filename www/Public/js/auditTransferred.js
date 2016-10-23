@@ -48,57 +48,12 @@ $(function(){
 			location.href=el.attr('data-url')+start_time+'@'+end_time;
 		}
     }});
-    
-    
-    //  详情
-	$('.atList dl').each(function(index, e) {
-		
-		$(e).hover(function(e){
-			/*************/
-			$('.detailLink').hide();
-			var e = e || window.event;	
-			var table_w=$('.atList').width();
-			var _x=(e.pageX?e.pageX:e.clientX)-parseInt($('.atList').offset().left)+80;
-			if((_x-table_w)>-50)
-			{
-				_x=_x-100;
-			}
-			var _y=parseInt($(this).offset().top)-parseInt($('.atList').offset().top)+9;
-			$(this).find('.detailLink').css({"left":_x,"top":_y});
-			$(this).find('.detailLink').show();
-	
-		},function(e){
-	
-			$(this).find('.detailLink').hide();
-	
-		});
-		
-	});
-	$('.detailLink').on("mouseover",function(e){
-	
-		var e = e || window.event;
-		e.stopPropagation();
-		e.preventDefault();
-		return false;
-	});
-	$('.detailLink').on("mouseenter",function(e){
-		var e = e || window.event;
-		e.stopPropagation();
-		e.preventDefault();
-		return false;
-	});
-	$('.detailLink').on("mouseleave",function(e){
-		var e = e || window.event;
-		e.stopPropagation();
-		e.preventDefault();
-		return false;
-	});
-	$('.detailLink').on("mouseout",function(e){
-		var e = e || window.event;
-		e.stopPropagation();
-		e.preventDefault();
-		return false;
-	});
 });
 
+
+//  双击打开详情
+$(document).on('dblclick',".content_li",function(){
+    var el = $(this).find('.hrefDetail');
+    $('#hrefForm').attr('action', el.attr('href')).submit();
+});
 
