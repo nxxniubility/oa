@@ -18,10 +18,8 @@
                 <span class="masterList">系统更新记录</span>
             </div>
             <div class="topRight r">
-                <if condition="$system_user_role_id==C('ADMIN_SUPER_ROLE')">
-                    <a href="{:U('addService')}" class="proExport">添加系统更新</a>
-                </if>
-                <a href="{:U('/system/index/main')}" class="return">返回</a>
+                <a href="{:U('/System/Index/addService')}" class="proExport">添加系统更新</a>
+                <a href="{:U('/System/Index/main')}" class="return">返回</a>
             </div>
         </div>
 
@@ -34,9 +32,7 @@
 				<th>标题</th>
 				<th>创建时间</th>
 				<th>创建者</th>
-				<if condition="$system_user_role_id eq  C('ADMIN_SUPER_ROLE')">
-					<th>操作</th>
-				</if>
+                <th>操作</th>
 			</tr>
 			<foreach name="data['systemUpdateList']['data']" item="v" key="k">
 				<tr>
@@ -46,25 +42,25 @@
 					<td><a href="{:U('updateDetail',array('system_update_id'=>$v['system_update_id']))}">{$v.uptitle}</a></td>
 					<td>{$v.create_time}</td>
 					<td>{$v.system_realname}</td>
-					<if  condition="$system_user_role_id eq  C('ADMIN_SUPER_ROLE')">
-						<td class="updateOperation">
-							<a href="javascript:;" class="proSelect"><i></i></a>
-	                        <div class="otherOperation">
-	                            <div class="otherIcon">
-                                    <ul>
-                                        <li class="edit">
+                    <td class="updateOperation">
+                        <a href="javascript:;" class="proSelect"><i></i></a>
+                        <div class="otherOperation">
+                            <div class="otherIcon">
+                                <ul>
+                                    <li class="edit">
+                                        <a href="{:U('addService',array('system_update_id'=>$v['system_update_id']))}">
                                             <span class="setEdit"></span>
                                             <em>修改</em>
-                                        </li>
-                                        <li class="del" >
-                                            <span class="setDel"></span>
-                                            <em>删除</em>
-                                        </li>
-                                    </ul>
-                                </div>
-                          	</div>
-						</td>
-					</if>
+                                        </a>
+                                    </li>
+                                    <li class="del" >
+                                        <span class="setDel"></span>
+                                        <em>删除</em>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
 				</tr>
 			</foreach>
 			
@@ -82,14 +78,6 @@
 <script src="__PUBLIC__/js/common.js"></script>
 <script src="__PUBLIC__/js/updateRecord.js"></script>
 <script>
-    $('.edit').click(function(){
-        var system_update_id = $(this).parents('.updateOperation').siblings('.firNum').children('.system_update_id').html();
-        var data = {
-            update_id : system_update_id,
-            type : 1  //修改
-        };
-        common_ajax(data);
-    });
     $('.del').click(function(){
         var system_update_id = $(this).parents('.updateOperation').siblings('.firNum').children('.system_update_id').html();
         var data = {

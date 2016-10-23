@@ -15,7 +15,11 @@
         <div class="proContTop clearfix">
             <div class="topTit l">
                 <span class="masterList">系统更新记录</span>
-                <span><em>&gt;</em>添加系统更新</span>
+                <if condition="!empty($system_update_id)">
+                    <span><em>&gt;</em>修改系统更新</span>
+                    <else/>
+                    <span><em>&gt;</em>添加系统更新</span>
+                </if>
             </div>
             <div class="topRight r">
                 <a href="{:U(updateRecord)}" class="return">返回</a>
@@ -28,14 +32,14 @@
             <div class="addRow clearfix">
                 <div class="addRowLeft"><i>*</i>标题: </div>
                 <div class="addRowRight">
-                    <input type="text" class="addInp" id="title" name="title"  value="{$curUpdateInfo[0].uptitle}">
+                    <input type="text" class="addInp" id="title" name="title"  value="{$updateItem.uptitle}">
                 </div>
             </div>
             <div class="addRow clearfix">
                 <div class="addRowLeft"><i>*</i>内容:</div>
                 <div class="addRowRight">
                     <!--<img src="__PUBLIC__/css/images/text_plug.png" class="addInp1">-->
-                   <script id="editor3" name="advantage"  type="text/plain" >{$curUpdateInfo[0]['upbody']|htmlspecialchars_decode}</script>
+                   <script id="editor3" name="advantage"  type="text/plain" >{$updateItem['upbody']|htmlspecialchars_decode}</script>
                 </div>
             </div>
             <div class="newRow clearfix">
@@ -54,23 +58,24 @@
 <script src="__PUBLIC__/js/layer/layer.js"></script>
 <script src="__PUBLIC__/js/common.js"></script>
 <script>
-    var ue = UE.getEditor('editor3'); //实例化编辑器
+    //实例化编辑器
+    var ue = UE.getEditor('editor3',{
+        initialFrameWidth:890,
+        initialFrameHeight:400,
+        enableAutoSave:false,
+        elementPathEnabled:false,
+        maximumWords:1000,
+        autoFloatEnabled:false
+    });
     //需要ready后执行，否则可能报错
-  /*  ue.ready(function(){
-        var arr = <?php echo json_encode($curUpdateInfo[0]); ?>;
-        var obj = eval(arr);
-        var content = obj.upbody;
-        ue.setContent(content);
-    });*/
     $('.setSubmit').click(function () {
-        var jumpType = <?php echo $jumpType; ?>;
         var editContent = ue.getContent(); //获取编辑器的内容值
         var data = {
-            type : jumpType,
-            title :  $(':input[name="title"]').val(),
-            content : editContent
+            id : "{$system_update_id}",
+            uptitle :  $(':input[name="title"]').val(),
+            upbody : editContent
         };
-        common_ajax(data);   //获取编辑器输入的内容
+        common_ajax2(data);   //获取编辑器输入的内容
     });
 
 </script>

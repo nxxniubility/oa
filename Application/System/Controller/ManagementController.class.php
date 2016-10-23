@@ -95,18 +95,28 @@ class ManagementController extends SystemController
             $this->ajaxReturn(1, '获取失败');
         }
 //        print_r($this->getpath('Shell/log/allot'));exit;
-        $data['path_log']['allot'][] = array(
+        $data['path_log']['allot']= array(
             'name'=>'allot',
             'type'=>'dir',
             'path'=>'Shell/log/allot',
             'children'=>$this->getpath('Shell/log/allot')
         );
-        $data['path_log']['recover'][] = array(
+        uasort($data['path_log']['allot']['children'], function($a, $b) {
+            $al = (str_replace('.log','',$a['name']));
+            $bl = (str_replace('.log','',$b['name']));
+            return ($al>$bl)?-1:1;
+        });
+        $data['path_log']['recover'] = array(
             'name'=>'recover',
             'type'=>'dir',
             'path'=>'Shell/log/recover',
             'children'=>$this->getpath('Shell/log/recover')
         );
+        uasort($data['path_log']['recover']['children'], function($a, $b) {
+            $al = (str_replace('.log','',$a['name']));
+            $bl = (str_replace('.log','',$b['name']));
+            return ($al>$bl)?-1:1;
+        });
         $this->assign('data', $data);
         $this->display();
     }

@@ -344,22 +344,13 @@ class IndexController extends SystemController
     public function  updateRecord()
     {
         if (IS_POST) {
-            $updateData = I('post.');
-            $type = $updateData['type'];
-            $where = array('system_update_id' => $updateData['update_id']);
-            if (1 == $type) {  //修改页面
-                $curUpdateInfo = D('SystemUpdate')->getSystemUpdateInfo($where);
-                session('curUpdateInfo', $curUpdateInfo[data]);
-                $this->success('跳转到修改页面', 0, U('System/Index/addService'));
-
+            $param = I('post.');
+            $param['system_update_id'] = $param['update_id'];
+            $flag = D('SystemUpdate','Service')->delSystemUpdate($param);
+            if ($flag['code']==0) {
+                $this->ajaxReturn(0, '删除成功', U('System/Index/updateRecord'));
             } else {
-                //删除指定一条信息
-                $result = D('SystemUpdate')->delUpdateInfo($where);
-                if ($result) {
-                    $this->success('删除成功', 0, U('System/Index/updateRecord'));
-                } else {
-                    $this->ajaxReturn(1, '删除失败');
-                }
+                $this->ajaxReturn(1, $flag['msg']);
             }
         }
         $re_page = I('get.page', 1);
@@ -378,6 +369,7 @@ class IndexController extends SystemController
      */
     public function updateDetail()
     {
+        //获取参数
         $updateItemId = I('get.system_update_id');
         $where = array('system_update_id' =>$updateItemId);
         $updateItem = D('SystemUpdate','Service')->getSystemUpdateInfo($where);
@@ -391,52 +383,36 @@ class IndexController extends SystemController
     public function  addService()
     {
         if (IS_POST) {
-            $editContent = I('post.');
-
-            if (!empty($editContent)) {
-
-                if(empty($editContent['title'])){
-                    $this->ajaxReturn('1','标题不能为空','','title');
+            $param = I('post.');
+            $param = array_filter($param);
+            //是否有ID？ 修改/新增
+            if(!empty($param['id'])){
+                $param['system_update_id'] = $param['id'];
+                $flag = D('SystemUpdate','Service')->editSystemUpdate($param);
+                if ($flag['code']==0) {
+                    $this->ajaxReturn(0, '修改成功', U('System/Index/updateRecord'));
+                } else {
+                    $this->ajaxReturn(1, $flag['msg']);
                 }
-                if(empty($editContent['content'])){
-                    $this->ajaxReturn('2','内容不能为空');
-                }
-
-                $data = array('system_user_id' => session('system_user_id'), 'uptitle' => $editContent['title'],
-                    'upbody' => $editContent['content'], 'createtime' => time());
-                if (1 == $editContent['type']) { //修改
-
-                    $curUpdateInfo = session('curUpdateInfo');
-                    $updateId = $curUpdateInfo[0]['system_update_id'];
-                    $where = array('system_update_id' => $updateId);
-                    $result = D('SystemUpdate')->modifyUpdateInfo($where, $data);
-
-                    if ($result > 0) {
-                        $this->success('修改成功', 0, U('Index/updateRecord'));
-                    } else {
-                        $this->ajaxReturn(1, '修改失败，请重新修改');
-                    }
-                } else {//添加
-
-                    $result = D('SystemUpdate')->addNewUpdateInfo($data);
-                    if ($result > 0) {
-                        $this->success('添加成功', 0, U('Index/updateRecord'));
-                    } else {
-                        $this->ajaxReturn(1, '添加失败');
-                    }
+            }else{
+                $flag = D('SystemUpdate','Service')->addSystemUpdate($param);
+                if ($flag['code']==0) {
+                    $this->ajaxReturn(0, '添加成功', U('System/Index/updateRecord'));
+                } else {
+                    $this->ajaxReturn(1, $flag['msg']);
                 }
             }
-        } else {
-            $curUpdateInfo = session('curUpdateInfo');
-            if (!empty($curUpdateInfo)) {
-                $jumpType = 1; //修改跳转
-                $this->assign('curUpdateInfo', $curUpdateInfo);
-            } else {
-                $jumpType = 2; //添加跳转
-            }
-            $this->assign('jumpType', $jumpType);
-            $this->display();
         }
+        //获取参数
+        $updateItemId = I('get.system_update_id', null);
+        //修改？获取详情
+        if($updateItemId!==null){
+            $where = array('system_update_id' =>$updateItemId);
+            $updateItem = D('SystemUpdate','Service')->getSystemUpdateInfo($where);
+            $this->assign('updateItem',  $updateItem['data']);
+        }
+        $this->assign('system_update_id', $updateItemId);
+        $this->display();
     }
 
 

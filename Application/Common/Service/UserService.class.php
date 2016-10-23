@@ -977,7 +977,7 @@ class UserService extends BaseService
     {
         //必要参数
         if(empty($data['user_id'])) return array('code'=>301,'msg'=>'参数异常');
-        if (empty($data['remark'])) return array('code'=>300,'msg'=>'备注不能为空');
+        if (empty($data['remark'])) return array('code'=>300,'msg'=>'原因不能为空');
         //获取客户信息
         $userList = D('User')->field('user_id,status,channel_id,system_user_id,realname,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->select();
         if(empty($userList)) return array('code'=>100,'msg'=>'查找不到客户信息');
@@ -1452,6 +1452,8 @@ class UserService extends BaseService
         if (empty($data['allocationnum'])) return array('code'=>303, 'msg'=>'分配数量不能为空', 'data'=>'allocationnum');
         if (empty($data['channel_id'])) return array('code'=>304, 'msg'=>'请选择渠道');
         if (empty($data['allocation_roles'])) return array('code'=>305, 'msg'=>'请添加分配职位', 'data'=>'role_name');
+        $data['holiday'] = !empty($data['holiday'])?$data['holiday']:null;
+        $data['specify_days'] = !empty($data['specify_days'])?$data['specify_days']:null;
         $data['system_user_id'] = $this->system_user_id;
         $data['createtime'] = time();
         if(!empty($data['system_user_ids'])){
@@ -1462,19 +1464,16 @@ class UserService extends BaseService
                 $_syswhere['where']["role_id"] = array('IN',$roles);
             }
             $_syswhere['where']["usertype"] = array('NEQ',10);
-            $zoneids = D('Zone', 'Service')->getZoneIds(array('zone_id'=>$data['zone_id']));
-            foreach($zoneids['data'] as $k => $v){
-                $zids[] = $v['zone_id'];
-            }
-            $_syswhere['where']["zone_id"] = array('IN',$zids);
+            $_syswhere['where']["status"] = 1;
+            $_syswhere['where']["zone_id"] = $data['zone_id'];
             $systemUserList = D('SystemUser', 'Service')->getSystemUsersList($_syswhere);
-            if(!empty($systemUserList['data'])){
-                foreach ($systemUserList['data'] as $k => $v) {
+            if(!empty($systemUserList['data']['data'])){
+                foreach ($systemUserList['data']['data'] as $k => $v) {
                     $ids[] = $v['system_user_id'];
                 }
             }
         }
-        if($ids){
+        if(!empty($ids)){
             //开启事务
             D()->startTrans();
             $result = D('UserAllocation')->addData($data);
@@ -1505,6 +1504,8 @@ class UserService extends BaseService
         if (empty($data['allocationnum'])) return array('code'=>303, 'msg'=>'分配数量不能为空', 'data'=>'allocationnum');
         if (empty($data['channel_id'])) return array('code'=>304, 'msg'=>'请选择渠道');
         if (empty($data['allocation_roles'])) return array('code'=>305, 'msg'=>'请添加分配职位', 'data'=>'role_name');
+        $data['holiday'] = !empty($data['holiday'])?$data['holiday']:null;
+        $data['specify_days'] = !empty($data['specify_days'])?$data['specify_days']:null;
         $data['system_user_id'] = $this->system_user_id;
         //开启事务
         D()->startTrans();
@@ -1517,19 +1518,16 @@ class UserService extends BaseService
                 $_syswhere['where']["role_id"] = array('IN',$roles);
             }
             $_syswhere['where']["usertype"] = array('NEQ',10);
-            $zoneids = D('Zone', 'Service')->getZoneIds(array('zone_id'=>$data['zone_id']));
-            foreach($zoneids['data'] as $k => $v){
-                $zids[] = $v['zone_id'];
-            }
-            $_syswhere['where']["zone_id"] = array('IN',$zids);
+            $_syswhere['where']["status"] = 1;
+            $_syswhere['where']["zone_id"] = $data['zone_id'];
             $systemUserList = D('SystemUser', 'Service')->getSystemUsersList($_syswhere);
-            if(!empty($systemUserList['data'])){
-                foreach ($systemUserList['data'] as $k => $v) {
+            if(!empty($systemUserList['data']['data'])){
+                foreach ($systemUserList['data']['data'] as $k => $v) {
                     $ids[] = $v['system_user_id'];
                 }
             }
         }
-        if($ids){
+        if(!empty($ids)){
             D('AllocationSystemuser')->delData($data['user_allocation_id']);
             foreach ($ids as $v) {
                 $addData[] = array('user_allocation_id' => $data['user_allocation_id'],'system_user_id'=>$v);
@@ -1714,6 +1712,8 @@ class UserService extends BaseService
         if (empty($param['zone_id'])) return array('code'=>304, 'msg'=>'区域不能为空');
         if (empty($param['channel_id'])) return array('code'=>305, 'msg'=>'请选择渠道');
         if (empty($param['abandon_roles'])) return array('code'=>306, 'msg'=>'请添加回收职位', 'data'=>'role_name');
+        $param['holiday'] = !empty($param['holiday'])?$param['holiday']:null;
+        $param['specify_days'] = !empty($param['specify_days'])?$param['specify_days']:null;
         $param['system_user_id'] = $this->system_user_id;
         $param['createtime'] = time();
         return D('UserAbandon')->addData($param);
@@ -1735,6 +1735,8 @@ class UserService extends BaseService
         if (empty($param['zone_id'])) return array('code'=>305, 'msg'=>'区域不能为空');
         if (empty($param['channel_id'])) return array('code'=>306, 'msg'=>'请选择渠道');
         if (empty($param['abandon_roles'])) return array('code'=>307, 'msg'=>'请添加回收职位', 'data'=>'role_name');
+        $param['holiday'] = !empty($param['holiday'])?$param['holiday']:null;
+        $param['specify_days'] = !empty($param['specify_days'])?$param['specify_days']:null;
         $param['system_user_id'] = $this->system_user_id;
         return D('UserAbandon')->editData($param, $param['user_abandon_id']);
     }

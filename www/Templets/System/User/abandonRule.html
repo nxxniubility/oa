@@ -59,37 +59,22 @@
                             <div class="select_title l" >请选择所属区域</div>
                             <div class="arrow r" ></div>
                             </dt>
-                            <foreach name = "data['zoneAll']" item = "v1">
-                                <dd class="fxDone" data-value="{$v1['zone_id']}">{$v1['name']}</dd>
-                                <if condition = "$v1['centersign'] neq 10">
-                                    <if condition = "!empty($v1['children']) ">
-                                        <foreach name = "v1['children']" item = "v2">
-                                            <dd class="fxDone zonesele zone_btn{$v1['zone_id']}" data-value="{$v2['zone_id']}">&nbsp;&nbsp;├─ {$v2['name']}</dd>
-                                        </foreach>
-                                    </if>
-                                    <if condition = "$v2['centersign'] neq 10">
-                                        <if condition = "!empty($v2['children']) ">
-                                            <foreach name = "v2['children']" item = "v2">
-                                                <dd class="fxDone zonesele zone_btn{$v2['zone_id']}" data-value="{$v2['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v2['name']}</dd>
-                                            </foreach>
-                                        </if>
-                                        <if condition = "$v2['centersign'] neq 10">
-                                            <if condition = "!empty($v2['children']) ">
-                                                <foreach name = "v2['children']" item = "v3">
-                                                    <dd class="fxDone zonesele zone_btn{$v3['zone_id']}" data-value="{$v3['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v3['name']}</dd>
+                            <dd class="fxDone" data-value="{$data['zoneAll']['zone_id']}">{$data['zoneAll']['name']}</dd>
+                            <if condition = "$data['zoneAll']['centersign'] neq 10">
+                                <foreach name = "data['zoneAll']['children']" item = "v2">
+                                    <dd class="fxDone zonesele zone_btn{$v2['zone_id']}" data-value="{$v2['zone_id']}">&nbsp;&nbsp;&nbsp;├─ {$v2['name']}</dd>
+                                    <if condition = "!empty($v2['children']) ">
+                                        <foreach name = "v2['children']" item = "v3">
+                                            <dd class="fxDone zonesele zone_btn{$v3['zone_id']}" data-value="{$v3['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v3['name']}</dd>
+                                            <if condition = "!empty($v3['children'])">
+                                                <foreach name = "v3['children']" item = "v4">
+                                                    <dd class="fxDone zonesele zone_btn{$v4['zone_id']}" data-value="{$v4['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v4['name']}</dd>
                                                 </foreach>
                                             </if>
-                                            <if condition = "$v3['centersign'] neq 10">
-                                                <if condition = "!empty($v3['children']) ">
-                                                    <foreach name = "v3['children']" item = "v4">
-                                                        <dd class="fxDone zonesele zone_btn{$v4['zone_id']}" data-value="{$v4['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v4['name']}</dd>
-                                                    </foreach>
-                                                </if>
-                                            </if>
-                                        </if>
+                                        </foreach>
                                     </if>
-                                </if>
-                            </foreach>
+                                </foreach>
+                            </if>
                         </dl>
                         <input type="hidden" name="zone_id" autocomplete="off" value="">
                     </div>

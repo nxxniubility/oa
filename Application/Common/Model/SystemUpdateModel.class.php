@@ -92,6 +92,7 @@ class SystemUpdateModel extends BaseModel
     */
     public function delData($id)
     {
+        print_r($id);exit;
         return $this->where(array($this->_id=>$id))->delete();
     }
 

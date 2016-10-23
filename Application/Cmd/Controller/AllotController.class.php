@@ -31,7 +31,6 @@ class AllotController extends BaseController {
             //获取分配规则
             $allots = D('UserAllocation')->where(array('user_allocation_id'=>$allocation_id))->order('sort asc')->select();
         }
-        
         //获取转入申请不可分配的数据
         $zl_user_applydb = D('UserApply');
         $userApply = $zl_user_applydb->field('user_id')->where(array('status'=>10))->select();
@@ -40,34 +39,17 @@ class AllotController extends BaseController {
         }
         foreach($allots as $topkey => $allot){
             //是否有指定日期
-            if(!empty($allot['specify_days'])){
+            $specify_days = array();
+            if(!empty($allot['specify_days'])) {
                 //转化时间戳匹配  防止一些浏览器时间格式不一致
                 $specify_days = explode(',', $allot['specify_days']);
-                foreach($specify_days as $_days_k=>$_days_v){
+                foreach ($specify_days as $_days_k => $_days_v) {
                     $specify_days[$_days_k] = strtotime($_days_v);
                 }
-                if(!in_array(strtotime(date('Y-m-d')), $specify_days)){
-                    if((!empty($allot['holiday']))){
-                        //是否有节假日限制？
-                        $holiday = explode(',', $allot['holiday']);
-                        $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd'));
-                        if($get_holiday['code']==0){
-                            if(in_array($get_holiday['data'], $holiday)){
-                                $falg_msg[] =  '失败原因:今天不在允许节假日限制，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
-                            }
-                        }
-                    }
-                    if(!empty($allot['week_text']) && $allot['week_text']!=0){
-                        //是否有星期限制？
-                        $week_text = explode(',', $allot['week_text']);
-                        if(!in_array(date('N'), $week_text)){
-                            $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
-                        }
-                    }
-                }
-            }else{
+            }
+            if(!in_array(strtotime(date('Y-m-d')), $specify_days)){
+                //是否有节假日限制？
                 if((!empty($allot['holiday']))){
-                    //是否有节假日限制？
                     $holiday = explode(',', $allot['holiday']);
                     $get_holiday = D('Api','Service')->getApiHoliday(date('Ymd'));
                     if($get_holiday['code']==0){
@@ -76,8 +58,8 @@ class AllotController extends BaseController {
                         }
                     }
                 }
+                //是否有星期限制？
                 if(!empty($allot['week_text']) && $allot['week_text']!=0){
-                    //是否有星期限制？
                     $week_text = explode(',', $allot['week_text']);
                     if(!in_array(date('N'), $week_text)){
                         $falg_msg[] =  '失败原因:今天不在允许星期内，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
@@ -157,7 +139,9 @@ class AllotController extends BaseController {
             $where['channel_id'] = array('IN',$allotChannel);
             $resource = $userdb->field('user_id,infoquality,channel_id,createtime')->where($where)->order('createtime desc')->limit($allotTotal)->select();
 
-            if(empty($resource)) continue;
+            if(empty($resource)) {
+                $falg_msg[] = '失败原因:客户资源不足分配，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
+            }
 
             $resultUser = array();
             foreach($resource as $k => $v){
@@ -189,9 +173,9 @@ class AllotController extends BaseController {
                     }
                 }
             }
-            
-            
-            
+
+
+
             //数据补全
             foreach($allotUser as $userkey1 => $uservalue1){
                 if($uservalue1['allotnum'] < $allot['allocationnum']){
@@ -261,7 +245,7 @@ class AllotController extends BaseController {
                     }
                 }
             } */
-            
+
             
             $status = C('USER_STATUS');
             $dateYMD = date('Ymd',$nowtime);
@@ -291,7 +275,7 @@ class AllotController extends BaseController {
                 $result = $userdb->where(array('user_id'=>array('IN',$arrIds)))->save($data);
                 $callbackData['status'] = 0;
                 $result2 = $zl_user_callbackdb->where(array('user_id'=>array('IN',$arrIds)))->save($callbackData);
-                
+
                 //插入回访记录
                 foreach ($arrIds as $arrkey1 => $arrvalue1){
                     $callbackDataAdd = array();
@@ -310,7 +294,7 @@ class AllotController extends BaseController {
                     $dataLog['logtime'] = time();
                     $DataService->addDataLogs($dataLog);
                 }
-                
+
 //                foreach($allotvalue['allotnumchannel'] as $channelkey => $channelvalue){
 //                    $logsdata['channel_id'] = $channelkey;
 //                    $logsdata['infoqualitya']  = empty($channelvalue['1']) ? 0 : $channelvalue['1'];
@@ -337,9 +321,11 @@ class AllotController extends BaseController {
         if(!empty($allocation_id)){
             $this->success($falg_msg[0]);
         }elseif(!empty($falg_msg)){
-            foreach($falg_msg as $msg_v){
-                echo $msg_v.'<br/>';
+            echo '自动分配---------------------------start:<br/>';
+            foreach($falg_msg as $k=>$msg_v){
+                echo '  '.($k+1).'、'.$msg_v.'<br/>';
             }
+            echo '自动分配---------------------------end;<br/>';
         }
         
     }

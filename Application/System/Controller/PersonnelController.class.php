@@ -395,7 +395,7 @@ class PersonnelController extends SystemController {
         $roleAll = D('Role', 'Service')->getRoleList();
         $data['roleAll'] = $roleAll['data'];
         //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
+        $zoneAll = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
         $data['zoneAll'] = $zoneAll['data'];
         //员工状态
         $data['systemUserStatus'] = C('FIELD_STATUS.SYSTEMUSERSTATUS');
@@ -485,7 +485,7 @@ class PersonnelController extends SystemController {
         $roleAll = D('Role', 'Service')->getRoleList();
         $data['roleAll'] = $roleAll['data'];
         //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
+        $zoneAll = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
         $data['zoneAll'] = $zoneAll['data'];
         //员工状态
         $data['systemUserStatus'] = C('FIELD_STATUS.SYSTEMUSERSTATUS');
@@ -541,7 +541,7 @@ class PersonnelController extends SystemController {
         $roleAll = D('Role', 'Service')->getRoleList();
         $data['roleAll'] = $roleAll['data'];
         //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList($this->system_user['zone_id']);
+        $zoneAll = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
         $data['zoneAll'] = $zoneAll['data'];
         //员工状态
         $data['systemUserStatus'] = C('FIELD_STATUS.SYSTEMUSERSTATUS');
@@ -656,7 +656,7 @@ class PersonnelController extends SystemController {
     public function getZoneSelect(){
         $zone_id = I('post.zone_id');
         //获取区域ID
-        $zoneAll = D('Zone', 'Service')->getZoneList($zone_id);
+        $zoneAll = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone_id));
         $zoneList = $zoneAll['data'];
         $zoneHtml =
         "<dt>
