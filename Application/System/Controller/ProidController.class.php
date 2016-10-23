@@ -969,13 +969,7 @@ class ProidController extends SystemController
         $proidInfo = $proid['data'];
         if(IS_POST)
         {
-            session('faile_input', null);
-            session('success_input', null);
-            session('newPromoteList', null);
-            session('letters', null);
-            $pc_pages_id = I("post.pcPagesType_id");
-            $m_pages_id  = I("post.mPagesType_id");
-            $setpages_id = I("post.setpages_id");
+            $request = I("post.");
             if (!empty($_FILES['file'])) {
                 $exts = array('xls','xlsx');
                 $rootPath = './Public/';
@@ -985,183 +979,21 @@ class ProidController extends SystemController
             }
             $datas = importExecl($filename);  
             unlink($filename);
-// $result = D('Proid', 'Service')->importPromotes($datas);
-            $setPagesInfo = D('Proid', 'Service')->getSetPagesInfo($setpages_id);
-            $letters = $setPagesInfo['data'];
+            $setPagesInfo = D('Proid', 'Service')->getSetPagesInfo($request['setpages_id']);
+            unset($request['setpages_id']);
+            $letters = $setPagesInfo['data'];           
             foreach ($letters as $k1 => $letter) {
                 $k1 = $k1+1;
                 $pro[$k1][] = $letter['pagehead'];
                 $pro[$k1][] = $letter['headname'];
-            }          
-            /*对生成的数组进行字段对接*/
-            foreach ($pro as $key => $p) {
-                foreach ($datas as $k => $v){
-                    if ($k>1) {
-                        for ($i=0; $i < count($v); $i++) {
-                            $keys = array_keys($v);
-                            foreach ($keys as $k2 => $v1) {
-                                if ($p[0] == $v1) {
-                                    $promoteList[$k-2]["$p[1]"] = $v[$v1];
-                                }
-                            }
-                        }
-                        $promoteList[$k-2]['proid_id'] = $proid_id;
-                        $promoteList[$k-2]['pc_pages_id'] = $pc_pages_id;
-                        $promoteList[$k-2]['m_pages_id'] = $m_pages_id;
-                    }
-                }
+                $errorIfm[] = $letter['headname'];
             }
-            //对数据进行处理
-            foreach ($promoteList as $key => $promote) {
-                $servicecode['system_user_id'] = $this->system_user_id;
-                $servicecode['status'] = 1;
-                if ($promote['pcservice']) {
-                    $servicecode['servicecode'] = $promote['pcservice'];
-                    $servicecode['terminal_id'] = 2; //PC端
-                    $pcsercode = D('Proid', 'Service')->getServicecode($servicecode);
-                    $pcserviceInfo = $pcsercode['data'];
-                    if ($pcserviceInfo) {
-                        $promote['pcservice_id'] = $pcserviceInfo['servicecode_id'];
-                    }else{
-                        $pcser = D('Proid', 'Service')->addServicecode($servicecode);
-                        $pcservice_id = $pcser['data'];
-                        if ($pcservice_id) {
-                            $promote['pcservice_id'] = $pcservice_id;
-                        }
-                    }
-                }else{
-                    $promote['pcservice_id'] = $proidInfo['pcservice_id'];
-                }
-                if ($promote['mservice']) {
-                    $servicecode['servicecode'] = $promote['mservice'];
-                    $servicecode['terminal_id'] = 1; //移动端
-                    $msercode = D('Proid', 'Service')->getServicecode($servicecode);
-                    $mserviceInfo = $msercode['data'];
-                    if ($mserviceInfo) {
-                        $promote['mservice_id'] = $mserviceInfo['servicecode_id'];
-                    }else{
-                        $mser = D('Proid', 'Service')->addServicecode($servicecode);
-                        $mservice_id = $mser['data'];
-                        if ($mservice_id) {
-                            $promote['mservice_id'] = $mservice_id;
-                        }
-                    }
-                }else{
-                    $promote['mservice_id'] = $proidInfo['mservice_id'];
-                }             
-                if ($promote['pc_pages']) {
-                    preg_match("/promote=([0-9]*)/", $promote['pc_pages'], $m);
-                    if($m){
-                        $promote['promote_id']=$m[1];
-                    } 
-                }elseif($promote['m_pages']){
-                    preg_match("/promote=([0-9]*)/", $promote['pc_pages'], $m);
-                    if($m){
-                        $promote['promote_id']=$m[1];
-                    } 
-                }
-                unset($promote['pc_pages']);
-                unset($promote['m_pages']);
-                if (!$promote['keyword'] || (!$promote['plan'] && $promote['planunit']) || ($promote['plan'] && !$promote['planunit'])) {
-                    $errorData[$key] = $promoteList[$key];
-                    $errorData[$key]['msg'] = '缺少关键字、有单元无计划，不是请联系程序猿哥哥';
-                    unset($promoteList[$key]);
-                }
-                $promoteList[$key] = $promote;
+            if (in_array('plan', $errorIfm) && !in_array('planunit', $errorIfm) || !in_array('plan', $errorIfm) && in_array('planunit', $errorIfm)) {
+                $this->error('模板设置表头时,计划和单元必须同时存在');
             }
-            foreach ($promoteList as $key => $promote) {               
-                if ($promote['promote_id']) {
-                    $info = D('Proid', 'Service')->getPromoteInfo(array('promote_id'=>$promote['promote_id']));
-                    $promoteInfo = $info['data'];
-                }else{
-                    $pross['plan'] = $promote['plan'];
-                    $pross['planunit'] = $promote['planunit'];
-                    $pross['keyword'] = $promote['keyword'];
-                    $pross['proid_id'] = $proid_id;
-                    $info = D('Proid', 'Service')->getPromoteInfo($pross);
-                    $promoteInfo = $info['data'];
-                }
-                if ($promoteInfo) {
-                    if (!$promote['pc_pages_id']) {
-                        $promote['pc_pages_id'] = $promoteInfo['pc_pages_id'];
-                    }
-                    if (!$promote['m_pages_id']) {
-                        $promote['m_pages_id'] = $promoteInfo['m_pages_id'];
-                    }
-                    $promote['promote_id'] = $promoteInfo['promote_id'];
-                    $updatepromote = D('Proid', 'Service')->editPromote($promote);
-                    $own['promote_id'] = $promote['promote_id'];
-                    $proInfo = D('Proid', 'Service')->getPromoteInfo($own);
-                    $ps['plan'] = $proInfo['data']['plan'];
-                    $ps['planunit'] = $proInfo['data']['planunit'];
-                    $ps['keyword'] = $proInfo['data']['keyword'];
-                    $ps['pc_pages'] = $proInfo['data']['pc_pages'];
-                    $ps['m_pages'] = $proInfo['data']['m_pages'];
-                    $newPromoteList[$key] = $ps;
-                }else{
-                    $prolev['proid_id'] = $promote['proid_id'];
-                    $prolev['status'] = 1;
-                    //只有计划没有单元
-                    if ($promote['plan'] && !$promote['planunit']) {
-                        unset($promote['planunit']);
-                        $prolev['name'] = $promote['plan'];
-                        $proLevInfo = D('Proid', 'Service')->getProLevInfo($prolev);
-                        if ($proLevInfo['code'] != 0) {
-                            $pro_lev_id = D('Proid', 'Service')->createProLev($prolev);
-                            $promote['pro_lev_id'] = $pro_lev_id['data'];
-                        }else{
-                            $promote['pro_lev_id'] = $proLevInfo['data']['pro_lev_id'];
-                        }
-                    }//有计划有单元
-                     elseif ($promote['plan'] && $promote['planunit']) {
-                        $prolev['name'] = $promote['plan'];
-                        $proLevInfo = D('Proid', 'Service')->getProLevInfo($prolev);
-                        if ($proLevInfo['code'] != 0) {
-                            $plan_lev_id = D('Proid', 'Service')->createProLev($prolev);
-                            $prolev['name'] = $promote['planunit'];
-                            $prolev['pid'] = $plan_lev_id['data'];
-                            $pro_lev_id = D('Proid', 'Service')->createProLev($prolev);
-                            $prolev['pid'] = 0; //重置pid为0
-                            $promote['pro_lev_id'] = $pro_lev_id['data'];
-                        }else{
-                            $prolev['name'] = $promote['planunit'];
-                            $prolev['pid'] = $proLevInfo['data']['pro_lev_id'];
-                            $punitLevInfo = D('Proid', 'Service')->getProLevInfo($prolev);
-                            if ($punitLevInfo['code'] == 0) {
-                                $promote['pro_lev_id'] = $punitLevInfo['data']['pro_lev_id'];
-                            }else{
-                                $pro_lev_id = D('Proid', 'Service')->createProLev($prolev);
-                                $promote['pro_lev_id'] = $pro_lev_id['data'];
-                            }
-                            $prolev['pid'] = 0; //重置pid为0
-                        }   
-                    }
-                    $result = D('Proid', 'Service')->createPromote($promote);
-                    if ($result['code'] != 0) {
-                        unset($promoteList[$key]);
-                        continue;
-                    }else{
-                        $own['promote_id'] = $result['data'];
-                        $info = D('Proid', 'Service')->getPromoteInfo($own);
-                        if ($info['code'] == 0) {
-                            $proInfo = $info['data'];
-                            $ps['plan'] = $proInfo['plan'];
-                            $ps['planunit'] = $proInfo['planunit'];
-                            $ps['keyword'] = $proInfo['keyword'];
-                            $ps['pc_pages'] = $proInfo['pc_pages'];
-                            $ps['m_pages'] = $proInfo['m_pages'];
-                            $newPromoteList[$key] = $ps;
-                        }
-                    }
-                }
-            }
-            session('faile_input', $errorData);
-            session('success_input', $promoteList);
-            session('newPromoteList', $newPromoteList);           
-            session('letters', $datas[1]);           
+            $result = D('Proid', 'Service')->inputPlan($datas, $pro, $request, $proid_id);
             $this->redirect('/System/Proid/inputClient', array('proid_id'=>$proid_id));
         }else{
-            $set['system_user_id'] = $this->system_user_id;
             $set['type'] = 1;    
             $res = D('Proid', 'Service')->getSetPages($set);
             $setPages = $res['data'];
@@ -1218,82 +1050,13 @@ class ProidController extends SystemController
     {
         $proid_id = I('get.proid_id');
         if (IS_POST) {
-            $keyword = I('post.keyword');        
-            $pro_lev_id = I('post.pro_lev_id');                     
-            $pro_lev_ids = I('post.pro_lev_ids');
-            $excel_key_value = array(
-                'plan'=>'推广计划名称',
-                'planunit'=>'推广单元名称',
-                'keyword'=>'关键词名称',
-                'pc_pages'=>'PC模板',
-                'm_pages'=>'移动模板',
-            );
-            $letter = array('A','B','C','D','E');
-            $new_result = array();
-            if(!$proid_id) {
-                $this->ajaxReturn(301, '缺省参数');
-            }
-            //若带了关键词则只导出该计划，否则导出所有单元或者该账号下所有计划
-            if (!empty($keyword)) {
-                $pList = D('Proid', 'Service')->searchName($keyword, $proid_id);
-                $promoteList = $pList['data'];
-                if ($pList['code'] != 0) {
-                    $this->ajaxReturn($pList['code'], $pList['msg']);
-                }
-                foreach ($promoteList as $key => $promote) {
-                    $p['promote_id'] = $promote['promote_id'];
-                    $datas = D('Proid', 'Service')->getPromoteInfo($p);
-                    $result = $datas['data'];
-                    unset($result['proid_id']);
-                    unset($result['promote_id']);
-                    $rresult[$key] = $result;
-                }
-                foreach ($rresult as $key => $value) {
-                    foreach ($excel_key_value as $key2 => $value2) {
-                        $new_result[$key][$key2] = $value[$key2];
-                    }
-                }            
-            }elseif($pro_lev_id || $pro_lev_ids){
-                if ($pro_lev_id) {
-                    $datas = D('Proid', 'Service')->getPromoteInfoByProlevid($pro_lev_id);
-                    if($datas['code'] != 0) {
-                        $this->ajaxReturn($datas['code'], $datas['msg']);
-                    }
-                }elseif ($pro_lev_ids) {
-                    $datas = D('Proid', 'Service')->getPromoteInfoByProlevid($pro_lev_ids);
-                    if($datas['code'] != 0) {
-                        $this->ajaxReturn($datas['code'], $datas['msg']);
-                    } 
-                }
-                $result = $datas['data'];
-                foreach ($result as $key => $res) {
-                    unset($res['pid']);
-                    unset($res['name']);
-                    unset($res['remark']);
-                    unset($res['status']);
-                    $sel[] = $res['pro_lev_id'];
-                }
-                $res['pro_lev_id'] = array("IN", $sel);
-                $p = D('Proid', 'Service')->getPromoteInfos($res);
-                $promoteList = $p['data'];
-                foreach ($promoteList as $k => $value) {        
-                    foreach ($excel_key_value as $key => $value1) {
-                        $new_result[$k][$key] = $value[$key];
-                    }
-                }
+            $request = I('post.');        
+            $result = D('Proid', 'Service')->outputPlan($request, $proid_id);
+            if($result['code']==0){
+                return $result['data'];
             }else{
-                $pro['proid_id'] = $proid_id;
-                $p = D('Proid', 'Service')->getPromoteInfos($pro);
-                $promoteList = $p['data'];
-               
-                foreach ($promoteList as $k => $value) {        
-                    foreach ($excel_key_value as $key => $value1) {
-                        $new_result[$k][$key] = $value[$key];
-                    }
-                }   
+                $this->ajaxReturn($result['code'], $result['msg']);
             }
-            $filename = "proPlan";
-            outExecl($filename,array_values($excel_key_value),$new_result,$letter);
         }
         $proid = D('Proid', 'Service')->getProInfo(array('proid_id'=>$proid_id));
         $pro['proid'] = $proid['data'];
