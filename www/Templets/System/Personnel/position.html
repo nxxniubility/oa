@@ -151,19 +151,16 @@
             if(role_id!=''){
                 //获取node_id
                 var access='';
-                alert($('.radio:checked').length);return false;
                 if($('.radio:checked').length>0){
-                    var Obj = null;
-                    for(var i=0;i<$('.radio:checked').length;i++){
-                        Obj = $('.radio:checked').eq(i);
+                    $('.radio:checked').each(function(){
                         if(i==0){
-                            access+=Obj.val()+'-'+Obj.attr('pid')+'-'+Obj.attr('level');
+                            access+=$(this).val()+'-'+$(this).attr('pid')+'-'+$(this).attr('level');
                         }else{
-                            access+=','+Obj.val()+'-'+Obj.attr('pid')+'-'+Obj.attr('level');
+                            access+=','+$(this).val()+'-'+$(this).attr('pid')+'-'+$(this).attr('level');
                         }
-                    }
+                    });
                 }
-//                edit_access(role_id,access);
+                edit_access(role_id,access);
             }
         })
     })
