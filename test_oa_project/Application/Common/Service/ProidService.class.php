@@ -170,18 +170,20 @@ class ProidService extends BaseService
      */
     public function getAllPages($order='createtime desc',$page=null,$where=array('status'=>1))
     {
-        $DB_PREFIX = C('DB_PREFIX');
         if (F('Cache/Promote/pages')) {
             $pagesAll = F('Cache/Promote/pages');
+            if (!$pagesAll) {
+                $pagesAll = D("Pages")->where($where)->order($order)->select();
+                F('Cache/Promote/pages',$pagesAll);
+            }
         } else {
             $pagesAll['data'] = D("Pages")
                 ->where($where)
-                ->order($DB_PREFIX.'pages.createtime DESC')
+                ->order($order)
                 ->select();
             $pagesAll['count'] = D("Pages")->count();
             F('Cache/Promote/pages',$pagesAll);
         }
-
         $pagesAll = $this->disposeArray($pagesAll, $order, $page, $where);
         if (!$pagesAll) {
             return array('code'=>'201', 'msg'=>'没有内容');
@@ -256,7 +258,7 @@ class ProidService extends BaseService
                     $new_v = explode('==',$v);
                     $add_data['typename'] = $new_v[0];
                     $add_data['terminal_id'] = $new_v[1];
-                    $addFlag = D('Proid', 'Service')->addPagesType($add_data);
+                    $addFlag = $this->addPagesType($add_data);
                     if ($addFlag['code'] != 0) {
                         return array('code'=>202, 'msg'=>'添加失败');
                     }
@@ -270,7 +272,7 @@ class ProidService extends BaseService
                     $new_v = explode('==',$v);
                     $edit_data['typename'] = $new_v[1];
                     $add_data['terminal_id'] = $new_v[2];
-                    $editFlag = D('Proid', 'Service')->editPagesType($edit_data, $new_v[0]);
+                    $editFlag = $this->editPagesType($edit_data, $new_v[0]);
                     if ($editFlag['code'] != 0) {
                         return array('code'=>202, 'msg'=>'修改失败');
                     }
@@ -802,11 +804,16 @@ class ProidService extends BaseService
             return array('code'=>301, 'msg'=>'请选择要删除的账号');
         }
         $proid['status'] = 0;
+        D()->startTrans();
         $updateproid = D("Proid")->editData($proid, $proid_id);
-        if ($updateproid['code'] != 0) {
-            return array("code"=>201,'msg'=>'删除推广账号失败');
+        $updatepromote = D("Promote")->where("proid_id = $proid_id")->delete();
+        $updateprolev = D("ProLev")->where("proid_id = $proid_id")->delete();
+        if ($updateproid['code'] == 0 && $updatepromote && $updateprolev) {
+            D()->commit();
+            return array("code"=>0,'msg'=>'删除推广账号成功');
         }
-        return array("code"=>0,'msg'=>'删除推广账号成功');
+        D()->rollback();
+        return array("code"=>201,'msg'=>'删除推广账号失败');
     }
 
     /**
@@ -1377,12 +1384,261 @@ class ProidService extends BaseService
         return $includedString;
     }
 
-    // /*
-    // * 导入计划数据处理
-    // */
-    // public function importPromotes($datas, $param)
-    // {
-    //     # code...
-    // }
+    /*
+    导入推广计划
+    */
+    public function inputPlan($datas, $pro, $request, $proid_id)
+    {
+        session('faile_input', null);
+        session('success_input', null);
+        session('newPromoteList', null);
+        session('letters', null);
+        /*对生成的数组进行字段对接*/
+        foreach ($pro as $key => $p) {
+            foreach ($datas as $k => $v){
+                if ($k>1) {
+                    for ($i=0; $i < count($v); $i++) {
+                        $keys = array_keys($v);
+                        foreach ($keys as $k2 => $v1) {
+                            if ($p[0] == $v1) {
+                                $promoteList[$k-2]["$p[1]"] = $v[$v1];
+                            }
+                        }
+                    }
+                    $promoteList[$k-2]['proid_id'] = $proid_id;
+                    $promoteList[$k-2]['pc_pages_id'] = $request['pcPagesType_id'];
+                    $promoteList[$k-2]['m_pages_id'] = $request['mPagesType_id'];
+                }
+            }
+        }
+        //对数据进行处理
+        foreach ($promoteList as $key => $promote) {
+            $servicecode['system_user_id'] = $this->system_user_id;
+            $servicecode['status'] = 1;
+            if ($promote['pcservice']) {
+                $servicecode['servicecode'] = $promote['pcservice'];
+                $servicecode['terminal_id'] = 2; //PC端
+                $pcsercode = $this->getServicecode($servicecode);
+                $pcserviceInfo = $pcsercode['data'];
+                if ($pcserviceInfo) {
+                    $promote['pcservice_id'] = $pcserviceInfo['servicecode_id'];
+                }else{
+                    $pcser = $this->addServicecode($servicecode);
+                    $pcservice_id = $pcser['data'];
+                    if ($pcservice_id) {
+                        $promote['pcservice_id'] = $pcservice_id;
+                    }
+                }
+            }else{
+                $promote['pcservice_id'] = $proidInfo['pcservice_id'];
+            }
+            if ($promote['mservice']) {
+                $servicecode['servicecode'] = $promote['mservice'];
+                $servicecode['terminal_id'] = 1; //移动端
+                $msercode = $this->getServicecode($servicecode);
+                $mserviceInfo = $msercode['data'];
+                if ($mserviceInfo) {
+                    $promote['mservice_id'] = $mserviceInfo['servicecode_id'];
+                }else{
+                    $mser = $this->addServicecode($servicecode);
+                    $mservice_id = $mser['data'];
+                    if ($mservice_id) {
+                        $promote['mservice_id'] = $mservice_id;
+                    }
+                }
+            }else{
+                $promote['mservice_id'] = $proidInfo['mservice_id'];
+            }             
+            if ($promote['pc_pages']) {
+                preg_match("/promote=([0-9]*)/", $promote['pc_pages'], $m);
+                if($m){
+                    $promote['promote_id']=$m[1];
+                } 
+            }elseif($promote['m_pages']){
+                preg_match("/promote=([0-9]*)/", $promote['pc_pages'], $m);
+                if($m){
+                    $promote['promote_id']=$m[1];
+                } 
+            }
+            unset($promote['pc_pages']);
+            unset($promote['m_pages']);
+            if (!$promote['keyword'] || (!$promote['plan'] && $promote['planunit']) || ($promote['plan'] && !$promote['planunit'])) {
+                $errorData[$key] = $promoteList[$key];
+                $errorData[$key]['msg'] = '缺少关键字、有单元无计划，不是请联系程序猿哥哥';
+                unset($promoteList[$key]);
+            }
+            $promoteList[$key] = $promote;
+        }
+        foreach ($promoteList as $key => $promote) {               
+            if ($promote['promote_id']) {
+                $info = $this->getPromoteInfo(array('promote_id'=>$promote['promote_id']));
+                $promoteInfo = $info['data'];
+            }else{
+                $pross['plan'] = $promote['plan'];
+                $pross['planunit'] = $promote['planunit'];
+                $pross['keyword'] = $promote['keyword'];
+                $pross['proid_id'] = $proid_id;
+                $info = $this->getPromoteInfo($pross);
+                $promoteInfo = $info['data'];
+            }
+            if ($promoteInfo) {
+                if (!$promote['pc_pages_id']) {
+                    $promote['pc_pages_id'] = $promoteInfo['pc_pages_id'];
+                }
+                if (!$promote['m_pages_id']) {
+                    $promote['m_pages_id'] = $promoteInfo['m_pages_id'];
+                }
+                $promote['promote_id'] = $promoteInfo['promote_id'];
+                $updatepromote = $this->editPromote($promote);
+                $own['promote_id'] = $promote['promote_id'];
+                $proInfo = $this->getPromoteInfo($own);
+                $ps['plan'] = $proInfo['data']['plan'];
+                $ps['planunit'] = $proInfo['data']['planunit'];
+                $ps['keyword'] = $proInfo['data']['keyword'];
+                $ps['pc_pages'] = $proInfo['data']['pc_pages'];
+                $ps['m_pages'] = $proInfo['data']['m_pages'];
+                $newPromoteList[$key] = $ps;
+            }else{
+                $prolev['proid_id'] = $promote['proid_id'];
+                $prolev['status'] = 1;
+                //只有计划没有单元
+                if ($promote['plan'] && !$promote['planunit']) {
+                    unset($promote['planunit']);
+                    $prolev['name'] = $promote['plan'];
+                    $proLevInfo = $this->getProLevInfo($prolev);
+                    if ($proLevInfo['code'] != 0) {
+                        $pro_lev_id = $this->createProLev($prolev);
+                        $promote['pro_lev_id'] = $pro_lev_id['data'];
+                    }else{
+                        $promote['pro_lev_id'] = $proLevInfo['data']['pro_lev_id'];
+                    }
+                }//有计划有单元
+                 elseif ($promote['plan'] && $promote['planunit']) {
+                    $prolev['name'] = $promote['plan'];
+                    $proLevInfo = $this->getProLevInfo($prolev);
+                    if ($proLevInfo['code'] != 0) {
+                        $plan_lev_id = $this->createProLev($prolev);
+                        $prolev['name'] = $promote['planunit'];
+                        $prolev['pid'] = $plan_lev_id['data'];
+                        $pro_lev_id = $this->createProLev($prolev);
+                        $prolev['pid'] = 0; //重置pid为0
+                        $promote['pro_lev_id'] = $pro_lev_id['data'];
+                    }else{
+                        $prolev['name'] = $promote['planunit'];
+                        $prolev['pid'] = $proLevInfo['data']['pro_lev_id'];
+                        $punitLevInfo = $this->getProLevInfo($prolev);
+                        if ($punitLevInfo['code'] == 0) {
+                            $promote['pro_lev_id'] = $punitLevInfo['data']['pro_lev_id'];
+                        }else{
+                            $pro_lev_id = $this->createProLev($prolev);
+                            $promote['pro_lev_id'] = $pro_lev_id['data'];
+                        }
+                        $prolev['pid'] = 0; //重置pid为0
+                    }   
+                }
+                $result = $this->createPromote($promote);
+                if ($result['code'] != 0) {
+                    unset($promoteList[$key]);
+                    continue;
+                }else{
+                    $own['promote_id'] = $result['data'];
+                    $info = $this->getPromoteInfo($own);
+                    if ($info['code'] == 0) {
+                        $proInfo = $info['data'];
+                        $ps['plan'] = $proInfo['plan'];
+                        $ps['planunit'] = $proInfo['planunit'];
+                        $ps['keyword'] = $proInfo['keyword'];
+                        $ps['pc_pages'] = $proInfo['pc_pages'];
+                        $ps['m_pages'] = $proInfo['m_pages'];
+                        $newPromoteList[$key] = $ps;
+                    }
+                }
+            }
+        }
+        session('faile_input', $errorData);
+        session('success_input', $promoteList);
+        session('newPromoteList', $newPromoteList);           
+        session('letters', $datas[1]);   
+    }
+
+    /*
+    * 导出计划数据处理
+    */
+    public function outputPlan($request, $proid_id)
+    {
+        $excel_key_value = array(
+            'plan'=>'推广计划名称',
+            'planunit'=>'推广单元名称',
+            'keyword'=>'关键词名称',
+            'pc_pages'=>'PC模板',
+            'm_pages'=>'移动模板',
+        );
+        $letter = array('A','B','C','D','E');
+        $new_result = array();
+        if(!$proid_id) {
+            return array('code'=>301, 'msg'=>'缺省参数');
+        }
+        //若带了关键词则只导出该计划，否则导出所有单元或者该账号下所有计划
+        if (!empty($request['keyword'])) {
+            $pList = $this->searchName($request['keyword'], $proid_id);
+            $promoteList = $pList['data'];
+            if ($pList['code'] != 0) {
+                return array('code'=>$pList['code'], 'msg'=>$pList['msg']);
+            }
+            foreach ($promoteList as $key => $promote) {
+                $p['promote_id'] = $promote['promote_id'];
+                $datas = $this->getPromoteInfo($p);
+                $result = $datas['data'];
+                unset($result['proid_id']);
+                unset($result['promote_id']);
+                $rresult[$key] = $result;
+            }
+            foreach ($rresult as $key => $value) {
+                foreach ($excel_key_value as $key2 => $value2) {
+                    $new_result[$key][$key2] = $value[$key2];
+                }
+            }            
+        }elseif($request['pro_lev_id'] || $request['pro_lev_ids']){
+            if ($request['pro_lev_id']) {
+                $datas = $this->getPromoteInfoByProlevid($request['pro_lev_id']);
+                if($datas['code'] != 0) {
+                    return array('code'=>$datas['code'], 'msg'=>$datas['msg']);
+                }
+            }elseif ($request['pro_lev_ids']) {
+                $datas = $this->getPromoteInfoByProlevid($request['pro_lev_ids']);
+                if($datas['code'] != 0) {
+                    return array('code'=>$datas['code'], 'msg'=>$datas['msg']);
+                } 
+            }
+            $result = $datas['data'];
+            foreach ($result as $key => $res) {
+                unset($res['pid']);
+                unset($res['name']);
+                unset($res['remark']);
+                unset($res['status']);
+                $sel[] = $res['pro_lev_id'];
+            }
+            $res['pro_lev_id'] = array("IN", $sel);
+            $p = $this->getPromoteInfos($res);
+            $promoteList = $p['data'];
+            foreach ($promoteList as $k => $value) {        
+                foreach ($excel_key_value as $key => $value1) {
+                    $new_result[$k][$key] = $value[$key];
+                }
+            }
+        }else{
+            $pro['proid_id'] = $proid_id;
+            $p = $this->getPromoteInfos($pro);
+            $promoteList = $p['data'];
+           
+            foreach ($promoteList as $k => $value) {        
+                foreach ($excel_key_value as $key => $value1) {
+                    $new_result[$k][$key] = $value[$key];
+                }
+            }   
+        }
+        $filename = "proPlan";
+        return array('code'=>0, 'data'=>outExecl($filename,array_values($excel_key_value),$new_result,$letter));
+    }
 
 }
