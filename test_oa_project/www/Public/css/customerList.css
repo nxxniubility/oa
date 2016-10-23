@@ -75,6 +75,9 @@
 #clTable th, #clTable tr:hover th {font-weight:700;color:#999;background:#f5f6fa;}
 #clTable th span, #clTable th i {float:left;}
 #clTable td {color:#696969;background:#fff;}
-#clTable td.dtOperation {position:relative;}
+#clTable td.dtOperation {}
 #clTable tr:hover td {background:#f5f6fa;}
 #clTable tr:hover td .nothing {background:#fff;}
+
+/*1023*/
+.operating-cont {position:relative;width:100%;height:100%;}

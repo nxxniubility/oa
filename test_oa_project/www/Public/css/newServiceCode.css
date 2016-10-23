@@ -25,7 +25,9 @@
 /*0908*/
 .wrapBox#newSerWrap .proCont {width:auto;}
 
-
-
+/*1023*/
+.wrapBox#newSerWrap .proCont {margin-bottom:0;}
+.wrapBox#newSerWrap .mt30 {margin-top:30px;}
+.wrapBox#newSerWrap .submitBtn {margin-top:0;}
 
 
