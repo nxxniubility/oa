@@ -41,7 +41,7 @@ class RoleService extends BaseService
     */
     public function getRoleList($param)
     {
-        $param['where']['status'] = 1;
+        $param['status'] = 1;
         $param['order'] = !empty($param['order'])?$param['order']:'sort desc';
         $param['page'] = !empty($param['page'])?$param['page']:null;
         if( F('Cache/role') ){
@@ -50,7 +50,7 @@ class RoleService extends BaseService
             $roleAll = $this->_getList();
             F('Cache/role', $roleAll);
         }
-        $roleAll = $this->disposeArray($roleAll,  $param['order'], $param['page'],  $param['where']);
+        $roleAll = $this->disposeArray($roleAll,  $param['order'], $param['page'],  $param);
         return array('code'=>0, 'data'=>$roleAll);
     }
 
@@ -124,7 +124,7 @@ class RoleService extends BaseService
 
     /*
     |--------------------------------------------------------------------------
-    | 删除职位详情---更新文件缓存
+    | 删除职位---更新文件缓存
     |--------------------------------------------------------------------------
     | @author zgt
     */
@@ -152,7 +152,7 @@ class RoleService extends BaseService
 
     /*
     |--------------------------------------------------------------------------
-    | 获取所有职位-文件缓存
+    | 获取职位详情-文件缓存
     |--------------------------------------------------------------------------
     | @author zgt
     */
@@ -183,7 +183,7 @@ class RoleService extends BaseService
     public function addRoleUser($param)
     {
         //必须参数
-        if(empty($param['role_id'])) return array('code'=>300,'msg'=>'缺少课程名称');
+        if(empty($param['role_id'])) return array('code'=>300,'msg'=>'参数异常');
         if(empty($param['system_user_id'])) return array('code'=>301,'msg'=>'缺少所属职位');
         $result = D('Role')->addData($param);
         //插入数据成功执行清除缓存
@@ -245,6 +245,7 @@ class RoleService extends BaseService
         $sidebar = $arrayhelps->createTree($result, 2,'id','pid');
         return array('code'=>'0', 'data'=>$sidebar);
     }
+
     /*
     |--------------------------------------------------------------------------
     | 获取职位对应员工

@@ -381,7 +381,7 @@ class PersonnelController extends SystemController {
         if(!empty($requestG['role_id'])) $where['role_id'] = $requestG['role_id'];
         $where['zone_id'] = !empty($requestG['zone_id'])?$requestG['zone_id']:$this->system_user['zone_id'];
         //员工列表
-        $_param['where'] = $where;
+        $_param = $where;
         $_param['page'] = $re_page.',30';
         $_param['order'] = 'system_user_id desc';
         $systemUserAll = D('SystemUser','Service')->getSystemUsersList($_param);
@@ -433,7 +433,7 @@ class PersonnelController extends SystemController {
         if(!empty($requestG['role_id'])) $where['role_id'] = $requestG['role_id'];
         $where['zone_id'] = !empty($requestG['zone_id'])?$requestG['zone_id']:$this->system_user['zone_id'];
         //员工列表
-        $_param['where'] = $where;
+        $_param = $where;
         $_param['page'] = $re_page.',30';
         $_param['order'] = 'system_user_id desc';
         $systemUserAll = D('SystemUser','Service')->getSystemUsersList($_param);

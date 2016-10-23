@@ -31,7 +31,7 @@ class SystemUpdateService extends BaseService
             $list = $this->_getSystemUpdateList();
             F('Cache/systemUpdate', $list);
         }
-        $list = $this->disposeArray($list,  $param['order'], $param['page'],  $param['where']);
+        $list = $this->disposeArray($list,  $param['order'], $param['page'], $param);
         return array('code'=>'0', 'data'=>$list);
     }
 
@@ -47,7 +47,7 @@ class SystemUpdateService extends BaseService
         $param = array_filter($param);
         $param['system_user_id'] = $this->system_user_id;
         $param['createtime'] = time();
-        if(empty($param['uptitle'])) return array('code'=>300,'msg'=>'缺少系统更新名称');
+        if(empty($param['uptitle'])) return array('code'=>300,'msg'=>'缺少系统更新名标题');
         $result = D('SystemUpdate')->addData($param);
         //插入数据成功执行清除缓存
         if ($result['code']==0){
