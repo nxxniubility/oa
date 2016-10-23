@@ -13,7 +13,7 @@ class DepartmentModel extends BaseModel
     //自动验证
     protected $_validate = array(
         array('departmentname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
-        array('departmentname', '0,15', array('code'=>'202','msg'=>'名称不能大于15字符！'), 0, 'length')
+        array('departmentname', '0,15', array('code'=>'202','msg'=>'名称不能大于15个字符！'), 0, 'length')
     );
 
     /*
