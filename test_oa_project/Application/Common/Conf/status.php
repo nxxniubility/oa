@@ -97,12 +97,6 @@ return array(
             14 => '在线咨询',
             15 => '其他'
         ),
-        //分配规则
-        'ALLOCATION_WEIGHTTYPE'=>array(
-            10 => '全部',
-            20 => '分配新量',
-            30 => '分配旧量',
-        ),
     ),
     //最近跟进结果
     'SYSTEM_USER_STATUS'=>array(

@@ -1009,98 +1009,63 @@ class UserController extends SystemController
     */
     public function applyList() {
         $request = I('get.');
-
+        $_where['system_user_id'] = $this->system_user_id;
         $re_page = isset($request['page']) ? $request['page'] : 1;
-        unset($request['page']);
-
-        $where = array();
-        if (!empty($request['key_value'])) {
-            $request['key_name'] = trim($request['key_name']);
-            $request['key_value'] = trim($request['key_value']);
-
-            if ($request['key_name'] == 'username') {
-                    $where['username'] = encryptPhone($request['key_value'], C('PHONE_CODE_KEY'));
-            }else{
-                $where[$request['key_name']] = array('like', "%{$request['key_value']}%");
-            }
-        }
-        $where['system_user_id'] = $this->system_user_id;
-        if (!empty($request['status'])) $where['status'] = $request['status'];
-        //今天申请, 三日内申请, 一周内申请筛选
-        if (!empty($request['applytime'])) {
-            $days = $request['applytime'];
-            $curTimestamp = time() - ($days-1) * 24 * 60 * 60; //获取当天,3日内, 1周内的时间戳
-            $curTimestamp = date('Y-m-d',$curTimestamp);  //从0点开始
-            $curTimestamp = strtotime($curTimestamp);
-            $where['applytime'] = array('EGT', $curTimestamp);
-        }
-        //自定义时间段筛选
-        if (!empty($request['dateStart']) && !empty($request['dateEnd'])) {
-            $request['dateStart2'] =  $request['dateStart']; //保留日期格式
-            $request['dateEnd2'] =  $request['dateEnd'];
-
-            $request['dateStart'] = strtotime($request['dateStart']);
-            $request['dateEnd'] = strtotime($request['dateEnd']);
-
-            if (!empty($request['status'])) $where['status'] = $request['status'];
-
-            if ($request['dateEnd'] >= $request['dateStart']) {
-                $request['dateEnd'] = $request['dateEnd'] + 24 * 60 * 60 - 1; //到当天23:59:59
-                $where['applytime'] = array(
-                    array('egt', $request['dateStart']),
-                    array('lt', $request['dateEnd']),
-                    'and'
-                );
-            } else {
-                $request['dateStart'] = $request['dateStart'] + 24 * 60 * 60 - 1; //到当天23:59:59
-                $where['applytime'] = array(
-                    array('egt', $request['dateEnd']),
-                    array('lt', $request['dateStart']),
-                    'and'
-                );
-            }
-        }
-
-        $applyList = D('User', 'Service')->getApplyList($where, (($re_page - 1) * 15) . ',15');
-
-        if ($applyList['count'] > 0) {
-            $statusArray = C('USER_STATUS');
-            foreach ($applyList['data'] as $k => $v) {
-                $applyList['data'][$k]['username'] = decryptPhone($v['username'], C('PHONE_CODE_KEY'));
-                $infoquality = C("USER_INFOQUALITY");
-                $key = $applyList['data'][$k]['infoquality'];
-                $applyList['data'][$k]['infoquality'] = $infoquality[$key];
-
-                switch ($applyList['data'][$k]['applystatus']) {
-                    case 10:
-                        $applyList['data'][$k]['status2'] = '待审核';
-                        $applyList['data'][$k]['operate'] = '查看';
-                        break;
-                    case 20:
-                        $applyList['data'][$k]['status2'] = '不通过';
-                        if ($applyList['data'][$k]['userstatus'] != $statusArray['distribution']['num']) {  //160回库状态
-                            $applyList['data'][$k]['operate'] = '查看';  //未回库
-                        } else {
-                            $applyList['data'][$k]['operate'] = '重新申请';
-                        }
-                        break;
-                    case 30:
-                        $applyList['data'][$k]['status2'] = '通过';
-                        $applyList['data'][$k]['operate'] = '查看';
-                        //保持原来所属人
-                        /*$applyList['data'][$k]['affiliation_realname'] = $applyList['data'][$k]['apply_realname'];
-                        $applyList['data'][$k]['channelname'] =  $applyList['data'][$k]['apply_channelname'];*/
-                        break;
-                }
-            }
-
-            //加载分页类
-            $paging = $this->Paging($re_page, 15, $applyList['count'], $request);
-            $this->assign('paging', $paging);
-            $this->assign('applyList', $applyList['data']);
-            $this->assign('url_dispostUser', U('System/User/dispostApply'));
-        }
-        $this->assign('request', $request);
+//        unset($request['page']);
+//
+//        $where = array();
+//        if (!empty($request['key_value'])) {
+//            $request['key_name'] = trim($request['key_name']);
+//            $request['key_value'] = trim($request['key_value']);
+//
+//            if ($request['key_name'] == 'username') {
+//                    $where['username'] = encryptPhone($request['key_value'], C('PHONE_CODE_KEY'));
+//            }else{
+//                $where[$request['key_name']] = array('like', "%{$request['key_value']}%");
+//            }
+//        }
+//        $where['system_user_id'] = $this->system_user_id;
+//        if (!empty($request['status'])) $where['status'] = $request['status'];
+//        //今天申请, 三日内申请, 一周内申请筛选
+//        if (!empty($request['applytime'])) {
+//            $days = $request['applytime'];
+//            $curTimestamp = time() - ($days-1) * 24 * 60 * 60; //获取当天,3日内, 1周内的时间戳
+//            $curTimestamp = date('Y-m-d',$curTimestamp);  //从0点开始
+//            $curTimestamp = strtotime($curTimestamp);
+//            $where['applytime'] = array('EGT', $curTimestamp);
+//        }
+//        //自定义时间段筛选
+//        if (!empty($request['dateStart']) && !empty($request['dateEnd'])) {
+//            $request['dateStart2'] =  $request['dateStart']; //保留日期格式
+//            $request['dateEnd2'] =  $request['dateEnd'];
+//
+//            $request['dateStart'] = strtotime($request['dateStart']);
+//            $request['dateEnd'] = strtotime($request['dateEnd']);
+//
+//            if (!empty($request['status'])) $where['status'] = $request['status'];
+//
+//            if ($request['dateEnd'] >= $request['dateStart']) {
+//                $request['dateEnd'] = $request['dateEnd'] + 24 * 60 * 60 - 1; //到当天23:59:59
+//                $where['applytime'] = array(
+//                    array('egt', $request['dateStart']),
+//                    array('lt', $request['dateEnd']),
+//                    'and'
+//                );
+//            } else {
+//                $request['dateStart'] = $request['dateStart'] + 24 * 60 * 60 - 1; //到当天23:59:59
+//                $where['applytime'] = array(
+//                    array('egt', $request['dateEnd']),
+//                    array('lt', $request['dateStart']),
+//                    'and'
+//                );
+//            }
+//        }
+        $_where['page'] = (($re_page - 1) * 15) . ',15';
+        $applyList = D('User', 'Service')->getApplyUserList($_where);
+        $data['applyList'] = $applyList['data']['data'];
+        //加载分页类
+        $data['paging_div'] = $this->Paging($re_page, 15, $applyList['data']['count'], $request);
+        $this->assign('data', $data);
         $this->display();
     }
 
@@ -1245,14 +1210,16 @@ class UserController extends SystemController
         }
         $where['zone_id'] = $this->system_user['zone_id'];
         $where['admin_system_user_id'] = $this->system_user_id;
-        $data['auditList'] = D('User', 'Service')->getApplyList($where, (($re_page - 1) * 15) . ',15');
         //获取区域下员工
-        $data['systemList'] = D('SystemUser', 'Service')->getSystemUsersList(array('zone_id' => $this->system_user['zone_id']));
+        $data['systemList'] = D('SystemUser', 'Service')->getSystemUsersList(array('zone_id' => $this->system_user['zone_id'],'order'=>'sign asc'));
         $data['systemList'] = $data['systemList']['data']['data'];
-        //信息质量转换
-        $data['USER_INFOQUALITY'] = C('USER_INFOQUALITY');
+        //获取列表数据
+        $_where = $request;
+        $_where['page'] = (($re_page - 1) * 15) . ',15';
+        $auditList = D('User', 'Service')->getApplyUserList($_where);
+        $data['auditList'] = $auditList['data']['data'];print_r($data['auditList']);
         //加载分页类
-        $data['paging'] = $this->Paging($re_page, 15, $data['auditList']['count'], $request);
+        $data['paging_div'] = $this->Paging($re_page, 15, $auditList['data']['count'], $request);
         $data['request'] = $request;
         $this->assign('data', $data);
         $this->display();

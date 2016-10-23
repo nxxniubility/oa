@@ -470,9 +470,9 @@ class SystemUserService extends BaseService
     public function getSystemUsersList($param)
     {
         //区域存在时获取子集
-        if(!empty($param['where']['zone_id'])){
-            $_zone_arr = $this->_getZoneIds($param['where']['zone_id']);
-            $param['where']['zone_id'] = array('IN', $_zone_arr);
+        if(!empty($param['zone_id'])){
+            $_zone_arr = $this->_getZoneIds($param['zone_id']);
+            $param['zone_id'] = array('IN', $_zone_arr);
         }
         $param['page'] = !empty($param['page'])?$param['page']:null;
         if( F('Cache/systemUsers') ) {
