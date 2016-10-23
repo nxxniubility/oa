@@ -134,7 +134,7 @@ class VisitController extends SystemController
             $re_page = isset($request['page']) ? $request['page'] : 1;
             unset($request['page']);
             //客户列表
-            $re_userAll = D('User', 'Service')->getList($where, 'visittime desc', (($re_page-1)*15).',15');
+            $re_userAll = D('User', 'Service')->getUserList($where, 'visittime desc', (($re_page-1)*15).',15');
             $data['userAll'] = $re_userAll['data']['data'];
             //加载分页类
             $data['paging'] = $this->Paging($re_page, 15, $re_userAll['data']['count'], $request);

@@ -40,7 +40,7 @@ class ChannelService extends BaseService
     public function getChannelList($param)
     {
         $param = array_filter($param);
-        $param['where']['status'] = 1;
+        $param['status'] = 1;
         $param['order'] = 'sort desc';
         $param['page'] = !empty($param['page'])?$param['page']:null;
         if( F('Cache/channel') ) {
@@ -49,7 +49,7 @@ class ChannelService extends BaseService
             $channel = $this->_getChannelList();
             F('Cache/channel', $channel);
         }
-        $channel = $this->disposeArray($channel,  $param['order'], $param['page'],  $param['where']);
+        $channel = $this->disposeArray($channel,  $param['order'], $param['page'],  $param);
         //数组分级
         $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
         $channel['data'] = $Arrayhelps->createTree($channel['data'], 0, 'channel_id', 'pid');

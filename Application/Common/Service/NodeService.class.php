@@ -37,8 +37,8 @@ class NodeService extends BaseService
     */
     public function getNodeList($param)
     {
-        $param['where']['status'] = 1;
-        $param['where']['node_id'] = !empty($param['where']['node_id'])?$param['where']['node_id']:0;
+        $param['status'] = 1;
+        $param['node_id'] = !empty($param['node_id'])?$param['node_id']:0;
         $param['order'] = 'sort desc';
         $param['page'] = !empty($param['page'])?$param['page']:null;
         if( F('Cache/node') ){
@@ -47,9 +47,9 @@ class NodeService extends BaseService
             $nodeAll = $this->_getList();
             F('Cache/node', $nodeAll);
         }
-        $nodeAll = $this->disposeArray($nodeAll,  $param['order'], $param['page'],  $param['where']);//数组分级
+        $nodeAll = $this->disposeArray($nodeAll,  $param['order'], $param['page'],  $param);//数组分级
         $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
-        $nodeAll['data'] = $Arrayhelps->createTree($nodeAll['data'], $param['where']['node_id'], 'id', 'pid');
+        $nodeAll['data'] = $Arrayhelps->createTree($nodeAll['data'], $param['node_id'], 'id', 'pid');
         return array('code'=>0, 'data'=>$nodeAll);
     }
 

@@ -75,7 +75,7 @@ class CourseService extends BaseService
             $course = $this->_getCourseList();
             F('Cache/course', $course);
         }
-        $course = $this->disposeArray($course,  $param['order'], $param['page'],  $param['where']);
+        $course = $this->disposeArray($course,  $param['order'], $param['page'],  $param);
         return array('code'=>'0', 'data'=>$course);
     }
 
@@ -242,7 +242,7 @@ class CourseService extends BaseService
             $course = $this->_getCourseProductList();
             F('Cache/courseProduct', $course);
         }
-        $course = $this->disposeArray($course,  $param['order'], $param['page'],  $param['where']);
+        $course = $this->disposeArray($course,  $param['order'], $param['page'],  $param);
         return array('code'=>'0', 'data'=>$course);
     }
     /*

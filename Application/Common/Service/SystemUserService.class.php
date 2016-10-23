@@ -481,7 +481,7 @@ class SystemUserService extends BaseService
             $systemUsers = $this->_getSystemUserList();
             F('Cache/systemUsers', $systemUsers);
         }
-        $systemUsers = $this->disposeArray($systemUsers,  $param['order'], $param['page'],  $param['where']);
+        $systemUsers = $this->disposeArray($systemUsers,  $param['order'], $param['page'],  $param);
         return array('code'=>'0', 'data'=>$systemUsers);
     }
 

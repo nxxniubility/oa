@@ -41,7 +41,7 @@ class DepartmentService extends BaseService
     */
     public function getDepartmentList($param)
     {
-        $param['where']['status'] = 1;
+        $param['status'] = 1;
         $param['order'] = !empty($param['order'])?$param['order']:'sort desc';
         $param['page'] = !empty($param['page'])?$param['page']:null;
         if( F('Cache/department') ){
@@ -50,7 +50,7 @@ class DepartmentService extends BaseService
             $departmentAll = $this->_getDepartmentList();
             F('Cache/department', $departmentAll);
         }
-        $departmentAll = $this->disposeArray($departmentAll,  $param['order'], $param['page'],  $param['where']);
+        $departmentAll = $this->disposeArray($departmentAll,  $param['order'], $param['page'], $param);
         return array('code'=>0, 'data'=>$departmentAll);
     }
 

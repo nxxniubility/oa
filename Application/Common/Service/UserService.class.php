@@ -25,7 +25,7 @@ class UserService extends BaseService
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getList($where, $order=null, $limit=null)
+    public function getUserList($where, $order=null, $limit=null)
     {
         //参数处理
         $where = $this->_dispostWhere($where);
@@ -154,60 +154,6 @@ class UserService extends BaseService
         }
         return array('code'=>'0', 'data'=>$result);
     }
-    /*
-    |--------------------------------------------------------------------------
-    | 添加用户
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function createUser($data)
-    {
-        $data['allocationtime'] = time();
-        $data['updatetime'] = time();
-        $data['lastvisit'] = time();
-        $data['updatetime'] = time();
-        $data['createtime'] = time();
-        $data['createip'] = get_client_ip();
-        $data['updateuser_id'] = $data['system_user_id'];
-        $data['createuser_id'] = $data['system_user_id'];
-        //验证唯一字段 数据处理
-        $checkData = $this->_checkField($data);
-        if($checkData['code']!=0) return array('code'=>$checkData['code'], 'msg'=>$checkData['msg'], 'sign'=>!empty($checkData['sign'])?$checkData['sign']:null);
-        $data = $checkData['data'];
-        //是否获取新渠道
-        $newChannelData = $this->isNewChannel($data);
-        if($newChannelData['code']!=0) return array('code'=>$newChannelData['code'], 'msg'=>$newChannelData['msg'], 'sign'=>!empty($newChannelData['sign'])?$newChannelData['sign']:null);
-        $data = $newChannelData['data'];
-        //启动事务
-        D()->startTrans();
-        $reUserId = D('User')->data($data)->add();
-        if(!empty($reUserId)){
-            $data_info = $data;
-            $data_info['user_id'] = $reUserId;
-            $reUserInfo = D('UserInfo')->data($data_info)->add();
-        }
-        //添加数据记录
-        $dataLog['operattype'] = '1';
-        $dataLog['user_id'] = $reUserId;
-        $dataLog['system_user_id'] = $data['system_user_id'];
-        $dataLog['updateuser_id'] = $data['system_user_id'];
-        $dataLog['createuser_id'] = $data['system_user_id'];
-        $dataLog['operator_user_id'] = $data['system_user_id'];
-        $dataLog['zone_id'] = $data['zone_id'];
-        $dataLog['channel_id'] = $data['channel_id'];
-        $dataLog['infoquality'] = $data['infoquality'];
-        $dataLog['logtime'] = time();
-        $DataService = new DataService();
-        $DataService->addDataLogs($dataLog);
-        if(!empty($reUserId) && !empty($reUserInfo)){
-            D()->commit();
-            return array('code'=>0,'msg'=>'客户添加成功','data'=>$reUserId);
-        }else{
-            D()->rollback();
-            return array('code'=>12,'msg'=>'数据添加失败');
-        }
-    }
-
 
 
     /*
@@ -479,7 +425,7 @@ class UserService extends BaseService
         $data_callback['user_id'] = $data['user_id'];
         $data_callback['nexttime'] = $_time;
         $data_callback['system_user_id'] = $data['system_user_id'];
-        $data_callback['remark'] = '客户上门到访,转出客户(前台操作)';
+        $data_callback['remark'] = '客户上门到访';
         $reflag = $this->_addCallback($data_callback);
         //添加数据记录
         $dataLog['operattype'] = 12;
@@ -1461,11 +1407,11 @@ class UserService extends BaseService
         }else{
             if(!empty($data['allocation_roles'])){
                 $roles = explode(',',$data['allocation_roles']);
-                $_syswhere['where']["role_id"] = array('IN',$roles);
+                $_syswhere["role_id"] = array('IN',$roles);
             }
-            $_syswhere['where']["usertype"] = array('NEQ',10);
-            $_syswhere['where']["status"] = 1;
-            $_syswhere['where']["zone_id"] = $data['zone_id'];
+            $_syswhere["usertype"] = array('NEQ',10);
+            $_syswhere["status"] = 1;
+            $_syswhere["zone_id"] = $data['zone_id'];
             $systemUserList = D('SystemUser', 'Service')->getSystemUsersList($_syswhere);
             if(!empty($systemUserList['data']['data'])){
                 foreach ($systemUserList['data']['data'] as $k => $v) {
@@ -1515,11 +1461,11 @@ class UserService extends BaseService
         }else{
             if(!empty($data['allocation_roles'])){
                 $roles = explode(',',$data['allocation_roles']);
-                $_syswhere['where']["role_id"] = array('IN',$roles);
+                $_syswhere["role_id"] = array('IN',$roles);
             }
-            $_syswhere['where']["usertype"] = array('NEQ',10);
-            $_syswhere['where']["status"] = 1;
-            $_syswhere['where']["zone_id"] = $data['zone_id'];
+            $_syswhere["usertype"] = array('NEQ',10);
+            $_syswhere["status"] = 1;
+            $_syswhere["zone_id"] = $data['zone_id'];
             $systemUserList = D('SystemUser', 'Service')->getSystemUsersList($_syswhere);
             if(!empty($systemUserList['data']['data'])){
                 foreach ($systemUserList['data']['data'] as $k => $v) {
@@ -1596,7 +1542,7 @@ class UserService extends BaseService
             foreach($allocation_roles as $k=>$v){
                 $_allocation_roles[] = $v;
             }
-            $role_where['where']['id']= array('IN',$_allocation_roles);
+            $role_where['id']= array('IN',$_allocation_roles);
             $role_list = D('Role', 'Service')->getRoleList($role_where);
             $result['roles'] = $role_list['data']['data'];
             if(!empty($result['roles'])){

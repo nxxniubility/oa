@@ -55,6 +55,7 @@ class BaseService extends BaseModel {
             $array_list = $array;
         }
         //对缓存条件筛选 XXXX 模糊搜索
+        unset($where['page']);unset($where['order']);
         if(!empty($where)){
             $where = array_filter($where);
             foreach($where as $k=>$v){

@@ -51,9 +51,9 @@ class OrderController extends SystemController
                 $this->ajaxReturn(0, '', $paging_data);
             }else if($requestP['type']=='getSysUser'){
                 //异步获取员工列表
-                $whereSystem['where']['usertype'] = array('neq',10);
-                $whereSystem['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-                $whereSystem['where']['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+                $whereSystem['usertype'] = array('neq',10);
+                $whereSystem['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+                $whereSystem['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
                 //员工列表
                 $reSystemList = D('SystemUser', 'Service')->getSystemUsersList($whereSystem);
                 //返回数据操作状态
@@ -207,9 +207,9 @@ class OrderController extends SystemController
         if (IS_POST) {
             $requestP = I('post.');
             if($requestP['type']=='getSysUser'){
-                $whereSystem['where']['usertype'] = array('neq',10);
-                $whereSystem['where']['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-                $whereSystem['where']['role_id'] = $requestP['role_id'];
+                $whereSystem['usertype'] = array('neq',10);
+                $whereSystem['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
+                $whereSystem['role_id'] = $requestP['role_id'];
                 //员工列表
                 $systemUserAll = D('SystemUser', 'Service')->getSystemUsersList($whereSystem);
                 if($systemUserAll['code'] == 0) {
