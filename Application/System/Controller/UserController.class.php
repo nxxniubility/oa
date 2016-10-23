@@ -1008,63 +1008,21 @@ class UserController extends SystemController
     | @author cq
     */
     public function applyList() {
-        $request = I('get.');
+        $request = $_where = I('get.');
         $_where['system_user_id'] = $this->system_user_id;
         $re_page = isset($request['page']) ? $request['page'] : 1;
-//        unset($request['page']);
-//
-//        $where = array();
-//        if (!empty($request['key_value'])) {
-//            $request['key_name'] = trim($request['key_name']);
-//            $request['key_value'] = trim($request['key_value']);
-//
-//            if ($request['key_name'] == 'username') {
-//                    $where['username'] = encryptPhone($request['key_value'], C('PHONE_CODE_KEY'));
-//            }else{
-//                $where[$request['key_name']] = array('like', "%{$request['key_value']}%");
-//            }
-//        }
-//        $where['system_user_id'] = $this->system_user_id;
-//        if (!empty($request['status'])) $where['status'] = $request['status'];
-//        //今天申请, 三日内申请, 一周内申请筛选
-//        if (!empty($request['applytime'])) {
-//            $days = $request['applytime'];
-//            $curTimestamp = time() - ($days-1) * 24 * 60 * 60; //获取当天,3日内, 1周内的时间戳
-//            $curTimestamp = date('Y-m-d',$curTimestamp);  //从0点开始
-//            $curTimestamp = strtotime($curTimestamp);
-//            $where['applytime'] = array('EGT', $curTimestamp);
-//        }
-//        //自定义时间段筛选
-//        if (!empty($request['dateStart']) && !empty($request['dateEnd'])) {
-//            $request['dateStart2'] =  $request['dateStart']; //保留日期格式
-//            $request['dateEnd2'] =  $request['dateEnd'];
-//
-//            $request['dateStart'] = strtotime($request['dateStart']);
-//            $request['dateEnd'] = strtotime($request['dateEnd']);
-//
-//            if (!empty($request['status'])) $where['status'] = $request['status'];
-//
-//            if ($request['dateEnd'] >= $request['dateStart']) {
-//                $request['dateEnd'] = $request['dateEnd'] + 24 * 60 * 60 - 1; //到当天23:59:59
-//                $where['applytime'] = array(
-//                    array('egt', $request['dateStart']),
-//                    array('lt', $request['dateEnd']),
-//                    'and'
-//                );
-//            } else {
-//                $request['dateStart'] = $request['dateStart'] + 24 * 60 * 60 - 1; //到当天23:59:59
-//                $where['applytime'] = array(
-//                    array('egt', $request['dateEnd']),
-//                    array('lt', $request['dateStart']),
-//                    'and'
-//                );
-//            }
-//        }
-        $_where['page'] = (($re_page - 1) * 15) . ',15';
+        unset($_where['page']);
+        //时间格式转化
+        if (!empty($request['applytime'])) {
+            $_time = explode('@', str_replace('/', '-', $request['applytime']));
+            $_where['applytime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59'))), 'AND');
+        }
+        $_where['page'] = (($re_page - 1) * 30) . ',30';
         $applyList = D('User', 'Service')->getApplyUserList($_where);
         $data['applyList'] = $applyList['data']['data'];
         //加载分页类
-        $data['paging_div'] = $this->Paging($re_page, 15, $applyList['data']['count'], $request);
+        $data['paging_div'] = $this->Paging($re_page, 30, $applyList['data']['count'], $request);
+        $data['request'] = $request;
         $this->assign('data', $data);
         $this->display();
     }
@@ -1076,61 +1034,11 @@ class UserController extends SystemController
     | @author cq
     */
     public function  applyDetails() {
-        $userData = I('get.');
-
-        if (!empty($userData)) {
-            $where['zl_user_apply.user_apply_id'] = $userData['id'];
-            $applyRecord = D('User','Service')->getApplyRecord($where);
-        }
-        $where['zl_user.user_id'] = $applyRecord['user_id'];
-        $applyUserDetails = D('User','Service')->getApplyUserDetails($where);
-
-        if (!empty($applyUserDetails)) {
-            $applyUserDetails[0]['username'] = decryptPhone($applyUserDetails[0]['username'], C('PHONE_CODE_KEY'));
-            $applyUserDetails[0]['introducermobile'] = decryptPhone($applyUserDetails[0]['introducermobile'], C('PHONE_CODE_KEY'));
-
-            $infoquality = C("USER_INFOQUALITY");
-            $key = $applyUserDetails[0]['infoquality'];
-            $applyUserDetails[0]['infoquality'] = $infoquality[$key];
-
-            $statusArray = C('USER_STATUS');
-            switch ($applyUserDetails[0]['applystatus']) {
-                case 10:
-                    $applyUserDetails[0]['status2'] = '待审核';
-                    $applyUserDetails[0]['reapply'] = 0;
-                    break;
-                case 20:
-                    $applyUserDetails[0]['status2'] = '不通过';
-                    if ($applyUserDetails[0]['userstatus'] == $statusArray['160']['num']) { //160回库状态
-                        $applyUserDetails[0]['reapply'] = 1;
-                    } else {
-                        $applyUserDetails[0]['reapply'] = 0;//没有申请的 机会了
-                    };
-                    break;
-                case 30:
-                    $applyUserDetails[0]['status2'] = '通过';
-                    $applyUserDetails[0]['reapply'] = 0;
-                    break;
-            }
-
-            $data['channel'] = D('Channel', 'Service')->getChannelList();
-            $data['channel'] = $data['channel']['data'];
-            if ($applyUserDetails[0]['apply_system_user_id'] == $this->system_user_id) {
-                $data['canReApply'] = 1;
-            } else {
-                $data['canReApply'] = 0;
-            }
-            ///////////////////
-            $where1['user_id'] = $applyRecord['user_id'];
-            $userApply = D('UserApply')->where(array('user_id'=>$where1['user_id'],'status'=>10))->find();
-            if(empty($userApply)){
-                $data['auditFlag'] = 0;   //未审核
-            }else{
-                $data['auditFlag'] = 1;   //审核中
-            }
-            $this->assign('data', $data);
-            $this->assign('applyUserDetails', $applyUserDetails);
-        }
+        $user_apply_id = I('get.id');
+        $where['user_apply_id'] = $user_apply_id;
+        $get_info = D('User', 'Service')->getApplyUserInfo($where);
+        $data['info'] = $get_info['data'];
+        $this->assign('data', $data);
         $this->display();
     }
 
@@ -1165,29 +1073,16 @@ class UserController extends SystemController
     public function auditTransfer() {
         if(IS_POST){
             $post = I('post.');
-            $post['system_user_id'] = $this->system_user_id;
             $reflag = D("User","Service")->auditTransfer($post);
             //返回数据操作状态
-            if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg'],U('System/User/auditList'));
+            if ($reflag['code'] == 0) $this->ajaxReturn(0, $reflag['msg'], U('System/User/auditList'));
             else  $this->ajaxReturn(1, $reflag['msg']);
         }
-        $apply['zl_user_apply.user_apply_id'] = I("get.id");
-        $auditDetails = D("User","Service")->getAuditUserDetails($apply);
-        if (!empty($auditDetails)) {
-            $PHONE_CODE_KEY = C('PHONE_CODE_KEY');
-            $auditDetails[0]['username'] = decryptPhone($auditDetails[0]['username'],$PHONE_CODE_KEY);
-            $auditDetails[0]['introducermobile'] = decryptPhone($auditDetails[0]['introducermobile'],$PHONE_CODE_KEY);
-            $infoquality = C("USER_INFOQUALITY");
-            $key = $auditDetails[0]['infoquality'];
-            $auditDetails[0]['infoquality'] = $infoquality[$key];
-        }
-        if ($auditDetails[0]['to_system_user_id'] != 0) {
-            $systemUser = D("SystemUser","Service")->getSystemUserInfo(array('system_user_id'=>$auditDetails[0]['to_system_user_id']));
-            $auditDetails[0]['to_system_user'] = $systemUser['data']['realname'];
-        }else{
-            $auditDetails[0]['to_system_user'] = $auditDetails[0]['apply_realname'];
-        }
-        $this->assign('auditDetails', $auditDetails);
+        $user_apply_id = I("get.id");
+        $where['user_apply_id'] = $user_apply_id;
+        $get_info = D('User', 'Service')->getApplyUserInfo($where);
+        $data['info'] = $get_info['data'];
+        $this->assign('data', $data);
         $this->display();
 
     }
@@ -1200,26 +1095,25 @@ class UserController extends SystemController
    | @author zgt
    */
     public  function  auditList() {
-        $request = $where = I('get.');
+        $request = $_where = I('get.');
         $re_page = isset($request['page']) ? $request['page'] : 1;
-        unset($where['page']);
+        unset($_where['page']);
         //时间格式转化
-        if (!empty($where['applytime'])) {
-            $_time = explode('@', str_replace('/', '-', $where['applytime']));
-            $where['applytime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59'))), 'AND');
+        if (!empty($request['applytime'])) {
+            $_time = explode('@', str_replace('/', '-', $request['applytime']));
+            $_where['applytime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59'))), 'AND');
         }
-        $where['zone_id'] = $this->system_user['zone_id'];
-        $where['admin_system_user_id'] = $this->system_user_id;
+        $_where['zone_id'] = $this->system_user['zone_id'];
+        $_where['admin_system_user_id'] = $this->system_user_id;
+        //获取列表数据
+        $_where['page'] = (($re_page - 1) * 30) . ',30';
+        $auditList = D('User', 'Service')->getApplyUserList($_where);
+        $data['auditList'] = $auditList['data']['data'];
+        //加载分页类
+        $data['paging_div'] = $this->Paging($re_page, 30, $auditList['data']['count'], $request);
         //获取区域下员工
         $data['systemList'] = D('SystemUser', 'Service')->getSystemUsersList(array('zone_id' => $this->system_user['zone_id'],'order'=>'sign asc'));
         $data['systemList'] = $data['systemList']['data']['data'];
-        //获取列表数据
-        $_where = $request;
-        $_where['page'] = (($re_page - 1) * 15) . ',15';
-        $auditList = D('User', 'Service')->getApplyUserList($_where);
-        $data['auditList'] = $auditList['data']['data'];print_r($data['auditList']);
-        //加载分页类
-        $data['paging_div'] = $this->Paging($re_page, 15, $auditList['data']['count'], $request);
         $data['request'] = $request;
         $this->assign('data', $data);
         $this->display();

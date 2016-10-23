@@ -10,13 +10,12 @@ $(function(){
 	//自定义日期
 	$('.afTime').glDatePicker({onClick:function(el, cell, date, data) {
 		el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
-		if(el.hasClass("end")){
+		if(el.hasClass("endTiem")){
 			var start_time=el.parents(".timeBox").find(".start").val();
 			var start_name=el.parents(".timeBox").find(".start").attr("name");
 			var end_time=el.val();
 			var end_name=el.attr("name");
-
-			location.href=el.attr('data-url')+'?dateStart='+start_time+'&dateEnd='+end_time;
+			location.href=el.attr('data-url')+start_time+'@'+end_time;
 		}
 	}});
 	
