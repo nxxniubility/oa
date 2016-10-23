@@ -67,7 +67,7 @@
 									<select name="system_sele" >
 										<option value="{:U(\'System/User/auditList\').'?'.http_build_query($request3)}&system_user_id=0" {:$data['request']['system_user_id']==0?'selected="selected"':''}>--全部所属人--</option>
 										<foreach name="data['systemList']" item="v" key="k">
-											<option value="{:U(\'System/User/auditList\').'?'.http_build_query($request3)}&system_user_id={$v.system_user_id}" {:$data['request']['system_user_id']==$v['system_user_id']?'selected="selected"':''}>{$v.realname}</option>
+											<option value="{:U(\'System/User/auditList\').'?'.http_build_query($request3)}&system_user_id={$v.system_user_id}" {:$data['request']['system_user_id']==$v['system_user_id']?'selected="selected"':''}>{$v.sign}-{$v.realname}</option>
 										</foreach>
 									</select>
 								</div>
@@ -87,6 +87,7 @@
 							</div>
 						</div>
 					</div>
+					<p class="viTips">鼠标左键双击客户信息打开对应的客户详情</p>
 					<div class="atList" id="atListBox">
 						<dl class="setTit clearfix">
 							<dt class="wOne">选中</dt>
@@ -103,32 +104,34 @@
 							<dt class="wEig mwT">审核状态</dt>
 							<dt class="wEle">操作</dt>
 						</dl>
-						<foreach name="data['auditList']['data']" item="v" key="k">
+						<foreach name="data['auditList']" item="v" key="k">
 						<dl class="clearfix">
 							<dd class="wOne"><input type="checkbox" class="atInpCheck"></dd>
 							<dt class="wTwo">{$v.realname}</dt>
-							<dt class="wThr">{:decryptPhone($v['username'],C('PHONE_CODE_KEY'))}</dt>
+							<dt class="wThr">{$v.username}</dt>
 							<dt class="wEig mwO">{$v.qq}</dt>
 							<dt class="wFiv mwS">{$v.tel}</dt>
-							<dt class="wEig mwT">{:$data['USER_INFOQUALITY'][$v['infoquality']]}</dt>
-							<dt class="wSev mwO">{$v.affiliation_channelname}</dt>
-							<dt class="wSev mwO">{$v.apply_channelname}</dt>
+							<dt class="wEig mwT">{$v.infoquality_name}</dt>
+							<dt class="wSev mwO">{$v.affiliation_channel_names}</dt>
+							<dt class="wSev mwO">{$v.channel_names}</dt>
 							<dt class="wEig mwT">{$v.affiliation_realname}</dt>
-							<dt class="wEig mwT">{$v.apply_realname}</dt>
-							<dt class="wThr" style="width: 127px;">{:date('Y-m-d H:i:s', $v['applytime'])}</dt>
-							<dt class="wEig mwT">{:$v['applystatus']==10?'待审核':($v['applystatus']==20?'不通过':'通过')}</dt>
-							<if condition="$v['applystatus'] neq 10">
-								<dd class="wEle"><a href="{:U('System/User/applyDetails',array('id'=>$v['user_apply_id']))}">查看</a></dd>
-							<else/>
-								<dd class="wEle"><a href="{:U('System/User/auditTransfer',array('id'=>$v['user_apply_id']))}">审核</a></dd>
-							</if>
-							<a  href="{:U('System/User/detailUser', array('id'=>$v['user_id'],'auditList'=>'1'))}"  class="detailLink" target="_blank">详情</a>
+							<dt class="wEig mwT">{$v.system_realname}</dt>
+							<dt class="wThr" style="width: 127px;">{$v.apply_time}</dt>
+							<dt class="wEig mwT">{$v.status_name}</dt>
+							<dd class="wEle">
+								<if condition="$v['status'] eq 10">
+									<a href="{:U('System/User/auditTransfer',array('id'=>$v['user_apply_id']) )}">审核</a>
+									<else/>
+									<a href="{:U('applyDetails',array('id'=>$v['user_apply_id']))}">查看</a>
+								</if>
+							</dd>
+							<a  href="{:U('detailUser',array('id'=>$v['user_id'],'auditList'=>'1'))}"  class="hrefDetail dn" target="_blank">详情</a>
 						</dl>
 						</foreach>
 					</div>
 
 					<div class="collegaPage">
-						{$data['paging']}
+						{$data['paging_div']}
 					</div>
 				</div>
 			</div>

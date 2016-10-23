@@ -88,43 +88,43 @@
 						</dl>
 
 
-						<foreach name="applyList" item="apply_item"  >
+						<foreach name="data['applyList']" item="v"  >
 
 							<dl class="content_li clearfix">
 								<dd class="wOne">
-									<input type="checkbox"  name="feCheck" class="atInpCheck" value="{$apply_item.user_apply_id}" autocomplete="off">
+									<input type="checkbox"  name="feCheck" class="atInpCheck" value="{$v.user_apply_id}" autocomplete="off">
 								</dd>
 								<dd class="wTwo" isShow="true">
-									<a href="javascript:;">{$apply_item.realname}</a>
+									<a href="javascript:;">{$v.realname}</a>
 								</dd>
 								<dd class="wThr">
-									<a href="javascript:;">{$apply_item.username}</a>
+									<a href="javascript:;">{$v.username}</a>
 								</dd>
 								<dd class="wFou">
-									<a href="javascript:;">{$apply_item.qq}</a>
+									<a href="javascript:;">{$v.qq}</a>
 								</dd>
 								<dd class="wFiv">
-									<a href="javascript:;">{$apply_item.tel}</a>
+									<a href="javascript:;">{$v.tel}</a>
 								</dd>
 								<dd class="wSix">
-									<a href="javascript:;">{$apply_item.infoquality}</a>
+									<a href="javascript:;">{$v.infoquality_name}</a>
 								</dd>
 								<dd class="wSev">
-									<a href="javascript:;">{$apply_item.affiliation_channelname}</a>
+									<a href="javascript:;">{$v.affiliation_channel_names}</a>
 								</dd>
 								<dd class="wEig">
-									<a href="javascript:;">{$apply_item.affiliation_realname}</a>
+									<a href="javascript:;">{$v.affiliation_realname}</a>
 								</dd>
 								<dd class="wNin">
-									<a href="javascript:;">{$apply_item.applytime|date='Y-m-d H:i:s',###}</a>
+									<a href="javascript:;">{$v.apply_time}</a>
 								</dd>
 								<dd class="wTen">
-									<a href="javascript:;">{$apply_item.status2}</a>
+									<a href="javascript:;">{$v.status_name}</a>
 								</dd>
 								<dd class="wEle">
-									<a href="{:U('applyDetails',array('id'=>$apply_item['user_apply_id']))}">{$apply_item.operate}</a>
+									<a href="{:U('applyDetails',array('id'=>$v['user_apply_id']))}">查看</a>
 								</dd>
-								<a  href="{:U('applyDetails',array('id'=>$apply_item['user_apply_id']))}"  class="hrefDetail dn" target="_blank">详情</a>
+								<a  href="{:U('applyDetails',array('id'=>$v['user_apply_id']))}"  class="hrefDetail dn" target="_blank">详情</a>
 							</dl>
 						</foreach>
 					</div>
@@ -142,7 +142,7 @@
 								</label>
 								<input type="button" class="delInp feAssignment" value="删除所选">
 							</div>
-							{$paging}
+							{$data['paging_div']}
 						</div>
 					</dl>
 				</div>

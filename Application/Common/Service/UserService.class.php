@@ -1004,7 +1004,6 @@ class UserService extends BaseService
         return array('code'=>100,'msg'=>'操作失败');
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | 申请转入客户
@@ -1048,6 +1047,133 @@ class UserService extends BaseService
         }else{
             return array('code'=>$reflag['code'],'msg'=>$reflag['msg']);
         }
+    }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 申请转入客户
+   |--------------------------------------------------------------------------
+   | user_id:客户 system_user_id:申请人 channel_id：请选择渠道 applyreason：申请理由不能为空 infoquality：信息质量
+   | @author zgt
+   */
+    public function getApplyUserList($data)
+    {
+        $data = array_filter($data);
+        $data = $this->_applyUserWhere($data);
+        $page = !empty($data['page'])?$data['page']:'0,30';
+        $join = 'RIGHT JOIN __USER__ A ON A.user_id=__USER_APPLY__.user_id';
+        $field = "A.realname,A.username,A.qq,A.tel,A.user_id,
+                {$this->DB_PREFIX}user_apply.user_apply_id,
+                {$this->DB_PREFIX}user_apply.infoquality,
+                {$this->DB_PREFIX}user_apply.system_user_id,
+                {$this->DB_PREFIX}user_apply.channel_id,
+                {$this->DB_PREFIX}user_apply.searchword,
+                {$this->DB_PREFIX}user_apply.interviewurl,
+                {$this->DB_PREFIX}user_apply.introducermobile,
+                {$this->DB_PREFIX}user_apply.applyreason,
+                {$this->DB_PREFIX}user_apply.applytime,
+                {$this->DB_PREFIX}user_apply.auditor_system_user_id,
+                {$this->DB_PREFIX}user_apply.auditorreason,
+                {$this->DB_PREFIX}user_apply.auditortime,
+                {$this->DB_PREFIX}user_apply.remark,
+                {$this->DB_PREFIX}user_apply.status,
+                {$this->DB_PREFIX}user_apply.affiliation_system_user_id,
+                {$this->DB_PREFIX}user_apply.affiliation_channel_id,
+                {$this->DB_PREFIX}user_apply.to_system_user_id";
+        $result['data'] = D('UserApply')->getList($data, $field, null, $page, $join);
+        $result['count'] = D('UserApply')->getCount($data, $join);
+        if(!empty($result['data'])){
+            $result['data'] = $this->_applyUserStatus($result['data']);
+        }
+        return array('code'=>0, 'data'=>$result);
+    }
+
+    /**
+     * 申请转入列表 条件处理
+     * @param $where
+     */
+    protected function _applyUserWhere($where)
+    {
+        foreach($where as $k=>$v){
+            if($k=='admin_system_user_id'){
+//                $where["{$this->DB_PREFIX}user_apply.".$k] = $v;
+            }if($k=='zone_id'){
+                //限制区域级别
+                $zoneIds = D('Zone', 'Service')->getZoneIds($this->system_user['zone_id']);
+                foreach ($zoneIds['data'] as $key => $value) {
+                    $zidString[] = $value['zone_id'];
+                }
+                $where['A.zone_id'] = array("IN", $zidString);
+            }elseif($k!=='page'){
+                $where["{$this->DB_PREFIX}user_apply.".$k] = $v;
+            }
+            unset($where[$k]);
+        }
+        return $where;
+    }
+
+    /**
+    * 申请转入列表 状态处理
+    */
+    protected function _applyUserStatus($array=null)
+    {
+        //客户审核状态
+        $user_status = C('FIELD_STATUS.USER_APPLY_STATUS');
+        //信息质量
+        $user_infoquality = C('FIELD_STATUS.USER_INFOQUALITY');
+        foreach($array as $k=>$v){
+            $array[$k]['system_realname'] = '';
+            $array[$k]['auditor_realname'] = '';
+            $array[$k]['affiliation_realname'] = '';
+            $array[$k]['last_realname'] = '';
+            $array[$k]['channel_names'] = '';
+            $array[$k]['affiliation_channel_names'] = '';
+            if(!empty($v['system_user_id'])){
+                $systemUser = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v['system_user_id']));
+                $array[$k]['system_realname'] = $systemUser['data']['realname'];
+            }
+            if(!empty($v['auditor_system_user_id'])){
+                $updateUser = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v['auditor_system_user_id']));
+                $array[$k]['auditor_realname'] = $updateUser['data']['realname'];
+            }
+            if(!empty($v['affiliation_system_user_id'])){
+                $updateUser = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v['affiliation_system_user_id']));
+                $array[$k]['affiliation_realname'] = $updateUser['data']['realname'];
+            }
+            if(!empty($v['to_system_user_id'])){
+                $createUser = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v['to_system_user_id']));
+                $array[$k]['last_realname'] = $createUser['data']['realname'];
+            }
+            if(!empty($v['channel_id'])){
+                $channel = D('Channel','Service')->getChannelInfo(array('channel_id'=>$v['channel_id']));
+//                if($channel['data']['pid']!=0){
+//                    $channel_parent = D('Channel','Service')->getChannelInfo(array('channel_id'=>$channel['data']['pid']));
+//                    $array[$k]['channel_names'] = $channel_parent['data']['channelname'].'-'.$channel['data']['channelname'];
+//                }else{
+                    $array[$k]['channel_names'] = $channel['data']['channelname'];
+//                }
+            }
+            if(!empty($v['affiliation_channel_id'])){
+                $channel = D('Channel','Service')->getChannelInfo(array('channel_id'=>$v['affiliation_channel_id']));
+//                if($channel['data']['pid']!=0){
+//                    $channel_parent = D('Channel','Service')->getChannelInfo(array('channel_id'=>$channel['data']['pid']));
+//                    $array[$k]['affiliation_channel_names'] = $channel_parent['data']['channelname'].'-'.$channel['data']['channelname'];
+//                }else{
+                    $array[$k]['affiliation_channel_names'] = $channel['data']['channelname'];
+//                }
+            }
+            if(!empty($v['applytime']) && $v['applytime']!=0)$array[$k]['apply_time'] = date('Y-m-d H:i:s', $v['applytime']);
+            if(!empty($v['auditortime']) && $v['auditortime']!=0)$array[$k]['auditor_time'] = date('Y-m-d H:i:s', $v['auditortime']);
+            if(!empty($v['status']) && $v['status']!=0)$array[$k]['status_name'] = $user_status[$v['status']];
+            if(!empty($v['infoquality']) && $v['infoquality']!=0){
+                $array[$k]['infoquality_name'] = $user_infoquality[$v['infoquality']];
+            }elseif($v['infoquality']==0){
+                $array[$k]['infoquality_name'] = 'D';
+            }
+            if(!empty($v['username']))$array[$k]['username'] = decryptPhone($v['username'], C('PHONE_CODE_KEY'));
+
+        }
+        return $array;
     }
 
     /*
