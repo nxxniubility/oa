@@ -73,3 +73,6 @@
 .atList .mwT{min-width:68px;}
 .atList .mwS{min-width:110px;}
 #atListBox { position: relative;}
+
+/*1023*/
+.audit-tip {margin-bottom:6px;font-size:12px;color:#ff0000;}
