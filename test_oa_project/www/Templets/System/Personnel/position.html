@@ -153,8 +153,8 @@
                 var access='';
                 alert($('.radio:checked').length);return false;
                 if($('.radio:checked').length>0){
+                    var Obj = null;
                     for(var i=0;i<$('.radio:checked').length;i++){
-                        var Obj = null;
                         Obj = $('.radio:checked').eq(i);
                         if(i==0){
                             access+=Obj.val()+'-'+Obj.attr('pid')+'-'+Obj.attr('level');
