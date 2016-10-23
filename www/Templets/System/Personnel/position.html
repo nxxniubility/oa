@@ -79,63 +79,6 @@
         		</tr>
         	</foreach>
         </table>
-        <!--<div class="rightsMiddle">
-            <dl class="regionTit  clearfix">
-                <dt class="wOne regionSequence clearfix">
-                    <span>排序</span>
-                    <i class="oergList" onclick="location.href='{$data[\'url_sort\']}'"></i>
-                </dt>
-                <dt class="wTwo regionSequence clearfix">
-                    <span>ID</span>
-                    <i class="oergList" onclick="location.href='{$data[\'url_id\']}'"></i>
-                </dt>
-                <dt class="wThr">职位名称</dt>
-                <dt class="wFou">所属部门</dt>
-                <dt class="wFiv">职位描述</dt>
-                <dt class="wSix">状态</dt>
-                <dt class="wSev">操作</dt>
-            </dl>
-            <foreach  name="data['roleAll']['data']" item="v" key="k">
-                <dl class="clearfix">
-                    <dd class="wOne regionSequence clearfix">
-                        <input type="tel" class="sequenceInp" value="{$v.sort}" oldSort="{$v.sort}"  data-id="{$v.id}" placeholder="0" maxlength="4" autocomplete="off">
-                    </dd>
-                    <dd class="wTwo regionSequence clearfix role_id">{$v.id}</dd>
-                    <dd class="wThr">{$v.name}&nbsp;</dd>
-                    <dd class="wFou">{$v.departmentname}&nbsp;</dd>
-                    <dd class="wFiv">{$v.remark}&nbsp;</dd>
-                    <dd class="wSix"><?php echo $v['display']==1?'启用':'禁用'; ?></dd>
-                    <dd class="wSev">
-                        <a href="javascript:;" class="rightsSelect"><i></i></a>
-                        <div class="otherOperation">
-                            <div class="triangle"></div>
-                            <div class="otherIcon">
-                                <ul>
-                                    <li>
-                                        <a href="javascript:;" class="selectPermissions" sid="{$v.id}">
-                                            <span class="set"></span>
-                                            <em>权限设置</em>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<?php echo $data['url_editPosition'].'?role_id='.$v['id'] ?>">
-                                            <span class="modify"></span>
-                                            <em>修改</em>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:del_position('{$v.id}');">
-                                            <span class="delete"></span>
-                                            <em>删除</em>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </dd>
-                </dl>
-            </foreach>
-        </div>-->
 
         <div class="collegaPage">
             <a class="sort"  id="sort" href="javascript:void(0)">排序</a>
@@ -219,7 +162,7 @@
                         }
                     }
                 }
-                edit_access(role_id,access);
+//                edit_access(role_id,access);
             }
         })
     })
