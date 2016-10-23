@@ -22,10 +22,13 @@
 .addRowRight .addInp:focus, .addRowRight .addSelect:focus, .addRowRight .addTxt:focus { border-color: #53b567;}
 .submitBtn { display: inline-block; width: 100px; height: 30px; line-height: 30px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
 
-.detailTongji { width: 985px;}
+/*.detailTongji { width: 985px;}*/
 
 /*0908*/
 .wrapBox#proInfoWrap .proCont {width:auto;}
 
-
+/*1023*/
+/*1023*/
+.wrapBox#proInfoWrap .proCont {margin-bottom:0;}
+.wrapBox#proInfoWrap .proCont .submitBtn {margin-bottom:40px;}
 
