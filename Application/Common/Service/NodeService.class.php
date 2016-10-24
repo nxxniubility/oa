@@ -181,17 +181,17 @@ class NodeService extends BaseService
     |--------------------------------------------------------------------------
     | @author nxx
     */
-    public function subNodes($nodes, $role_id)
+    public function subNodes($nodes)
     {
         if(empty($nodes)){
-                $this->ajaxReturn(301, '没有选择节点');
+                return array('code'=>301, 'msg'=>'没有选择节点');
             }
             $nodes = explode(',', $nodes);
             $system_user_id = $this->system_user_id;
             D('DefineNodes')->where("system_user_id = $system_user_id")->delete();
             foreach ($nodes as $k => $v) {
                 if (!empty($v)) {
-                    $data = array('system_user_id'=>$system_user_id, 'role_id'=>$role_id, 'node_id'=>$v, 'sort'=>$k);
+                    $data = array('system_user_id'=>$system_user_id, 'node_id'=>$v, 'sort'=>$k);
                     $result = D('DefineNodes')->addData($data);
                     if ($result['code'] != 0) {
                         session('default_nodes', null);
@@ -209,7 +209,7 @@ class NodeService extends BaseService
     获取自身的自定义节点
     nxx
     */
-    public function getUserInfoNodes()
+    protected function _getUserInfoNodes()
     {
         $userDefaultNodes = D('SystemUser', 'Service')->getUserDefaultNodes();
         if (empty($userDefaultNodes['data'])) {
@@ -224,6 +224,38 @@ class NodeService extends BaseService
             }
         }
         return array('code'=>0, 'data'=>$userDefaultNodes['data']);
+    }
+
+    /*拼接自定义快捷栏数据*/
+    public function getNodesData()
+    {
+        //自定义导航class
+        $navClass = array('0' => 'sbOne', '1' => 'sbTwo', '2' => 'sbThr', '3' => 'sbFou', '4' => 'sbFiv', '5' => 'sbSix', '6' => 'sbSev', '7' => 'sbEig');
+        $userDefaultNodes = $this->_getUserDefineNodes();
+        foreach ($userDefaultNodes as $k => $v) {
+            $in_array[] = $v['node_id'];
+            $nodeData = D('Node', 'Service')->getNodeParentInfo(array('id'=>$v['node_id']));
+            $url = U('System/' . $nodeData['data']['name'] . '/' . $v['name']);
+            $userDefaultNodes[$k]['url'] = $url;
+        }
+        $data['navClass'] = $navClass;
+        $data['userDefaultNodes'] = $userDefaultNodes;
+        return array('code'=>0, 'data'=>$data);
+    }
+
+    /*
+    *获取用户自定义的节点;
+    * @author  nxx
+    */
+    protected function  _getUserDefineNodes()
+    {
+        if (session('default_nodes')) {
+            $result['data'] = session('default_nodes');
+        } else {
+            $result = $this->_getUserInfoNodes();
+            session('default_nodes', $result['data']);
+        }
+        return $result['data'];
     }
 
 }

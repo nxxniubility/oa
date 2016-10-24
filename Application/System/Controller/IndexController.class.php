@@ -277,51 +277,28 @@ class IndexController extends SystemController
      */
     public function  main()
     {
-        $system_user_info = D("SystemUser", 'Service')->getSystemUserInfo(array('system_user_id'=>$this->system_user_id));
-        $role_id = $system_user_info['role_id'];
         if (IS_POST) {
             //获得提交的自定义节点
             $nodes = I('post.nodes');
-            $result = D("Node", 'Service')->subNodes($nodes, $role_id);
+            $result = D("Node", 'Service')->subNodes($nodes);
             if ($result['code'] != 0) {
                 $this->ajaxReturn($result['code'], $result['msg']);
             }
             $this->ajaxReturn(0, '添加成功', U('System/Index/main'));
         }
-        //自定义导航class
-        $navClass = array('0' => 'sbOne', '1' => 'sbTwo', '2' => 'sbThr', '3' => 'sbFou', '4' => 'sbFiv', '5' => 'sbSix', '6' => 'sbSev', '7' => 'sbEig');
-        $userDefaultNodes = $this->_getUserDefineNodes();
-        foreach ($userDefaultNodes as $k => $v) {
-            $in_array[] = $v['node_id'];
-            $nodeData = D('Node', 'Service')->getNodeParentInfo(array('id'=>$v['node_id']));
-            $url = U('System/' . $nodeData['data']['name'] . '/' . $v['name']);
-            $userDefaultNodes[$k]['url'] = $url;
-        }
+        
+        $result = D('Node', 'Service')->getNodesData();
         $siderbar = session('sidebar');
         $sysUpdateData = session('sysUpdateData');
         $this->assign('sysUpdateData', $sysUpdateData);
-        $this->assign('navClass', $navClass);
+        $this->assign('navClass', $result['data']['navClass']);
         $this->assign('in_array', $in_array);
-        $this->assign('default_nodes', $userDefaultNodes);
+        $this->assign('default_nodes', $result['data']['userDefaultNodes']);
         $this->assign('siderbar', $siderbar);
-        $this->assign('system_user_role_id', $role_id);
         $this->display();
     }
 
-    /*
-    *获取用户自定义的节点;
-    * @author  cq
-    */
-    protected function  _getUserDefineNodes()
-    {
-        if (session('default_nodes')) {
-            $result['data'] = session('default_nodes');
-        } else {
-            $result = D('Node', 'Service')->getUserInfoNodes();
-            session('default_nodes', $result['data']);
-        }
-        return $result['data'];
-    }
+    
 
     /**
      * 更新系统记录
@@ -335,7 +312,7 @@ class IndexController extends SystemController
             if ($flag['code']==0) {
                 $this->ajaxReturn(0, '删除成功', U('System/Index/updateRecord'));
             } else {
-                $this->ajaxReturn(1, $flag['msg']);
+                $this->ajaxReturn($flag['code'], $flag['msg']);
             }
         }
         $re_page = I('get.page', 1);
