@@ -338,14 +338,16 @@ class PersonnelController extends SystemController {
             }else if( isset($type) && $type=='access' ){
                 $access = I('post.access',null);
                 if(empty($role_id)) $this->ajaxReturn(1, '职位ID不能为空', '', 'role_id');
-                //权限内容处理
-                $access = explode(',', $access);
-                $access_new = array();
-                foreach($access as $v){
-                    $v = explode('-', $v);
-                    $access_new[] = array('node_id'=>$v[0], 'pid'=>$v[1], 'level'=>$v[2]);
+                if(!empty($access)){
+                    //权限内容处理
+                    $access = explode(',', $access);
+                    $access_new = array();
+                    foreach($access as $v){
+                        $v = explode('-', $v);
+                        $access_new[] = array('node_id'=>$v[0], 'pid'=>$v[1], 'level'=>$v[2]);
+                    }
+                    $request['access'] = $access_new;
                 }
-                $request['access'] = $access_new;
                 $request['role_id'] = $role_id;
                 $result = D('Role','Service')->editRole($request);
                 //权限修改

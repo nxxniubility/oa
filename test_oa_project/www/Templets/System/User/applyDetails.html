@@ -125,7 +125,6 @@
 										</div>
 										<div class="wrBox2Cont">
 											<div class="wrReason">
-												<p>申请理由：</p>
 												<p>{$data.info.applyreason|htmlspecialchars_decode}</p>
 											</div>
 										</div>
@@ -155,11 +154,8 @@
 										<div class="wrBox2Cont">
 											<div class="wrReason">
 												<if condition = "($data['info']['status'] neq 10)">
-													<p>审核原因：</p>
 													<if condition="!empty($data['info']['auditorreason'])">
 														<p>{$data.info.auditorreason|htmlspecialchars_decode}</p>
-														<else/>
-														<p>无</p>
 													</if>
 												<else/>
 													您的申請正在急速审核中,请耐心等待！

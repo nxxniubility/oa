@@ -232,8 +232,6 @@ class ZoneService extends BaseService
         $zoneAllList = D('Zone')->where("status=1")->select();
         F('Cache/zone', $zoneAllList);
         return $backInfo;
-
-
     }
 
 }
