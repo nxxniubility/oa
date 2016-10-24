@@ -127,7 +127,7 @@
                     uploadProgress: function(event, position, total, percentComplete) {
                         if(percentComplete>96){
                             percentComplete=96;
-                        }
+                        };
                         var percentVal = percentComplete + '%';
                         bar.width(percentVal);
                         barVal.html(percentVal);
@@ -143,6 +143,8 @@
                         layer.closeAll();
                     },
                     error: function(){
+                        var re_url = upload_url+'/'+reBucket+reName;
+                        alert(re_url);
                         barValName.html('');
                         barVal.html('0%');
                         bar.css('width','0%');
