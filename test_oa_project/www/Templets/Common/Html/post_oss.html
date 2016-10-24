@@ -43,7 +43,7 @@
     </div>
 </div>
 
-
+<iframe name="uploadIframeName" style="display:none;"></iframe>
 <script type="text/javascript" src="__PUBLIC__/js/jquery.form.js"></script>
 <script>
     $("#fileupload").change(function(){
@@ -51,13 +51,13 @@
         var barVal = $('#upload_planbody .file_loading_plan');//上传进度文字提示
         var barValName = $('#upload_planbody .file_loading_planame');//上传进度文件名字
         var fileObj = $(this);//input
-        var fileinfo = document.getElementsByName("fileupload").files[0];//文件信息
-        var temp_str = fileinfo.name.split('.');
+        var fileinfo = $("#fileupload").val();//文件信息
+        var temp_str = fileinfo.split('.');
         var al = temp_str.length-1;
         var new_fileinfo = temp_str[al];
 
         //显示上传进度条
-        barValName.html(fileinfo.name);
+        barValName.html(fileinfo);
         barVal.html('0%');
         bar.css('width','0%');
         layer.open({
@@ -82,7 +82,7 @@
             url:"/SystemApi/Config/getAliOss",
             dataType:'json',
             type:'post',
-            data:{bid:'1', name:fileinfo.name},
+            data:{bid:'1', name:fileinfo},
             success:function(data){
                 var upload_url = data.data.host;//表单提交地址 --上传只阿里云
                 var fileType = fileObj.attr('mtype');//文件格式限制
@@ -92,7 +92,7 @@
                 var reKeyId = data.data.keyid;
                 var reSignature = data.data.signature;
                 if($("#upload-form").length==0){
-                    fileObj.wrap('<form id="upload-form" action="'+upload_url+'" method="POST" enctype="multipart/form-data"></form>');
+                    fileObj.wrap('<form target="uploadIframeName" id="upload-form" action="'+upload_url+'" method="POST" enctype="multipart/form-data"></form>');
                 }
                 var upload_form = $("#upload-form");//表单id
                 //类型判断
