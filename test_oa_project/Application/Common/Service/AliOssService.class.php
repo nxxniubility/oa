@@ -40,14 +40,11 @@ class AliOssService extends BaseService
         return array('code'=>'0', 'data'=>$policy);
     }
 
-    public function policy($filename, $filebucket, $filesize='1048576000')
+    protected function policy($filename, $filebucket, $filesize='1048576000')
     {
         $ossid = C('ALIOSS_CONFIG.OSS_ACCESS_ID');
         $osskey = C('ALIOSS_CONFIG.OSS_ACCESS_KEY');
         $osshost = C('ALIOSS_CONFIG.OSS_DOMAIN');
-        //http://edu-app.oss-cn-shenzhen.aliyuncs.com
-        //$callback_body = '{"callbackUrl":"http://oss-demo.aliyuncs.com:23450","callbackHost":"oss-demo.aliyuncs.com","callbackBody":"filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}","callbackBodyType":"application/x-www-form-urlencoded"}';
-        //$base64_callback_body = base64_encode($callback_body);
         $now = time();
         $expire = 30; //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问
         $end = $now + $expire;
@@ -84,7 +81,7 @@ class AliOssService extends BaseService
         return $response;
     }
 
-    public function gmt_iso8601($time) {
+    protected function gmt_iso8601($time) {
         $dtStr = date("c", $time);
         //$mydatetime = new DateTime($dtStr);
         //$expiration = $mydatetime->format(DateTime::ISO8601);
