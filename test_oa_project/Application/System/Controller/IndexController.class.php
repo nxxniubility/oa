@@ -289,10 +289,12 @@ class IndexController extends SystemController
         
         $result = D('Node', 'Service')->getNodesData();
         $siderbar = session('sidebar');
-        $sysUpdateData = session('sysUpdateData');
-        $this->assign('sysUpdateData', $sysUpdateData);
+        //获取系统更新
+        $where_systemUpdate['page'] = '1,30';
+        $sysUpdateData = D('SystemUpdate', 'Service')->getSystemUpdateList($where_systemUpdate);
+        $data['systemUpdateList'] = $sysUpdateData['data'];
+        $this->assign('data', $data);
         $this->assign('navClass', $result['data']['navClass']);
-        $this->assign('in_array', $in_array);
         $this->assign('default_nodes', $result['data']['userDefaultNodes']);
         $this->assign('siderbar', $siderbar);
         $this->display();
