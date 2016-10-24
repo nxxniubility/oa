@@ -60,7 +60,7 @@
 									<div class="mcRowRight">
 										<div class="uploadBox" style="position: relative; height: 31px; margin-top: 70px;">
 											<span style="position: absolute;z-index: 1;">修改头像</span>
-											<input type="file" name="file" autocomplete="off" id="fileupload" class="imUploadBtn" value="修改头像">
+											<input type="file" name="file" autocomplete="off" id="fileupload" class="imUploadBtn" value="">
 											<input type="hidden" name="" id="img_src" class="faceImg">
 										</div>
 									</div>
@@ -202,7 +202,6 @@
 		<include file="Common@Html/post_oss"  />
 		<script type="text/javascript">
 			function upload_oss(url){
-				alert(url);
 				$('#faceImg').attr('src', url);
 				saveface(url);
 			};
