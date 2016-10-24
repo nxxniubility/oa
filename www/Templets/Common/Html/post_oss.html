@@ -1,0 +1,158 @@
+<style>
+    .alertwrap {
+        display: none;
+        padding: 20px;
+        width: auto;
+        color: #666;
+    }
+    .alertwrap .progressbar {
+        background: #eee none repeat scroll 0 0;
+        border-radius: 5px;
+        height: 15px;
+        line-height: 20px;
+        margin-top: 5px;
+    }
+    .alertwrap .progressbar .file_loading_planbg {
+        background: #46c37b none repeat scroll 0 0;
+        border-radius: 5px;
+        display: block;
+        height: 15px;
+        max-width: 100%;
+        width: 0;
+    }
+    #fileupload{
+        width: 90px;
+        height: 30px;
+        filter:alpha(opacity=0);  /* ie 有效*/
+        -moz-opacity:0; /* Firefox  有效*/
+        opacity: 0; /* 通用，其他浏览器  有效*/
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 2;
+        cursor:pointer;
+    }
+</style>
+
+
+<!--视频文件上传进度显示-->
+<div class="alertwrap" id="upload_planbody">
+    <span class="file_loading_planame"></span>（<span class="file_loading_plan">0%</span>）
+    <div class="progressbar">
+        <span class="file_loading_planbg" style="width:0%;"></span>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="__PUBLIC__/js/jquery.form.js"></script>
+<script>
+    $("#fileupload").change(function(){
+        var bar = $('#upload_planbody').find('.file_loading_planbg');//上传进度条显示
+        var barVal = $('#upload_planbody .file_loading_plan');//上传进度文字提示
+        var barValName = $('#upload_planbody .file_loading_planame');//上传进度文件名字
+        var fileObj = $(this);//input
+        var fileinfo = document.getElementById("fileupload").files[0];//文件信息
+        var temp_str = fileinfo.name.split('.');
+        var al = temp_str.length-1;
+        var new_fileinfo = temp_str[al];
+
+        //显示上传进度条
+        barValName.html(fileinfo.name);
+        barVal.html('0%');
+        bar.css('width','0%');
+        layer.open({
+            type:1,
+            title:'正在上传中...',
+            area:['450px','180px'],
+//            btn:['取消上传'],
+            closeBtn: 0,
+            content:$('#upload_planbody'),
+//            yes:function(upload){
+//                layer.confirm('您确定要取消正在上传的文件？', {
+//                    btn: ['确定','取消'] //按钮
+//                }, function(){
+//                    location.reload();
+//                    layer.close(upload);
+//                }, function(){});
+//            }
+        });
+
+        //获取后台签名
+        $.ajax({
+            url:"/SystemApi/Config/getAliOss",
+            dataType:'json',
+            type:'post',
+            data:{bid:'1', name:fileinfo.name},
+            success:function(data){
+                var upload_url = data.data.host;//表单提交地址 --上传只阿里云
+                var fileType = fileObj.attr('mtype');//文件格式限制
+                var reName = data.data.name;
+                var reBucket = data.data.dir;
+                var rePolicy = data.data.policy;
+                var reKeyId = data.data.keyid;
+                var reSignature = data.data.signature;
+                if($("#upload-form").length==0){
+                    fileObj.wrap('<form id="upload-form" action="'+upload_url+'" method="POST" enctype="multipart/form-data"></form>');
+                }
+                var upload_form = $("#upload-form");//表单id
+                //类型判断
+                if( fileType ){
+                    var istype = '';
+                    fileType = fileType.split('-');
+                    for(var i=0; i<fileType.length; i++){
+                        if( fileType[i]==new_fileinfo ){
+                            istype = 'yes';
+                        }
+                    }
+                    if( istype!='yes' ){
+                        fileObj.val('');
+                        layer.msg('上传文件格式有误！',{icon:2});
+                        return false;
+                    }
+                }
+                upload_form.prepend('<input class="temp_upload" type="hidden" name="key" value="'+reBucket+reName+'">');
+                upload_form.prepend('<input class="temp_upload" type="hidden" name="policy" value="'+rePolicy+'">');
+                upload_form.prepend('<input class="temp_upload" type="hidden" name="OSSAccessKeyId" value="'+reKeyId+'">');
+                upload_form.prepend('<input class="temp_upload" type="hidden" name="signature" value="'+reSignature+'">');
+                upload_form.prepend('<input class="temp_upload" type="hidden" name="success_action_status" value="200">');
+
+                //表单提交
+                upload_form.ajaxSubmit({
+                    dataType:  'json',
+                    beforeSend: function() {
+                        var percentVal = '0%';
+                        bar.width(percentVal);
+                        barVal.html(percentVal);
+                    },
+                    uploadProgress: function(event, position, total, percentComplete) {
+                        if(percentComplete>96){
+                            percentComplete=96;
+                        }
+                        var percentVal = percentComplete + '%';
+                        bar.width(percentVal);
+                        barVal.html(percentVal);
+                    },
+                    success: function() {
+                        bar.width('100%');
+                        barVal.html('100%');
+                        $('.temp_upload').remove();
+                        var re_url = upload_url+'/'+reBucket+reName;
+                        //-----成功处理--------
+                        upload_oss(re_url);
+                        //-------------
+                        layer.closeAll();
+                    },
+                    error: function(){
+                        barValName.html('');
+                        barVal.html('0%');
+                        bar.css('width','0%');
+                        fileObj.val('');
+                        layer.closeAll();
+                    }
+                },'json');
+            }
+        });
+
+    });
+
+</script>

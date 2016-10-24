@@ -58,9 +58,9 @@
 										</if>
 									</div>
 									<div class="mcRowRight">
-										<div class="uploadBox">
-											<span>修改头像</span>
-											<input type="button" id="uploadBtn" class="uploadBtn" value="修改头像">
+										<div class="uploadBox" style="position: relative; height: 31px; margin-top: 70px;">
+											<span style="position: absolute;z-index: 1;">修改头像</span>
+											<input type="file" name="file" autocomplete="off" id="fileupload" class="imUploadBtn" value="修改头像">
 											<input type="hidden" name="" id="img_src" class="faceImg">
 										</div>
 									</div>
@@ -195,13 +195,17 @@
 				</div>
 			</div>
 		</div>
-		
-		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-		<script src="__PUBLIC__/js/systemUserInfo_aliconfig.js"></script>
+
+		<script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script src="__PUBLIC__/js/common.js"></script>
-		<include  file="Common@Html/alioss" />
+		<include file="Common@Html/post_oss"  />
 		<script type="text/javascript">
+			function upload_oss(url){
+				alert(url);
+				$('#faceImg').attr('src', url);
+				saveface(url);
+			};
 			function saveface(url){
 	            var data = {
 	                face:url
@@ -209,8 +213,8 @@
 	            common_ajax(data,'','no',update);
 	            function update() {
 	            	$('#faceImg').attr('src',url);
-	            }
-			}
+	            };
+			};
 		</script>
 	</body>
 </html>

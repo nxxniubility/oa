@@ -43,8 +43,8 @@
                     <div class="selectbox l">
                         <dl class="select">
                             <dt>
-                            <div class="select_title l">选择所属终端分类:</div>
-                            <div class="arrow r"></div>
+                                <div class="select_title l">选择所属终端分类:</div>
+                                <div class="arrow r"></div>
                             </dt>
                             <foreach name="data['terminalAll']" item="v" key="k" >
                                 <dd class="fxDone terminal_{$v.terminal_id}" onclick="pagestype('{$v.terminal_id}');" data-value="{$v.terminal_id}">{$v.terminalname}</dd>
@@ -97,10 +97,9 @@
             <div class="addRow clearfix">
                 <div class="addRowLeft l"><i>*</i>预览图:</div>
                 <div class="addRowRight l">
-                    <div class="imUploadBox">
-                        <span>上传图片</span>
-                        <span  id="uploadLabel">上传图片</span>
-                        <input type="button" class="imUploadBtn"  id="imUploadBtn" >
+                    <div class="imUploadBox" style="position: relative;">
+                        <span  id="uploadLabel" style="position: absolute;z-index: 1;">上传图片</span>
+                        <input id="fileupload" class="imUploadBtn" type="file" name="file" autocomplete="off">
                         <input type="hidden"  name="image"  autocomplete="off">
                     </div>
                 </div>
@@ -189,9 +188,8 @@
 <script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
 <script src="__PUBLIC__/js/jquery.lib.min.js"></script>
 <script src="__PUBLIC__/js/templateList.js"></script>
-<script src="__PUBLIC__/js/addPagesAliconfig.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
-<include file="Common@Html/alioss"  />
+<include file="Common@Html/post_oss"  />
 
 <script>
     $(function(){
@@ -350,6 +348,11 @@
         $('#pagestype_select').append($('#pagestype_body .terminal_'+id).clone());
         $('#serviceCategory').show();
     }
+    //上传成功
+    function upload_oss(url){
+        $(':input[name="image"]').val(url);
+        $('#show_img').removeClass('dn').find('img').attr('src', url);
+    };
 </script>
 <script src="__PUBLIC__/js/common.js"></script>
 </body>
