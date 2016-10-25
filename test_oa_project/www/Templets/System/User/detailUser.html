@@ -774,12 +774,11 @@
         <div class="alRow clearfix">
             <div class="alRowLeft"><i>&#42</i>所属渠道:</div>
             <div class="alRowRight">
-                <select name="apply_channel_id">
+                <select name="apply_channel_id" id="channelchoose">
                     <option value="0" selected="selected">请选择渠道</option>
                     <foreach name="data['channel']['data']" item="v" key="k">
 
                         <optgroup label='{$v.channelname}'></optgroup>
-                        <!--<option disabled value="{$v['channel_id']}">{$v.channelname}</option>-->
                         <if condition="!empty($v['children'])">
                             <foreach name = "v['children']" item = "v2">
                                 <option value="{$v2['channel_id']}">&nbsp;&nbsp;├─ {$v2['channelname']}</option>
@@ -787,6 +786,12 @@
                         </if>
                     </foreach>
                 </select>
+            </div>
+        </div>
+        <div class="alRow clearfix nssNone">
+            <div class="alRowLeft"><i>&#42</i>转介绍人手机:</div>
+            <div class="alRowRight">
+                <input type="tel" class="alInp" name="apply_introducermobile">
             </div>
         </div>
         <div class="alRow clearfix">
@@ -821,7 +826,7 @@
                 <input type="text" class="alInp" name="apply_interviewurl">
             </div>
         </div>
-        <div class="alRow clearfix">
+        <!-- <div class="alRow clearfix">
             <div class="alRowLeft">转介绍:</div>
             <div class="alRowRight singleBox">
                 <label for="alCorrect">
@@ -833,13 +838,8 @@
                     <span>否</span>
                 </label>
             </div>
-        </div>
-        <div class="alRow clearfix dn">
-            <div class="alRowLeft"><i>&#42</i>转介绍人手机:</div>
-            <div class="alRowRight">
-                <input type="tel" class="alInp" name="apply_introducermobile">
-            </div>
-        </div>
+        </div> -->
+        
         <div class="alRow clearfix" style="height: 119px;">
             <div class="alRowLeft"><i>&#42</i>申请理由:</div>
             <div class="alRowRight" style="height: 119px;">

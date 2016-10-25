@@ -86,9 +86,8 @@
                             </dt>
                             <foreach name="data['channel']['data']" item="v" key="k">
                                 <dt class="caption">
-                                    <div class="select_title2 l " data-value="{$v.channel_id}">{$v.channelname}</div>
+                                    <div class="select_title2 l" data-value="{$v.channel_id}" data-name="{$v.channelname}">{$v.channelname}</div>
                                 </dt>
-                                <!--<dd class="fxDone" data-value="{$v.channel_id}">{$v.channelname}</dd>-->
                                 <if condition="!empty($v['children'])">
                                     <foreach name = "v['children']" item = "v2">
                                         <dd class="fxDone" data-value="{$v2.channel_id}">&nbsp;&nbsp;├─ {$v2.channelname}</dd>
@@ -98,6 +97,12 @@
                         </dl>
                         <input type="hidden" name="channel_id">
                     </div>
+                </div>
+            </div>
+            <div class="nsRow clearfix nssNone">
+                <div class="nsLeft2"><i>&#42</i>转介绍人手机号码:</div>
+                <div class="nsRight2">
+                    <input type="text" class="nsInp" name="introducermobile">
                 </div>
             </div>
             <div class="nsRow clearfix">
@@ -130,7 +135,7 @@
                     </div>
                 </div>
             </div>
-            <div class="nsRow clearfix">
+            <!-- <div class="nsRow clearfix">
                 <div class="nsLeft2"><i>&#42</i>转介绍:</div>
                 <div class="nsRight2 clearfix">
                     <label for="radioMan" class="manLabel">
@@ -148,7 +153,7 @@
                 <div class="nsRight2">
                     <input type="text" class="nsInp" name="introducermobile">
                 </div>
-            </div>
+            </div> -->
             <div class="nsRow clearfix">
                 <div class="nsLeft2">备注:</div>
                 <div class="nsRight2">
