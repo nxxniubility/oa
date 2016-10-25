@@ -4,7 +4,7 @@ $('#pcUploadBtn').on('click',function(){
 	layer.open({
 		type: 1,					//  页面层
 		title: false,				//	不显示标题栏
-		area: ['800px','569px'],	
+		area: ['800px','469px'],	
 		shade: .6,					//	遮罩
 		time: 0,					//  关闭自动关闭
 		shadeClose: true,			//	遮罩控制关闭层
