@@ -11,41 +11,39 @@
 			<div class="loginBox">
 				<if condition="$is_dida eq 1">
 					<div class="logoPic" style="background:url('__PUBLIC__/images/didazp-logo2.png') no-repeat;"></div>
-					<else/>
+				<else/>
 					<div class="logoPic"></div>
 				</if>
-					<div class="rows">
-						<input type="text" class="nameInp" placeholder="请输入手机号" name="username">
-						<i class="nameIcon"></i>
+				<div class="rows">
+					<input type="text" class="nameInp" placeholder="请输入手机号" name="username">
+					<i class="nameIcon"></i>
+				</div>
+				<div class="rows">
+					<input type="password" class="pwdInp" placeholder="请输入密码" name="password">
+					<i class="pwdIcon"></i>
+				</div>
+				<div class="rows clearfix">
+					<input type="text" class="codes" maxlength="4" name="verification">
+					<div class="codesBox">
+						<div class="codesCont">
+						<img id="verify_img" src="{$verify}" onclick="this.src='{$verify}?'+Math.random();" alt="验证码"></div>
+						<span onclick="document.getElementById('verify_img').src='{$verify}?'+Math.random();">看不清楚?换一张</span>
 					</div>
-					<div class="rows">
-						<input type="password" class="pwdInp" placeholder="请输入密码" name="password">
-						<i class="pwdIcon"></i>
-					</div>
-					<div class="rows clearfix">
-						<input type="text" class="codes" maxlength="4" name="verification">
-						<div class="codesBox">
-							<div class="codesCont">
-							<img id="verify_img" src="{$verify}" onclick="this.src='{$verify}?'+Math.random();" alt="验证码"></div>
-							<span onclick="document.getElementById('verify_img').src='{$verify}?'+Math.random();">看不清楚?换一张</span>
-						</div>
-					</div>
-					<div class="rows">
-						<input type="button" class="loginSubmit" value="登录">
-					</div>
+				</div>
+				<div class="rows">
+					<input type="button" class="loginSubmit" value="登录">
+				</div>
 				<div class="rows">
 					<p class="already">账号未激活？<a href="{:U('System/Admin/activation')}">马上激活</a></p>
 				</div>
-					<div class="rows">
-						<p class="versionNumber">版本号v{$version}</p>
-					</div>
+				<div class="rows">
+					<p class="versionNumber">版本号v{$version}</p>
+				</div>
 			</div>
 		</div>
-
-		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-		<script src="__PUBLIC__/js/common_two.js"></script>
-		<script src="__PUBLIC__/js/layer/layer.js"></script>
-		<script src="__PUBLIC__/js/login.js"></script>
-
 	</body>
+	<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+	<script src="__PUBLIC__/js/common_two.js"></script>
+	<script src="__PUBLIC__/js/layer/layer.js"></script>
+	<script src="__PUBLIC__/js/login.js"></script>
 </html>

@@ -21,7 +21,7 @@ class ManagementController extends SystemController
 //        $data = D('User')->limit('0,5000')->select();
 
         //获取配置-config
-        $data = loadconfig('config',APP_PATH.'System/Conf/');
+        $data = loadconfig('rbac',APP_PATH.'Common/Conf/');
         //超级管理员
         $data['ADMIN_SUPER_ROLE'] = C('ADMIN_SUPER_ROLE');
         //短信告警额外接收人
