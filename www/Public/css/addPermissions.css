@@ -41,6 +41,7 @@
 .selectbox .arrow_on { background:transparent url(../images/Ascending.png) no-repeat center center;}
 .selectbox .ddoption { display:none; height:200px; border: medium none; overflow-y:scroll;}
 .fxDone { display: none;}
+.zindex4 {z-index:4;}
 
 /*=================================== 黄金分割线：选择权限 ===================================*/
 .competenceBox { position: relative; display: none; border: 8px solid #7a7a7a; background: #fff;}

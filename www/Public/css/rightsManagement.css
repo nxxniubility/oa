@@ -98,7 +98,6 @@ table.treetable tbody tr td .lastListsIcon { width: 33px; background: url(../ima
 .wrapBox#posWrap .rightsCont {width:auto;}
 .otherIcon li a {display:block;height:40px;}
 
-
 #positionTable {width:100%;margin:20px auto;border:1px solid #ebeaea;border-bottom:none;background:#f5f6fa;}
 #positionTable tr {height:40px;line-height:40px;}
 #positionTable th, #positionTable td {text-align:left;border-bottom:1px solid #ebeaea;}
@@ -107,5 +106,7 @@ table.treetable tbody tr td .lastListsIcon { width: 33px; background: url(../ima
 #positionTable th, #positionTable tr:hover th {font-weight:700;color:#999;background:#f5f6fa;}
 #positionTable th span, #positionTable th i {float:left;}
 #positionTable td {color:#696969;background:#fff;}
-#positionTable td.posOperation {position:relative;}
 #positionTable tr:hover td {background:#f5f6fa;}
+
+/*1025*/
+.operating-cont {position:relative;width:100%;height:100%;}
