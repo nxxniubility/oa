@@ -49,8 +49,6 @@ class AdminController extends BaseController {
         if(IS_POST){
             //获取参数 验证
             $request = I('post.');
-            if(empty($request['username'])) $this->ajaxReturn(1, '用户名不能为空', '', 'username');
-            if(empty($request['password'])) $this->ajaxReturn(1, '密码不能为空', '', 'password');
             $result = D('SystemUser', 'Service')->login($request);
             if($result['code']==0){
                 $this->ajaxReturn(0, '登录成功', U('System/Index/index'));
@@ -72,37 +70,11 @@ class AdminController extends BaseController {
         if (IS_POST) {
             //获取参数
             $request = I('post.');
-            //参数验证
-            $checkform = new \Org\Form\Checkform();
-            $username = trim($request['username']);
-            if (empty($username)) $this->ajaxReturn('1', '手机号不能为空', '', 'username');
-            if(!$checkform->checkMobile($username)) $this->ajaxReturn('1', '手机号码格式有误', '', 'username');
-            if (empty($request['phoneverify'])) $this->ajaxReturn('1', '验证码不能为空,请输入6位验证码', '', 'phoneverify');
-            if (empty($request['password'])) $this->ajaxReturn('1', '密码不能为空,请输入密码', '', 'password');
-            if (empty($request['confirmPassword'])) $this->ajaxReturn('1', '确认密码不能为空,请输入确认密码', '', 'confirmPassword');
-            //激活帐号
-            $systemUserMain = new SystemUserMain();
-            $result = $systemUserMain->systemActivation($request);
-            if($result['code']!=0)$this->ajaxReturn($result['code'], $result['msg'], '', (empty($result['sign'])?'':$result['sign']));
-            //保存session
-            $session_data = array(
-                'zone_id'=>$result['data']['userInfo']['zone_id'],
-                'system_user_id'=>$result['data']['userInfo']['system_user_id'],
-                'realname'=>$result['data']['userInfo']['realname'],
-                'username'=>$result['data']['userInfo']['username'],
-                'face'=>$result['data']['userInfo']['face'],
-                'email'=>$result['data']['userInfo']['email'],
-                'sex'=>$result['data']['userInfo']['sex'],
-                'usertype'=>$result['data']['userInfo']['usertype'],
-                'isuserinfo'=>$result['data']['userInfo']['isuserinfo'],
-                'logintime'=>$result['data']['userInfo']['logintime']
-            );
-            session('system_user_id',$result['data']['userInfo']['system_user_id']);
-            session('system_user',$session_data);
-            session('system_user_role',$result['data']['userRole']);
-            //激活成功
-            Rbac::saveAccessList();
-            $this->success('激活成功', 0, U('System/Index/index'));
+            $result = D('SystemUser', 'Service')->activation($request);
+            if($result['code']==0){
+                $this->ajaxReturn(0, '激活成功', U('System/Index/index'));
+            }
+            $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
         }else{
             $this->assign('version',C('SYSTEM_VERSION'));
             $this->assign('url_login', U('System/Admin/index'));
@@ -170,46 +142,17 @@ class AdminController extends BaseController {
 
     /**
      * 生成和发送6位随机的短信验证码
-     * @author cq
+     * @author zgt
      */
     public function  randVerifyCode()
     {
-        $systemUserModel = D('SystemUser');
-        $smsType = I('post.smsType');
-        //生成随机的6位验证码
-        $num = rand(100000, 999999);
-        $strNum = strval($num);
-        session('smsVerifyCode_'.$smsType, null);
-
         //参数验证
-        $username =  I('post.username');
-        if(empty($username)){
-            $this->ajaxReturn(1, '手机号不能为空', '', 'username');
+        $request =  I('post.');
+        $result = D('SystemUser', 'Service')->activationSms($request);
+        if($result['code']==0){
+            $this->ajaxReturn(0, '短信发送成功');
         }
-        //数据验证
-        $userInfo = D('SystemUser')->getFind(array('username'=>encryptPhone($username,C('PHONE_CODE_KEY'))));
-        if (empty($userInfo)){
-            $this->ajaxReturn(2, '该OA账号未创建,请先找人事创建账号！', '', 'username');
-        }
-        if($smsType=='activate'){
-            if (!empty($userInfo['password'])){
-                $this->ajaxReturn(3, '该OA账号已激活！');
-            }
-        }
-        $smsData = array(
-            'code' => $strNum,
-            'product' => '泽林信息'
-        );
-        //阿里大鱼短信模板
-        $smspages = C('ALDAYUSMSPAGES');
-        //发送短信验证码
-        $result = $this->sms($username, $username, $smsData, $smspages[$smsType], '身份验证');
-        if($result->code==0){
-            session('smsVerifyCode_'.$smsType, $strNum);
-            $this->ajaxReturn(0, '已经发送验证码,请查收','','smsverify');
-        }else{
-            $this->ajaxReturn(4, '发送验证码失败');
-        }
+        $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
     }
     
     /**

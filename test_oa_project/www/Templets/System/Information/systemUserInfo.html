@@ -60,7 +60,7 @@
 									<div class="mcRowRight">
 										<div class="uploadBox" style="position: relative; height: 31px; margin-top: 70px;">
 											<span style="position: absolute;z-index: 1;">修改头像</span>
-											<input type="file" name="file" autocomplete="off" id="fileupload" class="imUploadBtn" value="">
+											<input type="file" name="file" autocomplete="off" id="fileupload" class="imUploadBtn" value="" style="position: absolute;z-index: 2;width: 73px;">
 											<input type="hidden" name="" id="img_src" class="faceImg">
 										</div>
 									</div>
@@ -199,7 +199,7 @@
 		<script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script src="__PUBLIC__/js/common.js"></script>
-		<include file="Common@Html/post_oss"  />
+		<include file="Common@Html/post_oss"/>
 		<script type="text/javascript">
 			function upload_oss(url){
 				$('#faceImg').attr('src', url);

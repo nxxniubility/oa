@@ -145,9 +145,11 @@ function common_ajax2(data,url,loca,fun,showload){
                 return false;
             };
             if(reflag.code && reflag.code!=0){
-                if(reflag.sign){
-                    layer.tips(reflag.msg, $(':input[name="'+reflag.sign+'"]'));
-                    $(':input[name="'+reflag.sign+'"]').focus();
+                if(reflag.data){
+                    if($(':input[name="'+reflag.data+'"]').length>0){
+                        layer.tips(reflag.msg, $(':input[name="'+reflag.data+'"]'));
+                        $(':input[name="'+reflag.data+'"]').focus();
+                    }
                 }else{
                     if(reflag.msg){
                         layer.msg(reflag.msg,{icon:2});

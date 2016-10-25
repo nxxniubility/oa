@@ -47,7 +47,7 @@
             <div class="afRow clearfix">
                 <div class="afRowLeft"><i>&#42</i>生日:</div>
                 <div class="afRowRight">
-                    <input type="text" class="afTime" id="afBirthday" name="birthday" value="<?php echo isset($data['on_info']['birthday'])?$data['on_info']['birthday_name']:''; ?>" placeholder="请选择日期">
+                    <input type="text" class="afTime" id="afBirthday" name="birthday" value="<?php echo isset($data['on_info']['birthday'])?$data['on_info']['birthday']:''; ?>" placeholder="请选择日期">
                 </div>
             </div>
             <div class="afRow clearfix">
@@ -87,7 +87,7 @@
                         <dl class="select">
                             <dt>
                                 <if condition="(isset($data['on_info']['education_id']))">
-                                    <div class="select_title l">{$v.education_name}</div>
+                                    <div class="select_title l">{:$data['educationAll'][$data['on_info']['education_id']]}</div>
                                 <else />
                                     <div class="select_title l">请选择学历</div>
                                 </if>
@@ -157,7 +157,7 @@
                 school:$(':input[name="school"]').val(),
                 plivatemail:$(':input[name="plivatemail"]').val()
             };
-            common_ajax(data);
+            common_ajax2(data);
         });
 		$(".afTime").glDatePicker({
             selectedDate: new Date(1990, 8, 5),

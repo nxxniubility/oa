@@ -50,8 +50,8 @@ class SystemController extends BaseController{
      * @author cq
      * @return boolean
      */
-    public function isLogin(){
-
+    public function isLogin()
+    {
         //判断是否开启禁止登录功能
         $system_user_role = session('system_user_role');
         $role_id = $system_user_role[0]['id'];

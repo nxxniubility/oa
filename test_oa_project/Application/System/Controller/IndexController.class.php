@@ -11,6 +11,7 @@ namespace System\Controller;
 
 use Common\Controller\SystemController;
 use Common\Controller\SystemUserController;
+use Common\Model\ValidateModel;
 use Org\Util\Rbac;
 
 class IndexController extends SystemController
@@ -204,17 +205,16 @@ class IndexController extends SystemController
         //实例化
         if (IS_POST) {
             //获取参数 验证
-            $checkform = new \Org\Form\Checkform();
-            $system_user_id = $this->system_user_id;                 //用户ID
+            $system_user_id = $this->system_user_id;
             $request = I('post.');
             if (empty($system_user_id)) $this->ajaxReturn(1, '非法操作');
-            if (empty($request['birthday'])) $this->ajaxReturn(1, '生日不能为空', '', 'birthday');
-            if (empty($request['nativeplace'])) $this->ajaxReturn(1, '籍贯不能为空', '', 'nativeplace');
-            if (empty($request['education_id'])) $this->ajaxReturn(1, '学历不能为空');
-            if (empty($request['school'])) $this->ajaxReturn(1, '毕业学校不能为空', '', 'school');
-            if (empty($request['plivatemail'])) $this->ajaxReturn(1, '个人邮箱不能为空', '', 'plivatemail');
-            if(!$checkform->isEmail($request['plivatemail'])) $this->ajaxReturn(1, '个人邮箱格式有误', '', 'plivatemail');
-            $request['birthday'] = strtotime($request['birthday']);
+            if (empty($request['birthday'])) $this->ajaxReturn(300, '生日不能为空', 'birthday');
+            if (empty($request['nativeplace'])) $this->ajaxReturn(301, '籍贯不能为空', 'nativeplace');
+            if (empty($request['education_id'])) $this->ajaxReturn(302, '学历不能为空');
+            if (empty($request['school'])) $this->ajaxReturn(303, '毕业学校不能为空', 'school');
+            if (empty($request['plivatemail'])) $this->ajaxReturn(304, '个人邮箱不能为空', 'plivatemail');
+            $preg_ramil = "/^[a-z0-9][a-z\.0-9-_]+@[a-z0-9_-]+(?:\.[a-z]{0,3}\.[a-z]{0,2}|\.[a-z]{0,3}|\.[a-z]{0,2})$/i";
+            if(!preg_match($preg_ramil, $request['plivatemail'])) $this->ajaxReturn(201, '个人邮箱格式有误', 'plivatemail');
             session('addSystemUserInfo', $request);
             //进入下一步
             $this->ajaxReturn(0, '完善个人信息成功，请继续完善任职信息！', U('System/Index/addSystemUserInfoTwo'));
@@ -224,8 +224,6 @@ class IndexController extends SystemController
             $data['userInfo'] = $systemUserInfo['data'];
             //获取学历表
             $data['educationAll'] = C('FIELD_STATUS.EDUCATION_ARRAY');
-            //获取学历表
-            $data['educationAll'] = D('Education')->getAllEducation();
             $data['on_info'] = session('addSystemUserInfo');
             $this->assign('data', $data);
             $this->display();
@@ -240,12 +238,14 @@ class IndexController extends SystemController
     {
         if (IS_POST) {
             //获取参数 验证
+            $system_user_id = $this->system_user_id;
             $session_request = session('addSystemUserInfo');
             $request = array_merge($session_request, I('post.'));
             if (empty($system_user_id)) $this->ajaxReturn(1, '非法操作');
             //获取 数据判断
+            $request['isuserinfo'] = 1;
             $addSystemUserInfo = D('SystemUser','Service')->editSystemUserInfo($request);
-            if ($addSystemUserInfo['code']==1) {
+            if ($addSystemUserInfo['code']==0) {
                 $system_user = $this->system_user;
                 $system_user['isuserinfo'] = 1;
                 session('system_user', $system_user);
@@ -257,13 +257,13 @@ class IndexController extends SystemController
             //获取基本信息
             $systemUserInfo = D('SystemUser','Service')->getSystemUserInfo(array('system_user_id'=>$this->system_user_id));
             $data['userInfo'] = $systemUserInfo['data'];
-            //员工状态
-            $data['systemUserStatus'] = C('SYSTEM_USER_STATUS');
-            foreach($data['systemUserStatus'] as $k=>$v){
-                if($v['text']=='离职'){
-                    unset($data['systemUserStatus'][$k]);
-                }
-            }
+            //添加员工状态
+            $system_info = session('addSystemUserInfo');
+            $system_info['usertype'] = $data['userInfo']['usertype'];
+            $system_info['entrytime'] = date('Y-m-d', $data['userInfo']['entrytime']);
+            $system_info['straightime'] = date('Y-m-d', $data['userInfo']['straightime']);
+            $system_info['check_id'] = $data['userInfo']['check_id'];
+            session('addSystemUserInfo', $system_info);
             $data['url_addSystemUserInfo'] = U('System/Index/addSystemUserInfo');
             $this->assign('data', $data);
             $this->display();

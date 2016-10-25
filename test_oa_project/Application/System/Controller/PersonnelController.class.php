@@ -467,10 +467,12 @@ class PersonnelController extends SystemController {
         else $this->ajaxReturn($flag['code'], $flag['msg']);
     }
 
-    /**
-     * 员工-添加
-     * @author zgt
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | 员工-添加
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
     public function addSystemUser()
     {
         if(IS_POST) {

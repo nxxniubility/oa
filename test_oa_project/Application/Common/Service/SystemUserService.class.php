@@ -30,21 +30,23 @@ class SystemUserService extends BaseService
     */
     public function login($data)
     {
-        $verify = new Verify();
+        if(empty($data['username'])) return array('code'=>300, 'msg'=>'用户名不能为空', 'data'=>'username');
+        if(empty($data['password'])) return array('code'=>301, 'msg'=>'密码不能为空', 'data'=>'password');
         //获取 数据判断
         $data = array_filter($data);
         $username = trim($data['username']);
         $password = trim($data['password']);
-        if(!$this->checkMobile($username)) return array('code'=>'201', 'data'=>array('sign'=>'username'), 'msg'=>'手机号码格式有误');
-        if(!$verify->check($data['verification'],'login')) return array('code'=>'202', 'data'=>array('sign'=>'verification'), 'msg'=>'验证码不正确');
+        if(!$this->checkMobile($username)) return array('code'=>'201', 'data'=>'username', 'msg'=>'手机号码格式有误');
+        $verify = new Verify();
+        if(!$verify->check($data['verification'],'login')) return array('code'=>'202', 'data'=>'verification', 'msg'=>'验证码不正确');
         //数据加密
         $username = encryptPhone($username, C('PHONE_CODE_KEY'));
         $user_info = D('SystemUser')->getFind(array('username'=>$username));
-        if(empty($user_info)) return array('code'=>'101', 'data'=>array('sign'=>'username'), 'msg'=>'该用户名未注册');
-        if(empty($user_info['password'])) return array('code'=>'102', 'data'=>array('sign'=>'username'), 'msg'=>'您的账户尚未激活,请点击下方激活按钮');
-        if($user_info['status']!=1) return array('code'=>'103', 'data'=>array('sign'=>'username'), 'msg'=>'该账号已无效，请联系管理员');
-        if($user_info['usertype']==10) return array('code'=>'104', 'data'=>array('sign'=>'username'), 'msg'=>'该员工已离职，已无法登录OA系统');
-        if($user_info['password'] !== passwd($password)) return array('code'=>'105', 'data'=>array('sign'=>'password'), 'msg'=>'密码错误');
+        if(empty($user_info)) return array('code'=>'101', 'data'=>'username', 'msg'=>'该用户名未注册');
+        if(empty($user_info['password'])) return array('code'=>'102', 'data'=>'username', 'msg'=>'您的账户尚未激活,请点击下方激活按钮');
+        if($user_info['status']!=1) return array('code'=>'103', 'data'=>'username', 'msg'=>'该账号已无效，请联系管理员');
+        if($user_info['usertype']==10) return array('code'=>'104', 'data'=>'username', 'msg'=>'该员工已离职，已无法登录OA系统');
+        if($user_info['password'] !== passwd($password)) return array('code'=>'105', 'data'=>'password', 'msg'=>'密码错误');
         //获取权限信息 获取职位（有多个）
         $user_role = $this->getSystemUserRole(array('system_user_id'=>$user_info['system_user_id']));
         if(empty($user_role['data'])) return array('code'=>'100', 'data'=>'', 'msg'=>'无法获取您的权限信息');
@@ -55,6 +57,77 @@ class SystemUserService extends BaseService
         //添加登录日志
         $this->addSystemUserLogs($user_info['system_user_id']);
         $newArr = array('userInfo'=>$user_info,'userRole'=>$user_role['data']);
+        //保存登录状态
+        $this->_loginSign($newArr);
+        return array('code'=>'0', 'data'=>$newArr, 'msg'=>'登录成功');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 员工激活 短信
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function activationSms($param)
+    {
+        //参数验证
+        if(empty($param['username'])) return array('code'=>300, 'msg'=>'用户名不能为空', 'data'=>'username');
+        //数据加密
+        $username = encryptPhone(trim($param['username']), C('PHONE_CODE_KEY'));
+        $user_info = D('SystemUser')->getFind(array('username'=>$username));
+        if (empty($user_info)) return array('code'=>201, 'msg'=>'该OA账号未创建,请先找人事创建账号！', 'data'=>'username');
+        if (!empty($user_info['password'])) return array('code'=>202, 'msg'=>'该OA账号已激活！');
+        //发送短信验证码
+        $data['mobile'] = trim($param['username']);
+        $result = D('Api', 'Service')->sendSms('authentication', $data);
+        if($result['code']==0){
+            return array('code'=>0, 'msg'=>'已经发送验证码,请查收','data'=>'smsverify');
+        }else{
+            return array('code'=>100, 'msg'=>$result['msg']);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 员工激活
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function activation($param)
+    {
+        //参数验证
+        if (empty($param['username'])) return array('code'=>301, 'msg'=>'手机号不能为空', 'data'=>'username');
+        if(!$this->checkMobile($param['username'])) return array('code'=>302, 'msg'=>'手机号码格式有误', 'data'=>'username');
+        if (empty($param['phoneverify'])) return array('code'=>303, 'msg'=>'验证码不能为空,请输入6位验证码', 'data'=>'phoneverify');
+        if (empty($param['password'])) return array('code'=>304, 'msg'=>'密码不能为空,请输入密码', 'data'=>'password');
+        if (empty($param['confirmPassword'])) return array('code'=>305, 'msg'=>'确认密码不能为空,请输入确认密码', 'data'=>'confirmPassword');
+        if ($param['phoneverify'] != session('smsVerifyCode_authentication')) return array('code'=>306, 'msg'=>'短信验证码不正确，请重新输入', 'data'=>'phoneverify');
+        //数据验证
+        $username = encryptPhone($param['username'], C('PHONE_CODE_KEY'));
+        $user_info = D('SystemUser')->getFind(array('username'=>$username));
+        if (!preg_match("/^[A-Za-z0-9_]{6,20}$/", $param['password'])) return array('code'=>307, 'msg'=>'密码必须是6-20位的字母,数字或者下划线', 'data'=>'password');
+        if ($user_info['status']!=1 || $user_info['usertype']==10) return array('code'=>308, 'msg'=>'该用户已无效,请联系管理员', 'data'=>'username');
+        if (!empty($user_info['password'])) return array('code'=>309, 'msg'=>'密码已经存在，无需重新设置', 'data'=>'password');
+        //加密用户密码 更新用户信息
+        $save_data['password'] = passwd($param['password'],C('PHONE_CODE_KEY'));
+        $result = D('SystemUser')->editData($save_data, $user_info['system_user_id']);
+        if($result['code']!=0)return array($result['code'], $result['msg']);
+        //获取权限信息 获取职位（有多个）
+        $user_role = $this->getSystemUserRole(array('system_user_id'=>$user_info['system_user_id']));
+        if(empty($user_role['data'])) return array('code'=>'100', 'data'=>'', 'msg'=>'无法获取您的权限信息');
+        //添加登录日志
+        $this->addSystemUserLogs($user_info['system_user_id']);
+        $newArr = array('userInfo'=>$user_info,'userRole'=>$user_role['data']);
+        //保存登录状态
+        $this->_loginSign($newArr);
+        return array('code'=>'0', 'data'=>$newArr, 'msg'=>'激活成功');
+    }
+
+    /**
+     * system 保存登录状态
+     * @author zgt
+     */
+    protected function _loginSign($newArr){
         //保存session
         $session_data = array(
             'zone_id'=>$newArr['userInfo']['zone_id'],
@@ -73,7 +146,6 @@ class SystemUserService extends BaseService
         session('system_user_role',$newArr['userRole']);
         //登录成功
         Rbac::saveAccessList();
-        return array('code'=>'0', 'data'=>$newArr, 'msg'=>'登录成功');
     }
 
     /*
@@ -160,6 +232,7 @@ class SystemUserService extends BaseService
         }
 
     }
+
     /*
     |--------------------------------------------------------------------------
     | 抹去唯一Token
@@ -179,6 +252,7 @@ class SystemUserService extends BaseService
         }
         return array("code"=>1,'msg'=>'重置Token失败');
     }
+
     /**
      * 生成token
      * @author nxx
@@ -192,118 +266,6 @@ class SystemUserService extends BaseService
             $randomstr .= $chrBase[rand(0,$max)];
         }
         return $randomstr;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | 员工激活
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function systemActivation($data)
-    {
-        //数据验证
-        $username = trim($data['username']);
-        $userInfo = D('SystemUser')->getSystemUser(array('username'=>encryptPhone($username,C('PHONE_CODE_KEY'))));
-
-        if (empty($userInfo)) return array('code'=>'3', 'data'=>'', 'msg'=>'该用户名未注册', 'sign'=>'username');
-        if ($userInfo['status']!=1 || $userInfo['usertype']==10) return array('code'=>'3', 'data'=>'', 'msg'=>'该用户已无效,请联系管理员', 'sign'=>'username');
-        if ($data['phoneverify'] != session('smsVerifyCode_activate')) return array('code'=>'3', 'data'=>'', 'msg'=>'短信验证码不正确，请重新输入', 'sign'=>'phoneverify');
-        if ($data['password'] != $data['confirmPassword']) return array('code'=>'3', 'data'=>'', 'msg'=>'您输入的两次密码不一致,请重新输入', 'sign'=>'password');
-        if (!preg_match("/^[A-Za-z0-9_]{6,20}$/", $data['password'])) return array('code'=>'3', 'data'=>'', 'msg'=>'密码必须是6-20位的字母,数字或者下划线', 'sign'=>'password');
-        if (!empty($userInfo['password'])) return array('code'=>'3', 'data'=>'', 'msg'=>'密码已经存在，无需重新设置', 'sign'=>'password');
-        //加密用户密码 更新用户信息
-        $save_data['password'] = passwd($data['password'],C('PHONE_CODE_KEY'));
-        $flag_edit = D('SystemUser')->editSystemUser($save_data, $userInfo['system_user_id']);
-        if(empty($flag_edit)) return array('code'=>'1', 'data'=>'', 'msg'=>'操作失败');
-        //添加登录日志
-        $userInfo['logintime'] = time();
-        $this->addSystemUserLogs($userInfo['system_user_id']);
-        //获取职位（有多个）
-        $user_role = $this->getSystemUserRole(array('system_user_id'=>$userInfo['system_user_id']));        
-        $newArr = array('userInfo'=>$userInfo,'userRole'=>$user_role['data']);
-        return array('code'=>'0', 'data'=>$newArr, 'msg'=>'激活成功');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 获取员工列表
-    |--------------------------------------------------------------------------
-    | $type
-    | @author zgt
-    */
-    public function getSystemUserList($where, $order=null, $limit=null, $type=null)
-    {
-        //参数处理
-        $where = $this->_dispostWhere($where);
-        //获取Model数据
-        $field = array(
-            "{$this->DB_PREFIX}system_user.system_user_id",
-            "{$this->DB_PREFIX}system_user.username",
-            "{$this->DB_PREFIX}system_user.realname",
-            "{$this->DB_PREFIX}system_user.sign",
-            "{$this->DB_PREFIX}system_user.face",
-            "{$this->DB_PREFIX}system_user.email",
-            "{$this->DB_PREFIX}system_user.sex",
-            "{$this->DB_PREFIX}system_user.check_id",
-            "{$this->DB_PREFIX}system_user.isuserinfo",
-            "{$this->DB_PREFIX}system_user.usertype",
-            "{$this->DB_PREFIX}system_user.logintime",
-            "{$this->DB_PREFIX}system_user.loginip",
-            "{$this->DB_PREFIX}zone.zone_id",
-            "{$this->DB_PREFIX}zone.level as zonelevel",
-            "{$this->DB_PREFIX}zone.name as zonename",
-            "{$this->DB_PREFIX}system_user.createtime",
-            "{$this->DB_PREFIX}system_user.createip",
-            "{$this->DB_PREFIX}system_user_engaged.status as engaged_status"
-        );
-        $join = 'LEFT JOIN __ZONE__ on __ZONE__.zone_id=__SYSTEM_USER__.zone_id
-                 LEFT JOIN __SYSTEM_USER_ENGAGED__ on __SYSTEM_USER_ENGAGED__.system_user_id=__SYSTEM_USER__.system_user_id';
-        if(!empty($order)){
-            $order = "{$this->DB_PREFIX}system_user.".$order;
-        }else{
-            $order = "{$this->DB_PREFIX}system_user.sign";
-        }
-    
-        $result = D('SystemUser')->join($join)->where($where)->order($order)->select();
-        //添加多职位
-        if(!empty($result)){
-            foreach($result as $k=>$v){
-                $result[$k]['realname'] = $v['sign'].'-'.$v['realname'];
-                $user_role = $this->getSystemUserRole(array('system_user_id'=>$v['system_user_id']));
-                foreach($user_role['data'] as $k2=>$v2){
-                    if($k2==0) {
-                        $roleNames = $v2['department_name'].'/'.$v2['name'];
-                        $roleName = $v2['name'];
-                    }else{
-                        $roleNames .= '，'.$v2['department_name'].'/'.$v2['name'];
-                        $roleName .= '，'.$v2['name'];
-                    }
-                }
-                $result[$k]['role_names'] = $roleNames;
-                $result[$k]['rolename'] = $roleName;
-                $result[$k]['roles'] = $user_role['data'];
-            }
-        }
-        //返回数据与状态
-        return array('code'=>'0', 'data'=>$result);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 获取员工列表总数
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
-    public function getCount($where)
-    {
-        $where = $this->_dispostWhere($where);
-        $join = 'LEFT JOIN __ZONE__ on __ZONE__.zone_id=__SYSTEM_USER__.zone_id';
-        //获取Model数据
-        $result = D('SystemUser')->getCount($where, $join);
-        //返回数据与状态
-        return array('code'=>'0', 'data'=>empty($result)?0:$result);
     }
 
     /*
@@ -428,30 +390,158 @@ class SystemUserService extends BaseService
      * @author zgt
      * @return false
      */
-    protected function addSystemUserLogs($systemUserId){
+    protected function addSystemUserLogs($systemUserId)
+    {
+        //登录唯一token
+        $len = 32;
+        $add_log['token'] = $this->_createToken($len);
+        session("token", $add_log['token']);
+        //登录时间
         $add_log['logintime'] = time();
         $add_log['loginip'] = get_client_ip();
+        //获取API IP地址
+        $reApi = D('Api', 'Service')->getApiIplookup($add_log['loginip']);
+        if($reApi['code']==0 && $reApi['data']['city']!=''){
+            $add_log['city'] = $reApi['data']['city'];
+            $add_log['district'] = $reApi['data']['county'];
+        }
         $addflag = D('SystemUser')->editData($add_log,$systemUserId);
         if($addflag['code']==0){
-            $add_log['system_user_id'] = $systemUserId;
-            $reflag = D('SystemUserLogs')->addData($add_log);
-            if($reflag['code']==0){
-                $new_info = D('SystemUser')->getFind(array("system_user_id"=>$systemUserId));
-                $new_info = $this->_addStatus($new_info);
-                $cahce_all = F('Cache/systemUsers');
-                if(!empty($cahce_all['data'])){
-                    foreach($cahce_all['data'] as $k => $v){
-                        if($v['system_user_id'] == $systemUserId){
-                            $cahce_all['data'][$k] = $new_info;
-                        }
+            //更新缓存
+            $new_info = D('SystemUser')->getFind(array("system_user_id"=>$systemUserId));
+            $new_info = $this->_addStatus($new_info);
+            $cahce_all = F('Cache/systemUsers');
+            if(!empty($cahce_all['data'])){
+                foreach($cahce_all['data'] as $k => $v){
+                    if($v['system_user_id'] == $systemUserId){
+                        $cahce_all['data'][$k] = $new_info;
                     }
                 }
-                F('Cache/systemUsers', $cahce_all);
             }
+            F('Cache/systemUsers', $cahce_all);
+            //开启登录告警
+            $add_log['system_user_id'] = $systemUserId;
+            if(!empty($add_log['city'])){
+                $reAlarm = $this->_logsAlarm($systemUserId,$reApi);
+                if($reAlarm===true){
+                    $add_log['status'] = 1;
+                }
+            }
+            return D('SystemUserLogs')->data($add_log)->add();
         }
     }
 
-
+    /**
+     * 是否开启登录告警
+     * @author zgt
+     */
+    protected function _logsAlarm($systemUserId,$data)
+    {
+        session('login_alarm',null);
+        $result = D('SystemUserLogs')->field('city')->where(array('system_user_id'=>$systemUserId,'status'=>0))->order('system_user_logs_id desc')->limit('0,10')->select();
+        $d_arr = array();
+        if(!empty($result)){
+            foreach($result as $k=>$v){
+                $d_arr[] = $v['city'];
+            }
+            // 发送短信
+            if(!in_array($data['data']['city'], $d_arr)){
+                $info = D('SystemUser')->field('username,realname')->where(array('system_user_id'=>$systemUserId))->find();
+                $time = time();
+                $send_data = array(
+                    "time"=>date("Y-m-d H:i:s", $time),
+                    "city"=>$data['data']['city'],
+                    "mobile"=>decryptPhone($info['username'], C('PHONE_CODE_KEY')),
+                );
+                $send_flag = D('Api', 'Service')->sendSms('alarm', $send_data);
+                if($send_flag['code']==0){
+                    //开启警告验证
+                    session('login_alarm',true);
+                    //主管发送短信
+                    $role_id = D('RoleUser')->getFind(array('user_id'=>$systemUserId),'role_id');
+                    $superiorid = D('Role')->getFind(array('id'=>$role_id),'superiorid');
+                    if(!empty($superiorid)){
+                        //记录已发送数组
+                        $send_username = array();
+                        $superiorUser = D('RoleUser')->getList(array('role_id'=>$superiorid),'username','__SYSTEM_USER__ ON __SYSTEM_USER__.system_user_id=__ROLE_USER__.user_id');
+                        if(!empty($superiorUser)){
+                            foreach($superiorUser as $v){
+                                $sendsuperior_data = array(
+                                    "time"=>date("Y-m-d H:i:s", $time),
+                                    "city"=>$data['data']['city'],
+                                    "realname"=>$info['realname'],
+                                    "mobile"=>decryptPhone($v['username'], C('PHONE_CODE_KEY')),
+                                );
+                                 D('Api', 'Service')->sendSms('alarmsuperior', $sendsuperior_data);
+                                $send_username[] = $v['username'];
+                            }
+                        }
+                        //额外通知高层人员
+                        if(C('SMSHINT_USER')){
+                            $smshint_user = C('SMSHINT_USER');
+                            $smshint_list = D('SystemUser')->getList(array('system_user_id'=>array('IN',$smshint_user)),'username');
+                            if(!empty($smshint_list)){
+                                foreach($smshint_list as $v){
+                                    if(!in_array($v['username'],$send_username)){
+                                        $sendsuperior_data = array(
+                                            "time"=>date("Y-m-d H:i:s", $time),
+                                            "city"=>$data['data']['city'],
+                                            "realname"=>$info['realname'],
+                                            "mobile"=>decryptPhone($v['username'], C('PHONE_CODE_KEY')),
+                                        );
+                                         D('Api', 'Service')->sendSms('alarmsuperior', $sendsuperior_data);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return true;
+                }
+                return true;
+            }elseif(in_array(date('H'), array('23','24','1','2','3','4','5','6'))){
+                $time = time();
+                $info = D('SystemUser')->getFind(array('system_user_id'=>$systemUserId),'username,realname');
+                $role_id = D('RoleUser')->getFind(array('user_id'=>$systemUserId),'role_id');
+                $superiorid = D('Role')->getFind(array('id'=>$role_id),'superiorid');
+                if(!empty($superiorid) && $superiorid!=0) {
+                    //记录已发送数组
+                    $send_username = array();
+                    $superiorUser = D('RoleUser')->getList(array('role_id'=>$superiorid),'username','__SYSTEM_USER__ ON __SYSTEM_USER__.system_user_id=__ROLE_USER__.user_id');
+                    if (!empty($superiorUser)) {
+                        foreach ($superiorUser as $v) {
+                            $sendsuperior_data = array(
+                                "time" => date("Y-m-d H:i:s", $time),
+                                "realname" => $info['realname'],
+                                "mobile" => decryptPhone($v['username'], C('PHONE_CODE_KEY')),
+                            );
+                             D('Api', 'Service')->sendSms('alarmlatesuperior', $sendsuperior_data);
+                            $send_username[] = $v['username'];
+                        }
+                    }
+                }
+                //额外通知高层人员
+                if(C('SMSHINT_USER')){
+                    $smshint_user = C('SMSHINT_USER');
+                    $smshint_list = D('SystemUser')->field('username')->getList(array('system_user_id'=>array('IN',$smshint_user)))->select();
+                    if(!empty($smshint_list)){
+                        foreach($smshint_list as $v){
+                            if(!in_array($v['username'],$send_username)){
+                                $sendsuperior_data = array(
+                                    "time" => date("Y-m-d H:i:s", $time),
+                                    "realname" => $info['realname'],
+                                    "mobile" => decryptPhone($v['username'], C('PHONE_CODE_KEY')),
+                                );
+                                 D('Api', 'Service')->sendSms('alarmlatesuperior', $sendsuperior_data);
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+            return fasle;
+        }
+        return fasle;
+    }
 
 
 
@@ -658,33 +748,31 @@ class SystemUserService extends BaseService
         if(!empty($userInfo['data'])) return array('code'=>201, 'msg'=>'该手机号码已被注册');
         $userInfoCheck = D('SystemUser')->getFind(array('check_id'=>$data['check_id']),'system_user_id');
         if(!empty($userInfoCheck['data'])) return array('code'=>203, 'msg'=>'该指纹编号已存在');
-        $result = C('SYSTEM_USER_ORDER');
+        $sign_arr = C('SYSTEM_USER_ORDER');
         $sign = mb_substr($data['realname'], 0, 1, "UTF-8");
-        $res = array_keys($result);
+        $res = array_keys($sign_arr);
         if (in_array($sign, $res)) {
-            $data['sign'] = $result[$sign];
+            $data['sign'] = $sign_arr[$sign];
         }
         $data['createtime'] = time();
         $data['createip'] = get_client_ip();
         //启动事务
         D()->startTrans();
         $result = D('SystemUser')->addData($data);
-        if(!empty($data['role_id'])){
+        if($result['code']==0 && !empty($data['role_id'])){
             $where_role = array();
             $add_role = explode(',',$data['role_id']);
             foreach($add_role as $k=>$v){
-                $where_role[] = array('role_id'=>$v,'user_id'=>$result);
+                $where_role[] = array('role_id'=>$v,'user_id'=>$result['data']);
             }
-            $flag_addrole = D('RoleUser')->addAll($where_role);
-        }else{
-            $flag_addrole = true;
+            D('RoleUser')->addAll($where_role);
         }
         $data['system_user_id'] = $result['data'];
         $flag_addinfo = D('SystemUserInfo')->field('system_user_id,entrytime,straightime')->data($data)->add();
-        $flag_addengaged = D('SystemUserEngaged')->data(array('system_user_id'=>$result,'status'=>2))->add();
-        if($result['code']==0 && $flag_addrole && $flag_addinfo && $flag_addengaged){
+        $flag_addengaged = D('SystemUserEngaged')->data(array('system_user_id'=>$result['data'],'status'=>2))->add();
+        if($result['code']==0 && $flag_addinfo && $flag_addengaged){
             D()->commit();
-            $new_info = D('SystemUser')->getFind(array("system_user_id"=>$result));
+            $new_info = D('SystemUser')->getFind(array("system_user_id"=>$result['data']));
             $new_info = $this->_addStatus($new_info);
             $cahce_all = F('Cache/systemUsers');
             $cahce_all['data'][] = $new_info;
