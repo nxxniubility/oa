@@ -76,4 +76,4 @@
 .contBox .temRows .picImgBox .limit {padding-top:10px;}
 .contBox .temRows .picImgBox img {display:block;width:160px;height:auto;}
 .contBox .temRows .desBox p.theme {margin:10px 0 0px 15px;}
-
+.contBox {max-height:250px;}
