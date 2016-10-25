@@ -93,17 +93,11 @@ class AdminController extends BaseController {
     {
         if(IS_AJAX){
             $request = I('post.');
-            if(empty($request['verifyCode'])) $this->ajaxReturn('1','请输入验证码！');
-            $verifyCode = session('smsVerifyCode_alarm');
-            if($request['verifyCode']==$verifyCode){
-                $system_user = session('system_user');
-                $system_user_id = session('system_user_id');
-                D('SystemUserLogs')->where(array('system_user_id'=>$system_user_id,'logintime'=>$system_user['logintime']))->save(array('status'=>0));
-                session('login_alarm', null);
-                $this->ajaxReturn('0','验证成功！',U('/System/Index/index'));
-            }else{
-                $this->ajaxReturn('1','验证码错误！');
+            $result = D('SystemUser', 'Service')->loginAlarm($request);
+            if($result['code']==0){
+                $this->ajaxReturn(0, '验证成功', U('System/Index/index'));
             }
+            $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
         }
 
         $this->display();

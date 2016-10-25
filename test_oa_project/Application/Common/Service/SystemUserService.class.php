@@ -431,6 +431,26 @@ class SystemUserService extends BaseService
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 异常登录验证
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function loginAlarm()
+    {
+        if(empty($request['verifyCode'])) return array('code'=>301, 'msg'=>'请输入验证码！');
+        $verifyCode = session('smsVerifyCode_alarm');
+        if($request['verifyCode']==$verifyCode){
+            $system_user = session('system_user');
+            $system_user_id = session('system_user_id');
+            D('SystemUserLogs')->where(array('system_user_id'=>$system_user_id,'logintime'=>$system_user['logintime']))->save(array('status'=>0));
+            session('login_alarm', null);
+            return array('code'=>0, 'msg'=>'验证成功');
+        }
+        return array('code'=>201, 'msg'=>'验证失败');
+    }
+
     /**
      * 是否开启登录告警
      * @author zgt
@@ -499,6 +519,7 @@ class SystemUserService extends BaseService
                 }
                 return true;
             }elseif(in_array(date('H'), array('23','24','1','2','3','4','5','6'))){
+                //深夜时段告警
                 $time = time();
                 $info = D('SystemUser')->getFind(array('system_user_id'=>$systemUserId),'username,realname');
                 $role_id = D('RoleUser')->getFind(array('user_id'=>$systemUserId),'role_id');
@@ -522,7 +543,7 @@ class SystemUserService extends BaseService
                 //额外通知高层人员
                 if(C('SMSHINT_USER')){
                     $smshint_user = C('SMSHINT_USER');
-                    $smshint_list = D('SystemUser')->field('username')->getList(array('system_user_id'=>array('IN',$smshint_user)))->select();
+                    $smshint_list = D('SystemUser')->getList(array('system_user_id'=>array('IN',$smshint_user)),'username');
                     if(!empty($smshint_list)){
                         foreach($smshint_list as $v){
                             if(!in_array($v['username'],$send_username)){

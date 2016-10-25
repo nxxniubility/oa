@@ -96,27 +96,5 @@ class ZoneModel extends BaseModel
         return $this->where(array($this->_id=>$id))->delete();
     }
 
-    /*
-  	role_id 获取想关联的ID
-  	@author nxx
-  	*/
-  	public function getZoneIds($zone_id = 0)
-  	{
-  		if (F('Cache/Zone/zone')) {
-  			$zoneList = F('Cache/Zone/zone');
-  		}else{
-  			$zoneList = $this->where("status=1")->select();
-  			F('Cache/Zone/zone', $zoneList);
-  		}
-  		//数组分级
-  		$Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
-  		$newZoneList = $Arrayhelps->subFinds($zoneList,$zone_id,'zone_id','parentid');
-  		foreach($zoneList as $k=>$v){
-  			if($v['zone_id']==$zone_id){
-  				$newZoneList[] = $v;
-  			}
-  		}
-  		return $newZoneList;
-  	}
 
 }

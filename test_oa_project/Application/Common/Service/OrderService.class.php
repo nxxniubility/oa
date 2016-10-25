@@ -81,9 +81,9 @@ class OrderService extends BaseService
      */
     protected function _getZoneIds($zone_id)
     {
-        $zoneIds = D('Zone')->getZoneIds($zone_id);
+        $zoneIds = D('Zone','Service')->getZoneIds(array('zone_id'=>$zone_id));
         $zoneIdArr = array();
-        foreach($zoneIds as $k=>$v){
+        foreach($zoneIds['data'] as $k=>$v){
             $zoneIdArr[] = $v['zone_id'];
         }
         return $zoneIdArr;
