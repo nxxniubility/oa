@@ -40,7 +40,7 @@
 					<input type="button" class="acSubmit" value="激活">
 				</div>
 				<div class="rows">
-					<p class="already">已经有账号？<a href="{$url_login}">马上登录</a></p>
+					<p class="already">已经有账号？<a href="{:U('System/Admin/index')}">马上登录</a></p>
 				</div>
 				<div class="rows">
 					<p class="versionNumber2">版本号v{$version}</p>
@@ -60,7 +60,7 @@
 						confirmPassword:$(':input[name="confirmPassword"]').val(),
 						phoneverify:$(':input[name="phoneverify"]').val()
 					};
-					common_ajax(data);
+					common_ajax2(data);
 				});
 
 				/*点击验证码框事件*/
@@ -81,7 +81,7 @@
 				var time = 60;
 				thisObj.hide();
 				lodingObj.show();
-				setInterval(codeInterval,1000);
+				sh = setInterval(codeInterval,1000);
 				function codeInterval(){
 					if(time!=0){
 						var str = '等待'+time+'秒';

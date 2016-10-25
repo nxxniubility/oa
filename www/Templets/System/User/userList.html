@@ -95,7 +95,7 @@
                     <span>最近跟进结果：</span>
                     <ul data-id="attitude_id">
                         <li><a href="javascript:;" data-value="0" {:$data['request']['attitude_id']==0?'class="on_hover"':''}>全部</a></li>
-                        <foreach name="data['attitude']" item="v" key="k">
+                        <foreach name="data['USER_ATTITUDE']" item="v" key="k">
                             <li><a href="javascript:;" data-value="{$k}" {:$data['request']['attitude_id']==$k?'class="on_hover"':''}>{$v}</a></li>
                         </foreach>
                     </ul>

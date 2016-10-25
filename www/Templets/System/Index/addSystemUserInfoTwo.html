@@ -39,20 +39,26 @@
             <div class="afRow clearfix">
                 <div class="afRowLeft"><i>&#42</i>员工状态:</div>
                 <div class="afRowRight">
-                    <input type="text" class="afInp afUnreadable" value="{:$data['systemUserStatus'][$data['userInfo']['usertype']]['text']}" disabled="disabled">
+                    <input type="text" class="afInp afUnreadable" value="{:$data['userInfo']['usertype_name']}" disabled="disabled">
                 </div>
             </div>
 
             <div class="afRow clearfix">
                 <div class="afRowLeft"><i>&#42</i>入职时间:</div>
                 <div class="afRowRight">
-                    <input type="text" class="afInp afUnreadable" value="{:date('Y/m/d',$data['userInfo']['entrytime'])}" disabled="disabled">
+                    <input type="text" class="afInp afUnreadable" value="{$data['userInfo']['entry_time']}" disabled="disabled">
                 </div>
             </div>
             <div class="afRow clearfix">
                 <div class="afRowLeft"><i>&#42</i>转正时间:</div>
                 <div class="afRowRight">
-                    <input type="text" class="afInp afUnreadable" value="{:date('Y/m/d',$data['userInfo']['straightime'])}" disabled="disabled">
+                    <input type="text" class="afInp afUnreadable" value="{$data['userInfo']['straigh_time']}" disabled="disabled">
+                </div>
+            </div>
+            <div class="afRow clearfix">
+                <div class="afRowLeft"><i>&#42</i>指纹编号:</div>
+                <div class="afRowRight">
+                    <input type="text" class="afInp afUnreadable" value="{$data['userInfo']['check_id']}" disabled="disabled">
                 </div>
             </div>
         </div>
@@ -76,23 +82,17 @@
             </div>
         </div>
         <div class="afItem">
-            <div class="itTop clearfix">
-                <div class="topLeft"></div>
-                <span>其他信息</span>
-                <em></em>
-            </div>
-            <div class="afRow clearfix">
-                <div class="afRowLeft"><i>&#42</i>指纹编号:</div>
-                <div class="afRowRight">
-                    <input type="text" class="afInp afUnreadable" value="{$data['userInfo']['check_id']}" disabled="disabled">
-                </div>
-            </div>
-            <div class="afRow clearfix">
-                <div class="afRowLeft">备注:</div>
-                <div class="afRowRight">
-                    <textarea class="afTxt" name="remark"></textarea>
-                </div>
-            </div>
+            <!--<div class="itTop clearfix">-->
+                <!--<div class="topLeft"></div>-->
+                <!--<span>其他信息</span>-->
+                <!--<em></em>-->
+            <!--</div>-->
+            <!--<div class="afRow clearfix">-->
+                <!--<div class="afRowLeft">备注:</div>-->
+                <!--<div class="afRowRight">-->
+                    <!--<textarea class="afTxt" name="remark"></textarea>-->
+                <!--</div>-->
+            <!--</div>-->
 
             <div class="afRow clearfix">
                 <div class="afRowLeft">&nbsp;</div>

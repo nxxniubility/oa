@@ -76,8 +76,10 @@ class ApiService extends BaseService {
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function sendSms($smsType, $data)
+    public function sendSms($smsType, $data=null)
     {
+        //清空session手机验证码
+        session('smsVerifyCode_'.$smsType, null);
         //阿里大鱼短信模板
         $smspages = C('SMSDATA');
         $smsData = $smspages[$smsType]['smsdata'];
@@ -100,7 +102,7 @@ class ApiService extends BaseService {
             }
         }
         //发送短信验证码
-        $result =  $this->sms($data['mobile'], $smsType.'_'.$data['mobile'], $smsData, $smspages[$smsType]['smsdata_id'], $smspages[$smsType]['signName']);
+        $result =  $this->_sms($data['mobile'], $smsType.'_'.$data['mobile'], $smsData, $smspages[$smsType]['smsdata_id'], $smspages[$smsType]['signName']);
         $result = (array) $result;
         if($result['code']==0){
             return array('code'=>0, 'msg'=>'短信已经发送,请查收');
@@ -138,5 +140,32 @@ class ApiService extends BaseService {
         }else{
             return array('code'=>1, 'msg'=>$send_flag);
         }
+    }
+
+
+
+
+    /**
+     * 短信公共接口
+     * @author Sunles
+     * phone_num：电话号码
+     * sign:标识
+     * signName:签名(注册验证)
+     * smsdata:短信内容"{\"code\":\"$smscode\",\"product\":\"$alidayu\"}"
+     * smsdata_id：模板ID（SMS_5260550）
+     */
+    protected function _sms($phone_num,$sign,$smsdata,$smsdata_id,$signName)
+    {
+        import('Vendor.Alidayu.TopSdk');
+
+        $client = new \TopClient;
+        $request = new \AlibabaAliqinFcSmsNumSendRequest;
+        $request->setExtend($sign);
+        $request->setSmsType("normal");
+        $request->setSmsFreeSignName($signName);
+        $request->setSmsParam(json_encode($smsdata));
+        $request->setRecNum($phone_num);
+        $request->setSmsTemplateCode($smsdata_id);
+        return $client->execute($request);
     }
 }
