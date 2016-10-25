@@ -106,6 +106,11 @@ function selectbox2() {
             selectStatus($(".select2 dd").parent("dl").find("dt"));
             var callback = $(this).attr('callback');
             if (callback) eval(callback + '(this)');
+            if (data_name.indexOf('学员转介绍') != -1) {
+                $(".nssNone").show();
+            }else{
+                $(".nssNone").hide();
+            }
         });
     $(document).click(function() {
         $(".select2 dd").hide();
@@ -137,26 +142,4 @@ function otherSelectStatus() {
     $("[class^=select]").find("dl").removeClass("zindex4");
 }
 
-///*添加新/编辑模版*/
-//$('.tt').on('click', function() {
-//    layer.open({
-//        type: 1, 					//  页面层
-//        title: false, 				//	不显示标题栏
-//        area: ['600px', '140px'],
-//        shade: .6, 					//	遮罩
-//        time: 0, 					//  关闭自动关闭
-//        shadeClose: true, 			//	遮罩控制关闭层
-//        closeBtn: false, 			//	不显示关闭按钮
-//        shift: 1, 					//	出现动画
-//        content: $(".department")	//  加载主体内容
-//    });
-//    $('.nsClose, .nsDetermine').on('click', function() {
-//        layer.closeAll(); 			// 关闭
-//    });
-//});
-
-
-$(".nsRight2 label").click(function(){
-    if($(this).find(".man:checked").val()==undefined)  $(".nsNone").hide();
-    else  $(".nsNone").show();
-})
+$(".nssNone").hide();

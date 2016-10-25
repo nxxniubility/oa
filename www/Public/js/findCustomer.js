@@ -133,6 +133,17 @@ $('.btn_apply').click(function(e){
         shift: 1, 					//	出现动画
         content: $("#popup1")	//  加载主体内容
     });
+
+    $("#channelchoose").change(function()
+    {
+        var data_value = $(this).val();
+        if (data_value == 1000016) {
+            $(".nssNone").show();
+        }else{
+            $(".nssNone").hide();
+        }
+    })
+    $(".nssNone").hide();
 });
 
 /*赎回客户*/
