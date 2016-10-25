@@ -71,3 +71,9 @@
 /*0908*/
 .wrapBox#addproWrap .proCont {width:auto;}
 .wrapBox#addproWrap .proCont .imRight em {display:block;height:30px;}
+
+/*1025*/
+.contBox .temRows .picImgBox .limit {padding-top:10px;}
+.contBox .temRows .picImgBox img {display:block;width:160px;height:auto;}
+.contBox .temRows .desBox p.theme {margin:10px 0 0px 15px;}
+

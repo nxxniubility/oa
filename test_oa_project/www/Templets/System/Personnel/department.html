@@ -40,25 +40,27 @@
 							</td>
 							<td>{$v.department_id}</td>
 							<td>{$v.departmentname}</td>
-							<td class="lastItem dtOperation">
-								<a href="javascript:;" class="orgSelect"><i></i></a>
-								<div class="otherOperation">
-									<div class="triangle"></div>
-									<div class="otherIcon">
-										<ul>
-											<li>
-												<a href="<?php echo U('System/Personnel/editDepartment',array('dep_id'=>$v['department_id'])); ?>">
-													<span class="modify"></span>
-													<em>修改</em>
-												</a>
-											</li>
-											<li>
-												<a href="javascript:;" onclick="del_department('{$v.department_id}')">
-													<span class="delete"></span>
-													<em>删除</em>
-												</a>
-											</li>
-										</ul>
+							<td class="lastItem">
+								<div class="operating-cont">
+									<a href="javascript:;" class="orgSelect"><i></i></a>
+									<div class="otherOperation">
+										<div class="triangle"></div>
+										<div class="otherIcon">
+											<ul>
+												<li>
+													<a href="<?php echo U('System/Personnel/editDepartment',array('dep_id'=>$v['department_id'])); ?>">
+														<span class="modify"></span>
+														<em>修改</em>
+													</a>
+												</li>
+												<li>
+													<a href="javascript:;" onclick="del_department('{$v.department_id}')">
+														<span class="delete"></span>
+														<em>删除</em>
+													</a>
+												</li>
+											</ul>
+										</div>
 									</div>
 								</div>
 							</td>

@@ -48,33 +48,35 @@
         			<td>{$v.department_name}</td>
         			<td>{$v.remark}</td>
         			<td><?php echo $v['display']==1?'启用':'禁用'; ?></td>
-        			<td class="lastItem posOperation">
-        				<a href="javascript:;" class="rightsSelect"><i></i></a>
-                        <div class="otherOperation">
-                            <div class="triangle"></div>
-                            <div class="otherIcon">
-                                <ul>
-                                    <li>
-                                        <a href="javascript:;" class="selectPermissions" sid="{$v.id}">
-                                            <span class="set"></span>
-                                            <em>权限设置</em>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{:U('System/Personnel/editPosition',array('role_id'=>$v['id']))}">
-                                            <span class="modify"></span>
-                                            <em>修改</em>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:del_position('{$v.id}');">
-                                            <span class="delete"></span>
-                                            <em>删除</em>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+        			<td class="lastItem">
+        				<div class="operating-cont">
+	        				<a href="javascript:;" class="rightsSelect"><i></i></a>
+	                        <div class="otherOperation">
+	                            <div class="triangle"></div>
+	                            <div class="otherIcon">
+	                                <ul>
+	                                    <li>
+	                                        <a href="javascript:;" class="selectPermissions" sid="{$v.id}">
+	                                            <span class="set"></span>
+	                                            <em>权限设置</em>
+	                                        </a>
+	                                    </li>
+	                                    <li>
+	                                        <a href="{:U('System/Personnel/editPosition',array('role_id'=>$v['id']))}">
+	                                            <span class="modify"></span>
+	                                            <em>修改</em>
+	                                        </a>
+	                                    </li>
+	                                    <li>
+	                                        <a href="javascript:del_position('{$v.id}');">
+	                                            <span class="delete"></span>
+	                                            <em>删除</em>
+	                                        </a>
+	                                    </li>
+	                                </ul>
+	                            </div>
+	                        </div>
+	                   </div>
         			</td>
         		</tr>
         	</foreach>
@@ -106,9 +108,9 @@
 
 </div>
 <script src="__PUBLIC__/js/jquery-1.7.2.js"></script>
-<script src="__PUBLIC__/js/rightsManagement.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
 <script src="__PUBLIC__/js/jquery.treetable.js"></script>
+<script src="__PUBLIC__/js/rightsManagement.js"></script>
 <script>
     $(function(){
         //树配置

@@ -1,4 +1,7 @@
-selectbox();
+$(document).ready(function(){
+	selectbox();
+	checknode();
+});
 //下拉框
 function selectbox() {
     $(document).bind({
@@ -90,8 +93,6 @@ $('.selectPermissions').on('click', function() {
   $(this).toggleClass("selected");
 });*/
 
-checknode();
-
 function checknode(obj) {
     var chk = $("input[type='checkbox']");
     var count = chk.length;
@@ -114,4 +115,11 @@ function checknode(obj) {
             else if (eval(le) == eval(level_bottom)) break;
         }
     }
+}
+// 限制字符长度
+function chkLength(el,size){
+	if(el.value.length > size){
+		layer.msg('不能超过'+ size +'字数限制.',{icon:2});
+	}
+	el.value = el.value.substring(0,size);
 }
