@@ -437,7 +437,7 @@ class SystemUserService extends BaseService
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function loginAlarm()
+    public function loginAlarm($request)
     {
         if(empty($request['verifyCode'])) return array('code'=>301, 'msg'=>'请输入验证码！');
         $verifyCode = session('smsVerifyCode_alarm');
