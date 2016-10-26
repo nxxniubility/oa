@@ -175,7 +175,6 @@
                 <tr class="rnHeader">
                     <th class="rnPosition">所属职位</th>
                     <th>姓名</th>
-                    <th>忙闲状态</th>
                     <th>操作</th>
                 </tr>
             </table>
@@ -209,7 +208,12 @@
         });
         //  重新分配 star
         $('.getsystembtn').on('click', function(){
-            getSystemList();
+            $.colorbox({
+                inline: true,
+                href: $("#viReassign"),
+                overlayClose: false,
+                title: "分配员工列表"
+            });
         });
         //搜索职位相关-检索
         $('.nsSearchSubmit').on('click', function(){
@@ -244,102 +248,69 @@
     });
     //获取客户信息状态
     function getStatus(uid){
-        layer.load(2);
         $(':input[name="temp_user"]').val(uid);
-        $.ajax({
-            url:"{:U('System/Visit/visitList')}",
-            type:'post',
-            dataType:'json',
-            data:{user_id:uid,type:'getUser'},
-            success:function(reflag){
-                layer.closeAll('loading');
-                if(reflag.code==1){
-                    //未分配
-                    $(':input[name="temp_system"]').val(reflag.data.system_user_id);
-                    $('.newSystem').html(reflag.data.realname);
-                    $.colorbox({
-                        inline: true,
-                        href: $("#popup1"),
-                        overlayClose: false,
-                        title: "到访客户接待提醒"
-                    });
-                }else if(reflag.code==2){
-                    //本中心
-                    $(':input[name="temp_system"]').val(reflag.data.system_user_id);
-                    $('.newSystem').html(reflag.data.realname);
-                    $.colorbox({
-                        inline: true,
-                        href: $("#popup3"),
-                        overlayClose: false,
-                        title: "到访客户接待提醒"
-                    });
-                }else if(reflag.code==3){
-                    //非本中心客户
-                    $(':input[name="temp_system"]').val(reflag.data.system_user_id);
-                    $('.newSystem').html(reflag.data.zonename+'&nbsp;&nbsp;'+reflag.data.realname);
-                    $.colorbox({
-                        inline: true,
-                        href: $("#popup4"),
-                        overlayClose: false,
-                        title: "非本中心客户"
-                    });
-                }else if(reflag.code==4){
-                    //无所属销售人员
-                    $(':input[name="temp_system"]').val(reflag.data.system_user_id);
-                    $('.newSystem').html(reflag.data.realname);
-                    $.colorbox({
-                        inline: true,
-                        href: $("#popup1"),
-                        overlayClose: false,
-                        title: "无所属销售人员"
-                    });
-                }else if(reflag.code==5){
-                    //本中心销售忙线
-                    $.colorbox({
-                        inline: true,
-                        href: $("#popup2"),
-                        overlayClose: false,
-                        title: "本中心销售忙线"
-                    });
-                }
-            },
-            error:function(){
-                layer.closeAll('loading');
-            }
-        })
-    }
+        common_ajax2({user_id:uid,type:'getUserVisitInfo'},"{:U('System/Visit/visitList')}",'no',hintBox);
+        function hintBox(reflag){
+            if(reflag.code==602){
+                //未分配
+                $(':input[name="temp_system"]').val(reflag.data.data[0].system_user_id);
+                $('.newSystem').html(reflag.data.data[0].realname);
+                getSystemList(reflag.data);
+                $.colorbox({
+                    inline: true,
+                    href: $("#popup1"),
+                    overlayClose: false,
+                    title: "到访客户接待提醒"
+                });
+            }else if(reflag.code==0){
+                //本中心
+                $(':input[name="temp_system"]').val(reflag.data.system_user_id);
+                $('.newSystem').html(reflag.data.realname);
+                $.colorbox({
+                    inline: true,
+                    href: $("#popup3"),
+                    overlayClose: false,
+                    title: "到访客户接待提醒"
+                });
+            }else if(reflag.code==601){
+                //非本中心客户
+                $(':input[name="temp_system"]').val(reflag.data.system_user_id);
+                $('.newSystem').html(reflag.data.zonename+'&nbsp;&nbsp;'+reflag.data.realname);
+                $.colorbox({
+                    inline: true,
+                    href: $("#popup4"),
+                    overlayClose: false,
+                    title: "非本中心客户"
+                });
+            }else if(reflag.code==603){
+                //无所属销售人员
+                $(':input[name="temp_system"]').val(reflag.data.data[0].system_user_id);
+                $('.newSystem').html(reflag.data.data[0].realname);
+                getSystemList(reflag.data);
+                $.colorbox({
+                    inline: true,
+                    href: $("#popup1"),
+                    overlayClose: false,
+                    title: "无所属销售人员"
+                });
+            };
+        };
+    };
     //获取员工列表
-    function getSystemList(role_id){
+    function getSystemList(reflag){
         $('.system_ajax').remove();
-        $.ajax({
-            url: "{:U('System/Visit/visitList')}",
-            type: 'post',
-            dataType: 'json',
-            data: {role_id: role_id, type: 'getSystemList'},
-            success: function (reflag) {
-                if(reflag.code==0){
-                    var html = '';
-                    var html_if = '';
-                    $.each(reflag.data, function(k,v){
-                        if(v.engaged_status && v.engaged_status==1){
-                            html_if = '<td><a href="javascript:;" class="rnXian">忙线</a></td> <td><a href="javascript:;" onclick="subtn(0,'+ v.system_user_id+')" class="rnConfirm">确定</a></td>';
-                        }else{
-                            html_if = '<td><a href="javascript:;" class="rnMang">空闲</a></td> <td><a href="javascript:;" onclick="subtn(0,'+ v.system_user_id+')" class="rnConfirm">确定</a></td>';
-                        };
-                        html += '<tr class="system_ajax"> <td class="rnPosition">'+ v.role_names+'</td> <td class="rnRealname">'+ v.realname+'</td> '+html_if+' </tr>';
-                    });
-                    $('#rnTable').append(html);
-                    $('#search_body').empty().append(html);
-                };
-            }
-        });
-        $.colorbox({
-            inline: true,
-            href: $("#viReassign"),
-            overlayClose: false,
-            title: "分配员工列表"
-        });
+        var html = '';
+        var html_if = '';
+        if(reflag.data){
+            $.each(reflag.data, function(k,v){
+                html_if = ' <td><a href="javascript:;" onclick="subtn(0,'+ v.system_user_id+')" class="rnConfirm">确定</a></td>';
+                html += '<tr class="system_ajax"> <td class="rnPosition">'+ v.role_names+'</td> <td class="rnRealname">'+ v.realname+'</td> '+html_if+' </tr>';
+            });
+        };
+        $('#rnTable').append(html);
+        $('#search_body').empty().append(html);
     }
+    //提交
     function subtn(temp_user,temp_system){
         if (temp_system.length == 0 || temp_system==0) {
             layer.msg('操作人区域平级下没有销售人员',{icon:2});
@@ -358,7 +329,7 @@
             system_user_id:temp_system,
             type:'submit'
         };
-        common_ajax(data,'','reload');
+        common_ajax2(data,'','reload');
     }
 </script>
 </body>

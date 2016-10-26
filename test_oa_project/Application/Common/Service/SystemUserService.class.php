@@ -615,9 +615,9 @@ class SystemUserService extends BaseService
                 }
             }
         }
-        $where_system['where']['system_user_id'] = array('IN',$system_ids);
+        $where_system['system_user_id'] = array('IN',$system_ids);
         $systemList = $this->getSystemUsersList($where_system);
-        if(empty($systemList['data']['data'])) array('code'=>'200','msg'=>'找不到员工数据');
+        if(empty($systemList['data']['data'])) return array('code'=>'200','msg'=>'找不到员工数据');
         foreach ($systemList['data']['data'] as $key => $sysUser) {
             $i=0;
             foreach($newChannelArr as $k2=>$v2){

@@ -21,6 +21,141 @@ class UserService extends BaseService
 
     /*
     |--------------------------------------------------------------------------
+    | 用户到访信息查询
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getUserVisitInfo($param)
+    {
+        $param = array_filter($param);
+        //获取操作人ID与区域ID
+        $zone_id = $this->system_user['zone_id'];
+        $system_user_id = $this->system_user_id;
+        if(empty($param['user_id'])) return array('code'=>300,'msg'=>'参数异常');
+        //获取销售与教务 配置项ID
+        $market_arr = C('ADMIN_MARKET_ROLE');
+        $educational_arr = C('ADMIN_EDUCATIONAL_ROLE');
+        //合并教务与销售ID集合
+        $market_arr = explode(',', $market_arr);
+        $educational_arr = explode(',', $educational_arr);
+        $roles_arr = array_merge($market_arr, $educational_arr);
+        //获取客户信息
+        $user_info = D('User', 'Service')->getFind(array('user_id'=>$param['user_id']),'status,zone_id,system_user_id');
+        //客户是否回库状态？
+        if($user_info['status']==160){
+            $where_visitlist['zone_id'] = $zone_id;
+            $where_visitlist['role_id'] = array('IN', $roles_arr);
+            $visit_list = $this->_getSystemVisitList($where_visitlist);
+            return array('code'=>602, 'msg'=>'该客户属于回库状态', 'data'=>$visit_list['data']);
+        }
+        //获取所属人职位
+        $system_info = D('SystemUser', 'Service')->getSystemUsersInfo(array('system_user_id'=>$user_info['system_user_id']));
+        $system_role_arr = array();
+        if(!empty($system_info['data']['role_id'])){
+            $system_role_arr = explode(',', $system_info['data']['role_id']);
+        }
+        //是否销售教务？
+        if(array_intersect($system_role_arr, $roles_arr)){
+            //是否本中心销售
+            if($zone_id==$system_info['data']['zone_id']){
+                return array('code'=>0, 'msg'=>'该客户属于 '.$system_info['data']['rolename'].' '.$system_info['data']['realname'], 'data'=>$system_info['data']);
+            }else{
+                return array('code'=>601, 'msg'=>'该客户属于非本中心 销售/教务', 'data'=>$system_info['data']);
+            }
+        }else{
+            $where_visitlist['zone_id'] = $zone_id;
+            $where_visitlist['role_id'] = array('IN', $roles_arr);
+            $visit_list = $this->_getSystemVisitList($where_visitlist);
+            return array('code'=>603, 'msg'=>'该客户不属于 销售/教务', 'data'=>$visit_list['data']);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 添加客户到访 并分配到员工
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function addUserVisit($data){
+        $data = array_filter($data);
+        $system_user_id = $this->system_user_id;
+        $user_id = $data['user_id'];
+        $tosystem_user_id = $data['tosystem_user_id'];
+        //客户分配
+        $userInfo = D('User')->getFind(array('user_id'=>$user_id), 'system_user_id,status,zone_id');
+        //获取所属人职位
+        $tosystem_info = D('SystemUser', 'Service')->getSystemUsersInfo(array('system_user_id'=>$tosystem_user_id));
+        if($tosystem_user_id!=$userInfo['system_user_id'] || $userInfo['status']=='160'){
+            $param['user_id'] = $user_id;
+            $param['tosystem_user_id'] = $tosystem_user_id;
+            $param['system_user_id'] = $system_user_id;
+            $reflag_allocation = $this->allocationUser($param,10);
+            $callbackDate['attitude_id'] = 0;
+            $callbackDate['remark'] = '前台操作: 客户于 '.date('Y-m-d',time()).' 上门到访！';
+            $callbackDate['nexttime'] = time();
+            $callbackDate['user_id'] = $user_id;
+            $callbackDate['system_user_id'] = $system_user_id;
+            $this->_addCallback($callbackDate);
+        }
+
+        if($reflag_allocation['code']==0){
+            D()->startTrans();
+            //重置zone_id 与 更新上门时间
+            $save_user['zone_id'] = $tosystem_info['data']['zone_id'];
+            $save_user['visittime'] = $save_user['lastvisit'] = time();
+            $flag_user_save = D('user')->editData($save_user, $user_id);
+            if($flag_user_save!=false){
+                //添加数据记录
+                $dataLog['operattype'] = 12;
+                $dataLog['operator_user_id'] = $system_user_id;
+                $dataLog['user_id'] = $user_id;
+                $dataLog['logtime'] = time();
+                D('Data', 'Service')->addDataLogs($dataLog);
+                D()->commit();
+                $visitLogs = D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$tosystem_user_id))->find();
+                if(!empty($visitLogs)){
+                    $data['visitnum'] = array('exp','visitnum+1');
+                    D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$tosystem_user_id))->save($data);
+                }else{
+                    $data['date'] = date('Ymd');
+                    $data['system_user_id'] = $tosystem_user_id;
+                    $data['visitnum'] = 1;
+                    D('UserVisitLogs')->data($data)->add();
+                }
+                return  array('code'=>0,'msg'=>'分配到访客户成功');
+            }else{
+                D()->rollback();
+                return  array('code'=>0,'msg'=>'分配操作失败');
+            }
+        }else{
+            return  array('code'=>201,'msg'=>$reflag_allocation['msg']);
+        }
+    }
+
+    /*
+    * 获取本中心销售/教务名单
+    * @author zgt
+    */
+    protected function _getSystemVisitList($where){
+        $list = D('SystemUser', 'Service')->getSystemUsersList($where);
+        if(!empty($list['data']['data'])){
+            foreach($list['data']['data'] as $k=>$v){
+                $visit_logs = D('UserVisitLogs')->getFind(array('system_user_id'=>$v['system_user_id'],'date'=>date('Ymd')),'visitnum');
+                $list['data']['data'][$k]['visitnum'] = !empty($visit_logs)?$visit_logs['visitnum']:0;
+            }
+            uasort($list['data']['data'], function($a, $b) {
+                $al = ($a['visitnum']);
+                $bl = ($b['visitnum']);
+                if($al==$bl)return 0;
+                return ($al<$bl)?-1:1;
+            });
+            array_values($list['data']['data']);
+        }
+        return array('code'=>0, 'data'=>$list['data']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | 查找用户列表
     |--------------------------------------------------------------------------
     | @author zgt
@@ -62,6 +197,7 @@ class UserService extends BaseService
             "{$this->DB_PREFIX}user.createuser_id",
             "{$this->DB_PREFIX}user.channel_id",
             "{$this->DB_PREFIX}user.reservetype",
+            "{$this->DB_PREFIX}user.selftype",
         );
         $result['data'] = D('User')->getList($where,$field,$order,$limit);
         $result['count'] = D('User')->getCount($where);
@@ -333,65 +469,6 @@ class UserService extends BaseService
         }
     }
 
-    /**
-     * 添加客户到访 并分配到员工
-     * @author zgt
-     */
-    public function addUserVisit($user_id,$tosystem_user_id,$system_user_id){
-        //客户分配
-        $userInfo = D('User')->getFind(array('user_id'=>$user_id), 'system_user_id,status');
-        if($tosystem_user_id!=$userInfo['system_user_id'] || $userInfo['status']=='160'){
-            $param['user_id'] = $user_id;
-            $param['tosystem_user_id'] = $tosystem_user_id;
-            $param['system_user_id'] = $system_user_id;
-            $reflag_allocation = $this->allocationUser($param,10);
-            $callbackDate['attitude_id'] = 0;
-            $callbackDate['remark'] = '前台操作: 客户于 '.date('Y-m-d',time()).' 上门到访！';
-            $callbackDate['nexttime'] = time();
-            $callbackDate['user_id'] = $user_id;
-            $callbackDate['system_user_id'] = $system_user_id;
-            $this->_addCallback($callbackDate);
-        }
-        
-        if($reflag_allocation['code']==0){
-            $data_engaged['user_id'] = $user_id;
-            $data_engaged['createtime'] = time();
-            $data_engaged['status'] = 1;
-            $data_engaged['isovertime'] = 1;
-            $data_engaged['isget'] = 1;
-            D()->startTrans();
-            // 添加记录
-            $flag_engaged_save = M('system_user_engaged')->where(array('system_user_id'=>$tosystem_user_id))->save($data_engaged);
-            //重置zone_id
-            $system = M('system_user')->field('system_user_id,zone_id')->where(array('system_user_id'=>$tosystem_user_id))->find();
-            $flag_user_save = M('user')->where(array('user_id'=>$user_id))->save(array('zone_id'=>$system['zone_id'],'visittime'=>time(),'lastvisit' => time()));
-            if($flag_engaged_save!==fasle && $flag_user_save!=false){
-                //添加数据记录
-                $dataLog['operattype'] = 12;
-                $dataLog['operator_user_id'] = $system_user_id;
-                $dataLog['user_id'] = $user_id;
-                $dataLog['logtime'] = time();
-                D('Data', 'Service')->addDataLogs($dataLog);
-                D()->commit();
-                $visitLogs = D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$tosystem_user_id))->find();
-                if(!empty($visitLogs)){
-                    $data['visitnum'] = array('exp','visitnum+1');
-                    D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$tosystem_user_id))->save($data);
-                }else{
-                    $data['date'] = date('Ymd');
-                    $data['system_user_id'] = $tosystem_user_id;
-                    $data['visitnum'] = 1;
-                    D('UserVisitLogs')->data($data)->add();
-                }
-                return  array('code'=>0,'msg'=>'分配到访客户成功');
-            }else{
-                D()->rollback();
-                return  array('code'=>0,'msg'=>'分配操作失败');
-            }
-        }else{
-            return  array('code'=>201,'msg'=>$reflag_allocation['msg']);
-        }
-    }
 
 
     /*
