@@ -20,6 +20,7 @@ class UserController extends SystemController
         //参数判断
         $where['system_user_id|updateuser_id'] = $this->system_user_id;
         $re_page = isset($where['page']) ? $where['page'] : 1;
+        $re_pagenum = session('user_list_pagenum') ? session('user_list_pagenum') : 30;
         unset($request['page']);unset($where['page']);unset($where['type']);unset($where['_pjax']);
         if ($where['status'] == 0) {
             $where['status'] = array('IN', array(20, 30, 70, 120));
@@ -42,10 +43,10 @@ class UserController extends SystemController
             }
         }
         //客户列表
-        $re_userAll = D('User','Service')->getUserList($where, $order, (($re_page-1)*30).',30');
+        $re_userAll = D('User','Service')->getUserList($where, $order, (($re_page-1)*$re_pagenum).','.$re_pagenum);
         $data['userAll'] = $re_userAll['data']['data'];
         //加载分页类
-        $data['paging_data'] = $this->Paging($re_page, 30, $re_userAll['data']['count'], $request, __ACTION__, null, 'system');
+        $data['paging_data'] = $this->Paging($re_page, $re_pagenum, $re_userAll['data']['count'], $request, __ACTION__, null, 'system');
         //获取自定义列
         $column_where['columntype'] = 1;
         $column_list = D('SystemUser','Service')->getColumnList($column_where);
@@ -606,6 +607,7 @@ class UserController extends SystemController
         //参数判断
         $where['zone_id'] = !empty($where['zone_id'])?$where['zone_id']:$this->system_user['zone_id'];
         $re_page = isset($where['page']) ? $where['page'] : 1;
+        $re_pagenum = session('user_list_pagenum') ? session('user_list_pagenum') : 30;
         unset($request['page']);unset($where['page']);unset($where['type']);unset($where['_pjax']);
         //排序
         if ($where['status'] == 30){
@@ -651,10 +653,10 @@ class UserController extends SystemController
             }
         }
         //客户列表
-        $re_userAll = D('User','Service')->getUserList($where, $order, (($re_page-1)*30).',30');
+        $re_userAll = D('User','Service')->getUserList($where, $order, (($re_page-1)*$re_pagenum).','.$re_pagenum);
         $data['userAll'] = $re_userAll['data']['data'];
         //加载分页类
-        $data['paging_data'] = $this->Paging($re_page, 30, $re_userAll['data']['count'], $request, __ACTION__, null, 'system');
+        $data['paging_data'] = $this->Paging($re_page, $re_pagenum, $re_userAll['data']['count'], $request, __ACTION__, null, 'system');
         //获取自定义列
         $column_where['columntype'] = 2;
         $column_list = D('SystemUser','Service')->getColumnList($column_where);
