@@ -1419,27 +1419,21 @@ class MoveController extends BaseController
 
 
     public function delUser(){
-//        exit;
+        exit;
 ////        $where['system_user_id'] = 2;
-//        $where['createuser_id'] = 34;
-//        $where['channel_id'] = 28;
-//        $where['email'] = array('IN', '男,女');
+//        $where['createuser_id'] = 53236;
+//        $where['channel_id'] = 27;
+////        $where['email'] = array('IN', '男,女');
 ////        $where['status'] = 160;
-//        $where['createtime'] = array('EGT',strtotime(date('2016-10-23').' 00:00:00'));
+//        $where['createtime'] = array('EGT',strtotime(date('2016-10-26').' 00:00:00'));
 //        $list = M('user','zl_','DB_CONFIG1')->where($where)->select();
-//        F('20161023-editUser',$list);
+//        F('20161026-delUser',$list);
 //        print_r($list);
 //        exit;
-        $list = F('20161023-editUser');
+        $list = F('20161026-delUser');
         foreach($list as $k=>$v){
-            if($v['email']=='男'){
-                $data2['sex'] = 1;
-            }else{
-                $data2['sex'] = 2;
-            }
-            $data['email'] = null;
-            $arr[] = M('user','zl_','DB_CONFIG1')->field('email')->where(array('user_id'=>$v['user_id']))->save($data);
-            M('user_info','zl_','DB_CONFIG1')->field('sex')->where(array('user_id'=>$v['user_id']))->save($data2);
+            $arr[] = M('user','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->delete();
+            M('user_info','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->delete();
         }
         print_r(count($arr));
     }

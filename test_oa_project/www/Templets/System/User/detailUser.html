@@ -1497,13 +1497,13 @@
             _face='<img src="/Public/images/personalInfo_01-01.jpg">';
         }else{
             _face='<img src="/Public/images/personalInfo_01-02.jpg">';
-        }
+        };
         //录音
         if(data.call_length!=0){
             _call_mp3 = '<a href="'+data.call_mp3+'" target="_blank"><img src="__PUBLIC__/images/play- recording.png" alt="播放录音"></a> <span>录音时长'+data.call_length+'秒</span> <a href="'+data.call_mp3+'" target="_blank"><input type="button" class="play-btn" value="播放"></a>';
         }else{
             _call_mp3 = '无录音';
-        }
+        };
         var _old_box = $('#call_box li').clone();
         $('#call_box li').find('.add_face').html(_face);
         $('#call_box li').find('.add_call_mp3').html( $('#call_box li').find('.add_call_mp3').html()+ _call_mp3);
