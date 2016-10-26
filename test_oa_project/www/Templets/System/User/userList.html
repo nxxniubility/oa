@@ -9,10 +9,6 @@
     <link rel="stylesheet" href="__PUBLIC__/css/external.min.css?v=201609031">
     <link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
     <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-    <style>
-    	.tr_title,.tr_content{min-width: 85px;text-align: center;}
-		.iconBox div{float: right !important;}
-    </style>
     <script>
         //创建订单
         var createOrder_href = "{:U('System/User/createOrder')}";
@@ -328,6 +324,9 @@
                             <tr class="content_li" {:((time()-$v['createtime']) < 86400)?'style="color:green"':(($v['status']==30 && $v['nextvisit']!=0 && $v['lastvisit']!=0 && $v['lastvisit']<time() && $v['nextvisit']<time())?'style="color:red"':'')}>
                             <td class="tr_content" isShow="true">
                                 <div class="iconBox clearfix bodyr_{$k}"  data-value="{$v.user_id}" data-realname="{$v.realname}" data-qq="{$v.qq}" data-tel="{$v.tel}" data-username="{:decryptPhone($v['username'],C('PHONE_CODE_KEY'))}">
+                                	<!-- 自投icon：3、为自投-亮；4、不是自投-暗 -->
+                                    <div class="delivery"><img src="__PUBLIC__/images/intro-client-3.png" alt="无介绍" width="20" height="20"></div>
+                                    
                                     <if condition="(time()-$v['allocationtime']) LT 86400">
                                         <div class="new"><img src="__PUBLIC__/images/new-client.png" alt="新增" width="20" height="20"></div>
                                         <else/>
