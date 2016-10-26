@@ -83,14 +83,14 @@ class DataService extends BaseService
                     continue;
                 }
                 $add_arr[] = array(
-                    'zone_id'=>$v['zone_id'],
-                    'course_id'=>$v['course_id'],
-                    'attitude_id'=>$v['attitude_id'],
-                    'channel_id'=>$v['channel_id'],
-                    'infoquality'=>$v['infoquality'],
-                    'createuser_id'=>$v['createuser_id'],
-                    'updateuser_id'=>$v['updateuser_id'],
-                    'system_user_id'=>$v['system_user_id'],
+                    'zone_id'=>!empty($v['zone_id'])?$v['zone_id']:0,
+                    'course_id'=>!empty($v['course_id'])?$v['course_id']:0,
+                    'attitude_id'=>!empty($v['attitude_id'])?$v['attitude_id']:0,
+                    'channel_id'=>!empty($v['channel_id'])?$v['channel_id']:0,
+                    'infoquality'=>!empty($v['infoquality'])?$v['infoquality']:0,
+                    'createuser_id'=>!empty($v['createuser_id'])?$v['createuser_id']:0,
+                    'updateuser_id'=>!empty($v['updateuser_id'])?$v['updateuser_id']:0,
+                    'system_user_id'=>!empty($v['system_user_id'])?$v['system_user_id']:0,
                     'user_id'=>$v['user_id'],
                     'operattype'=>$data['operattype'],
                     'logtime'=>$data['logtime'],

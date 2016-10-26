@@ -1556,4 +1556,37 @@ class SystemUserService extends BaseService
         return array('code'=>0, 'data'=>$redata);
     }
 
+    /*
+   |--------------------------------------------------------------------------
+   | 获取本中心销售/教务名单
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function getSystemVisitList($where){
+        //获取销售与教务 配置项ID
+        $market_arr = C('ADMIN_MARKET_ROLE');
+        $educational_arr = C('ADMIN_EDUCATIONAL_ROLE');
+        //合并教务与销售ID集合
+        $market_arr = explode(',', $market_arr);
+        $educational_arr = explode(',', $educational_arr);
+        $roles_arr = array_merge($market_arr, $educational_arr);
+        $where['role_id'] = array('in',$roles_arr);
+        $where['usertype'] = array('neq',10);
+        $where['status'] = 1;
+        $list = D('SystemUser', 'Service')->getSystemUsersList($where);
+        if(!empty($list['data']['data'])){
+            foreach($list['data']['data'] as $k=>$v){
+                $visit_logs = D('UserVisitLogs')->getFind(array('system_user_id'=>$v['system_user_id'],'date'=>date('Ymd')),'visitnum');
+                $list['data']['data'][$k]['visitnum'] = !empty($visit_logs)?$visit_logs['visitnum']:0;
+            }
+            uasort($list['data']['data'], function($a, $b) {
+                $al = ($a['visitnum']);
+                $bl = ($b['visitnum']);
+                if($al==$bl)return 0;
+                return ($al<$bl)?-1:1;
+            });
+            array_values($list['data']['data']);
+        }
+        return array('code'=>0, 'data'=>$list['data']);
+    }
 }

@@ -10,23 +10,28 @@ class VisitController extends SystemController
         parent::_initialize();
     }
 
+
     /*
-    * *****************************************************
-    * 到访列表
-    * *****************************************************
-    * @author nxx
-    */
+   |--------------------------------------------------------------------------
+   | 到访列表
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
     public function visitList()
     {
         if(IS_POST){
             //确认到访
             $request = I('post.');
-            if($request['type']=='getUserVisitInfo'){
+            if($request['type']=='getSystemList') {
+                $where_system['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
+                $systemUserList = D('SystemUser', 'Service')->getSystemVisitList($where_system);
+                $this->ajaxReturn($systemUserList['code'],'获取成功',$systemUserList['data']);
+            }else if($request['type']=='getUserVisitInfo'){
                 $reflag = D('User', 'Service')->getUserVisitInfo($request);
                 $this->ajaxReturn($reflag['code'],$reflag['msg'],$reflag['data']);
             }else if($request['type']=='submit'){
                 $data['user_id'] = $request['user_id'];
-                $data['system_user_id'] = $request['system_user_id'];
+                $data['tosystem_user_id'] = $request['system_user_id'];
                 $reflag = D('User', 'Service')->addUserVisit($data);
                 if ($reflag['code'] == 0) {
                     $this->ajaxReturn('0','操作成功，请通知分配人员到前台接待',U('System/Visit/visitList'));

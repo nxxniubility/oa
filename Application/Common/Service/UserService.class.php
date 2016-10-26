@@ -44,8 +44,7 @@ class UserService extends BaseService
         //客户是否回库状态？
         if($user_info['status']==160){
             $where_visitlist['zone_id'] = $zone_id;
-            $where_visitlist['role_id'] = array('IN', $roles_arr);
-            $visit_list = $this->_getSystemVisitList($where_visitlist);
+            $visit_list = D('SystemUser', 'Service')->getSystemVisitList($where_visitlist);
             return array('code'=>602, 'msg'=>'该客户属于回库状态', 'data'=>$visit_list['data']);
         }
         //获取所属人职位
@@ -64,8 +63,7 @@ class UserService extends BaseService
             }
         }else{
             $where_visitlist['zone_id'] = $zone_id;
-            $where_visitlist['role_id'] = array('IN', $roles_arr);
-            $visit_list = $this->_getSystemVisitList($where_visitlist);
+            $visit_list = D('SystemUser', 'Service')->getSystemVisitList($where_visitlist);
             return array('code'=>603, 'msg'=>'该客户不属于 销售/教务', 'data'=>$visit_list['data']);
         }
     }
@@ -76,52 +74,60 @@ class UserService extends BaseService
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function addUserVisit($data){
-        $data = array_filter($data);
+    public function addUserVisit($param){
+        $param = array_filter($param);
         $system_user_id = $this->system_user_id;
-        $user_id = $data['user_id'];
-        $tosystem_user_id = $data['tosystem_user_id'];
+        $user_id = $param['user_id'];
+        $tosystem_user_id = $param['tosystem_user_id'];
         //客户分配
         $userInfo = D('User')->getFind(array('user_id'=>$user_id), 'system_user_id,status,zone_id');
+        //客户是否已上门
+        if(!empty($userInfo['visittime']) && $userInfo['visittime']>0){
+            return array('code'=>201,'msg'=>'客户已经确认上门过，无需重复操作');
+        }
+        //该客户是否在申请转入审核中
+        $userApply = $this->_isApply($user_id);
+        if(!empty($userApply)) return array('code'=>203,'msg'=>'客户 '.$userInfo['realname'].' 正在审核转入中，请联系本中心主管');
         //获取所属人职位
         $tosystem_info = D('SystemUser', 'Service')->getSystemUsersInfo(array('system_user_id'=>$tosystem_user_id));
-        if($tosystem_user_id!=$userInfo['system_user_id'] || $userInfo['status']=='160'){
-            $param['user_id'] = $user_id;
-            $param['tosystem_user_id'] = $tosystem_user_id;
-            $param['system_user_id'] = $system_user_id;
-            $reflag_allocation = $this->allocationUser($param,10);
-            $callbackDate['attitude_id'] = 0;
-            $callbackDate['remark'] = '前台操作: 客户于 '.date('Y-m-d',time()).' 上门到访！';
-            $callbackDate['nexttime'] = time();
-            $callbackDate['user_id'] = $user_id;
-            $callbackDate['system_user_id'] = $system_user_id;
-            $this->_addCallback($callbackDate);
-        }
-
+        if($userInfo['status']=='70') return array('code'=>204,'msg'=>'客户在交易状态无法分配，请联系本中心主管');
+        //客户转出
+        $alloca_param['user_id'] = $user_id;
+        $alloca_param['tosystem_user_id'] = $tosystem_user_id;
+        $alloca_param['system_user_id'] = $system_user_id;
+        $reflag_allocation = $this->allocationUser($alloca_param, 10);
         if($reflag_allocation['code']==0){
             D()->startTrans();
             //重置zone_id 与 更新上门时间
             $save_user['zone_id'] = $tosystem_info['data']['zone_id'];
             $save_user['visittime'] = $save_user['lastvisit'] = time();
             $flag_user_save = D('user')->editData($save_user, $user_id);
-            if($flag_user_save!=false){
-                //添加数据记录
-                $dataLog['operattype'] = 12;
-                $dataLog['operator_user_id'] = $system_user_id;
-                $dataLog['user_id'] = $user_id;
-                $dataLog['logtime'] = time();
-                D('Data', 'Service')->addDataLogs($dataLog);
+            //添加今日上门数量
+            $visitLogs = D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$tosystem_user_id))->find();
+            if(!empty($visitLogs)){
+                $data['visitnum'] = array('exp','visitnum+1');
+                $visitLogs_flag = D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$tosystem_user_id))->save($data);
+            }else{
+                $data['date'] = date('Ymd');
+                $data['system_user_id'] = $tosystem_user_id;
+                $data['visitnum'] = 1;
+                $visitLogs_flag = D('UserVisitLogs')->data($data)->add();
+            }
+            //添加回访记录
+            $callbackDate['attitude_id'] = 0;
+            $callbackDate['remark'] = '前台操作: 客户于 '.date('Y-m-d',time()).' 上门到访！';
+            $callbackDate['nexttime'] = time();
+            $callbackDate['user_id'] = $user_id;
+            $callbackDate['system_user_id'] = $system_user_id;
+            $this->_addCallback($callbackDate);
+            //添加数据记录
+            $dataLog['operattype'] = 12;
+            $dataLog['operator_user_id'] = $system_user_id;
+            $dataLog['user_id'] = $user_id;
+            $dataLog['logtime'] = time();
+            D('Data', 'Service')->addDataLogs($dataLog);
+            if($flag_user_save['code']==0 && $visitLogs_flag!==false){
                 D()->commit();
-                $visitLogs = D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$tosystem_user_id))->find();
-                if(!empty($visitLogs)){
-                    $data['visitnum'] = array('exp','visitnum+1');
-                    D('UserVisitLogs')->where(array('date'=>date('Ymd'),'system_user_id'=>$tosystem_user_id))->save($data);
-                }else{
-                    $data['date'] = date('Ymd');
-                    $data['system_user_id'] = $tosystem_user_id;
-                    $data['visitnum'] = 1;
-                    D('UserVisitLogs')->data($data)->add();
-                }
                 return  array('code'=>0,'msg'=>'分配到访客户成功');
             }else{
                 D()->rollback();
@@ -132,27 +138,7 @@ class UserService extends BaseService
         }
     }
 
-    /*
-    * 获取本中心销售/教务名单
-    * @author zgt
-    */
-    protected function _getSystemVisitList($where){
-        $list = D('SystemUser', 'Service')->getSystemUsersList($where);
-        if(!empty($list['data']['data'])){
-            foreach($list['data']['data'] as $k=>$v){
-                $visit_logs = D('UserVisitLogs')->getFind(array('system_user_id'=>$v['system_user_id'],'date'=>date('Ymd')),'visitnum');
-                $list['data']['data'][$k]['visitnum'] = !empty($visit_logs)?$visit_logs['visitnum']:0;
-            }
-            uasort($list['data']['data'], function($a, $b) {
-                $al = ($a['visitnum']);
-                $bl = ($b['visitnum']);
-                if($al==$bl)return 0;
-                return ($al<$bl)?-1:1;
-            });
-            array_values($list['data']['data']);
-        }
-        return array('code'=>0, 'data'=>$list['data']);
-    }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -341,7 +327,7 @@ class UserService extends BaseService
                 $data_callback['callbacktype'] = 10;
             }
             $dataLog['operattype'] = 15;
-        }else{
+        }elseif($rank==1){
             $data_callback['remark'] = '客户转出';
             $data_callback['callbacktype'] = 1;
             $dataLog['operattype'] = 5;
