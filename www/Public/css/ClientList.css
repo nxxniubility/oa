@@ -448,8 +448,8 @@ textarea{resize:none;}
 
 /*right table*/
 .iconBox {width: 100%;height: 40px;line-height: 40px;}
-.iconBox .emphasis, .iconBox .introduce, .iconBox .new { float: left; width: 20px; height: 20px; margin-top: 10px; margin-left: 5px;}
-.iconBox .emphasis img, .iconBox .introduce img, .iconBox .new img { display: block; vertical-align: middle;}
+.iconBox .emphasis, .iconBox .introduce, .iconBox .new, .iconBox .delivery { float: left; width: 20px; height: 20px; margin-top: 10px; margin-left: 5px;}
+.iconBox .emphasis img, .iconBox .introduce img, .iconBox .new img, .iconBox .delivery img { display: block; vertical-align: middle;}
 .proContMiddle .proSelect i { margin-right: 0; margin: 14px 14px 0;}
 .otherIcon { top: -15px;}
 
@@ -684,3 +684,7 @@ textarea{resize:none;}
 .panel3 .Capacity {position:relative;height:337px;margin:20px auto 40px;}
 .panel3 .data-loading {position:absolute;top:150px;left:450px;width:24px;height:24px;}
 .panel3 .data-loading img {display:block;width:100%;}
+
+/*1026*/
+.tr_title,.tr_content{min-width:125px;text-align: center;}
+.iconBox .emphasis, .iconBox .introduce, .iconBox .new, .iconBox .delivery {float:right;}
