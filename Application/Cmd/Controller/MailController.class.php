@@ -353,7 +353,7 @@ class MailController extends BaseController {
 				   {						
 					  foreach($education_array  as $kk=>$vv)
 					  {							
-						  if($vv==trim($matchs[$pattern[3]])) $user_data[$pattern[1]][$k]=$kk+1;
+						  if($vv==trim($matchs[$pattern[3]])) $user_data[$pattern[1]][$k]=$kk;
 					  }
 				   }elseif($k=='exp_city'){
 					  $user_data[$pattern[1]][$k]=substr($matchs[$pattern[3]],strrpos($matchs[$pattern[3]],'>')+1);
@@ -381,7 +381,7 @@ class MailController extends BaseController {
 					{						
 						foreach($education_array  as $kk=>$vv)
 						{							
-							if($vv==trim($matchs[$pattern[3]])) $user_data[$pattern[1]][$k]=$kk+1;
+							if($vv==trim($matchs[$pattern[3]])) $user_data[$pattern[1]][$k]=$kk;
 						}
 					}else{
 					  $user_data[$pattern[1]][$k]=$matchs[$pattern[3]]; 
@@ -411,7 +411,7 @@ class MailController extends BaseController {
 				   {						
 						foreach($education_array  as $kk=>$vv)
 						{							
-							if($vv==trim($matchs[$pattern[3]])) $user_data[$pattern[1]][$k]=$kk+1;
+							if($vv==trim($matchs[$pattern[3]])) $user_data[$pattern[1]][$k]=$kk;
 						}
 				   }else{
 					  $user_data[$pattern[1]][$k]=$matchs[$pattern[3]]; 
@@ -437,7 +437,7 @@ class MailController extends BaseController {
 					{						
 						foreach($education_array  as $kk=>$vv)
 						{							
-							if($vv==trim($matchs[$pattern[3]])) $user_data[$pattern[1]][$k]=$kk+1;
+							if($vv==trim($matchs[$pattern[3]])) $user_data[$pattern[1]][$k]=$kk;
 						}
 					}else{
 				       $user_data[$pattern[1]][$k]=$matchs[$pattern[3]];
@@ -466,7 +466,7 @@ class MailController extends BaseController {
 						{							
 						   if(strpos($matchs[$pattern[3]],$vv)>-1)
 						   {
-							   $user_data[$pattern[1]][$k]=$kk+1;
+							   $user_data[$pattern[1]][$k]=$kk;
 						   }
 						}					
 				   }elseif($k=='school'){
