@@ -701,6 +701,7 @@ class SystemUserService extends BaseService
                 $_array[$k]['zonename'] = $zone_list['data']['name'];
                 //多职位
                 $user_role = $this->getSystemUserRole(array('system_user_id'=>$v['system_user_id']));
+                $roleNames = $roleName = $role_id = '';
                 foreach($user_role['data'] as $k2=>$v2){
                     if($k2==0) {
                         $roleNames = $v2['department_name'].'/'.$v2['name'];
@@ -711,6 +712,7 @@ class SystemUserService extends BaseService
                         $roleName .= '，'.$v2['name'];
                         $role_id .= '，'.$v2['id'];
                     }
+                    $_array[$k]['role_ids'][] = $v2['id'];
                 }
                 $_array[$k]['role_names'] = $roleNames;
                 $_array[$k]['rolename'] = $roleName;
@@ -1570,10 +1572,10 @@ class SystemUserService extends BaseService
         $market_arr = explode(',', $market_arr);
         $educational_arr = explode(',', $educational_arr);
         $roles_arr = array_merge($market_arr, $educational_arr);
-        $where['role_id'] = array('in',$roles_arr);
+        $where['role_ids'] = array('in',$roles_arr);
         $where['usertype'] = array('neq',10);
         $where['status'] = 1;
-        $list = D('SystemUser', 'Service')->getSystemUsersList($where);
+        $list = $this->getSystemUsersList($where);
         if(!empty($list['data']['data'])){
             foreach($list['data']['data'] as $k=>$v){
                 $visit_logs = D('UserVisitLogs')->getFind(array('system_user_id'=>$v['system_user_id'],'date'=>date('Ymd')),'visitnum');
