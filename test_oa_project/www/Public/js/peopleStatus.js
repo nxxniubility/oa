@@ -155,7 +155,6 @@ function getMsgList_ajax(){
         var data = {isread : 1,page:'0,5'};
         common_ajax2(data,getMsgList_url,'no', _reMsgList,1);
         function _reMsgList(reflag){
-            var old_count = $('#poll_total_msg').text();
             if(reflag.code==0){
                 $('#poll_total_msg').text(reflag.data.count);
                 if(reflag.data.count==0){
