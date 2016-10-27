@@ -1418,6 +1418,44 @@ class MoveController extends BaseController
     }
 
 
+    public function byUser(){
+        exit;
+        $list = F('20161026-byuser_channel');
+        foreach($list as $v){
+            $ids[] = $v['user_id'];
+        }
+        $save['system_user_id'] = 160203;
+        $save['status'] = 20;
+        $list2 = M('user','zl_','DB_CONFIG1')->field('system_user_id,status')->where(array('user_id'=>array('IN',$ids)))->save($save);
+
+        print_r($list2);
+        exit;
+        $byuser_list2 = F('20161026-byuser_list2');
+        foreach($byuser_list2 as $k=>$v){
+            $info = M('user','zl_','DB_CONFIG1')->field('createtime,status,user_id')->where(array('user_id'=>$v['user_id']))->find();
+            if($info['status']==160){
+                $save['allocationtime'] = $info['createtime'];
+                $save['updatetime'] = $info['createtime'];
+                $save['nextvisit'] = $info['createtime'];
+                $save['lastvisit'] = $info['createtime'];
+                $save['status'] = 70;
+                if($v['invitation_id']!=0){
+                    $save['updateuser_id'] = $v['invitation_id'];
+                }elseif($v['service_id']!=0){
+                    $save['updateuser_id'] = $v['service_id'];
+                }else{
+                    $save['updateuser_id'] = $v['consulting_id'];
+                }
+                $save['system_user_id'] = $v['consulting_id'];
+                $edit_flag = M('user','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->save($save);
+                if(!empty($edit_flag)){
+                    $flag_ids[] = $v['user_id'];
+                }
+            }
+        }
+        F('20161026-byuser160',$flag_ids);
+    }
+
     public function delUser(){
         exit;
 ////        $where['system_user_id'] = 2;
