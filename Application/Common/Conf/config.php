@@ -26,4 +26,12 @@ return array(
         'DB_PWD'    => 'zelin007A',
         'DB_PORT'   => '3306',
     ),
+    'DB_CONFIG2' => array(
+        'DB_TYPE'   => 'mysql',
+        'DB_HOST'   => 'rds0q0x59aut678p041j.mysql.rds.aliyuncs.com',
+        'DB_NAME'   => 'zelinedu',
+        'DB_USER'   => 'zelininfo',
+        'DB_PWD'    => 'zelin007A',
+        'DB_PORT'   => '3306',
+    ),
 );
