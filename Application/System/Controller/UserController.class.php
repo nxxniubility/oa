@@ -897,6 +897,7 @@ class UserController extends SystemController
         //详情
         $allocation_list = D('User','Service')->allocationDetail(array('user_allocation_id'=>$id));
         $data['allocationAll'] = $allocation_list['data'];
+        $allocationnums = explode(',', $data['allocationAll']['allocationnum']);
         //区域
         $zoneList = D("Zone", 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
         $data['zoneAll'] = $zoneList['data'];
@@ -910,6 +911,7 @@ class UserController extends SystemController
         $channeList = D('Channel','Service')->getChannelList();
         $data['channel'] = $channeList['data'];
         $this->assign('data', $data);
+        $this->assign('allocationnums', $allocationnums);
         $this->display();
     }
 

@@ -129,6 +129,24 @@
 #week_table th, #week_edit_table th, #recover_table th, #edit_recover_table th {color:#999;background:#f5f6fa;}
 #week_table td, #week_edit_table td, #recover_table td, #edit_recover_table td {color:#696969;text-align:center;} 
 
+/*0922*/
+.ban_box {float:left;height:30px;border-right:1px solid #ccc;overflow:hidden;}
+.ban_box div {float:left;width:auto;height:28px;line-height:28px;padding:0 18px;font-size:14px;color:#555;text-align:center;border:1px solid #ccc;border-right:none;background:#f7f7f7;cursor:pointer;}
+.ban_box div.cur {color:#fff;background:#53b567;}
+
+.ban-body-btn, .ban-edit-btn, .ban-recover-btn, .edit-recover-btn {display:block;width:100px;height:30px;line-height:30px;font-size:12px;color:#555;text-align:center;border:1px solid #ccc;background:#f7f7f7;cursor:pointer;}
+.ban-body, .ban-edit-body, .ban-recover, .ban-edit-recover {position:relative;display:none;border:8px solid #7a7a7a;background: #fff;}
+.edit_confirm, .add_confirm, .recover_confirm, .edit_recover_confirm {display:block;width:65px;height:30px;line-height:30px;margin-bottom:32px;font-size:12px;color:#fff;border:none;background:#53b567;cursor:pointer;}
+
+#ban_table, #ban_edit_table, #recover_table, #edit_recover_table {width:100%;margin-bottom:20px;border:1px solid #e1e6eb;border-right:none;border-bottom:none;background:#fff;} 
+#ban_table tr, #ban_edit_table tr, #recover_table tr, #edit_recover_table tr {height:38px;line-height:38px;}
+#ban_table th, #ban_table td, 
+#ban_edit_table th, #ban_edit_table td, 
+#recover_table th, #recover_table td,
+#edit_recover_table th, #edit_recover_table td {font-size:12px;border-right:1px solid #e1e6eb;border-bottom:1px solid #e1e6eb;}
+#ban_table th, #ban_edit_table th, #recover_table th, #edit_recover_table th {color:#999;background:#f5f6fa;}
+#ban_table td, #ban_edit_table td, #recover_table td, #edit_recover_table td {color:#696969;text-align:center;} 
+
 /*0930*/
 .nsRight .specified-date, .nsRight2 .specified-date {display:block;width:468px;height:28px;line-height:28px;color:#696969;border:1px solid #ccc;background:#fff;}
 .calendar-icon {display:none;}

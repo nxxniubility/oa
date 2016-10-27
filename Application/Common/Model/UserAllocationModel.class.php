@@ -13,12 +13,10 @@ class UserAllocationModel extends BaseModel
     //自动验证
     protected $_validate = array(
         array('allocationname', 'checkSpecialCharacter', array('code'=>'201','msg'=>'名称不能含有特殊字符！'), 0, 'callback'),
-        array('allocationnum', 'checkInt', array('code'=>'201','msg'=>'分配客户数只能为正整数！'), 0, 'callback'),
         array('startnum', 'checkInt', array('code'=>'201','msg'=>'开始天数只能为正整数！'), 0, 'callback'),
         array('intervalnum', 'checkInt', array('code'=>'201','msg'=>'间隔天数只能为正整数！'), 0, 'callback'),
         array('sort', 'checkInt', array('code'=>'201','msg'=>'排序只能为正整数！'), 0, 'callback'),
         array('allocationname', '0,10', array('code'=>'202','msg'=>'姓名不能大于十位字符！'), 0, 'length'),
-        array('allocationnum', '0,10', array('code'=>'203','msg'=>'分配数量不能大于十位数字！'), 0, 'length'),
         array('startnum', '0,10', array('code'=>'202','msg'=>'开始天数不能大于十位数字！'), 0, 'length'),
         array('intervalnum', '0,10', array('code'=>'203','msg'=>'间隔天数不能大于十位数字！'), 0, 'length'),
         array('sort', '0,10', array('code'=>'202','msg'=>'排序数量不能大于十位数字！'), 0, 'length'),

@@ -29,17 +29,6 @@
                     <input type="text" class="nsInp" name="allocationname" value="{$data['allocationAll']['allocationname']}" placeholder="请输入分配规则名称">
                 </div>
             </div>
-            <!--<div class="nsRow clearfix">-->
-                <!--<div class="nsLeft l"><i>*</i>分配类型：</div>-->
-                <!--<div class="nsRight l">-->
-                    <!--<select class="newSelect" name="weighttype">-->
-                        <!--<option value="{$data['allocationAll']['weighttype']}">{$data['allocationAll']['weightname']}</option>>-->
-                        <!--<option value="10">全部分配</option>-->
-                        <!--<option value="20">新量分配</option>-->
-                        <!--<option value="30">旧量分配</option>-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>开始天数:</div>
                 <div class="nsRight">
@@ -59,19 +48,12 @@
                 </div>
             </div>
             <div class="nsRow clearfix">
-                <div class="nsLeft"><i>&#42</i>每次分配客户数:</div>
-                <div class="nsRight">
-                    <input type="tel" class="nsInp" name="allocationnum" value="{$data['allocationAll']['allocationnum']}" placeholder="20">
-                </div>
-            </div>
-
-            <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>所属区域:</div>
                 <div class="nsRight">
                     <div class="selectbox2 l">
                         <dl class="select">
                             <dt>
-                            <div class="select_title l" >请选择所属区域</div>
+                            <div class="select_title l" >{$data['zoneAll']['name']}</div>
                             <div class="arrow r" ></div>
                             </dt>
                             <dd class="fxDone" data-value="{$data['zoneAll']['zone_id']}">{$data['zoneAll']['name']}</dd>
@@ -146,6 +128,35 @@
                 </div>
             </div>
             <div class="nsRow clearfix">
+                <div class="nsLeft"><i>&#42</i>是否平均分配:</div>
+                <div class="nsRight clearfix">
+                    <label for="radioMan" class="manLabel">
+                        <input type="radio" name="isave" class="nsRadio man" id="radioMan" {:($data['allocationAll']['isave'] == 1)?'checked="checked"':''} value="1" autocomplete="off">
+                        <span>是</span>
+                    </label>
+                    <label for="radioWoman">
+                        <input type="radio" name="isave" class="nsRadio woMan" id="radioWoman" {:($data['allocationAll']['isave'] == 2)?'checked="checked"':''} value="2" autocomplete="off">
+                        <span>否</span>
+                    </label>
+                </div>
+            </div>
+            <if condition="($data['allocationAll']['isave'] eq 2)">
+                <foreach name="data['allocationAll']['roles']" item="role" key="k" >
+                    <div class="nsRow clearfix edssNone">
+                        <div class="nsLeft"><i>&#42</i>{$role['name']}:</div>
+                        <div class="nsRight">
+                            <input type="tel" class="nsInp" name="allocationnum" placeholder="" value="{$allocationnums[$k]}">
+                        </div>
+                    </div>
+                </foreach>
+            </if>
+            <div class="nsRow clearfix edsNone">
+                <div class="nsLeft"><i>&#42</i>平均分配客户数:</div>
+                <div class="nsRight">
+                    <input type="tel" class="nsInp" name="allocationnum" value="{$data['allocationAll']['allocationnum']}" placeholder="" autocomplete="off">
+                </div>
+            </div>
+            <div class="nsRow clearfix">
                 <div class="nsLeft">指定日期:</div>
                 <div class="nsRight clearfix">
 					<input type="text" name="specify_days" class="specified-date" readonly="readonly" value="{$data['allocationAll']['specify_days']}">
@@ -155,8 +166,6 @@
                 <div class="nsLeft">开启节日限制:</div>
                 <div class="nsRight clearfix">
                     <div class="holiday_box fl">
-                        <!--<div data-value="0">工作日</div>-->
-                        <!--<div data-value="1">休息日</div>-->
                         <div data-value="2">关闭</div>
                     </div>
                     <input type="hidden" name="holiday" value="{$data['allocationAll']['holiday']}" autocomplete="off">
@@ -175,6 +184,28 @@
                         <div data-value="7">星期日</div>
                 	</div>
                     <input type="hidden" name="week_text" value="{$data['allocationAll']['week_text']}" autocomplete="off">
+                </div>
+            </div>
+            <div class="nsRow clearfix">
+                <div class="nsLeft"><i>&#42</i>禁止分配的跟进状态:</div>
+                <div class="nsRight clearfix">
+                    <div class="ban_box fl">
+                        <div data-value="1">意向学习</div>
+                        <div data-value="2">承诺到访</div>
+                        <div data-value="3">明确拒绝</div>
+                        <div data-value="4">已培训</div>
+                        <div data-value="5">已入职</div>
+                        <div data-value="6">关机</div>
+                        <div data-value="7">空号</div>
+                        <div data-value="8">无人接听</div>
+                        <div data-value="9">考虑</div>
+                        <div data-value="11">年龄不符</div>
+                        <div data-value="12">学历不符</div>
+                        <div data-value="13">薪酬过高</div>
+                        <div data-value="14">非本地客户</div>
+                        <div data-value="10">其他</div>
+                    </div>
+                    <input type="hidden" name="banstatus" value="{$data['allocationAll']['banstatus']}" autocomplete="off">
                 </div>
             </div>
             <div class="nsRow clearfix">
@@ -227,6 +258,14 @@
         <input type="button" class="nsDetermine" value="确定">
     </div>
 </div>
+<div class="dn">
+    <div class="nsRow clearfix edssNone">
+        <div class="nsLeft"><i>&#42</i>自定义分配客户数:</div>
+        <div class="nsRight">
+            <input type="tel" class="nsInp" name="allocationnum" placeholder="" value="">
+        </div>
+    </div>
+</div>
 <div id="search_body" style="display: none">
     <foreach name="data['roleAll'][data]" item="v" key="k">
         <dl class="clearfix department_content">
@@ -247,17 +286,6 @@
     </div>
     <div class="nsCont">
         <div class="nsSelectTop clearfix">
-            <!-- <div class="selectbox nsSelectBox l">
-                <dl class="select">
-                    <dt>
-                    <div class="select_title l">全部</div>
-                    <div class="arrow r"></div>
-                    </dt>
-                    <dd class="fxDone">咨询组</dd>
-                    <dd class="fxDone">邀约组</dd>
-                    <dd class="fxDone">销售组</dd>
-                </dl>
-            </div> -->
             <input type="text" class="nsSelectSearch l" placeholder="请输入人员姓名">
             <input type="submit" class="nsSearchSubmit nsSearchSubmitSystem l" value="搜索">
         </div>
@@ -273,35 +301,6 @@
 </div>
 <!-- 选择人员E -->
 
-<!-- 选择星期限制 S -->
-<!--<div class="week-edit-body">
-    <div class="nsTop clearfix">
-        <span>选择星期</span>
-        <div class="nsClose"></div>
-    </div>
-    <div class="nsCont">
-        <form method="post" action="#">
-        	<div class="week_box">
-                <table cellpadding="0" cellspacing="0" id="week_table">
-                    <tr>
-                        <th>选中</th>
-                        <th>星期</th>
-                    </tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="1" autocomplete="off"></td><td>星期一</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="2" autocomplete="off"></td><td>星期二</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="3" autocomplete="off"></td><td>星期三</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="4" autocomplete="off"></td><td>星期四</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="5" autocomplete="off"></td><td>星期五</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="6" autocomplete="off"></td><td>星期六</td></tr>
-                    <tr><td><input type="checkbox" name="week_chk" value="7" autocomplete="off"></td><td>星期日</td></tr>
-                </table>
-        	</div>
-        </form>
-        <input type="button" class="edit_confirm " value="确定">
-    </div>
-</div>-->
-<!-- 选择星期限制 E -->
-
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
 <script src="__PUBLIC__/js/asDatepicker/dist/jquery-asDatepicker.js"></script>
@@ -310,11 +309,14 @@
 <script>
     var holiday = "{$data['allocationAll']['holiday']}";
     var week_text = "{$data['allocationAll']['week_text']}";
+    var banstatus = "{$data['allocationAll']['banstatus']}";
     var specify_days = "{$data['allocationAll']['specify_days']}";
     $(function(){
-        <if condition="!empty($data['allocationAll']['zone_id'])">
-            $('.zone_btn'+{$data['allocationAll']['zone_id']}).trigger('click');
-        </if>
+        //111111111111111111111111111  废代码行
+        //222222222222222222222222222  同上
+        // <if condition="!empty($data['allocationAll']['zone_id'])">
+        //     $('.zone_btn'+{$data['allocationAll']['zone_id']}).trigger('click');
+        // </if>
         //初始化
         if(holiday!=0 && holiday!=''){
             $('.holiday_box div').eq(0).addClass('cur').text('开启');
@@ -325,9 +327,31 @@
                 $('.week_box div').eq(parseInt(v)-1).addClass('cur');
             });
         };
+        if(banstatus!=0 && banstatus!=''){
+            banstatus = banstatus.split(',');
+            $.each(banstatus, function(k,v){
+                $('.ban_box div').eq(parseInt(v)-1).addClass('cur');
+            });
+        };
+        $('.nsRadio').click(function(){
+            var role_id = '';
+            var role_name = '';
+            $('.nsMiddle').find('.edssNone').remove();
+            var newArr = $(':input[name="role_id"]').val().split(',');
+            role_id += newArr;
+            for(var i=0;i<newArr.length;i++){
+                if(i==0){
+                    role_name += $(':input[name="roles_name"]:checked').eq(i).parent().siblings('.wNsTwo').text()+'/'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text();
+                }else{
+                    role_name += ','+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsTwo').text()+'/'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text();
+                }
+                $('.dn .edssNone').children('.nsLeft').html('<i>&#42</i>'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text()+':');
+                $('.edsNone').before( $('.dn .edssNone').clone());
+            }
+        })
         $('.nsDetermine').click(function(){
             var role_id = '';
-            var role_name = ''
+            var role_name = '';
             for(var i=0;i<$(':input[name="nsChk"]:checked').length;i++){
                 if(i==0){
                     role_id += $(':input[name="nsChk"]:checked').eq(i).val();
@@ -386,16 +410,40 @@
                 $('.department_title').after( $('#search_body .department_content').clone() );
             }
         });
+
         $('.nsSubmit').click(function(){
+            var allocationnum = '';
+            var isReturn = true;
+            if($(':input[name="isave"]:checked').val()==2){
+                $('.nsMiddle').find('.edssNone').each(function(){
+                    var thisObj = $(this).find(':input[name="allocationnum"]');
+                    if (isReturn) {
+                        if(thisObj.val()==0 || thisObj.val()==''){
+                            layer.msg(thisObj.parent().siblings('.nsLeft').text()+'分配数量不能为0', {icon:2});
+                            isReturn = false;
+                            return false;
+                        }else{
+                            if(allocationnum == ''){
+                                allocationnum = thisObj.val();
+                            }else{
+                                allocationnum += ','+thisObj.val();
+                            };
+                        };
+                    };
+                });
+                if (!isReturn) return false;
+            }else{
+                allocationnum = $('.edsNone').find(':input[name="allocationnum"]').val();
+            };
             if( $(':input[name="week_text"]').val().length==0 ){
                 layer.msg('必须选择启用星期', {icon:2});
                 return false;
             };
             var data = {
                 allocationname:$(':input[name="allocationname"]').val(),
-                allocationnum:$(':input[name="allocationnum"]').val(),
+                allocationnum:allocationnum,
+                isave:$(':input[name="isave"]:checked').val(),
                 sort:$(':input[name="sort"]').val(),
-//                weighttype:$(':input[name="weighttype"]').val(),
                 startnum:$(':input[name="startnum"]').val(),
                 intervalnum:$(':input[name="intervalnum"]').val(),
                 channel_id:$(':input[name="channel_id"]').val(),
@@ -404,7 +452,8 @@
                 zone_id:$(':input[name="zone_id"]').val(),
                 specify_days:$(':input[name="specify_days"]').val(),
                 holiday:$(':input[name="holiday"]').val(),
-                week_text:$(':input[name="week_text"]').val()
+                week_text:$(':input[name="week_text"]').val(),
+                banstatus:$(':input[name="banstatus"]').val()
             };
             common_ajax(data);
         });
