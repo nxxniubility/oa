@@ -69,6 +69,7 @@ class MessageService extends BaseService
         }
         //获取当前未读总数
         $where['isread'] = 1;
+        unset($where['readtype']);
         $result['unread_count'] = D('Message')->getCount($where,$join);
         if(!empty($result['data']) && $result['unread_count']>0){
             $result['unread_count'] = $result['unread_count']-1;

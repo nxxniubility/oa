@@ -78,7 +78,9 @@ function content(){
 }
 //  头部显示消息
 function showMsgList() {
-	$('.message').mouseover(function(){
+	$('.message').mouseover(function(e){
+		e.stopPropagation();
+		getMsgList_ajax();
 		$('.msgbody').show();
 	});
 	$('.message').mouseout(function(){
