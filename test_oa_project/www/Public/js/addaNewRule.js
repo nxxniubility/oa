@@ -197,85 +197,35 @@ function weekChk(){
             $(':input[name="week_text"]').val('');
         }
 	});
-		
 }
 
-/*//  添加分配新规则弹窗
-$('.week-body-btn').on('click', function() {
-    //getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
-    layer.open({
-        type: 1,                    //  页面层
-        title: false,               //  不显示标题栏
-        area: ['400px', 'auto'],
-        shade: .6,                  //  遮罩
-        time: 0,                    //  关闭自动关闭
-        shadeClose: true,           //  遮罩控制关闭层
-        closeBtn: false,            //  不显示关闭按钮
-        shift: 1,                   //  出现动画
-        content: $(".week-body")    //  加载主体内容
+//  启用星期选择
+banChk();
+function banChk(){
+    $(document).on('click', '.ban_box div', function(){
+        var _this = $(this);
+        if(_this.hasClass('cur')){
+            _this.removeClass('cur');
+        }else {
+            _this.addClass('cur');
+        };
+        var banstatus = '';
+        if($('.ban_box .cur').length>0){
+            $('.ban_box .cur').each(function(){
+                if(banstatus==''){
+                    banstatus = $(this).attr('data-value');
+                }else{
+                    banstatus += ','+$(this).attr('data-value');
+                };
+            });
+            if(banstatus!=''){
+                $(':input[name="banstatus"]').val(banstatus);
+            };
+        }else{
+            $(':input[name="banstatus"]').val('');
+        }
     });
-    $('.nsClose, .add_confirm').on('click', function() {
-        layer.closeAll();           // 关闭
-    });
-});
-
-//  修改分配规则弹窗
-$('.week-edit-btn').on('click', function() {
-    //getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
-    layer.open({
-        type: 1,                    //  页面层
-        title: false,               //  不显示标题栏
-        area: ['400px', 'auto'],
-        shade: .6,                  //  遮罩
-        time: 0,                    //  关闭自动关闭
-        shadeClose: true,           //  遮罩控制关闭层
-        closeBtn: false,            //  不显示关闭按钮
-        shift: 1,                   //  出现动画
-        content: $(".week-edit-body")    //  加载主体内容
-    });
-    $('.nsClose, .edit_confirm').on('click', function() {
-        layer.closeAll();           // 关闭
-    });
-});
-
-//  添加回收新规则弹窗
-$('.week-recover-btn').on('click', function() {
-    //getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
-    layer.open({
-        type: 1,                    //  页面层
-        title: false,               //  不显示标题栏
-        area: ['400px', 'auto'],
-        shade: .6,                  //  遮罩
-        time: 0,                    //  关闭自动关闭
-        shadeClose: true,           //  遮罩控制关闭层
-        closeBtn: false,            //  不显示关闭按钮
-        shift: 1,                   //  出现动画
-        content: $(".week-recover")    //  加载主体内容
-    });
-    $('.nsClose, .recover_confirm').on('click', function() {
-        layer.closeAll();           // 关闭
-    });
-});
-
-//  修改回收规则弹窗
-$('.edit-recover-btn').on('click', function() {
-    //getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
-    layer.open({
-        type: 1,                    //  页面层
-        title: false,               //  不显示标题栏
-        area: ['400px', 'auto'],
-        shade: .6,                  //  遮罩
-        time: 0,                    //  关闭自动关闭
-        shadeClose: true,           //  遮罩控制关闭层
-        closeBtn: false,            //  不显示关闭按钮
-        shift: 1,                   //  出现动画
-        content: $(".week-edit-recover")    //  加载主体内容
-    });
-    $('.nsClose, .edit_recover_confirm').on('click', function() {
-        layer.closeAll();           // 关闭
-    });
-});*/
-
+}
 
 //  指定日期初始化
 $(".specified-date").asDatepicker({
@@ -313,6 +263,35 @@ function holiday(){
         }else{
             $(':input[name="holiday"]').val('');
         }
-	});
-		
+	});	
+}
+
+$(".nsRight label").click(function(){
+    if($(this).find(".man:checked").val()==undefined) {
+        $(".nsNone").hide();
+        $(".nssNone").show();
+    }else{
+        $(".nssNone").hide();
+        $(".nsNone").show();
+    }
+})
+$(".nssNone").hide();
+
+$(".nsRight label").click(function(){
+    if($(this).find(".man:checked").val()==undefined) {
+        $(".edsNone").hide();
+        $(".edssNone").show();
+    }else{
+        $(".edssNone").hide();
+        $(".edsNone").show();
+    }
+})
+// $(".edssNone").hide();
+if($(".nsRight label").find(".man:checked").val()==undefined) {
+    $('.edsNone').find(':input[name="allocationnum"]').val('');
+    $(".edsNone").hide();
+    $(".edssNone").show();
+}else{
+    $(".edssNone").hide();
+    $(".edsNone").show();
 }

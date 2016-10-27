@@ -56,6 +56,7 @@
 .atList .wEle { color: #53b567;}
 .atList .setTit .wEle { color: #999;}
 .atList .wEle a { display: inline; color: #53b567; cursor: pointer;}
+.atList .content_li.red dd {color:red;}
 
 
 /*=================================== 黄金分割线 ===================================*/

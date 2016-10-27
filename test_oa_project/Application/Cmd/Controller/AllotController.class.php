@@ -37,6 +37,21 @@ class AllotController extends BaseController {
         foreach($userApply as $k => $v){
             $userApplyArr[] = $v['user_id'];
         }
+        //对分配规则进行筛选操作
+        foreach ($allots as $k => $v) {
+            if ($v['isave'] == 2) {        //不均的分配规则进行拆分重组
+                $nums = explode(',', $v['allocationnum']);
+                $roles = explode(',', $v['allocation_roles']);
+                foreach ($nums as $k1 => $v1) {
+                    unset($allots[$k]);
+                    $v2[$k1] = $v;
+                    $v2[$k1]['allocationnum'] = $v1;
+                    $v2[$k1]['allocation_roles'] = $roles[$k1];
+                    $allots[] = $v2[$k1];
+                }
+            }
+
+        }
         foreach($allots as $topkey => $allot){
             //是否有指定日期
             $specify_days = array();
@@ -68,7 +83,11 @@ class AllotController extends BaseController {
             }
             //查询分配人
             $join = "left join zl_allocation_systemuser on zl_system_user.system_user_id=zl_allocation_systemuser.system_user_id";
-            $allotUser = D('SystemUser')->field('zl_system_user.system_user_id,realname,zone_id')->join($join)->where(array('user_allocation_id'=>$allot['user_allocation_id'],'zl_allocation_systemuser.status'=>1,'usertype'=>array('NEQ',10)))->select();
+            if ($allot['isave'] == 2) {
+                $allotUser = D('SystemUser')->field('zl_system_user.system_user_id,realname,zone_id')->join($join)->where(array('user_allocation_id'=>$allot['user_allocation_id'],'zl_allocation_systemuser.status'=>1,'zl_allocation_systemuser.role_id'=>$allot['allocation_roles'],'usertype'=>array('NEQ',10)))->select();
+            }else{
+                $allotUser = D('SystemUser')->field('zl_system_user.system_user_id,realname,zone_id')->join($join)->where(array('user_allocation_id'=>$allot['user_allocation_id'],'zl_allocation_systemuser.status'=>1,'usertype'=>array('NEQ',10)))->select();
+            }
             if(empty($allotUser)){
                 $falg_msg[] =  '失败原因:找不到需要分配的员工，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
             }
@@ -91,25 +110,10 @@ class AllotController extends BaseController {
             $where = array();
             $where['status'] = 160;
             $where['attitude_id'] = array('IN',array('0','1','2','8','9','10'));
-            
-            
             $startnum = $nowtime - (86400 * $allot['startnum']);
             $intervalnum = $startnum - (86400 * $allot['intervalnum']);
             $where['createtime'][] = array('ELT',$startnum);
             $where['createtime'][] = array('EGT',$intervalnum);
-            
-            
-            
-            /* if($allot['weighttype'] == 20){
-                $where['weight'] = 0;
-                $createtime= $nowtime - (86400 * 4);
-                $where['createtime'] = array('EGT',$createtime);//大于等于以下时间点
-            }elseif($allot['weighttype'] == 30){
-                $where['weight'] = array('GT',0);
-                $lastvisit = $nowtime - (86400 * 3);
-                $where['lastvisit'] = array('ELT',$lastvisit);
-            } */
-            
             
             //查找区域
             $zonedb = D('Zone');
@@ -137,8 +141,22 @@ class AllotController extends BaseController {
             }
             //获取所有资源信息
             $where['channel_id'] = array('IN',$allotChannel);
-            $resource = $userdb->field('user_id,infoquality,channel_id,createtime')->where($where)->order('createtime desc')->limit($allotTotal)->select();
+            if ($allot['banstatus']) {
+                $bans = explode(',', $allot['banstatus']);
+            }
 
+            //判断是否有禁止的选项，有则剔除
+            $statuss = C('USER_ATTITUDE');
+            foreach ($statuss as $key => $value) {
+                $statusss[] = $value['num'];
+            }
+            foreach ($statusss as $key => $value) {
+                if (in_array($value, $bans)) {
+                    unset($statusss[$key]);
+                }
+            }
+            $where['attitude_id'] = array('IN', $statusss);
+            $resource = $userdb->field('user_id,infoquality,channel_id,createtime')->where($where)->order('createupdatetime desc')->limit($allotTotal)->select();
             if(empty($resource)) {
                 $falg_msg[] = '失败原因:客户资源不足分配，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
             }
@@ -198,55 +216,6 @@ class AllotController extends BaseController {
                 }
             }
             
-            //原分配规则
-            //平均分配所有渠道数据
-            /* $user = array();
-            foreach($allotChannel as $k => $v){
-                $where['channel_id'] = $v;
-                $user[$k]['user'] = $userdb->field('user_id,infoquality,channel_id')->where($where)->order('weight asc,createtime desc')->limit($allotTotal)->select();
-                $user[$k]['usertotal'] = count($user[$k]['user']);
-                $i=0;
-                for($i;$i<$allotChannelAverage;$i++){
-                    foreach($allotUser as $userkey => $uservalue){
-                        if($allotUser[$userkey]['allotnum'] <$allot['allocationnum']){
-                            if(!empty($user[$k]['user'])){
-                                $current_user = reset($user[$k]['user']);
-                                $current_user_key = key($user[$k]['user']);
-                                $allotUser[$userkey]['arr'][] =$current_user;
-                                unset($user[$k]['user'][$current_user_key]);
-                                $allotUser[$userkey]['allotnum'] +=1;
-                                $current_user['infoquality'] = empty($current_user['infoquality']) ? 4 : $current_user['infoquality'];
-                                $allotUser[$userkey]['allotnumchannel'][$v][$current_user['infoquality']] +=1;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            
-            //数据补全
-            foreach($allotUser as $userkey1 => $uservalue1){
-                if($uservalue1['allotnum'] < $allot['allocationnum']){
-                    foreach($user as $userkey2 => $uservalue2){
-                            foreach($user[$userkey2] as $userkey3 => $uservalue3){
-                                if($userkey3 != 'usertotal'){
-                                    foreach($uservalue3 as $userkey4 => $uservalue4){
-                                        if($allotUser[$userkey1]['allotnum'] < $allot['allocationnum'] && !empty($uservalue4)){
-                                            $allotUser[$userkey1]['arr'][] = $uservalue4;
-                                            $allotUser[$userkey1]['allotnum'] +=1;
-                                            $uservalue4['infoquality'] = empty($uservalue4['infoquality']) ? 4 : $uservalue4['infoquality'];
-                                            $allotUser[$userkey1]['allotnumchannel'][$uservalue4['channel_id']][$uservalue4['infoquality']] +=1;
-                                            unset($user[$userkey2][$userkey3][$userkey4]);
-                                        }
-                                    }
-                                }
-                                
-                            }
-                    }
-                }
-            } */
-
-            
             $status = C('USER_STATUS');
             $dateYMD = date('Ymd',$nowtime);
             $zl_user_allocation_logsdb = D('UserAllocationLogs');
@@ -295,29 +264,10 @@ class AllotController extends BaseController {
                     $DataService->addDataLogs($dataLog);
                 }
 
-//                foreach($allotvalue['allotnumchannel'] as $channelkey => $channelvalue){
-//                    $logsdata['channel_id'] = $channelkey;
-//                    $logsdata['infoqualitya']  = empty($channelvalue['1']) ? 0 : $channelvalue['1'];
-//                    $logsdata['infoqualityb']  =  empty($channelvalue['2']) ? 0 : $channelvalue['2'];
-//                    $logsdata['infoqualityc']  =  empty($channelvalue['3']) ? 0 : $channelvalue['3'];
-//                    $logsdata['infoqualityd']  =  empty($channelvalue['4']) ? 0 : $channelvalue['4'];
-//                    $logsdata['date'] = $dateYMD;
-//                    $logsdata['system_user_id'] = $allotvalue['system_user_id'];
-//
-//                    $log = $zl_user_allocation_logsdb->where(array('channel_id'=>$logsdata['channel_id'],'date'=>$dateYMD,'system_user_id'=>$allotvalue['system_user_id']))->find();
-//                    if(!empty($log)){
-//                        $log['infoqualitya'] += $logsdata['infoqualitya'];
-//                        $log['infoqualityb'] += $logsdata['infoqualityb'];
-//                        $log['infoqualityc'] += $logsdata['infoqualityc'];
-//                        $log['infoqualityd'] += $logsdata['infoqualityd'];
-//                        $zl_user_allocation_logsdb->save($log);
-//                    }else{
-//                        $zl_user_allocation_logsdb->add($logsdata);
-//                    }
-//                }
             }
             $falg_msg[] = '分配成功:'.$result.'条数据/每人，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');
         }
+        exit;
         if(!empty($allocation_id)){
             $this->success($falg_msg[0]);
         }elseif(!empty($falg_msg)){

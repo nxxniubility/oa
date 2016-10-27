@@ -105,19 +105,19 @@
 							<dt class="wEle">操作</dt>
 						</dl>
 						<foreach name="data['auditList']" item="v" key="k">
-						<dl class="content_li clearfix">
+						<dl {:!empty($v['color'])?'class=" content_li red clearfix"':" content_li clearfix"}>
 							<dd class="wOne"><input type="checkbox" class="atInpCheck"></dd>
-							<dt class="wTwo">{$v.realname}</dt>
-							<dt class="wThr">{$v.username}</dt>
-							<dt class="wEig mwO">{$v.qq}</dt>
-							<dt class="wFiv mwS">{$v.tel}</dt>
-							<dt class="wEig mwT">{$v.infoquality_name}</dt>
-							<dt class="wSev mwO">{$v.affiliation_channel_names}</dt>
-							<dt class="wSev mwO">{$v.channel_names}</dt>
-							<dt class="wEig mwT">{$v.affiliation_realname}</dt>
-							<dt class="wEig mwT">{$v.system_realname}</dt>
-							<dt class="wThr" style="width: 127px;">{$v.apply_time}</dt>
-							<dt class="wEig mwT">{$v.status_name}</dt>
+							<dd class="wTwo">{$v.realname}</dd>
+							<dd class="wThr">{$v.username}</dd>
+							<dd class="wEig mwO">{$v.qq}</dd>
+							<dd class="wFiv mwS">{$v.tel}</dd>
+							<dd class="wEig mwT">{$v.infoquality_name}</dd>
+							<dd class="wSev mwO">{$v.affiliation_channel_names}</dd>
+							<dd class="wSev mwO">{$v.channel_names}</dd>
+							<dd class="wEig mwT">{$v.affiliation_realname}</dd>
+							<dd class="wEig mwT">{$v.system_realname}</dd>
+							<dd class="wThr" style="width: 127px;">{$v.apply_time}</dd>
+							<dd class="wEig mwT">{$v.status_name}</dd>
 							<dd class="wEle">
 								<if condition="$v['status'] eq 10">
 									<a href="{:U('System/User/auditTransfer',array('id'=>$v['user_apply_id']) )}">审核</a>

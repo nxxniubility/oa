@@ -718,7 +718,20 @@ class UserService extends BaseService
         $data['createuser_id'] = $data['system_user_id'];
         //验证唯一字段 数据处理
         $checkData = $this->_checkField($data);
-        if($checkData['code']!=0) return array('code'=>$checkData['code'], 'msg'=>$checkData['msg'], 'sign'=>!empty($checkData['sign'])?$checkData['sign']:null);
+        if($checkData['code']!=0) {
+            $createUpdate['createupdatetime'] = time();
+            if ($checkData['code'] == 201) {
+                $data['username'] = encryptPhone($data['username'], C('PHONE_CODE_KEY'));
+                $isusername = D('User')->where(array('username'=>$data['username']))->save($createUpdate);
+            }
+            if ($checkData['code'] == 203) {
+                $isusername = D('User')->where(array('tel'=>$data['tel']))->save($createUpdate);
+            }
+            if ($checkData['code'] == 205) {
+                $isusername = D('User')->where(array('qq'=>$data['qq']))->save($createUpdate);
+            }
+            return array('code'=>$checkData['code'], 'msg'=>$checkData['msg'], 'sign'=>!empty($checkData['sign'])?$checkData['sign']:null);
+        }
         $data = $checkData['data'];
         //是否获取新渠道
         $newChannelData = $this->_isNewChannel($data);
@@ -727,9 +740,11 @@ class UserService extends BaseService
         //启动事务
         $data = array_filter($data);
         D()->startTrans();
+        $data['createupdatetime'] = time();
         $reUserId = D('User')->addData($data);
         if($reUserId['code']==0){
             $data_info = $data;
+            unset($data['createupdatetime']);
             $data_info['user_id'] = $reUserId['data'];
             $reUserInfo = D('UserInfo')->addData($data_info);
             //添加数据记录
@@ -1147,6 +1162,15 @@ class UserService extends BaseService
         $result['count'] = D('UserApply')->getCount($data, $join);
         if(!empty($result['data'])){
             $result['data'] = $this->_applyUserStatus($result['data']);
+        }
+        $date = time()-60*60*24;   //超过申请时间24小时 变红色
+        foreach ($result['data'] as $key => $value) {
+            if ($value['applytime']<$date && empty($value['auditortime'])) {
+                $value['color'] = 1;
+            }else{
+                $value['color'] = 0;
+            }
+            $result['data'][$key] = $value;
         }
         return array('code'=>0, 'data'=>$result);
     }
@@ -1620,7 +1644,19 @@ class UserService extends BaseService
         $data = array_filter($data);
         if (empty($data['zone_id'])) return array('code'=>301, 'msg'=>'区域不能为空');
         if (empty($data['allocationname'])) return array('code'=>302, 'msg'=>'名称不能为空', 'data'=>'allocationname');
-        if (empty($data['allocationnum'])) return array('code'=>303, 'msg'=>'分配数量不能为空', 'data'=>'allocationnum');
+        if ($data['isave'] == 2) {
+            $allocationnum = explode(',', $data['allocationnum']);
+            foreach ($allocationnum as $key => $value) {
+                if ($value[0] == 0) {
+                    $allocationnum[$key] = substr($value, 1);
+                }
+            }
+            $data['allocationnum'] = implode(',', $allocationnum);
+        }else{
+            if ($data['allocationnum'][0] == 0) {
+                $data['allocationnum'] = substr($data['allocationnum'], 1);
+            }
+        }
         if (empty($data['channel_id'])) return array('code'=>304, 'msg'=>'请选择渠道');
         if (empty($data['allocation_roles'])) return array('code'=>305, 'msg'=>'请添加分配职位', 'data'=>'role_name');
         $data['holiday'] = !empty($data['holiday'])?$data['holiday']:null;
@@ -1644,12 +1680,16 @@ class UserService extends BaseService
                 }
             }
         }
+        $role_ids = explode(',', $data['allocation_roles']);
+        $_where['role_id'] = array('IN', $role_ids);
         if(!empty($ids)){
             //开启事务
             D()->startTrans();
             $result = D('UserAllocation')->addData($data);
-            foreach ($ids as $v) {
-                $addData[] = array('user_allocation_id' => $result['data'],'system_user_id'=>$v);
+            foreach ($ids as $k=>$v) {
+                $_where['user_id'] = $v;
+                $sysUserRoles = D('RoleUser')->where($_where)->field('role_id, user_id')->find();
+                $addData[] = array('user_allocation_id' => $result['data'],'system_user_id'=>$sysUserRoles['user_id'],'role_id'=>$sysUserRoles['role_id']);
             }
             $rflag_systemUser = D('AllocationSystemuser')->addAll($addData);
         }
@@ -1672,7 +1712,19 @@ class UserService extends BaseService
         $data = array_filter($data);
         if (empty($data['zone_id'])) return array('code'=>301, 'msg'=>'区域不能为空');
         if (empty($data['allocationname'])) return array('code'=>302, 'msg'=>'名称不能为空', 'data'=>'allocationname');
-        if (empty($data['allocationnum'])) return array('code'=>303, 'msg'=>'分配数量不能为空', 'data'=>'allocationnum');
+        if ($data['isave'] == 2) {
+            $allocationnum = explode(',', $data['allocationnum']);
+            foreach ($allocationnum as $key => $value) {
+                if ($value[0] == 0) {
+                    $allocationnum[$key] = substr($value, 1);
+                }
+            }
+            $data['allocationnum'] = implode(',', $allocationnum);
+        }else{
+            if ($data['allocationnum'][0] == 0) {
+                $data['allocationnum'] = substr($data['allocationnum'], 1);
+            }
+        }
         if (empty($data['channel_id'])) return array('code'=>304, 'msg'=>'请选择渠道');
         if (empty($data['allocation_roles'])) return array('code'=>305, 'msg'=>'请添加分配职位', 'data'=>'role_name');
         $data['holiday'] = !empty($data['holiday'])?$data['holiday']:null;
@@ -2121,7 +2173,7 @@ class UserService extends BaseService
                 $data['tel'] = trim($data['tel']);
                 if (!$this->checkTel($data['tel'])) return array('code' => 202, 'msg' => '固定号码格式有误', 'sign' => 'tel');
                 $istel = D('User')->where(array('tel' => $data['tel']))->find();
-                if (!empty($istel)) return array('code' => 1, 'msg' => '固定电话已存在');
+                if (!empty($istel)) return array('code' => 203, 'msg' => '固定电话已存在');
             }
         }
         //验证QQ号码是否有修改
@@ -2130,9 +2182,9 @@ class UserService extends BaseService
                 unset($data['qq']);
             }else{
                 $data['qq'] = trim($data['qq']);
-                if (!$this->checkInt($data['qq'])) return array('code' => 205, 'msg' => 'qq格式有误', 'sign' => 'qq');
+                if (!$this->checkInt($data['qq'])) return array('code' => 204, 'msg' => 'qq格式有误', 'sign' => 'qq');
                 $isqq = D('User')->where(array('qq' => $data['qq']))->find();
-                if (!empty($isqq)) return array('code' => 1, 'msg' => 'qq号码已存在');
+                if (!empty($isqq)) return array('code' => 205, 'msg' => 'qq号码已存在');
                 if (empty($data['email']) && !empty($user['email'])) $data['email'] = $data['qq'] . '@qq.com';
             }
         }
