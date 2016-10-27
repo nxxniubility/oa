@@ -312,11 +312,9 @@
     var banstatus = "{$data['allocationAll']['banstatus']}";
     var specify_days = "{$data['allocationAll']['specify_days']}";
     $(function(){
-        //111111111111111111111111111  废代码行
-        //222222222222222222222222222  同上
-        // <if condition="!empty($data['allocationAll']['zone_id'])">
-        //     $('.zone_btn'+{$data['allocationAll']['zone_id']}).trigger('click');
-        // </if>
+        <if condition="!empty($data['allocationAll']['zone_id'])">
+            $('.zone_btn'+{$data['allocationAll']['zone_id']}).trigger('click');
+        </if>
         //初始化
         if(holiday!=0 && holiday!=''){
             $('.holiday_box div').eq(0).addClass('cur').text('开启');
