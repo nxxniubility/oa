@@ -80,7 +80,7 @@ class UserService extends BaseService
         $user_id = $param['user_id'];
         $tosystem_user_id = $param['tosystem_user_id'];
         //客户分配
-        $userInfo = D('User')->getFind(array('user_id'=>$user_id), 'system_user_id,status,zone_id');
+        $userInfo = D('User')->getFind(array('user_id'=>$user_id), 'system_user_id,status,zone_id,realname,username');
         //客户是否已上门
         if(!empty($userInfo['visittime']) && $userInfo['visittime']>0){
             return array('code'=>201,'msg'=>'客户已经确认上门过，无需重复操作');
@@ -98,6 +98,13 @@ class UserService extends BaseService
         $reflag_allocation = $this->allocationUser($alloca_param, 10);
         if($reflag_allocation['code']==0){
             D()->startTrans();
+            $add_msg['senduser_id'] = $system_user_id;
+            $add_msg['system_user_id'] = $tosystem_user_id;
+            $add_msg['msgtype'] = 20;
+            $add_msg['content'] = '客户姓名：'.$userInfo['realname'].'<br/>客户手机号码：'.($userInfo['username']!=0?(decryptPhone($userInfo['username'],C('PHONE_CODE_KEY'))):'无').'<br/>请及时到前台进行接待！';
+            $add_msg['href'] = '/System/User/detailUser/id/'.$user_id;
+            $add_msg['readtype'] = 1;
+            D('Message', 'Service')->addMsg($add_msg);
             //重置zone_id 与 更新上门时间
             $save_user['zone_id'] = $tosystem_info['data']['zone_id'];
             $save_user['visittime'] = $save_user['lastvisit'] = time();

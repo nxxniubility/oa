@@ -380,7 +380,7 @@ class PersonnelController extends SystemController {
                 $where[$requestG['key_name']] = array('like', $requestG['key_value']);
             }
         }
-        if(!empty($requestG['role_id'])) $where['role_id'] = $requestG['role_id'];
+        if(!empty($requestG['role_id'])) $where['role_ids'] = $requestG['role_id'];
         $where['zone_id'] = !empty($requestG['zone_id'])?$requestG['zone_id']:$this->system_user['zone_id'];
         //员工列表
         $_param = $where;
@@ -432,7 +432,7 @@ class PersonnelController extends SystemController {
                 $where[$requestG['key_name']] = array('like', $requestG['key_value']);
             }
         }
-        if(!empty($requestG['role_id'])) $where['role_id'] = $requestG['role_id'];
+        if(!empty($requestG['role_id'])) $where['role_ids'] = $requestG['role_id'];
         $where['zone_id'] = !empty($requestG['zone_id'])?$requestG['zone_id']:$this->system_user['zone_id'];
         //员工列表
         $_param = $where;

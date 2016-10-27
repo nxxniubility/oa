@@ -92,102 +92,40 @@ $('.mCancel').on('click',function(){
 });
 //  忙 end
 
-
-function getEngagedStatus_ajax(){
-    $.ajax({
-        url:ajax_url,
-        type: 'post',
-        dataType: 'json',
-        data: '',
-        success: function (reflag) {
-            if(reflag.code==10){
-                $('.peopleStatus .mang').show().siblings('span').hide();
-                if(!$('.header').hasClass('redBg')){
-                    $('.header').addClass('redBg');
-                }
-                /*$.colorbox({
-                 inline: true,
-                 href: $("#automatic"),
-                 overlayClose: false,
-                 title: "客户到访通知"
-                 });*/
+function getMsgHint(){
+    common_ajax2(null,getMsgHint_url,'no',_hintbox,1);
+    function _hintbox(redata){
+        if(redata.code==0){
+            //消息数量
+            $('#poll_total_msg').text(redata.data.unread_count);
+            //消息内容提示窗
+            if(redata.data.read_msg && $('#layui-layer1').length==0){
+                //示范一个公告层
                 layer.open({
-                    type: 1, 					//  页面层
-                    title: '客户到访通知', 				//	不显示标题栏
-                    area: ['404px', 'auto'],
-                    closeBtn: 1,
-                    shade: .6, 					//	遮罩
-                    time: 0, 					//  关闭自动关闭
-                    shadeClose: false, 			//	遮罩控制关闭层
-                    shift: 5, 					//	出现动画-5 闪现
-                    content: $("#automatic"),	//  加载主体内容
-                    scrollbar: false
+                    type: 1
+                    ,title: redata.data.read_msg.msgtype_name+'提醒' //不显示标题栏
+                    ,closeBtn: false
+                    ,area: '300px;'
+                    ,shade: 0.8
+                    ,id: 'hone_open_id' //设定一个id，防止重复弹出
+                    ,btn: ['查看详情', '取消']
+                    ,moveType: 1 //拖拽模式，0或者1
+                    ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">'+redata.data.read_msg.content+'</div>'
+                    ,success: function(layero){
+                        var btn = layero.find('.layui-layer-btn');
+                        btn.css('text-align', 'center');
+                        if(redata.data.read_msg.href){
+                            btn.find('.layui-layer-btn0').attr({
+                                href : redata.data.read_msg.href
+                                ,target: '_blank'
+                            });
+                        };
+                    }
                 });
-                //alert('到访提示'+ '、、、、、、、');
-                $('#automatic .vsRow').eq(0).children('em').html(reflag.data.realname);
-                if(reflag.data.username==0){
-                    reflag.data.username=' ';
-                }
-                $('#automatic .vsRow').eq(1).children('em').html(reflag.data.username);
-                if(reflag.data.tel==0){
-                    reflag.data.tel=' ';
-                }
-                $('#automatic .vsRow').eq(2).children('em').html(reflag.data.tel);
-                if(reflag.data.qq==0){
-                    reflag.data.qq=' ';
-                }
-                $('#automatic .vsRow').eq(3).children('em').html(reflag.data.qq);
-                $('#automatic a').attr('onclick',"editUrl_iframe("+reflag.data.user_id+")");
-            }else if(reflag.code==2){
-                $('.peopleStatus .mang').show().siblings('span').hide();
-                if(!$('.header').hasClass('redBg')){
-                    $('.header').addClass('redBg');
-                }
-                $('.code2_msg').html(reflag.msg);
-                /*$.colorbox({
-                 inline: true,
-                 href: $("#chao"),
-                 overlayClose: false,
-                 title: "忙线状态提示"
-                 });*/
-                layer.open({
-                    type: 1, 					//  页面层
-                    title: '忙线状态提示', 				//	不显示标题栏
-                    area: ['404px', 'auto'],
-                    closeBtn: 1,
-                    shade: .6, 					//	遮罩
-                    time: 0, 					//  关闭自动关闭
-                    shadeClose: false, 			//	遮罩控制关闭层
-                    shift: 5, 					//	出现动画-5 闪现
-                    content: $("#chao"),	//  加载主体内容
-                    scrollbar: false
-                });
-                //alert('忙提示'+ '、、、、、、、');
-            }else if(reflag.code==3){
-                $('.peopleStatus .mang').show().siblings('span').hide();
-                if(!$('.header').hasClass('redBg')){
-                    $('.header').addClass('redBg');
-                }
-            }else if(reflag.code==100){
-                window.location.href=reflag.data;
-            }else{
-                $('.peopleStatus .xian').show().siblings('span').hide();
-                if($('.header').hasClass('redBg')){
-                    $('.header').removeClass('redBg');
-                }
-            }
-            return false;
-        },
-        error:function(){
-            $('.peopleStatus .xian').show().siblings('span').hide();
-            if($('.header').hasClass('redBg')){
-                $('.header').removeClass('redBg');
-            }
-            return false;
-        }
-    });
-    return false;
-}
+            };
+        };
+    };
+};
 
 //获取消息列表
 function getMsgList_ajax(){

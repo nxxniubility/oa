@@ -97,7 +97,13 @@ class BaseService extends BaseModel {
             if(is_array($value)){
                 if(!is_array($value[1])) $value[1] = explode(',', $value[1]);
                 if(strtoupper($value[0])=='IN'){
-                    if(in_array($v[$key],$value[1])) $department_new[] = $v;
+                    if(is_array($v[$key])){
+                        if(array_intersect($v[$key],$value[1])){
+                            $department_new[] = $v;
+                        }
+                    }elseif(in_array($v[$key],$value[1])) {
+                        $department_new[] = $v;
+                    }
                 }elseif(strtoupper($value[0])=='NEQ'){
                     if(!in_array($v[$key],$value[1])) $department_new[] = $v;
                 }elseif(strtoupper($value[0])=='LIKE'){
@@ -107,7 +113,11 @@ class BaseService extends BaseModel {
                 if( count(explode(',', $value))>1 ){
                     if(in_array($v[$key],explode(',', $value))) $department_new[] = $v;
                 }else{
-                    if($v[$key]==$value) $department_new[] = $v;
+                    if(is_array($v[$key])){
+                        if(in_array($value, $v[$key])){
+                            $department_new[] = $v;
+                        }
+                    }elseif($v[$key]==$value) $department_new[] = $v;
                 }
             }
         }

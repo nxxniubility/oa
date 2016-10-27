@@ -8,6 +8,12 @@ if(!defined('THINK_PATH')) exit('非法调用');//防止被外部系统调用
 
 return array(
     'FIELD_STATUS'=>array(
+        //消息类型
+        'MSG_TYPE'=>array(
+            1 => '系统消息',
+            10 => '消息消息',
+            20 => '到访消息',
+        ),
         //学习平台
         'USER_LEARNINGTYPE'=>array(
             1 => '泽林',
