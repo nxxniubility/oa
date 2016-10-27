@@ -92,18 +92,39 @@ $('.mCancel').on('click',function(){
 });
 //  忙 end
 
-function getMsgHint(){
+var _key = 0;
+function msg_icon(){
+    var _icon_int = setInterval(_icon_animate,200);
+    function _icon_animate(){
+        if(_key==3){
+            _key = 0;
+            clearInterval(_icon_int);
+        };
+        $('#poll_total_msg').parents('.message').animate({'background-position':'18px'}).animate({'background-position':'22px'});
+        _key++;
+    };
+};
+
+function getMsgHint_ajax(){
     common_ajax2(null,getMsgHint_url,'no',_hintbox,1);
     function _hintbox(redata){
         if(redata.code==0){
             //消息数量
-            $('#poll_total_msg').text(redata.data.unread_count);
+            if($('#poll_total_msg').text()!=redata.data.unread_count){
+                if($('#poll_total_msg').text()<redata.data.unread_count){
+                    layer.tips('有未读新消息哦！', '.message', {
+                        tips: 3
+                    });
+                };
+                $('#poll_total_msg').attr('flag', 'yes').text(redata.data.unread_count);
+                msg_icon();
+            };
             //消息内容提示窗
-            if(redata.data.read_msg && $('#layui-layer1').length==0){
-                //示范一个公告层
+            if(redata.data.read_msg){
+                //公告层
                 layer.open({
                     type: 1
-                    ,title: redata.data.read_msg.msgtype_name+'提醒' //不显示标题栏
+                    ,title: redata.data.read_msg.msgtype_name+'提醒：'+redata.data.read_msg.title //不显示标题栏
                     ,closeBtn: false
                     ,area: '300px;'
                     ,shade: 0.8
@@ -116,8 +137,8 @@ function getMsgHint(){
                         btn.css('text-align', 'center');
                         if(redata.data.read_msg.href){
                             btn.find('.layui-layer-btn0').attr({
-                                href : redata.data.read_msg.href
-                                ,target: '_blank'
+                                href : redata.data.read_msg.href,
+                                target: '_blank'
                             });
                         };
                     }
@@ -129,32 +150,30 @@ function getMsgHint(){
 
 //获取消息列表
 function getMsgList_ajax(){
-    var data = {
-        type:'getMsgList'
-    };
-    common_ajax2(data,ajax_url,'no',reMsgList,'no');
-    function reMsgList(reflag){
-        var old_count = $('#poll_total_msg').text();
-        if(reflag.code==0){
-            $('#poll_total_msg').text(reflag.data.count);
-            if(reflag.data.count==0){
-                $('#poll_msg_bady').empty().siblings('.MsgNull').show();
-            }else if(old_count<reflag.data.count){
-                var html = '';
-                $.each(reflag.data.data,function(k,v){
-                    if(k==0 && v.msgtype==11 && v.read==1){
-
-                    };
-                    if(k<3){
-                        html += '<p> <a href="'+v.system_user_msg_id+'" style="margin-top: 0px; width: 263px;">'+v.content+'</a> <span style="margin-right: 10px;width: 100px;">'+v.create_time+'</span> </p>';
-                    };
-                });
-                $('#poll_msg_bady').html(html).show().siblings('img').siblings('.MsgNull').hide();
-                $('#poll_msg_more').show();
+    if($('#poll_total_msg').attr('flag')=='yes'){
+        $('#poll_total_msg').attr('flag','no');
+        var data = {isread : 1,page:'0,5'};
+        common_ajax2(data,getMsgList_url,'no', _reMsgList,1);
+        function _reMsgList(reflag){
+            var old_count = $('#poll_total_msg').text();
+            if(reflag.code==0){
+                $('#poll_total_msg').text(reflag.data.count);
+                if(reflag.data.count==0){
+                    $('#poll_msg_bady').empty().siblings('.MsgNull').show();
+                }else{
+                    var html = '';
+                    $.each(reflag.data.data,function(k,v){
+                        if(k<3){
+                            html += '<p> <a href="'+v.message_id+'" style="margin-top: 0px; width: 263px;">'+v.title+'</a> <span style="margin-right: 10px;width: 100px;">'+v.create_time.substr(5,11)+'</span> </p>';
+                        };
+                    });
+                    $('#poll_msg_bady').html(html).show().siblings('img').siblings('.MsgNull').hide();
+                    $('#poll_msg_more').show();
+                };
             };
+            $('#poll_msg_bady').siblings('img').hide();
         };
-        $('#poll_msg_bady').siblings('img').hide();
-    };
+    }
 };
 
 //异步修改

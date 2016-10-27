@@ -101,7 +101,8 @@ class UserService extends BaseService
             $add_msg['senduser_id'] = $system_user_id;
             $add_msg['system_user_id'] = $tosystem_user_id;
             $add_msg['msgtype'] = 20;
-            $add_msg['content'] = '客户姓名：'.$userInfo['realname'].'<br/>客户手机号码：'.($userInfo['username']!=0?(decryptPhone($userInfo['username'],C('PHONE_CODE_KEY'))):'无').'<br/>请及时到前台进行接待！';
+            $add_msg['title'] = '客户 '.$userInfo['realname'].' 上门到访';
+            $add_msg['content'] = '客户姓名：'.$userInfo['realname'].'<br/>客户手机号码：'.(!empty($userInfo['username'])?(decryptPhone($userInfo['username'],C('PHONE_CODE_KEY'))):'无').'<br/>请及时到前台进行接待！';
             $add_msg['href'] = '/System/User/detailUser/id/'.$user_id;
             $add_msg['readtype'] = 1;
             D('Message', 'Service')->addMsg($add_msg);
