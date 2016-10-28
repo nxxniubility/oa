@@ -172,7 +172,7 @@ function getMsgList_ajax(){
             };
             $('#poll_msg_bady').siblings('img').hide();
         };
-    }
+    };
 };
 
 //异步修改
@@ -190,7 +190,7 @@ function editStatus(status){
                     $('.peopleStatus .mang').show().siblings('span').hide();
                     if(!$('.header').hasClass('redBg')){
                         $('.header').addClass('redBg');
-                    }
+                    };
                     //$('#xian').colorbox.close();
                     layer.closeAll();
                 }else{
@@ -200,11 +200,11 @@ function editStatus(status){
                     }
                     //$('#mang').colorbox.close();
                     layer.closeAll();
-                }
+                };
                 layer.msg(reflag.msg,{icon:1});
             }else{
                 layer.msg(reflag.msg,{icon:2});
-            }
+            };
             return false;
         }
     });
