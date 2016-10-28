@@ -246,7 +246,7 @@ class UserController extends SystemController
             //异步获取员工列表
             $where_system['usertype'] = array('NEQ',10);
             $where_system['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-            $where_system['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+            $where_system['role_ids'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
             if(!empty($request['search'])) $where_system['realname'] = array('like',$request['search']);
             $where_system['order'] = 'sign asc';
             $where_system['page'] = $page.',10';
@@ -467,7 +467,7 @@ class UserController extends SystemController
             //异步获取员工列表
             $where_system['usertype'] = array('NEQ',10);
             $where_system['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-            $where_system['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+            $where_system['role_ids'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
             if(!empty($request['search'])) $where_system['realname'] = array('like',$request['search']);
             $where_system['order'] = 'sign asc';
             $where_system['page'] = $page.',10';
@@ -505,7 +505,7 @@ class UserController extends SystemController
             //异步获取员工列表
             $where_system['usertype'] = array('NEQ',10);
             $where_system['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-            $where_system['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+            $where_system['role_ids'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
             if(!empty($request['search'])) $where_system['realname'] = array('like',$request['search']);
             $where_system['order'] = 'sign asc';
             $where_system['page'] = $page.',10';
@@ -566,7 +566,7 @@ class UserController extends SystemController
                 //异步获取员工列表
                 $whereSystem['usertype'] = array('NEQ',10);
                 $whereSystem['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-                $whereSystem['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+                $whereSystem['role_ids'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
                 $whereSystem['order'] = 'sign asc';
                 //员工列表
                 $reSystemList = D('SystemUser','Service')->getSystemUsersList($whereSystem);
@@ -649,7 +649,7 @@ class UserController extends SystemController
                 //异步获取员工列表
                 $whereSystem['usertype'] = array('NEQ',10);
                 $whereSystem['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-                $whereSystem['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+                $whereSystem['role_ids'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
                 $whereSystem['order'] = 'sign asc';
                 //员工列表
                 $reSystemList = D('SystemUser','Service')->getSystemUsersList($whereSystem);
@@ -713,7 +713,7 @@ class UserController extends SystemController
             //异步获取员工列表
             $where_system['usertype'] = array('NEQ',10);
             $where_system['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-            $where_system['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+            $where_system['role_ids'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
             if(!empty($request['search'])) $where_system['realname'] = array('like',$request['search']);
             $where_system['order'] = 'sign asc';
             $where_system['page'] = $page.',10';
@@ -767,7 +767,7 @@ class UserController extends SystemController
             //异步获取员工列表
             $where_system['usertype'] = array('NEQ',10);
             $where_system['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-            $where_system['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+            $where_system['role_ids'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
             if(!empty($request['search'])) $where_system['realname'] = array('like',$request['search']);
             $where_system['order'] = 'sign asc';
             $where_system['page'] = $page.',10';
@@ -837,7 +837,7 @@ class UserController extends SystemController
                 if(empty($request['zone_id'])) $this->ajaxReturn(1, '请先选择区域');
                 if(empty($request['role_id'])) $this->ajaxReturn(1, '请先选中职位');
                 $where['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-                $where['role_id'] = array('IN', $request['role_id']);
+                $where['role_ids'] = array('IN', $request['role_id']);
                 $where['realname'] = !empty($request['keyname'])?array('LIKE', $request['keyname']):null;
                 //员工列表
                 $reflag = D('SystemUser','Service')->getSystemUsersList($where);
@@ -880,7 +880,7 @@ class UserController extends SystemController
                 if(empty($request['zone_id'])) $this->ajaxReturn(1, '请先选择区域');
                 if(empty($request['role_id'])) $this->ajaxReturn(1, '请先选中职位');
                 $param['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-                $param['role_id'] = array('IN', $request['role_id']);
+                $param['role_ids'] = array('IN', $request['role_id']);
                 $param['usertype'] = array('NEQ', 10);
                 $param['realname'] = !empty($request['keyname'])?array('LIKE', $request['keyname']):null;
                 //员工列表
