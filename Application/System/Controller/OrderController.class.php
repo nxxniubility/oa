@@ -53,7 +53,7 @@ class OrderController extends SystemController
                 //异步获取员工列表
                 $whereSystem['usertype'] = array('neq',10);
                 $whereSystem['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-                $whereSystem['role_id'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
+                $whereSystem['role_ids'] = (!empty($requestP['role_id']))?$requestP['role_id']:0;
                 //员工列表
                 $reSystemList = D('SystemUser', 'Service')->getSystemUsersList($whereSystem);
                 //返回数据操作状态
@@ -209,7 +209,7 @@ class OrderController extends SystemController
             if($requestP['type']=='getSysUser'){
                 $whereSystem['usertype'] = array('neq',10);
                 $whereSystem['zone_id'] = !empty($requestP['zone_id'])?$requestP['zone_id']:$this->system_user['zone_id'];
-                $whereSystem['role_id'] = $requestP['role_id'];
+                $whereSystem['role_ids'] = $requestP['role_id'];
                 //员工列表
                 $systemUserAll = D('SystemUser', 'Service')->getSystemUsersList($whereSystem);
                 if($systemUserAll['code'] == 0) {
