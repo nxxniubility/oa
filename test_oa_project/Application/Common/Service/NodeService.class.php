@@ -213,13 +213,16 @@ class NodeService extends BaseService
     {
         $userDefaultNodes = D('SystemUser', 'Service')->getUserDefaultNodes();
         if (empty($userDefaultNodes['data'])) {
-            $tempData = session('user_child_nodes');
-            //如果孩子节点数大于8则默认取前面8个,否则取全部
-            if (count($tempData) <= 8) {
-                $userDefaultNodes['data'] = $tempData;
-            } else {
-                for ($i = 0; $i < 8; $i++) {
-                    $userDefaultNodes['data'][$i] = $tempData[$i];
+            $tempData = session('sidebar');
+            $i = 0;
+            foreach ($tempData as $key => $value) {
+                foreach ($value['children'] as $k1 => $v1) {
+                    if ($v1 && $i<8) {
+                        $userDefaultNodes['data'][$i] = $v1;
+                        $i++;
+                    }else{
+                        continue;
+                    }
                 }
             }
         }
