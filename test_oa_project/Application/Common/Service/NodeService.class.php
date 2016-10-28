@@ -216,13 +216,17 @@ class NodeService extends BaseService
             $tempData = session('sidebar');
             $i = 0;
             foreach ($tempData as $key => $value) {
-                foreach ($value['children'] as $k1 => $v1) {
-                    if ($v1 && $i<8) {
-                        $userDefaultNodes['data'][$i] = $v1;
-                        $i++;
-                    }else{
-                        continue;
+                if ($i<8) {
+                    foreach ($value['children'] as $k1 => $v1) {
+                        if ($v1 && $i<8) {
+                            $userDefaultNodes['data'][$i] = $v1;
+                            $i++;
+                        }else{
+                            continue;
+                        }
                     }
+                }else{
+                    continue;
                 }
             }
         }
