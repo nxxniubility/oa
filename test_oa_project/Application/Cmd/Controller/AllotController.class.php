@@ -81,7 +81,7 @@ class AllotController extends BaseController {
                     }
                 }
             }
-            //查询分配人
+            // 查询分配人
             $join = "left join zl_allocation_systemuser on zl_system_user.system_user_id=zl_allocation_systemuser.system_user_id";
             if ($allot['isave'] == 2) {
                 $allotUser = D('SystemUser')->field('zl_system_user.system_user_id,realname,zone_id')->join($join)->where(array('user_allocation_id'=>$allot['user_allocation_id'],'zl_allocation_systemuser.status'=>1,'zl_allocation_systemuser.role_id'=>$allot['allocation_roles'],'usertype'=>array('NEQ',10)))->select();
@@ -143,19 +143,17 @@ class AllotController extends BaseController {
             $where['channel_id'] = array('IN',$allotChannel);
             if ($allot['banstatus']) {
                 $bans = explode(',', $allot['banstatus']);
-            }
-
-            //判断是否有禁止的选项，有则剔除
-            $statuss = C('USER_ATTITUDE');
-            foreach ($statuss as $key => $value) {
-                $statusss[] = $value['num'];
-            }
-            foreach ($statusss as $key => $value) {
-                if (in_array($value, $bans)) {
-                    unset($statusss[$key]);
+                $statusss = array();
+                //判断是否有禁止的选项，有则剔除
+                $statuss = C('FIELD_STATUS.USER_ATTITUDE');
+                foreach ($statuss as $key => $value) {
+                    if (!in_array($key, $bans)) {
+                        $statusss[] = $key;
+                    }
                 }
+                $statusss[] = 0;
+                $where['attitude_id'] = array('IN', $statusss);
             }
-            $where['attitude_id'] = array('IN', $statusss);
             $resource = $userdb->field('user_id,infoquality,channel_id,createtime')->where($where)->order('createupdatetime desc')->limit($allotTotal)->select();
             if(empty($resource)) {
                 $falg_msg[] = '失败原因:客户资源不足分配，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
