@@ -837,7 +837,7 @@ class UserController extends SystemController
                 if(empty($request['zone_id'])) $this->ajaxReturn(1, '请先选择区域');
                 if(empty($request['role_id'])) $this->ajaxReturn(1, '请先选中职位');
                 $where['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-                $where['role_ids'] = array('IN', $request['role_id']);
+                $where['role_ids'] = $request['role_id'];
                 $where['realname'] = !empty($request['keyname'])?array('LIKE', $request['keyname']):null;
                 //员工列表
                 $reflag = D('SystemUser','Service')->getSystemUsersList($where);
