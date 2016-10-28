@@ -268,63 +268,6 @@ class SystemUserService extends BaseService
         return $randomstr;
     }
 
-    /*
-	|--------------------------------------------------------------------------
-	| 获取员工列表--缓存
-	|--------------------------------------------------------------------------
-	| $type 是否添加分配渠道统计
-	| @author zgt
-	*/
-    public function getListCache($where, $order=null, $limit=null, $type=null)
-    {
-        $where = array_filter($where);
-        if(F('Cache/system') && empty($where['realname'])){
-            $systemUserAll = F('Cache/system');
-        }else{
-            if(!empty($where['realname'])){
-                $systemUserList = D('SystemUser')->getList($where);
-            }else{
-                $systemUserList = D('SystemUser')->getList(array('usertype'=>array('neq',10)));
-            }
-            $systemUserCount = D('SystemUser')->getCount(array('usertype'=>array('neq',10)));
-            $systemUserAll['data'] = $systemUserList['data'];
-            $systemUserAll['count'] = $systemUserCount['data'];
-            if(empty($where['realname'])){
-                F('Cache/system',$systemUserAll);
-            }
-        }
-        if(!empty($where['zone_id'])){
-            $zoneIdArr = array();
-            $zoneIdArr = $this->_getZoneIds($where['zone_id']);
-            foreach($systemUserAll['data'] as $k=>$v){
-                if(!empty($where['zone_id']) && !in_array($v['zone_id'],$zoneIdArr)){
-                    unset($systemUserAll['data'][$k]);
-                }
-                if(!empty($where['role_id'])){
-                    $in_flag = false;
-                    foreach($v['roles'] as $k2=>$v2){
-                        if($v2['role_id']==$where['role_id'] ){
-                            $in_flag = true;
-                        }
-                    }
-                    if($in_flag===false) unset($systemUserAll['data'][$k]);
-                }
-            }
-        }
-        if($limit!==null){
-            $limit = explode(',',$limit);
-            $systemUserAll['data'] = array_slice($systemUserAll['data'], $limit[0], $limit[1]);
-        }
-        if(!empty($where['system_user_id'])){
-            foreach($systemUserAll['data'] as $k=>$v){
-                if($v['system_user_id']==$where['system_user_id']){
-                    $systemUserAll['data'] = $v;
-                }
-            }
-        }
-        //返回数据与状态
-        return array('code'=>'0', 'data'=>$systemUserAll);
-    }
 
 
     /**
@@ -371,19 +314,6 @@ class SystemUserService extends BaseService
     }
 
 
-    /*
-     * userid=>获取员工权限
-     * @author zgt
-     * @return array
-     */
-//    protected function getSystemUserRole($systemUserId){
-//        return D('RoleUser')
-//            ->field('name,role_id,departmentname')
-//            ->where(array('user_id'=>$systemUserId))
-//            ->join('__ROLE__ ON __ROLE_USER__.role_id=__ROLE__.id')
-//            ->join('LEFT JOIN __DEPARTMENT__ on __DEPARTMENT__.department_id=__ROLE__.department_id')
-//            ->select();
-//    }
 
     /*
      * 添加登录日志

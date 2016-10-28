@@ -39,7 +39,7 @@ class NodeService extends BaseService
     {
         $param['status'] = 1;
         $param['node_id'] = !empty($param['node_id'])?$param['node_id']:0;
-        $param['order'] = 'sort desc';
+        $param['order'] = !empty($param['order'])?$param['order']:'sort desc';
         $param['page'] = !empty($param['page'])?$param['page']:null;
         if( F('Cache/node') ){
             $nodeAll = F('Cache/node');
