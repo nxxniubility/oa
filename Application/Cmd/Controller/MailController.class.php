@@ -114,13 +114,8 @@ class MailController extends BaseController {
             //根据匹配规则获取入库字段的信息
 			
 			
-			$data = $this->get_data($subject,$pattern['nickname'],$site);
-			
-			
+			$data = $this->get_data($subject,$pattern['nickname'],$site);		
 			$this->get_other_data($data,$subject,$site);
-			//echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body><pre>';
-			//print_r($data);
-			//echo '</body></html></pre>';
 		
             //既没手机号 又没 qq号 的略过
             if(empty($data['zl_user']['username']) && empty($data['zl_user']['qq'])) {
@@ -130,8 +125,23 @@ class MailController extends BaseController {
             }
 			$data['zl_user_info']['channel_id'] = $pattern['channel_id'];
             //判断简历是否存在
-            $user_id = $this->UserDB->getUser(array('username'=>$data['zl_user']['username']),array('user_id'));
-            if(!empty($user_id)) {
+            $data['zl_user']['username'] = encryptPhone($data['zl_user']['username'], C('PHONE_CODE_KEY'))
+            $isSameUsername = $this->UserDB->getFind(array('username'=>$data['zl_user']['username']));
+            $isSameUserqq = $this->UserDB->getFind(array('username'=>$data['zl_user']['qq']));
+            $isSameUsertel = $this->UserDB->getFind(array('username'=>$data['zl_user']['tel']));
+            $save['createupdatetime'] = time();
+            if(!empty($isSameUsername)) {
+            	$update = $this->UserDB->editData($save, $isSameUser['user_id']);
+                $this->delete_mail($i);
+                $this->msg .= '当前简历已经入库过'."\r\n";
+                continue;
+            }elseif (!empty($isSameUserqq)) {
+            	$update = $this->UserDB->editData($save, $isSameUserqq['user_id']);
+                $this->delete_mail($i);
+                $this->msg .= '当前简历已经入库过'."\r\n";
+                continue;
+            }elseif (!empty($isSameUsertel)) {
+            	$update = $this->UserDB->editData($save, $isSameUsertel['user_id']);
                 $this->delete_mail($i);
                 $this->msg .= '当前简历已经入库过'."\r\n";
                 continue;
