@@ -149,9 +149,9 @@ a.sort{ display:block; float:left; height:30px; color:#333;  line-height:30px; p
 .pageCount,.pageNum {margin-right:20px;}
 .pageCount div {display:inline-block;height:auto;}
 .pageCount .page-shownum {width:auto;height:30px;line-height:30px;margin:0 5px;padding:0 15px;color:#9c9b9b;border:1px solid #9c9b9b;}
-.pageNum{font-size:0;border:1px solid #ccc;background:#fff;}
-.pageNum a,.pageNum span {display:inline-block;height:30px;line-height:30px;padding:0 12px;font-size:12px;}
-.pageNum a {height:28px;line-height:28px;color:#333;}
+.pageNum{height:28px;font-size:0;border:1px solid #ccc;background:#fff;}
+.pageNum a,.pageNum span {display:inline-block;height:28px;line-height:28px;padding:0 12px;font-size:12px;}
+.pageNum a {color:#333;}
 .pageNum span {color:#999;cursor:pointer;}
 .pageNum span.current,.pageNum a:hover{color:#fff;background:#4dbe88;}
 .pageNum .pagination,.pageNum .returnFirst,.pageNum .returnNext,.pageNum .returnPrev{border-right:1px solid #ccc;}
