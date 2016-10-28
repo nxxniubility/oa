@@ -126,8 +126,9 @@ class AllotController extends BaseController {
             $zoneIds[] = $allot['zone_id'];
             
             $where['zone_id'] = array('IN',$zoneIds);
-            $where['user_id'] = array('NOT IN',$userApplyArr);
-
+            if ($userApplyArr) {
+                $where['user_id'] = array('NOT IN',$userApplyArr);
+            }
 
             //获取近期放弃客户
             $excludeTime = $nowtime - (86400 * 7);
