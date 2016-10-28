@@ -21,7 +21,8 @@ class NodeController extends SystemController
     public function nodeList()
     {
         //获取数据
-        $nodeList = D('Node','Service')->getNodeList();
+        $param['order'] = 'id asc';
+        $nodeList = D('Node','Service')->getNodeList($param);
         $nodeList = $nodeList['data']['data'];
         //模版赋值
         $this->assign('nodeList', $nodeList);
