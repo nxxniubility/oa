@@ -164,7 +164,6 @@ class DataService extends BaseService
         $_where['daytime'] = $where['daytime'];
         $result = D('DataMarket')->where($_where)->select();
         $newArr = array();
-        $SystemUserService = new SystemUserService();
         //补全天数内容
         if(!empty($daytime)){
             $start = $daytime[0];
