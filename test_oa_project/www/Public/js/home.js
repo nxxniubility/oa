@@ -54,7 +54,6 @@ $(function () {
         var data = {
             nodes: nodes
         };
-
         common_ajax(data, '', 'reload');
     });
 
