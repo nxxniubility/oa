@@ -137,29 +137,18 @@ class AllotController extends BaseController {
             foreach($excludeUser as $k => $v){
                 $excludeUserArr[$v['user_id']] = $v['user_id'];
             }
-            if ($excludeUserArr) {
+            if (!empty($excludeUser)) {
                 $where['user_id'] = array('NOT IN',$excludeUserArr);
             }
             //获取所有资源信息
             $where['channel_id'] = array('IN',$allotChannel);
             if ($allot['banstatus']) {
-                $bans = explode(',', $allot['banstatus']);
-                $statusss = array();
-                //判断是否有禁止的选项，有则剔除
-                $statuss = C('FIELD_STATUS.USER_ATTITUDE');
-                foreach ($statuss as $key => $value) {
-                    if (!in_array($key, $bans)) {
-                        $statusss[] = $key;
-                    }
-                }
-                $statusss[] = 0;
-                $where['attitude_id'] = array('IN', $statusss);
+                $where['attitude_id'] = array('NOT IN', $allot['banstatus']);
             }
             $resource = $userdb->field('user_id,infoquality,channel_id,createtime')->where($where)->order('createupdatetime desc')->limit($allotTotal)->select();
             if(empty($resource)) {
                 $falg_msg[] = '失败原因:客户资源不足分配，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');continue;
             }
-
             $resultUser = array();
             foreach($resource as $k => $v){
                 $v['createtime'] = date('Y-m-d H:i:s',$v['createtime']);
@@ -266,7 +255,6 @@ class AllotController extends BaseController {
             }
             $falg_msg[] = '分配成功:'.$result.'条数据/每人，'.'规则名称:'.$allot['allocationname'].'，执行时间:'.date('Y-m-d H:i:s');
         }
-        exit;
         if(!empty($allocation_id)){
             $this->success($falg_msg[0]);
         }elseif(!empty($falg_msg)){
