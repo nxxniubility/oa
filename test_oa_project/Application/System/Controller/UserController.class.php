@@ -2,6 +2,7 @@
 namespace System\Controller;
 
 use Common\Controller\SystemController;
+use Common\Service\UserService;
 
 class UserController extends SystemController
 {
@@ -1533,7 +1534,8 @@ class UserController extends SystemController
                 $USER_STATUS = C('USER_STATUS');
                 $user['status'] = $USER_STATUS['160']['num'];
                 $user['course_id'] = 0;
-                $result = D("User",'Service')->addUser($user);
+                $UserService = new UserService();
+                $result = $UserService->addUser($user);
                 if ($result['code'] != 0) {
                     $userList[$key]['msg'] = $result['msg'];
                     $errorData[$key] = $userList[$key];

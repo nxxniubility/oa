@@ -6,6 +6,7 @@
 */
 namespace Common\Service;
 
+use Common\Model\UserModel;
 use Common\Service\DataService;
 use Common\Service\BaseService;
 
@@ -747,7 +748,8 @@ class UserService extends BaseService
         $data = array_filter($data);
         D()->startTrans();
         $data['createupdatetime'] = time();
-        $reUserId = D('User')->addData($data);
+        $UserModel = new UserModel();
+        $reUserId = $UserModel->addData($data);
         if($reUserId['code']==0){
             $data_info = $data;
             unset($data['createupdatetime']);
