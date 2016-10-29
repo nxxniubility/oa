@@ -1383,7 +1383,7 @@ class UserController extends SystemController
                     continue;
                 }
 
-            } 
+            }
             session('faile_import', $errorData);
             session('success_import', $userList);
             $this->redirect('/System/User/importClient', array('type' => $type));
