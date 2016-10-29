@@ -1257,7 +1257,7 @@ class UserController extends SystemController
      */
     public function importUser()
     {
-        set_time_limit(0);
+        set_time_limit(3000);
         $zone_id = $this->system_user['zone_id'];
         $type = I("get.type");     
         if (IS_POST) {
@@ -1306,8 +1306,6 @@ class UserController extends SystemController
                     $num = strlen($user['username']);
                     if ($num > 11) {
                         $user['username'] = substr($user['username'], ($num - 11), $num);
-                    } elseif ($num < 11) {
-                        unset($user['username']);
                     }
                 }
                 if ($user['qq'] && !$user['email']) {  //邮箱
@@ -1376,6 +1374,7 @@ class UserController extends SystemController
                 }
                 $user['infoquality'] = 4;   //信息质量不明确
                 $user['channel_id'] = $setpagesInfo[0]['channel_id'];
+                $user['course_id'] = 0;
                 $result = D("User",'Service')->addUser($user);
                 if ($result['code'] != 0) {
                     $userList[$key]['msg'] = $result['msg'];
@@ -1405,7 +1404,7 @@ class UserController extends SystemController
      */
     public function importUserLibrary()
     {
-        set_time_limit(0);
+        set_time_limit(3000);
         $zone_id = $this->system_user['zone_id'];
         $type = I("get.type");
         if (IS_POST) {
@@ -1457,8 +1456,6 @@ class UserController extends SystemController
                     $num = strlen($user['username']);
                     if ($num > 11) {
                         $user['username'] = substr($user['username'], ($num - 11), $num);
-                    } elseif ($num < 11) {
-                        unset($user['username']);
                     }
                 }
     
@@ -1496,7 +1493,7 @@ class UserController extends SystemController
                     }
                     unset($user['educationname']);
                 }
-    
+
                 if (strlen($user['postcode']) != 6) {  //邮编验证
                     unset($user['postcode']);
                 }
@@ -1535,6 +1532,7 @@ class UserController extends SystemController
                 $user['channel_id'] = $setpagesInfo[0]['channel_id'];
                 $USER_STATUS = C('USER_STATUS');
                 $user['status'] = $USER_STATUS['160']['num'];
+                $user['course_id'] = 0;
                 $result = D("User",'Service')->addUser($user);
                 if ($result['code'] != 0) {
                     $userList[$key]['msg'] = $result['msg'];

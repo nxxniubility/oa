@@ -18,7 +18,7 @@ class SystemUserController extends SystemApiController
 
     /*
    |--------------------------------------------------------------------------
-   | 获取客户详情
+   | 获取员工列表
    |--------------------------------------------------------------------------
    | @author zgt
    */
@@ -27,9 +27,10 @@ class SystemUserController extends SystemApiController
         //获取请求？
         $param['role_ids'] = I('param.role_ids',null);
         $param['zone_id'] = I('param.zone_id',null);
-        $param['realname'] = I('param.zone_id',null);
-        $param['page'] = I('param.page',null);
+        $param['realname'] = !empty(I('param.realname',null))?array('LIKE', I('param.realname')):null;
         $param['usertype'] = I('param.usertype',null);
+        $param['order'] = I('param.role_ids',null);
+        $param['page'] = I('param.page',null);
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
@@ -43,7 +44,7 @@ class SystemUserController extends SystemApiController
 
     /*
    |--------------------------------------------------------------------------
-   | 获取客户详情
+   | 获取员工详情
    |--------------------------------------------------------------------------
    | @author zgt
    */
@@ -111,7 +112,7 @@ class SystemUserController extends SystemApiController
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
-        $result = D('SystemUser','Service')->login($param);
+        $result = D('SystemUser','Service')->editSystemUser($param);
         //返回参数
         if($result['code']==0){
             $this->ajaxReturn(0,'获取成功',$result['data']);
@@ -141,7 +142,7 @@ class SystemUserController extends SystemApiController
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
-        $result = D('SystemUser','Service')->login($param);
+        $result = D('SystemUser','Service')->editSystemUserInfo($param);
         //返回参数
         if($result['code']==0){
             $this->ajaxReturn(0,'获取成功',$result['data']);
@@ -151,19 +152,61 @@ class SystemUserController extends SystemApiController
 
     /*
    |--------------------------------------------------------------------------
-   | 员工 删除/离职
+   | 员工 离职
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function dimission()
+    {
+        //获取请求？
+        $param['system_user_id'] = I('param.system_user_id',null);
+        //去除数组空值
+        $param = array_filter($param);
+        //获取接口服务层
+        $result = D('SystemUser','Service')->delSystemUser($param);
+        //返回参数
+        if($result['code']==0){
+            $this->ajaxReturn(0,'获取成功',$result['data']);
+        }
+        $this->ajaxReturn($result['code'],$result['msg']);
+    }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 员工 离线
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function offLineSystemUser()
+    {
+        //获取请求？
+        $param['system_user_id'] = I('param.system_user_id',null);
+        //去除数组空值
+        $param = array_filter($param);
+        //获取接口服务层
+        $result = D('SystemUser','Service')->removeToken($param);
+        //返回参数
+        if($result['code']==0){
+            $this->ajaxReturn(0,'获取成功',$result['data']);
+        }
+        $this->ajaxReturn($result['code'],$result['msg']);
+    }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 员工 删除
    |--------------------------------------------------------------------------
    | @author zgt
    */
     public function delSystemUser()
     {
         //获取请求？
-        $param['username'] = I('param.username',null);
-        $param['password'] = I('param.password',null);
+        $param['system_user_id'] = I('param.system_user_id',null);
+        $param['flag'] = 'del';
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
-        $result = D('SystemUser','Service')->login($param);
+        $result = D('SystemUser','Service')->delSystemUser($param);
         //返回参数
         if($result['code']==0){
             $this->ajaxReturn(0,'获取成功',$result['data']);

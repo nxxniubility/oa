@@ -707,13 +707,11 @@ class UserService extends BaseService
         if (empty($data['infoquality'])) return array('code' => 312, 'msg' => '信息质量不能为空');
         if (empty($data['channel_id'])) return array('code' => 313, 'msg' => '所属渠道不能为空');
 
-        if (empty($data['course_id']) && $data['course_id'] != 9999) {
+        if (empty($data['course_id']) && $data['course_id'] != 0) {
             return array('code' => 314, 'msg' => '请选择意向课程');
         }
-        if ($data['course_id'] == 9999) {
-            $data['course_id'] = 0;
-        }
         // if (empty($data['remark'])) return array('code' => 315, 'msg' => '备注不能为空');
+        $data['realname'] = trim($data['realname']);
         $data['system_user_id'] = $this->system_user_id;
         $data['zone_id'] = $this->system_user['zone_id'];
         $data['allocationtime'] = time();
@@ -730,13 +728,13 @@ class UserService extends BaseService
             $createUpdate['createupdatetime'] = time();
             if ($checkData['code'] == 201) {
                 $data['username'] = encryptPhone($data['username'], C('PHONE_CODE_KEY'));
-                $isusername = D('User')->where(array('username'=>$data['username']))->save($createUpdate);
+                D('User')->where(array('username'=>$data['username']))->save($createUpdate);
             }
             if ($checkData['code'] == 203) {
-                $isusername = D('User')->where(array('tel'=>$data['tel']))->save($createUpdate);
+                D('User')->where(array('tel'=>$data['tel']))->save($createUpdate);
             }
             if ($checkData['code'] == 205) {
-                $isusername = D('User')->where(array('qq'=>$data['qq']))->save($createUpdate);
+                D('User')->where(array('qq'=>$data['qq']))->save($createUpdate);
             }
             return array('code'=>$checkData['code'], 'msg'=>$checkData['msg'], 'sign'=>!empty($checkData['sign'])?$checkData['sign']:null);
         }
@@ -2165,6 +2163,7 @@ class UserService extends BaseService
                 $data['username'] = encryptPhone($data['username'], C('PHONE_CODE_KEY'));
                 $isusername = D('User')->where(array('username'=>array(array('eq',$data['username']),array('eq',$username0),'OR')))->find();
                 if(!empty($isusername)) return array('code'=>201,'msg'=>'手机号码已存在');
+                //获取手机号码归属地
                 $reApi = phoneVest($username);
                 if(!empty($reApi)) {
                     $data['phonevest'] = $reApi['city'];
@@ -2179,7 +2178,12 @@ class UserService extends BaseService
                 unset($data['tel']);
             }else{
                 $data['tel'] = trim($data['tel']);
+                $arr_tel = explode('-',$data['tel']);
                 if (!$this->checkTel($data['tel'])) return array('code' => 202, 'msg' => '固定号码格式有误', 'sign' => 'tel');
+                if(count($arr_tel)>1){
+                    $is_mobile_prefix = D('MobilePrefix')->getFind(array('number'=>$arr_tel[0]));
+                    if(empty($is_mobile_prefix)) return array('code' => 206, 'msg' => '该固定电话 区号 不存在', 'sign' => 'tel');
+                }
                 $istel = D('User')->where(array('tel' => $data['tel']))->find();
                 if (!empty($istel)) return array('code' => 203, 'msg' => '固定电话已存在');
             }
@@ -2191,6 +2195,7 @@ class UserService extends BaseService
             }else{
                 $data['qq'] = trim($data['qq']);
                 if (!$this->checkInt($data['qq'])) return array('code' => 204, 'msg' => 'qq格式有误', 'sign' => 'qq');
+                if(5<strlen($data['qq']) || strlen($data['qq'])>20)  return array('code' => 208, 'msg' => 'qq长度只能在5位到20之间', 'sign' => 'qq');
                 $isqq = D('User')->where(array('qq' => $data['qq']))->find();
                 if (!empty($isqq)) return array('code' => 205, 'msg' => 'qq号码已存在');
                 if (empty($data['email']) && !empty($user['email'])) $data['email'] = $data['qq'] . '@qq.com';

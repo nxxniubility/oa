@@ -239,10 +239,10 @@ class SystemUserService extends BaseService
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function removeToken($system_user_id=null)
+    public function removeToken($param)
     {
-        if($system_user_id!==null){
-            $where['system_user_id'] = $system_user_id;
+        if(!empty($param['system_user_id'])){
+            $where['system_user_id'] = $param['system_user_id'];
         }
         $where['logintime'] = array(array('GT',strtotime(date('Y-m-d'))), array('ELT',time()));
         $save['token'] = time();
