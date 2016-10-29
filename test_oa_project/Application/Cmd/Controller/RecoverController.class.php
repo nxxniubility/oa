@@ -111,12 +111,12 @@ class RecoverController extends BaseController {
             $map = array();
 
             $where['callbacknum'] = array('LT',$abandon['callbacknum']);
-            $lastvisit = $nowtime - (($abandon['unsatisfieddays'] * 86400) - 3600);//2016-10-13 回收保护期减1小时
+            $lastvisit = $nowtime - (($abandon['unsatisfieddays'] * 86400) - (3600*5));//2016-10-26 回收保护期减5小时
             $where['lastvisit'] = array('LT',$lastvisit);
             $where['_logic'] = 'and';
             
             $where1['callbacknum'] = array('EGT',$abandon['callbacknum']);
-            $lastvisit1 = $nowtime - (($abandon['attaindays'] * 86400) - 3600);//2016-10-13 回收保护期减1小时
+            $lastvisit1 = $nowtime - (($abandon['attaindays'] * 86400) - (3600*5));//2016-10-26 回收保护期减5小时
             $where1['lastvisit'] = array('LT',$lastvisit1);
             
             $map['_complex'][] = $where;

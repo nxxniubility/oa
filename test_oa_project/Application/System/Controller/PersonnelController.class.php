@@ -461,8 +461,8 @@ class PersonnelController extends SystemController {
     public function SystemUserOffline()
     {
         $request = I('post.');
-        $system_user_id = !empty($request['system_user_id'])?$request['system_user_id']:null;
-        $flag = D('SystemUser','Service')->removeToken($system_user_id);
+        $param['system_user_id'] = !empty($request['system_user_id'])?$request['system_user_id']:null;
+        $flag = D('SystemUser','Service')->removeToken($param);
         if($flag['code']==0) $this->ajaxReturn(0, $flag['msg']);
         else $this->ajaxReturn($flag['code'], $flag['msg']);
     }

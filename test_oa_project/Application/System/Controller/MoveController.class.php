@@ -1456,6 +1456,8 @@ class MoveController extends BaseController
         F('20161026-byuser160',$flag_ids);
     }
 
+
+
     public function delUser(){
         exit;
 ////        $where['system_user_id'] = 2;
@@ -1468,7 +1470,7 @@ class MoveController extends BaseController
 //        F('20161026-delUser',$list);
 //        print_r($list);
 //        exit;
-        $list = F('20161026-delUser');
+        $list = F('20161029-delUser');
         foreach($list as $k=>$v){
             $arr[] = M('user','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->delete();
             M('user_info','zl_','DB_CONFIG1')->where(array('user_id'=>$v['user_id']))->delete();
