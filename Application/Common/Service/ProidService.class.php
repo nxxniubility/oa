@@ -682,6 +682,7 @@ class ProidService extends BaseService
                 $mservice = $servicecodeDb->getFind(array('servicecode_id'=>$pro['mservice_id']));
                 $getProList['data'][$key]['mservice'] = $mservice['title'];
             }
+            $getProList['data'][$key]['createtime'] = date('Y-m-d H:d:s', $pro['createtime']);
         }
         return array('code'=>0,'data'=>$getProList);
     }
@@ -995,6 +996,9 @@ class ProidService extends BaseService
         $setPages['system_user_id'] = $this->system_user_id;
         $setPages['status'] = 1;
         $pages = D("Setpages")->getList($setPages);
+        foreach ($pages as $key => $value) {
+            $pages[$key]['createtime'] = date('Y-m-d H:d:s', $value['createtime']);
+        }
         return array('code'=>0,'data'=>$pages);
     }
 

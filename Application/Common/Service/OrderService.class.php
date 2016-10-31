@@ -895,6 +895,48 @@ class OrderService extends BaseService
         return D('DiscountParent')->editData($save, $id);
    }
 
+   /*
+    |--------------------------------------------------------------------------
+    | 修改优惠分类
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+   public function editDiscountInfo($param, $id)
+   {
+        if (!$param['dname'] && $param['dname']>0) {
+            return array(301,'请填写优惠名称');
+        }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$param['dname'])){
+            return array(302,'不能包含特殊字符');
+        }
+        if (strlen($param['dname'])>60) {
+            return array(303,'优惠名称不得超过20个字');
+        }
+        if (!$param['remark']) {
+            return array(304,'请填写优惠详情');
+        }
+        if ($param['sign'] == 10) {
+            $save['dname'] = $param['dname'];
+            $save['remark'] = $param['remark'];
+            $save['type'] = $param['type'];
+            return D('DiscountParent')->editData($save, $id);
+        }else{
+            if (!$param['pid']) {
+                return array(305,'请选择优惠分类');
+            }
+            if (!$param['dmoney']) {
+                return array(306,'请填写优惠金额');
+            }elseif($param['dmoney']>2000){
+                return array(307,'优惠金额不能大于2000');
+            }
+            if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$param['dmoney'])){
+                return array(308,"请输入正确的优惠金额");
+            }
+            return D('Discount')->editData($param, $id);
+        }
+
+        
+   }
+
     /*
     |--------------------------------------------------------------------------
     | 导出订单列表

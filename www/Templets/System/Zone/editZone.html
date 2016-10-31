@@ -48,7 +48,7 @@
 			                            </if>
 									</foreach>
 		                        </dl>
-		                        <input type="hidden" name="zone_id" value="{$zone['parent']['zone_id']}">
+		                        <input type="hidden" name="pid" value="{$zone['parent']['zone_id']}">
 		                    </div>
 						</div>
 					</div>
@@ -95,7 +95,7 @@
 		        $('.newAreaSubmit').click(function() {
 		            var data = {
 		                name:$(':input[name="name"]').val(),
-		                zone_id:$(':input[name="zone_id"]').val(),
+		                pid:$(':input[name="pid"]').val(),
 		                address:$(':input[name="address"]').val(),
 		                tel:$(':input[name="tel"]').val(),
 		                email:$(':input[name="email"]').val(),
