@@ -122,7 +122,7 @@ class ZoneService extends BaseService
             }
             return array('code'=>301,'msg'=>'区域名称不能为空');
         }
-        if(empty($param['parentid'])) {
+        if(!empty($param['parentid'])) {
             return array('code'=>302,'msg'=>'请选择所属区域');
         }
         $result1 = $this->checkMobile($param['tel']);

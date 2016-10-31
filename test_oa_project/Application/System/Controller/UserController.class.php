@@ -1458,7 +1458,6 @@ class UserController extends SystemController
                         $user['username'] = substr($user['username'], ($num - 11), $num);
                     }
                 }
-    
                 if ($user['qq'] && !$user['email']) {  //邮箱
                     $user['email'] = $user['qq'] . '@qq' . '.com';
                 }

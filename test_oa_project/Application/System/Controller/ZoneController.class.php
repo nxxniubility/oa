@@ -66,7 +66,7 @@ class ZoneController extends SystemController {
             $zone['tel'] = I('post.tel');
             $zone['abstract'] = I('post.abstract');
             $zone['address'] = I('post.address');
-            $zone['parentid'] = I("post.zone_id");
+            $zone['parentid'] = I("post.pid");
             $result = D('Zone', 'Service')->editZone($zone, $zone['zone_id'], $center);
             if($result['code'] != 0){
                 $this->ajaxReturn($result['code'],$result['msg']);
@@ -124,7 +124,6 @@ class ZoneController extends SystemController {
         $this->assign('zone', $zone['data']);
         $this->assign('zoneList', $zoneList['data']);
         $this->display();
-
 
     }
 

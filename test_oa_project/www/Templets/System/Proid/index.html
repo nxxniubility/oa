@@ -96,7 +96,7 @@
 				                                </a>
 			                                </li>
 	
-			                                <li class="edit" onclick="delPro('{$promote.promote_id}')">
+			                                <li class="edit" onclick="delPro('{$promote.promote_id}','{$data.proid_id}')">
 			                                    <span class="setDel"></span>
 			                                    <em>删除</em>
 			                                </li>
@@ -107,70 +107,6 @@
 						</tr>
 					</foreach>
 				</table>
-				
-				<!--<div class="proContMiddle">
-					<dl class="proTit clearfix">
-						<dt class="wOne proSequence clearfix">
-							<span>推广ID</span>
-							<i class="proListID"></i>
-						</dt>
-						<dt class="wTwo">推广账号</dt>
-						<dt class="wThr">推广渠道</dt>
-						<dt class="wFou">推广计划</dt>
-						<dt class="wFiv">推广单元</dt>
-						<dt class="wSix">关键词</dt>
-						<dt class="wSev">PC推广地址</dt>
-						<dt class="wEig">移动推广地址</dt>
-						<dt class="wNin">操作</dt>
-					</dl>
-					
-					<foreach name = "data['promoteListAll']['promoteList']" item = "promote">
-					<dl class="clearfix">
-						<dd class="wOne proListDetails">
-							<span>{$promote['promote_id']}</span>
-							<!-- <div class="detailBox clearfix">
-								<div class="leftImg"><img src="../../../Public/images/programList_01-02.jpg"></div>
-								<div class="rightCont clearfix">
-									<p class="theme">ps培训主题</p>
-									<p class="time">创建时间：2015-11-02 15:15:43</p>
-									<p class="pang conversionRate">信息转化率：0%</p>
-									<p class="pang forecastingRates">预报率：0%</p>
-									<p class="pang views">访问：0</p>
-								</div>
-							</div> 
-						</dd>
-
-						<dd class="wTwo">{$promote['accountname']}&nbsp;</dd>
-						<dd class="wThr">{$promote['channelname']}&nbsp;</dd>
-						<dd class="wFou">{$promote['plan']}&nbsp;</dd>
-						<dd class="wFiv">{$promote['planunit']}&nbsp;</dd>
-						<dd class="wSix">{$promote['keyword']}&nbsp;</dd>
-						<dd class="wSev"><a href="{$promote['pc_pages']}" target="_blank">查看</a>&nbsp;</dd>
-						<dd class="wEig"><a href="{$promote['m_pages']}" target="_blank">查看</a>&nbsp;</dd>
-						<dd class="wNin">
-							<a href="javascript:;" class="proSelect"><i></i></a>
-							<div class="otherOperation">
-		                        <div class="otherIcon">
-		                            <ul>
-		                                <li class="status">
-		                                	<a href="<?php echo U('System/Proid/editPromote',array('promote_id'=>$promote['promote_id'])); ?>">
-			                                    <span class="setEdit"></span>
-			                                    <em>修改</em>
-			                                </a>
-		                                </li>
-
-		                                <li class="edit" onclick="delPro('{$promote.promote_id}')">
-		                                    <span class="setDel"></span>
-		                                    <em>删除</em>
-		                                </li>
-		                            </ul>
-		                        </div>
-		                    </div>
-						</dd>
-						</dl>
-					</foreach>
-					
-				</div>-->	
 				<div class='collegaPage clearfix'>
 					{$data['paging']}
 				</div>
@@ -207,12 +143,13 @@
 	           		}
 	           });
 	        });
-		    function delPro(promote_id){
+		    function delPro(promote_id,proid_id){
 		        layer.confirm('确定要删除该计划？', {
 		            btn: ['确定','取消'] //按钮
 		        }, function(){
 		            var data = {
 		                promote_id:promote_id,
+		                proid_id:proid_id,
 		                type:'del'
 		            };
 		            common_ajax(data,'{$urlDelPromote}','reload');

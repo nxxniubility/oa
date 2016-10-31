@@ -456,10 +456,6 @@ class ProidController extends SystemController
         $pro['status'] = 1;
         $result = D('Proid', 'Service')->proidList($pro,'0,100');
         $data['proList'] = $result['data'];
-        foreach ($data['proList']['data'] as $key => $value) {
-            $value['createtime'] = date('Y-m-d H:d:s', $value['createtime']);
-            $data['proList']['data'][$key] = $value;
-        }
         $this->assign('data', $data);
         $this->display();
     }
