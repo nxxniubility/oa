@@ -111,7 +111,7 @@ $('.btn_apply').click(function(e){
         // 实例化编辑器
         apply_remak = UE.getEditor('apply_remak',{
             toolbars: [
-                ['fullscreen', 'source','fontsize','fontfamily', 'undo', 'redo','underline', 'bold','simpleupload']
+                ['fullscreen', 'source','fontsize','fontfamily', 'undo', 'redo','underline', 'bold','insertimage']
             ],
             initialFrameWidth:358,
             initialFrameHeight:116,

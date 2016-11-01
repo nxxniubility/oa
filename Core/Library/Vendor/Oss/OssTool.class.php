@@ -96,8 +96,7 @@ class OssTool {
      * @return array     
      */
     public function get_oss_signature($data)
-	{	
-
+	{
 	    /***************************/
 		if($data['is_callback'])
 		{
@@ -133,7 +132,7 @@ class OssTool {
 	
 		$response = array();
 		$response['accessid'] = self::$config['OSS_ACCESS_ID'];
-		$response['host'] = "http://".self::$config['OSS_BUCKET'].'.'.self::$host;
+		$response['host'] = self::$host;
 		$response['policy'] = $base64_policy;
 		$response['signature'] = $signature;
 		$response['expire'] = $end;

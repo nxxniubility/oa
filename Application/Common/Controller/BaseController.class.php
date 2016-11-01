@@ -204,57 +204,7 @@ class BaseController extends Controller {
             return array('status'=>false,'file_path'=>$file_path,'html_dir'=>$html_dir) ;
         }
     }
-	
-	//*************************************************************/
-    //  以下是系列OSS操作方法  begin
-    //**************************************************************/
-    
-    /**
-     * 客户端获取签名公共调用地址
-     * @author luoyu
-     */
-    public function getOssSign($define_oss_dir='')
-    {
-        
-        Vendor('Oss.OssTool',VENDOR_PATH,'.class.php');     
-        $osstool=new \OssTool();
-        $dir=I('post.oss_dir','user_dir/');//这里设置客户端允许上传的目录
-        $flat=false;
-        if(isset($define_oss_dir)&&$define_oss_dir!='')
-        {
-            $dir=$define_oss_dir;                           
-        }else{          
-            $flat=true;         
-            if(!in_array($dir,C('ALIOSS_CONFIG.ALIOSS_USER_DIR')))$dir='user_dir/';   
-        }
-        
-        /*
-        if($is_callback)
-        {
-            $oss_data=array(
-                'oss_dir'=>$dir,
-                'is_callback'=>true,
-                'callbackUrl'=>'http://oss-demo.aliyuncs.com:23450',//'/index.php?g=Home&c=Index&a=ossCallBack',//回调地址
-                'callbackHost'=>'oss-demo.aliyuncs.com',//回调Host
-                'callbackBody'=>'filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}'
-            );
-        }else{
-        */
-        $oss_data=array(
-            'oss_dir'=>$dir,
-            'is_callback'=>false
-        );
-        //}
-        
-        $response=$osstool->get_oss_signature($oss_data);
-        if($flat)
-        {   
-            echo json_encode(array("code"=>0,"msg"=>"","data"=>$response));
-            exit;
-        }else{          
-            return $response;
-        }
-    }
+
     
     /**
      * 短信公共接口
