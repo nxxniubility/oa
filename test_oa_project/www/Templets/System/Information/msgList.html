@@ -4,7 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>系统首页-{$siteinfo.sitename}</title>
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
-    <link rel="stylesheet" href="__PUBLIC__/css/callnumberlist.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/information.msglist.css">
+    <link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
     <script>
         var jump_code = "{$jump_code}";
     </script>
@@ -19,51 +20,73 @@
             <a href="<?php echo U('System/Information/sendMsg'); ?>" class="add_number">发送消息</a>
         </div>
     </div>
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">系统消息</li>
+            <li>消息通知</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="main">
+                    <div class="msg_list msg_hgt_out">
+                        <div class="list_box">
+                            <div class="list_title"><i class="layui-icon title_icon2">&#xe61d;</i>消息标题12213212</div>
+                            <div class="list_time">2016-10-10 10:10</div>
+                            <div class="list_icon">
+                                <i class="layui-icon">&#xe640;</i>
+                            </div>
+                            <div class="list_content">
+                                内容121232斯蒂芬斯赛道上的房贷放松
+                            </div>
+                        </div>
+                    </div>
+                    <div class="msg_list msg_hgt_out">
+                        <div class="list_box">
+                            <div class="list_title"><i class="layui-icon title_icon">&#xe622;</i>消息标题12213212</div>
+                            <div class="list_time">2016-10-10 10:10</div>
+                            <div class="list_icon">
+                                <i class="layui-icon">&#xe640;</i>
+                            </div>
+                            <div class="list_content">
+                                <i class="layui-icon">&#xe640;</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="main">
+                    <div class="news-box">
+                        <div class="news-box-empty">
+                            <p>没有新消息</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="main">
-        <table cellpadding="0" cellspacing="0" id="numbeer_list">
-            <tr class="for_head">
-                <th class="first_item">标题</th>
-                <th class="first_item">内容</th>
-                <th>时间</th>
-                <th class="last_item">操作</th>
-            </tr>
-        </table>
+        </div>
     </div>
+
 </div>
 
-<!-- 添加号码 -->
-<div class="call_addbox">
-    <div class="box_main">
-        <div class="rows clearfix">
-            <span>号码：</span>
-            <div class="box_right">
-                <input type="text" class="call_inp" name="number">
-            </div>
-        </div>
-        <div class="rows clearfix">
-            <span>类型：</span>
-            <div class="box_right">
-                <select name="number_type">
-                    <option value="0" selected="selected">--请选择号码类型--</option>
-                    <option value="1">固定电话</option>
-                    <option value="2">手机号码</option>
-                </select>
-            </div>
-        </div>
-        <div class="rows txt_center clearfix">
-            <input type="button" class="btn_confirm" value="确定">
-            <input type="button" class="btn_cancel" value="取消">
-        </div>
-    </div>
-</div>
-<input type="hidden" name="temp_id" autocomplete="off">
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/layui/layui.js"></script>
 <script src="__PUBLIC__/js/common.js"></script>
-<script src="__PUBLIC__/js/callNumberList.js"></script>
 <script>
-
+    layui.use(['element', 'layer'], function(){
+        var element = layui.element()
+                ,layer = layui.layer;
+    });
+    $(document).on('click','.msg_list',function(){
+        if($(this).hasClass('msg_hgt_out')){
+            $(this).addClass('msg_hgt_on').addClass('msg_list_hover').removeClass('msg_hgt_out');
+            if($(this).find('.title_icon').length>0){
+                $(this).find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe61d;');
+            };
+        }else{
+            $(this).addClass('msg_hgt_out').removeClass('msg_hgt_on').removeClass('msg_list_hover');
+        };
+    });
 </script>
 </body>
 </html>
