@@ -87,28 +87,20 @@ class MessageService extends BaseService
     {
         if(empty($param['message_id'])) return array('code'=>300, 'msg'=>'参数异常');
         $param = array_filter($param);
-        // //获取弹窗信息
-        // $where['system_user_id'] = $this->system_user_id;
-        // $where['message_id'] = $param['message_id'];
-        // $join = '__MESSAGE_USER__ ON __MESSAGE_USER__.message_id = __MESSAGE__.message_id';
-        // $resuif = D('Message')->getFind($where, null, $join);
-        // // 补上转换
-        // if(!empty($resuif)){
-        //     if($resuif['isread']==1){
-        //         $save['isread'] = 0;
-        //         D('MessageUser')->where(array('message_id'=>$resuif['message_id'],'system_user_id'=>$where['system_user_id']))->save($save);
-        //     }
-        //     $resuif = $this->_addStatus($resuif);
-        // }
-        $msgUser = D("MessageUser")->getFind($param);
-        if ($msgUser['system_user_id'] != $this->system_user_id) {
-            return array('code'=>201, 'msg'=>"无权限查看该消息");
-        }
-        $result = D("Message")->getFind($param);
-        if (!$result) {
-            return array('code'=>301, 'msg'=>"消息不存在");
-        }
-        return array('code'=>0, 'data'=>$result);
+         //获取弹窗信息
+         $where['system_user_id'] = $this->system_user_id;
+         $where['message_id'] = $param['message_id'];
+         $join = '__MESSAGE_USER__ ON __MESSAGE_USER__.message_id = __MESSAGE__.message_id';
+         $resuif = D('Message')->getFind($where, null, $join);
+         // 补上转换
+         if(!empty($resuif)){
+             if($resuif['isread']==1){
+                 $save['isread'] = 0;
+                 D('MessageUser')->where(array('message_id'=>$resuif['message_id'],'system_user_id'=>$where['system_user_id']))->save($save);
+             }
+             $resuif = $this->_addStatus($resuif);
+         }
+        return array('code'=>0, 'data'=>$resuif);
     }
 
     /*

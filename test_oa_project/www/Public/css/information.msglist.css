@@ -53,8 +53,8 @@
 .news-box-empty {background: rgba(0, 0, 0, 0) url("../images/news_icon.png") no-repeat scroll 3px -246px;  color: #a5a5a5;  font-size: 14px;  font-weight: 700;  height: 60px;  line-height: 60px;  margin: 130px auto 0;  padding-left: 70px;  text-align: right;  width: 90px;  }
 
 .msg_list{width: 100%;position: relative;overflow: hidden;border: 1px dashed #ddd;color: #666;margin-top: 8px;cursor: pointer}
-.msg_list:hover{background-color: #f2f2f2}
-.msg_list_hover{background-color: #f2f2f2}
+
+.msg_list_hover{background-color: #fff}
 .msg_hgt_out{height: 65px;}
 .msg_hgt_on{height: 130px;}
 .msg_list .list_box{width: 100%;height: 150px;position:absolute;clear: both;}
@@ -63,4 +63,4 @@
 .msg_list .list_box .list_title .title_icon2{color: #666;margin-right: 3px;}
 .msg_list .list_box .list_time{width: 20%;height: 65px;line-height: 65px;float: left}
 .msg_list .list_box .list_icon{width: 10%;height: 65px;line-height: 65px;float: left;}
-.msg_list .list_box .list_content{width: calc(100% - 20px);margin-left:20px;height: 65px;line-height: 65px;clear: both;background-color: #fff}
+.msg_list .list_box .list_content{width: calc(100% - 20px);margin-left:20px;height: 65px;line-height: 65px;clear: both;background-color: #f2f2f2}
