@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>系统首页-{$siteinfo.sitename}</title>
+    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/callnumberlist.css">
+    <script>
+        var jump_code = "{$jump_code}";
+    </script>
+</head>
+<body>
+<div class="wrapper_box">
+    <div class="title clearfix">
+        <div class="title_left">
+            <span class="title_text">消息列表</span>
+        </div>
+        <div class="title_right fr clearfix">
+            <a href="javascript:;" class="add_number">发送消息</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <table cellpadding="0" cellspacing="0" id="numbeer_list">
+            <tr class="for_head">
+                <th class="first_item">标题</th>
+                <th class="first_item">内容</th>
+                <th>时间</th>
+                <th class="last_item">操作</th>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- 添加号码 -->
+<div class="call_addbox">
+    <div class="box_main">
+        <div class="rows clearfix">
+            <span>号码：</span>
+            <div class="box_right">
+                <input type="text" class="call_inp" name="number">
+            </div>
+        </div>
+        <div class="rows clearfix">
+            <span>类型：</span>
+            <div class="box_right">
+                <select name="number_type">
+                    <option value="0" selected="selected">--请选择号码类型--</option>
+                    <option value="1">固定电话</option>
+                    <option value="2">手机号码</option>
+                </select>
+            </div>
+        </div>
+        <div class="rows txt_center clearfix">
+            <input type="button" class="btn_confirm" value="确定">
+            <input type="button" class="btn_cancel" value="取消">
+        </div>
+    </div>
+</div>
+<input type="hidden" name="temp_id" autocomplete="off">
+<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+<script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__PUBLIC__/js/callNumberList.js"></script>
+<script>
+
+</script>
+</body>
+</html>
