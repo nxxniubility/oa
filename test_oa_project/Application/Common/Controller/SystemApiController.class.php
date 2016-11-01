@@ -13,9 +13,9 @@ class SystemApiController extends ApiBaseController {
     public function _initialize()
     {
         parent::_initialize();
-//        if(!session(C('USER_AUTH_KEY'))){
-//            $this->ajaxReturn(501, '请重新登录');
-//        }
+        if(!session(C('USER_AUTH_KEY'))){
+            $this->ajaxReturn(501, '请重新登录');
+        }
     }
 
 

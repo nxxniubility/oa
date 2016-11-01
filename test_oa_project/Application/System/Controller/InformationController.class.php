@@ -37,10 +37,12 @@ class InformationController extends SystemController
 
     }
 
-    /**
-     * 修改密码
-     * @author  nxx
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | 修改密码
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
     public function changePwd()
     {
         $userInfo = $this->system_user;
@@ -88,5 +90,16 @@ class InformationController extends SystemController
         $data['numberList'] = D('SystemUser','Service')->getCallNumber(array('system_user_id'=>$this->system_user_id));
         $this->assign('data', $data);
         $this->display();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 消息列表
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function msgList()
+    {
+
     }
 }
