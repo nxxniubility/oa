@@ -100,6 +100,6 @@ class InformationController extends SystemController
     */
     public function msgList()
     {
-
+        $this->display();
     }
 }
