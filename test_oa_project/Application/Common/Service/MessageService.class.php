@@ -87,30 +87,46 @@ class MessageService extends BaseService
     {
         if(empty($param['message_id'])) return array('code'=>300, 'msg'=>'参数异常');
         $param = array_filter($param);
-        //获取弹窗信息
-        $where['system_user_id'] = $this->system_user_id;
-        $where['message_id'] = $param['message_id'];
-        $join = '__MESSAGE_USER__ ON __MESSAGE_USER__.message_id = __MESSAGE__.message_id';
-        $resuif = D('Message')->getFind($where, null, $join);
-        // 补上转换
-        if(!empty($resuif)){
-            if($resuif['isread']==1){
-                $save['isread'] = 0;
-                D('MessageUser')->where(array('message_id'=>$resuif['message_id'],'system_user_id'=>$where['system_user_id']))->save($save);
-            }
-            $resuif = $this->_addStatus($resuif);
+        // //获取弹窗信息
+        // $where['system_user_id'] = $this->system_user_id;
+        // $where['message_id'] = $param['message_id'];
+        // $join = '__MESSAGE_USER__ ON __MESSAGE_USER__.message_id = __MESSAGE__.message_id';
+        // $resuif = D('Message')->getFind($where, null, $join);
+        // // 补上转换
+        // if(!empty($resuif)){
+        //     if($resuif['isread']==1){
+        //         $save['isread'] = 0;
+        //         D('MessageUser')->where(array('message_id'=>$resuif['message_id'],'system_user_id'=>$where['system_user_id']))->save($save);
+        //     }
+        //     $resuif = $this->_addStatus($resuif);
+        // }
+        $msgUser = D("MessageUser")->getFind($param);
+        if ($msgUser['system_user_id'] != $this->system_user_id) {
+            return array('code'=>201, 'msg'=>"无权限查看该消息");
         }
-        return array('code'=>0, 'data'=>$resuif);
+        $result = D("Message")->getFind($param);
+        if (!$result) {
+            return array('code'=>301, 'msg'=>"消息不存在");
+        }
+        return array('code'=>0, 'data'=>$result);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 添加消息
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
     public function addMsg($param)
     {
-        $param['create_time'] = time();
-        D()->startTrans();
-        $reid = D('Message')->addData($param);
+        $param['createtime'] = time();
+        $msg = $param;
+        unset($msg['system_user_id']);
+        $reid = D('Message')->addData($msg);
         if($reid['code']==0){
-            $param['message_id'] = $reid['data'];
-            D('MessageUser')->addData($param);
+            $msgUser['message_id'] = $reid['data'];
+            $msgUser['system_user_id'] = $param['system_user_id'];
+            D('MessageUser')->addData($msgUser);
             return array('code'=>0, 'msg'=>'添加成功');
         }else{
             return array('code'=>$reid['code'], 'msg'=>$reid['msg']);

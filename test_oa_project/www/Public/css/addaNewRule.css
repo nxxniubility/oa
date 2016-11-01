@@ -156,3 +156,12 @@
 
 /*1020*/
 .nsSelectTop .nsSelectBox, .selectbox.nsSelectBox dl {width:138px;}
+
+
+.nsRight .addTxt {
+    font-size: 14px;
+    height: 80px;
+    padding: 10px 5px;
+    resize: none;
+    width: 460px;
+}

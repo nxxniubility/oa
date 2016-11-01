@@ -90,6 +90,7 @@ class BaseService extends BaseModel {
         $array['data'] = $array_list;
         return $array;
     }
+    
     //对缓存条件筛选
     public function disposeArray_where($array, $key, $value){
         $value_link = null;
