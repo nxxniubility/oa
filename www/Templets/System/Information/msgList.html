@@ -6,9 +6,6 @@
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
     <link rel="stylesheet" href="__PUBLIC__/css/information.msglist.css">
     <link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
-    <script>
-        var jump_code = "{$jump_code}";
-    </script>
 </head>
 <body>
 <div class="wrapper_box">
@@ -22,37 +19,16 @@
     </div>
     <div class="layui-tab">
         <ul class="layui-tab-title">
-            <li class="layui-this">系统消息</li>
-            <li>消息通知</li>
+            <li class="layui-this">全部通知</li>
+            <li data-value="1">系统通知</li>
+            <li data-value="10">消息通知</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
                 <div class="main">
-                    <div class="msg_list msg_hgt_out">
-                        <div class="list_box">
-                            <div class="list_title"><i class="layui-icon title_icon2">&#xe61d;</i>消息标题12213212</div>
-                            <div class="list_time">2016-10-10 10:10</div>
-                            <div class="list_icon">
-                                <i class="layui-icon">&#xe640;</i>
-                            </div>
-                            <div class="list_content">
-                                内容121232斯蒂芬斯赛道上的房贷放松
-                            </div>
-                        </div>
-                    </div>
-                    <div class="msg_list msg_hgt_out">
-                        <div class="list_box">
-                            <div class="list_title"><i class="layui-icon title_icon">&#xe622;</i>消息标题12213212</div>
-                            <div class="list_time">2016-10-10 10:10</div>
-                            <div class="list_icon">
-                                <i class="layui-icon">&#xe640;</i>
-                            </div>
-                            <div class="list_content">
-                                <i class="layui-icon">&#xe640;</i>
-                            </div>
-                        </div>
-                    </div>
+                        
                 </div>
+                <div class="paging"></div>
             </div>
             <div class="layui-tab-item">
                 <div class="main">
@@ -68,25 +44,83 @@
     </div>
 
 </div>
-
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 <script src="__PUBLIC__/js/layui/layui.js"></script>
 <script src="__PUBLIC__/js/common.js"></script>
+<!--列表模版-->
+<script id="demo" type="text/html">
+    {{#  layui.each(d, function(k, v){ }}
+    <div class="msg_list msg_hgt_out">
+        <div class="list_box">
+            <div class="list_title">
+                {{#  if(v.isread == 1){ }}
+                <i class="layui-icon title_icon">&#xe61d;</i>
+                {{#  }else{ }}
+                <i class="layui-icon title_icon2">&#xe638;</i>
+                {{#  }; }}
+                {{ v.title }}
+            </div>
+            <div class="list_time">{{ v.create_time }}</div>
+            <div class="list_icon">
+                <i class="layui-icon">&#xe640;</i>
+            </div>
+            <div class="list_content">
+                {{ v.content }}
+            </div>
+        </div>
+    </div>
+    {{#  }); }}
+    {{#  if(d.length === 0){ }}
+    <div class="news-box">
+        <div class="news-box-empty">
+            <p>没有新消息</p>
+        </div>
+    </div>
+    {{#  } }}
+</script>
 <script>
-    layui.use(['element', 'layer'], function(){
-        var element = layui.element()
-                ,layer = layui.layer;
+    $(function(){
+        layui.use(['element', 'layer'], function(){
+            var element = layui.element(),layer = layui.layer;
+        });
+        layui.use('laytpl', function(){
+            var laytpl = layui.laytpl;
+
+            common_ajax2('','','no',_demoHtml,1);
+            function _demoHtml(redata){
+                if(redata.code==0){
+                    laytpl(demo.innerHTML).render(redata.data.data, function(result){
+                        $('.main').eq(0).html(result);
+                    });
+                    layui.use(['laypage', 'layer'], function(){
+                        var laypage = layui.laypage
+                                ,layer = layui.layer;
+
+                        laypage({
+                            cont:  $('.paging')
+                            ,pages: 100 //总页数
+                            ,groups: 5 //连续显示分页数
+                            ,first: false
+                            ,last: false
+                        });
+                    });
+                };
+            };
+        });
     });
+
+
     $(document).on('click','.msg_list',function(){
         if($(this).hasClass('msg_hgt_out')){
             $(this).addClass('msg_hgt_on').addClass('msg_list_hover').removeClass('msg_hgt_out');
             if($(this).find('.title_icon').length>0){
-                $(this).find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe61d;');
+                $(this).find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe638;');
             };
         }else{
             $(this).addClass('msg_hgt_out').removeClass('msg_hgt_on').removeClass('msg_list_hover');
         };
     });
 </script>
+
 </body>
 </html>
