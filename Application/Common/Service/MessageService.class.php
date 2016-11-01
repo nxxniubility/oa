@@ -28,6 +28,9 @@ class MessageService extends BaseService
         if(!empty($param['isread'])){
             $where['isread'] = $param['isread'];
         }
+        if(!empty($param['msgtype'])){
+            $where['msgtype'] = $param['msgtype'];
+        }
         $where['system_user_id'] = $this->system_user_id;
         $where['status'] = 1;
         $order = 'createtime desc';

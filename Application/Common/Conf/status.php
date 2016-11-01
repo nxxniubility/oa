@@ -10,9 +10,8 @@ return array(
     'FIELD_STATUS'=>array(
         //消息类型
         'MSG_TYPE'=>array(
-            1 => '系统消息',
-            10 => '消息消息',
-            20 => '到访消息',
+            1 => '系统通知',
+            10 => '消息通知',
         ),
         //学习平台
         'USER_LEARNINGTYPE'=>array(
