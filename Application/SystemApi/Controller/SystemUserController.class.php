@@ -27,7 +27,8 @@ class SystemUserController extends SystemApiController
         //获取请求？
         $param['role_ids'] = I('param.role_ids',null);
         $param['zone_id'] = I('param.zone_id',null);
-        $param['realname'] = !empty(I('param.realname',null))?array('LIKE', I('param.realname')):null;
+        $realname = I('param.realname');
+        $param['realname'] = !empty($realname)?array('LIKE', $realname):null;
         $param['usertype'] = I('param.usertype',null);
         $param['order'] = I('param.role_ids',null);
         $param['page'] = I('param.page',null);

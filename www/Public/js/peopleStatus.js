@@ -94,14 +94,16 @@ $('.mCancel').on('click',function(){
 
 var _key = 0;
 function msg_icon(){
-    var _icon_int = setInterval(_icon_animate,200);
+    //var _icon_int = setInterval(_icon_animate,200);
+    setTimeout(_icon_animate,200);
     function _icon_animate(){
-        if(_key==3){
+        if(_key==0){
+            //clearInterval(_icon_int);
+            $('#poll_total_msg').parents('.message').animate({'background-position':'18px'}).animate({'background-position':'22px'});
+            _key++;
+        }else{
             _key = 0;
-            clearInterval(_icon_int);
-        };
-        $('#poll_total_msg').parents('.message').animate({'background-position':'18px'}).animate({'background-position':'22px'});
-        _key++;
+        }
     };
 };
 
@@ -113,7 +115,8 @@ function getMsgHint_ajax(){
             if($('#poll_total_msg').text()!=redata.data.unread_count){
                 if($('#poll_total_msg').text()<redata.data.unread_count){
                     layer.tips('有未读新消息哦！', '.message', {
-                        tips: 3
+                        tips: 3,
+                        time:0
                     });
                 };
                 $('#poll_total_msg').attr('flag', 'yes').text(redata.data.unread_count);
@@ -150,6 +153,7 @@ function getMsgHint_ajax(){
 
 //获取消息列表
 function getMsgList_ajax(){
+    layer.closeAll();
     if($('#poll_total_msg').attr('flag')=='yes'){
         $('#poll_total_msg').attr('flag','no');
         var data = {isread : 1,page:'0,5'};

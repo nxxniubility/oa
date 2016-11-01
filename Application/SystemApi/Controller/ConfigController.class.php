@@ -1,7 +1,7 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| ÇşµÀÊı¾İÏà¹ØµÄ½Ó¿Ú
+| æ¸ é“æ•°æ®ç›¸å…³çš„æ¥å£
 |--------------------------------------------------------------------------
 | @author zgt
 */
@@ -18,23 +18,44 @@ class ConfigController extends SystemApiController
 
     /*
    |--------------------------------------------------------------------------
-   | »ñÈ¡ÇşµÀÁĞ±í
+   | è·å–OSSé…ç½®
    |--------------------------------------------------------------------------
    | @author zgt
    */
     public function getAliOss()
     {
-        //»ñÈ¡ÇëÇó£¿
+        //è·å–è¯·æ±‚ï¼Ÿ
         $param['bid'] = I('param.bid',null);
         $param['name'] = I('param.name',null);
         $param['size'] = I('param.size',null);
-        //»ñÈ¡½Ó¿Ú·şÎñ²ã
+        //è·å–æ¥å£æœåŠ¡å±‚
         $result = D('AliOss','Service')->osspolicy($param);
-        //·µ»Ø²ÎÊı
+        //è¿”å›å‚æ•°
         if($result['code']==0){
-            $this->ajaxReturn(0,'»ñÈ¡³É¹¦',$result['data']);
+            $this->ajaxReturn(0,'è·å–æˆåŠŸ',$result['data']);
         }
         $this->ajaxReturn($result['code'],$result['msg']);
     }
 
+
+    /*
+   |--------------------------------------------------------------------------
+   | è·å–é™æ€é…ç½®çŠ¶æ€
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function getStatusList()
+    {
+        //è·å–è¯·æ±‚ï¼Ÿ
+        $param['name'] = I('param.name',null);
+        $field_list = C('FIELD_STATUS');
+        if(!empty($param['name'])){
+            $_re_arr = $field_list[strtoupper($param['name'])];
+        }else{
+            $_re_arr = $field_list;
+        }
+
+        //è¿”å›å‚æ•°
+        $this->ajaxReturn(0,'OK',$_re_arr);
+    }
 }
