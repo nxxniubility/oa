@@ -105,6 +105,7 @@ class MessageService extends BaseService
 
     public function addMsg($param)
     {
+        $param['create_time'] = time();
         D()->startTrans();
         $reid = D('Message')->addData($param);
         if($reid['code']==0){
