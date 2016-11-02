@@ -101,7 +101,7 @@ class UserService extends BaseService
             D()->startTrans();
             $add_msg['system_user_id'] = $tosystem_user_id;
             $add_msg['title'] = '客户 '.$userInfo['realname'].' 上门到访';
-            $add_msg['content'] = '客户姓名：'.$userInfo['realname'].'<br/>客户手机号码：'.(!empty($userInfo['username'])?(decryptPhone($userInfo['username'],C('PHONE_CODE_KEY'))):'无').'<br/>请及时到前台进行接待！';
+            $add_msg['content'] = '客户姓名：'.$userInfo['realname'].'<br/>客户手机号码：'.(!empty($userInfo['username'])?(decryptPhone($userInfo['username'],C('PHONE_CODE_KEY'))):'无').'<br/>请到前台进行接待！';
             $add_msg['href'] = '/System/User/detailUser/id/'.$user_id;
             $add_msg['msgtype'] = 1;
             $add_msg['readtype'] = 1;
@@ -364,6 +364,18 @@ class UserService extends BaseService
             $dataLog2['user_id'] = $data['user_id'];
             $dataLog2['logtime'] = $_time;
             D('Data','Service')->addDataLogs($dataLog2);
+            //系统消息提醒
+            $add_msg['system_user_id'] = $data['tosystem_user_id'];
+            $_system_user_info = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$data['system_user_id']));
+            $add_msg['title'] = $_system_user_info['data']['realname'].' 将 '.count(explode(',',$data['user_id'])).'名客户转入你库中';
+            $add_msg['content'] = $_system_user_info['data']['realname'].' 将 ';
+            //客户
+            foreach($userList as $k=>$v){
+                $add_msg['content'] .= "<span class='user_realname' data-id='".$v['user_id']."'> ".$v['realname']." </span>";
+            }
+            $add_msg['content'] .=' 转入你库中。';
+            $add_msg['msgtype'] = 1;
+            D('Message', 'Service')->sendMsgs($add_msg);
             D()->commit();
             return array('code'=>0,'msg'=>'数据分配成功');
         }else{
@@ -455,6 +467,18 @@ class UserService extends BaseService
             D('Data', 'Service')->addDataLogs($dataLog2);
             //出库隐藏历史回访记录
             $this->_heiddenOldInfo($data['user_id']);
+            //系统消息提醒
+            $add_msg['system_user_id'] = $data['tosystem_user_id'];
+            $_system_user_info = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$data['system_user_id']));
+            $add_msg['title'] = $_system_user_info['data']['realname'].' 将 '.count(explode(',',$data['user_id'])).'名客户出库到您库中';
+            $add_msg['content'] = $_system_user_info['data']['realname'].' 将 ';
+            //客户
+            foreach($userList as $k=>$v){
+                $add_msg['content'] .= "<span class='user_realname' data-id='".$v['user_id']."'> ".$v['realname']." </span>";
+            }
+            $add_msg['content'] .=' 出库到您库中。';
+            $add_msg['msgtype'] = 1;
+            D('Message', 'Service')->sendMsgs($add_msg);
             D()->commit();
             return array('code'=>0,'msg'=>'数据出库成功');
         }else{
@@ -1443,25 +1467,6 @@ class UserService extends BaseService
         return $audioDetails;
     }
 
-    /*
-   |--------------------------------------------------------------------------
-   | 审核转入操作
-   |--------------------------------------------------------------------------
-   | user_apply_id:客户 system_user_id:审核人 status：审核状态
-   | @author zgt
-   */
-    public function auditTransfer2($data)
-    {
-        $_time = time();
-        //审核人
-        $applyData['auditor_system_user_id'] = $this->system_user_id;
-        //必要参数
-        if(empty($data['user_apply_id'])) return array('code'=>300,'msg'=>'参数异常');
-        if(empty($data['status'])) return array('code'=>301,'msg'=>'缺少审核状态');
-        $applyData['auditortime'] = $_time;
-        if($data['status']!=20 || $data['status']!=30) return array('code'=>201,'msg'=>'审核状态异常');
-
-    }
 
     /*
     |--------------------------------------------------------------------------
@@ -1485,9 +1490,19 @@ class UserService extends BaseService
         $applyData['auditorreason'] = $data['auditorreason'];
         //申请信息
         $applyInfo = D('UserApply')->where(array('user_apply_id'=>$data['user_apply_id']))->find();
+        //获取客户信息
+        $_userInfo = D('User')->getFind(array('user_id'=>$applyInfo['user_id']));
+        //操作人
+        $_system_user_info = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$applyData['auditor_system_user_id']));
         //审核失败？
         if($data['status']==20){
             $result = D('UserApply')->editData($applyData, $data['user_apply_id']);
+            //系统消息提醒
+            $add_msg['system_user_id'] = $applyInfo['system_user_id'];
+            $add_msg['title'] = '您有一个客户 申请转入 审核失败';
+            $add_msg['content'] = "您申请转入的客户 <span class='user_realname' data-id='".$applyInfo['user_id']."'> ".$_userInfo['realname']." </span> 审核失败，审核人：".$_system_user_info['data']['realname'].'.';
+            $add_msg['msgtype'] = 1;
+            D('Message', 'Service')->sendMsgs($add_msg);
             if($result['code'] == 0){
                 return array('code'=>0,'msg'=>'审核操作成功');
             }
@@ -1556,6 +1571,26 @@ class UserService extends BaseService
         $dataLog['user_id'] = $applyInfo['user_id'];
         $dataLog['logtime'] = $_time;
         D('Data', 'Service')->addDataLogs($dataLog);
+        //系统消息提醒
+        //是否存在预转出人？
+        if (!empty($applyInfo['to_system_user_id'])) {
+            $add_msg['system_user_id'] = $applyInfo['system_user_id'];
+            $add_msg['title'] = '您有一个客户 申请转入 审核成功';
+            $add_msg['content'] = "您申请转入的客户 <span class='user_realname' data-id='".$applyInfo['user_id']."'> ".$_userInfo['realname']." </span> 审核成功并转给 ".$toSysUser['realname']."，审核人：".$_system_user_info['data']['realname'].'。';
+            $add_msg['msgtype'] = 1;
+            D('Message', 'Service')->sendMsgs($add_msg);
+            $add_msg2['system_user_id'] = $applyInfo['to_system_user_id'];
+            $add_msg2['title'] = $systemUser['realname'].'申请转入客户审核成功并将客户转入您库中成';
+            $add_msg2['content'] = $systemUser['realname']."申请转入的客户 <span class='user_realname' data-id='".$applyInfo['user_id']."'> ".$_userInfo['realname']." </span> 审核成功并转到您的库中，审核人：".$_system_user_info['data']['realname'].'。';
+            $add_msg2['msgtype'] = 1;
+            D('Message', 'Service')->sendMsgs($add_msg2);
+        }else{
+            $add_msg['system_user_id'] = $applyInfo['system_user_id'];
+            $add_msg['title'] = '您有一个客户 申请转入 审核成功';
+            $add_msg['content'] = "您申请转入的客户 <span class='user_realname' data-id='".$applyInfo['user_id']."'> ".$_userInfo['realname']." </span> 审核成功，审核人：".$_system_user_info['data']['realname'].'。';
+            $add_msg['msgtype'] = 1;
+            D('Message', 'Service')->sendMsgs($add_msg);
+        }
         if( $apply_flag['code']==0 && $user_flag['code']==0 ){
             D()->commit();
             return array('code'=>0,'msg'=>'审核通过');
