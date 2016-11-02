@@ -159,7 +159,7 @@
 .nsSelectTop .nsSelectBox, .selectbox.nsSelectBox dl {width:138px;}
 
 /*1102*/
-.nsRight .send-msgcontent {width:460px;height:165px;}
+.nsRight .send-msgcontent {width:460px;height:auto;}
 .ns-bottom {height:auto;overflow:hidden;}
 .ns-bottom label, .ns-bottom .nsDetermine {float:left;}
 .ns-bottom label {height:30px;line-height:30px;margin:0 20px 0 19px;font-size:0;cursor:pointer;}
