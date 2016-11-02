@@ -324,7 +324,6 @@ class OrderController extends SystemController
     {
         if (IS_POST) {
             $request = I("post.");
-            
             $result = D('Order', 'Service')->createDiscount($request);
             if ($result['code'] != 0) {
                 $this->ajaxReturn($result['code'],$result['msg']);
@@ -341,7 +340,6 @@ class OrderController extends SystemController
     {
         if (IS_POST) {
             $request = I("post.");
-            
             $result = D('Order', 'Service')->createParentDiscount($request);
             if ($result['code'] != 0) {
                 $this->ajaxReturn($result['code'], $result['msg']);
