@@ -132,7 +132,7 @@
             };
         });
     });
-
+    //获取列表
     getMsgList('',1);
     function getMsgList(type,page){
         if(type==1){
@@ -150,7 +150,6 @@
             page : ((page-1)*10)+',10'
         };
         common_ajax2(data,'','no',_demoHtml,1);
-
         function _demoHtml(redata){
             if(redata.code==0){
                 layui.use('laytpl', function(){
@@ -183,18 +182,16 @@
             };
         };
     };
-
     //更新已读信息
     function readMsg(id){
+        parent.$('#poll_total_msg').text(parent.$('#poll_total_msg').text()-1).attr('flag','yes');
+        $('.msg_list[data-id="'+id+'"]').find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe638;');
         var data = {
             message_id : id,
             type : 'getInfo'
         };
         common_ajax2(data,'','no',_redata,1);
-        function _redata(){
-            parent.$('#poll_total_msg').text(parent.$('#poll_total_msg').text()-1).attr('flag','yes');
-            $('.msg_list[data-id="'+id+'"]').find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe638;');
-        };
+        function _redata(){};
     };
 </script>
 
