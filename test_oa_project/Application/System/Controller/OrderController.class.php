@@ -123,6 +123,18 @@ class OrderController extends SystemController
         //优惠方式
         $discountList = D('Order', 'Service')->getDiscountList();
         $data['discount'] = $discountList['data'];
+        foreach ($data['discount'] as $key => $value) {
+            if ($value['nums'] == 0) {
+                $data['discount'][$key]['nums'] = "不限";
+            }else{
+                $data['discount'][$key]['nums'] = $value['nums'] - $value['usednums'];
+            }
+            if ($value['typetime'] != 0) {
+                $data['discount'][$key]['typetime'] = date('Y-m-d H:i:s', $value['typetime']);
+            }else{
+                $data['discount'][$key]['typetime'] = "长期有效";
+            }
+        }
         //获取配置状态值
         $data['order_loan_institutions'] = C('USER_LOAN_INSTITUTIONS');
         $data['order_studytype'] = C('USER_STUDYTYPE');
@@ -287,11 +299,16 @@ class OrderController extends SystemController
             }
             if ($value['nums'] == 0) {
                 $value['nums'] = "不限";
+            }else{
+                $value['nums'] = $value['nums'] - $value['usednums'];
             }
             if ($value['typetime'] != 0) {
-                $value['typetime'] = date('Y-m-d', $value['typetime']);
+                $value['typetime'] = date('Y-m-d H:i:s', $value['typetime']);
             }else{
                  $value['typetime'] = "长期有效";
+            }
+            if ($value['type'] != 1) {
+                $value['typetime'] = "已下架";
             }
             $parent = D("DiscountParent")->where("discount_parent_id = $value[pid]")->find();
             $value['pname'] = $parent['dname'];
@@ -361,20 +378,13 @@ class OrderController extends SystemController
             if ($request['sign'] == 10) {
                 $discount_parent_id = $request['discount_parent_id'];
                 $update = D('Order', 'Service')->editParentDiscount($request, $discount_parent_id);
-                if ($update['code'] != 0) {
-                    $this->ajaxReturn($update['code'], $update['msg']);
-                }
-                $this->ajaxReturn(0,'修改优惠类型成功');
+                $this->ajaxReturn($update['code'], $update['msg']);
             }else{
                 $discount_id = $request['discount_id'];
                 unset($request['discount_id']);
                 $update = D('Order', 'Service')->editDiscount($request, $discount_id);
-                if ($update ['code'] != 0) {
-                    $this->ajaxReturn($update['code'],'修改优惠失败');
-                }
-                $this->ajaxReturn(0,'修改优惠成功');
+                $this->ajaxReturn($update['code'],$update['msg']);
             }
-
         }
         $discountList = D("Discount")->where("pid = 0")->select();
         $this->assign('discountList', $discountList);

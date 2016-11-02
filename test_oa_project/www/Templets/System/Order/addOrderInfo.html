@@ -138,6 +138,8 @@
 	                <th>优惠ID</th>
 	                <th>优惠项目</th>
 	                <th>优惠金额</th>
+                    <th>优惠次数</th>
+                    <th>优惠截止日期</th>
 	                <th>说明</th>
 	                <th class="lastTh">操作</th>
 	            </tr>
@@ -146,6 +148,8 @@
                         <td class="name">{:$v['discount_id']}</td>
 	                    <td class="name">{:$v['dname']}</td>
 	                    <td class="money" data-value="{:$v['dmoney']}">¥{:$v['dmoney']}</td>
+                        <td>{:$v['nums']}</td>
+                        <td>{:$v['typetime']}</td>
 	                    <td>{:$v['remark']}</td>
 	                    <td class="lastTd">
 	                        <input type="checkbox" name="checkboxName" id="discountInfo_{$v['discount_id']}" class="pwChk" value="{$v['discount_id']}" data-value="{:$v['repeat']}"/>

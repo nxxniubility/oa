@@ -537,6 +537,19 @@ class OrderService extends BaseService
         }
         //启动事务
         D()->startTrans();
+        $discountInfo = D("Discount")->where("discount_id = $request[discount_id]")->field('nums, usednums')->find();
+        if ($discountInfo['nums'] != 0) {
+            $discountInfo['usednums'] += 1;
+            //可用次数==已用次数，优惠下架
+            if ($discountInfo['usednums'] == $discountInfo['nums']) {
+                $dis_save['type'] = 0;
+                $dis_save['usednums'] = $discountInfo['usednums'];
+                $updiscount = D("Discount")->where("discount_id = $request[discount_id]")->save($dis_save);
+            }else{
+                $dis_save['usednums'] = $discountInfo['usednums'];
+                $updiscount = D("Discount")->where("discount_id = $request[discount_id]")->save($dis_save);
+            }
+        }
         $flag_save = D('Order')->editData($save, $request['order_id']);
         //添加实时收款记录？
         if(!empty($request['cost'])){
@@ -550,7 +563,7 @@ class OrderService extends BaseService
         }else{
             $flag_add2['data'] = true;
         }
-        if($flag_save['data']!==false && $flag_add2['data']!==false) {
+        if($flag_save['data']!==false && $flag_add2['data']!==false && $updiscount!==false) {
             D()->commit();
             return array('code'=>0,'msg'=>'提交缴费成功');
         }
@@ -699,6 +712,18 @@ class OrderService extends BaseService
         }
         //启动事务
         D()->startTrans();
+        $disInfo = D("Order")->where("order_id = $data[order_id]")->field('discount_id')->find();
+        $discountInfo = D("Discount")->where("discount_id = $disInfo[discount_id]")->field('nums, usednums, typetime')->find();
+        if ($discountInfo['nums'] != 0) {
+            $discountInfo['usednums'] -= 1;
+            $dis_save['type'] = 1;
+            $dis_save['usednums'] = $discountInfo['usednums'];
+            $time = time();
+            //时间截止日期不存在或者时间截止日期大于当前时间，则优惠重新启用
+            if ($discountInfo['typetime'] == 0 || $discountInfo['typetime']>$time) {
+                $updiscount = D("Discount")->where("discount_id = $disInfo[discount_id]")->save($dis_save);
+            }
+        }
         $order['refundtime'] = time();
         //修改订单信息
         $updata = D("Order")->editData($order, $data['order_id']);
@@ -736,6 +761,17 @@ class OrderService extends BaseService
     {
         $where['type'] = 1;
         $where['pid'] != 0;
+        $time = time();
+        $data = D('Discount')->getList($where);
+        foreach ($data as $key => $discount) {
+            if ($discount['typetime'] != 0) {
+                //如果当前时间大于优惠截止时间，则优惠下架
+                if ($time > $discount['typetime']) {
+                    $save['type'] = 0;
+                    $discount = D("Discount")->where("discount_id = $discount[discount_id]")->save($save);
+                }
+            }
+        }
         $result = D('Discount')->getList($where);
         return array('code'=>0,'data'=>$result);
     }
@@ -787,7 +823,8 @@ class OrderService extends BaseService
             $repeatList = explode(",",$request['repeat']);
         }
         $result = D("Discount")->addData($request);
-        if ($result['data']) {
+        $discount_id = $result['data'];
+        if ($discount_id) {
             if ($repeatList) {
                 foreach ($repeatList as $key => $value) {
                     $where['discount_id'] = $value;
@@ -834,8 +871,16 @@ class OrderService extends BaseService
         if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$param['dmoney'])){
             return array(307,"请输入正确的优惠金额");
         }
+        if(!preg_match("/^-?[0-9]\d*$/",$param['nums'])){
+           return array('code'=>308, 'msg'=>"优惠次数请输入整数");
+        }
         if (!$param['remark']) {
-            return array(308,'请填写优惠详情');
+            return array(309,'请填写优惠详情');
+        }
+        if(!$param['typetime']){
+           $param['typetime'] = 0;
+        }else{
+            $param['typetime'] = strtotime($param['typetime']) + 3600*24;
         }
         return D('Discount')->editData($param, $id);
    }
