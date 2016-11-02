@@ -86,7 +86,7 @@
 				</div>
 				<div class="preRows clearfix">
 					<span>可选择次数：</span>
-					<input type="text" class="pre-frequency" name="remark" autocomplete="off" onkeyup="chkLength(this,30)">
+					<input type="text" class="pre-frequency" name="nums" autocomplete="off" onkeyup="chkLength(this,30)">
 				</div>
 				<div class="preRows clearfix">
 					<span>优惠详情：</span>
@@ -118,8 +118,8 @@
 					</div>
 				</div>	
 				<div class="preRows clearfix">
-					<span>日期：</span>
-            		<input type="text" class="discount-atime" name="deposit_practicaltime" value="" readonly="readonly" >
+					<span>截止日期：</span>
+            		<input type="text" class="discount-atime" name="typetime" value="" readonly="readonly" >
 				</div>
 				<div class="preRows clearfix">
 					<div class="preBtns">
@@ -177,7 +177,7 @@
 				</div>
 				<div class="preRows clearfix">
 					<span>可选择次数：</span>
-					<input type="text" class="pre-frequency" name="remark" autocomplete="off" onkeyup="chkLength(this,30)">
+					<input type="text" class="pre-frequency" name="edit_nums" autocomplete="off" onkeyup="chkLength(this,30)">
 				</div>
 				<div class="preRows clearfix">
 					<span>优惠详情：</span>
@@ -206,10 +206,10 @@
 						<option value="1">启用</option>
 						<option value="0">下架</option>
 					</select>
-				</div>	
+				</div>
 				<div class="preRows clearfix">
 					<span>日期：</span>
-            		<input type="text" class="discount-etime" name="deposit_practicaltime" value="" readonly="readonly" >
+            		<input type="text" class="discount-etime" name="edit_typetime" value="" readonly="readonly" >
 				</div>
 				<div class="preRows clearfix">
 					<div class="preBtns">
@@ -234,6 +234,8 @@
 		                dmoney:$(':input[name="dmoney"]').val(),
 		                remark:$(':input[name="remark"]').val(),
 		                pid:$(':input[name="pid"]').val(),
+		                nums:$(':input[name="nums"]').val(),
+		                typetime:$(':input[name="typetime"]').val(),
 		                type:$(':input[name="type"]').val(),
 		                repeat:$(':input[name="repeat"]').val(),
 		            };
@@ -246,6 +248,8 @@
 		                dname:$(':input[name="edit_dname"]').val(),
 		                dmoney:$(':input[name="edit_dmoney"]').val(),
 		                remark:$(':input[name="edit_remark"]').val(),
+	                 	nums:$(':input[name="edit_nums"]').val(),
+		                typetime:$(':input[name="edit_typetime"]').val(),
 		                pid:$(':input[name="edit_pid"]').val(),
 		                type:$(':input[name="edit_type"]').val(),
 		                repeat:$(':input[name="edit_repeat"]').val(),
