@@ -101,7 +101,11 @@ function getMsgHint_ajax(){
             };
             //消息内容提示窗
             if(redata.data.read_msg){
-                $('.hint_bady').children('.ct_msg').html(redata.data.read_msg.content);
+                var content = redata.data.read_msg.content;
+                if(redata.data.read_msg.href){
+                    content += '<a href="'+redata.data.read_msg.href+'" target="_blank">查看详情</a>';
+                };
+                $('.hint_bady').children('.ct_msg').html(content);
                 //公告层
                 layer.open({
                     type: 1
@@ -157,7 +161,11 @@ function getMsgList_ajax(){
 
 //查看消息详细
 function getMsgIngo(id,thisObj){
-    $('.hint_bady').children('.ct_msg').html($(thisObj).attr('data-content'));
+    var content = $(thisObj).attr('data-content');
+    if($(thisObj).attr('data-href').length>0){
+        content += '<a href="'+$(thisObj).attr('data-href')+'" target="_blank">查看详情</a>';
+    };
+    $('.hint_bady').children('.ct_msg').html(content);
     //公告层
     layer.open({
         type: 1
