@@ -200,9 +200,11 @@ class MessageService extends BaseService
     }
 
     /*
-        发送消息
-        nxx
-    */
+   |--------------------------------------------------------------------------
+   | 发送消息
+   |--------------------------------------------------------------------------
+   | @author nxx
+   */
     public function sendMsgs($request)
     {
         $request['senduser_id'] = $this->system_user_id;

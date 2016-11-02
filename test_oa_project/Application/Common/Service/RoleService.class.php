@@ -26,11 +26,28 @@ class RoleService extends BaseService
     {
         $list['data'] = D('Role')->getList();
         $list['count'] = D('Role')->getCount();
-        foreach($list['data'] as $k=>$v){
-            $department = D('Department', 'Service')->getDepartmentInfo(array('department_id'=>$v['department_id']));
-            $list['data'][$k]['department_name'] = $department['data']['departmentname'];
-        }
+        $list['data'] = $this->_addStatus($list['data']);
         return $list;
+    }
+    /**
+     * 添加状态
+     * @return array
+     */
+    protected function _addStatus($array=null){
+        if (empty($array[0])) {
+            $arrStr[0] = $array;
+        } else {
+            $arrStr = $array;
+        }
+        foreach($arrStr as $k=>$v){
+            $department = D('Department', 'Service')->getDepartmentInfo(array('department_id'=>$v['department_id']));
+            $arrStr[$k]['department_name'] = $department['data']['departmentname'];
+        }
+        if(empty($array[0])){
+            return $arrStr[0];
+        }else{
+            return $arrStr;
+        }
     }
 
     /*
@@ -73,6 +90,7 @@ class RoleService extends BaseService
         if ($result['code']==0){
             if (F('Cache/role')) {
                 $new_info = D('Role')->getFind(array("id"=>$result['data']));
+                $new_info = $this->_addStatus($new_info);
                 $cahce_all = F('Cache/role');
                 $cahce_all['data'][] = $new_info;
                 $cahce_all['count'] =  $cahce_all['count']+1;
@@ -103,6 +121,7 @@ class RoleService extends BaseService
         if ($result['code']==0){
             if (F('Cache/role')) {
                 $new_info = D('Role')->getFind(array("id"=>$param['role_id']));
+                $new_info = $this->_addStatus($new_info);
                 $cahce_all = F('Cache/role');
                 foreach($cahce_all['data'] as $k=>$v){
                     if($v['id'] == $param['role_id']){
