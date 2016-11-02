@@ -103,7 +103,7 @@ function getMsgHint_ajax(){
             if(redata.data.read_msg){
                 var content = redata.data.read_msg.content;
                 if(redata.data.read_msg.href){
-                    content += '<a href="'+redata.data.read_msg.href+'" target="_blank">查看详情</a>';
+                    content += '<a href="'+redata.data.read_msg.href+'" style="color:#0055aa" target="_blank">查看详情</a>';
                 };
                 $('.hint_bady').children('.ct_msg').html(content);
                 //公告层
@@ -163,7 +163,7 @@ function getMsgList_ajax(){
 function getMsgIngo(id,thisObj){
     var content = $(thisObj).attr('data-content');
     if($(thisObj).attr('data-href').length>0){
-        content += '<a href="'+$(thisObj).attr('data-href')+'" target="_blank">查看详情</a>';
+        content += '<a href="'+$(thisObj).attr('data-href')+'" style="color:#0055aa" target="_blank">查看详情</a>';
     };
     $('.hint_bady').children('.ct_msg').html(content);
     //公告层
