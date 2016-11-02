@@ -1,0 +1,166 @@
+@charset "utf-8";
+.clearfix:after, .clearfix:before { display: table; content: " ";}
+.clearfix:after { clear: both;}
+/**/
+.wrapBox { padding: 0 20px; background: #fff;}
+.newEmployeesCont { width: 1130px; margin-bottom: 20px;}
+.nsContTop { height: 55px; line-height: 55px; border-bottom: 1px solid #dedfdf;}
+.nsContTop .topTit { line-height: 14px; font-size: 0; cursor: default;}
+.nsContTop .topTit span { float: left; display: block; padding: 20px 0; font-size: 14px; color: #b9bdc4;}
+.nsContTop .topTit span.masterList { color: #53b567; border-bottom: 2px solid #53b567;}
+.nsContTop .topTit span em { margin: 0 4px;}
+.topRight { height: 55px; font-size: 0;}
+.topRight .return { display: inline-block; width: 108px; height: 28px; line-height: 28px; margin: 13px 0 12px; font-size: 14px; color: #9e9e9e; text-align: center; border: 1px solid #ddd; background: #f7f7f7;}
+.topRight .return:hover { color: #fff; border-color: #53b567; background: #53b567;}
+
+/*=================================== 黄金分割线 ===================================*/
+.nsMiddle { margin-top: 40px;}
+.nsRow { margin-bottom: 20px;}
+.nsLeft, .nsRight, .nsLeft2, .nsRight2 { float: left; line-height: 30px;}
+.nsLeft, .nsLeft2 { margin-right: 20px; color: #333; text-align: right;}
+.nsLeft { width: 10.6%;}
+.nsLeft2 { width: 15.7%;}
+.nsLeft i, .nsLeft2 i { margin-right: 4px; color: #d00202;}
+.nsRight, .nsRight2 { color: #555; text-align: left;}
+.nsRight { width: 87.6%;}
+.nsRight2 { width: 82.5%;}
+.nsRight .nsInp, .nsRight2 .nsInp { display: block; width: 468px; height: 28px; line-height: 28px; margin-right: 20px; text-align: left; text-indent: 10px; border: 1px solid #ccc; background: #fff;}
+.nsRight .nsInp:focus, .nsRight2 .nsInp:focus { border-color: #53b567;}
+.nsRight .nsDepartment, .nsRight2 .nsDepartment { width: 348px;}
+.nsRight .nsSelectPost, .nsRight .nsSelectPostMan, .nsRight2 .nsSelectPost { display: block; width: 100px; height: 30px; line-height: 30px; font-size: 12px; color: #555; text-align: center; border: 1px solid #ccc; background: #f7f7f7; cursor: pointer;}
+.nsRight .nsSubmit, .nsRight2 .nsSubmit { display: block; width: 94px; height: 30px; line-height: 30px; margin-top: 20px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
+.nsRight label, .nsRight2 label { float: left; height: 30px; line-height: 30px; color: #494949; cursor: pointer;}
+.nsRight label .nsRadio, .nsRight2 label .nsRadio { width: 13px; height: 13px; margin-top: -2px; vertical-align: middle;}
+.nsRight label.manLabel, .nsRight2 label.manLabel { margin-right: 50px;}
+.nsRight label span, .nsRight2 label span { margin-left: 10px;}
+.nsRight2 .nsInp { float: left;} 
+.nsRight2 .nsSpTip { display: none; height: 30px; line-height: 30px; margin-left: 10px; font-size: 12px; color: #FF0000;}
+
+/*=================================== 黄金分割线：模拟select ===================================*/
+.select_title{ width: calc(100% - 30px); white-space: nowrap; word-break: keep-all; text-overflow: ellipsis; }
+.selectbox { position:relative; width: 470px; height:30px; line-height:30px; margin-right: 27px; font-size:12px;}
+.selectbox dl { position:absolute; width: 138px; color: #555; border:1px solid #ccc;}
+.selectbox dl.on { max-height: 150px; width: calc(100% + 10px); border:1px solid #ccc; overflow-y: auto; overflow-x: hidden;}
+.selectbox dl dt { padding-left:10px; cursor:pointer; overflow:hidden; border-bottom: none; background: #fff;}
+.selectbox dl dt.on { border-bottom:1px solid #ccc; background: #e6e6e6 none repeat scroll 0 0;}
+.selectbox dl dd{ position:relative; padding:0 10px; color: #555; border-bottom:1px solid #ebebeb;background:#fff none repeat scroll 0 0; cursor:pointer; z-index: 5;}
+.selectbox dl dd:last-child { border-bottom: none;}
+.selectbox dl dd.on{border-bottom:1px solid #53b567;}
+.selectbox dl dd:hover{ background: #eaedf1 none repeat scroll 0 0;}
+.selectbox .arrow { width: 30px; height: 28px; background:transparent url(../images/Descending.png) no-repeat center center;}
+.selectbox .arrow_on { background:transparent url(../images/Ascending.png) no-repeat center center;}
+.selectbox .ddoption { display:none; height:200px; border: medium none; overflow-y:scroll;}
+.nsArea { width: 138px;}
+.selectbox2 dl{color:#a6a7a7;border-color:#ccc;}
+.selectbox2 dl dt{border-bottom:none;background:#fff;}
+.selectbox2 dl dd{font-size:12px;}
+.selectbox2 dl dt.on{border-bottom:1px solid #ccc;background:#fff;}
+.selectbox2 dl dd:hover{ background:#eaedf1 none repeat scroll 0 0;}
+.selectbox2 .arrow{width:50px;background:transparent url(../images/Descending.png) no-repeat center center;}
+.selectbox2 .arrow_on{background:transparent url(../images/Ascending.png) no-repeat center center;}
+.selectbox2{width: 468px;font-size:12px;height:30px;line-height:30px;position:relative;}
+.selectbox2 dl{border:1px solid #ccc;color:#555;margin:0;position:absolute;width:100%;}
+.selectbox2 dl.on{border:1px solid #ccc;overflow-y: auto;overflow-x: hidden;max-height: 150px;width: calc(100% + 10px);}
+.selectbox2 dl dt{cursor:pointer;overflow:hidden;padding-left:10px;}
+.selectbox2 dl dt.on{background:#e6e6e6 none repeat scroll 0 0;border-bottom:1px solid #ccc;}
+.selectbox2 dl dd{background:#fff none repeat scroll 0 0;border-bottom:1px solid #ccc;cursor:pointer;margin:0;padding:0 10px;position:relative;z-index:10;padding-left:25px;}
+.selectbox2 dl dd.on{border-bottom:1px solid #ccc;}
+.selectbox2 dl dd:hover{background:#eaedf1 none repeat scroll 0 0;}
+.selectbox2 dl dd:last-child { border-bottom: none;}
+.selectbox2 .arrow {height:30px;width: 30px;}
+.selectbox2 .ddoption {border:medium none;display:none;height:200px;overflow-y:scroll;}
+.select_title2 {display:none;font-size:12px;font-weight:bold;width:100%;margin-left:-10px;padding-left:10px;border-bottom:1px solid #ccc;color: #696969;}
+.select_title2:hover { background: #fff;}
+.selectbox2 .caption{cursor:default;}
+.selectbox2 .caption2 { cursor: default; background: #fff;}
+.selectbox2.area .caption .select_title2:hover, .selectbox2.area .caption2:hover { background: #eaedf1;}
+.selectbox2.area .caption { cursor: pointer;}
+.selectbox2.area .caption2 { cursor: pointer;}
+.select_title3 { display:none; font-size:12px; font-weight: bold; width:100%; margin-left:-10px; padding-left:10px; border-bottom:1px solid #ccc; color: #696969;}
+.fxDone { display: none;}
+.area .select_title2 { padding-left: 30px;}
+.zindex4 { z-index: 4;}
+.selectbox2 dl dd.allChannel { padding-left: 9px; font-weight: 700;}
+
+/*=================================== 黄金分割线：选择部门及职位 ===================================*/
+.department, .departmentMan { position: relative; display: none; border: 8px solid #7a7a7a; background: #fff;}
+.nsTop { height: 40px; line-height: 40px; padding: 0 10px 0 20px; border-bottom: 1px solid #ccc;}
+.nsTop span { float: left; font-weight: bold; color: #333;}
+.nsTop .nsClose { float: right; width: 40px; height: 40px; background: url(../images/addPer_01-01.png) no-repeat center center; cursor: pointer;}
+
+.nsCont { padding: 10px 20px 0;}
+.nsSelectTop { height: 30px; margin-bottom: 10px;}
+.nsSelectTop .nsSelectBox, .selectbox.nsSelectBox dl { width: 84px;} 
+.nsSelectTop .nsSelectBox { margin-right: 19px;}
+.nsSelectTop .nsSelectSearch, .nsSelectTop .nsSearchSubmit { display: block; font-size: 12px;} 
+.nsSelectTop .nsSelectSearch { width: 148px; height: 30px; line-height: 30px; margin-right: 15px; color: #555; text-align: left; text-indent: 10px; border: 1px solid #ccc; background: #fff;}
+.nsSelectTop .nsSelectSearch:focus { border-color: #53b567;}
+.nsSelectTop .nsSearchSubmit { width: 66px; height: 32px; line-height: 32px; color: #fff; text-align: center; border: none; background: #53b567; cursor: pointer;}
+.nsDeparMiddle { height: 389px; margin-bottom: 20px; border: 1px solid #e1e6eb; overflow-y: scroll;}
+.nsDeparMiddle dl { font-size: 12px; border-bottom: 1px solid #e1e6eb;}
+.nsDeparMiddle dl.nsTit { background: #f5f6fa;}
+.nsDeparMiddle dl:last-child { border-bottom: none;}
+.nsDeparMiddle dt, .nsDeparMiddle dd { float: left; line-height: 38px; word-wrap:break-word; word-break:break-all; text-align: left;}
+.nsDeparMiddle dt { color: #999;}
+.nsDeparMiddle dd { color: #696969;}
+.nsDeparMiddle .wNsOne, .nsDeparMiddle .wNsTwo, .nsDeparMiddle .wNsThr { padding: 0 .2%;}
+.nsDeparMiddle .wNsOne { width: 13.1%; padding-left: 19px;}
+.nsDeparMiddle .wNsTwo { width: 32.3%;}
+.nsDeparMiddle .wNsThr { width: 46.3%;}
+.nsDeparMiddle .wNsOne input[type="checkbox"] { margin-top: -2px; vertical-align: middle;}
+.nsDetermine { display: block; width: 65px; height: 30px; line-height: 30px; margin-bottom: 32px; font-size: 12px; color: #fff; border: none; background: #53b567; cursor: pointer;}
+
+.newSelect { width: 470px; height: 30px; border: 1px solid #ccc; color: #555;}
+
+/*0922*/
+.week_box {float:left;height:30px;border-right:1px solid #ccc;overflow:hidden;}
+.week_box div {float:left;width:auto;height:28px;line-height:28px;padding:0 18px;font-size:14px;color:#555;text-align:center;border:1px solid #ccc;border-right:none;background:#f7f7f7;cursor:pointer;}
+.week_box div.cur {color:#fff;background:#53b567;}
+
+.week-body-btn, .week-edit-btn, .week-recover-btn, .edit-recover-btn {display:block;width:100px;height:30px;line-height:30px;font-size:12px;color:#555;text-align:center;border:1px solid #ccc;background:#f7f7f7;cursor:pointer;}
+.week-body, .week-edit-body, .week-recover, .week-edit-recover {position:relative;display:none;border:8px solid #7a7a7a;background: #fff;}
+.edit_confirm, .add_confirm, .recover_confirm, .edit_recover_confirm {display:block;width:65px;height:30px;line-height:30px;margin-bottom:32px;font-size:12px;color:#fff;border:none;background:#53b567;cursor:pointer;}
+
+#week_table, #week_edit_table, #recover_table, #edit_recover_table {width:100%;margin-bottom:20px;border:1px solid #e1e6eb;border-right:none;border-bottom:none;background:#fff;} 
+#week_table tr, #week_edit_table tr, #recover_table tr, #edit_recover_table tr {height:38px;line-height:38px;}
+#week_table th, #week_table td, 
+#week_edit_table th, #week_edit_table td, 
+#recover_table th, #recover_table td,
+#edit_recover_table th, #edit_recover_table td {font-size:12px;border-right:1px solid #e1e6eb;border-bottom:1px solid #e1e6eb;}
+#week_table th, #week_edit_table th, #recover_table th, #edit_recover_table th {color:#999;background:#f5f6fa;}
+#week_table td, #week_edit_table td, #recover_table td, #edit_recover_table td {color:#696969;text-align:center;} 
+
+/*0922*/
+.ban_box {float:left;height:65px;border-right:1px solid #ccc;overflow:hidden;}
+.ban_box div {float:left;width:auto;height:28px;line-height:28px;margin-bottom:1px;padding:0 18px;font-size:14px;color:#fff;text-align:center;border:1px solid #ccc;border-right:none;background:#53b567;cursor:pointer;}
+.ban_box div.cur {color:#fff;background:red;}
+
+.ban-body-btn, .ban-edit-btn, .ban-recover-btn, .edit-recover-btn {display:block;width:100px;height:30px;line-height:30px;font-size:12px;color:#555;text-align:center;border:1px solid #ccc;background:#f7f7f7;cursor:pointer;}
+.ban-body, .ban-edit-body, .ban-recover, .ban-edit-recover {position:relative;display:none;border:8px solid #7a7a7a;background: #fff;}
+.edit_confirm, .add_confirm, .recover_confirm, .edit_recover_confirm {display:block;width:65px;height:30px;line-height:30px;margin-bottom:32px;font-size:12px;color:#fff;border:none;background:#53b567;cursor:pointer;}
+
+#ban_table, #ban_edit_table, #recover_table, #edit_recover_table {width:100%;margin-bottom:20px;border:1px solid #e1e6eb;border-right:none;border-bottom:none;background:#fff;} 
+#ban_table tr, #ban_edit_table tr, #recover_table tr, #edit_recover_table tr {height:38px;line-height:38px;}
+#ban_table th, #ban_table td, 
+#ban_edit_table th, #ban_edit_table td, 
+#recover_table th, #recover_table td,
+#edit_recover_table th, #edit_recover_table td {font-size:12px;border-right:1px solid #e1e6eb;border-bottom:1px solid #e1e6eb;}
+#ban_table th, #ban_edit_table th, #recover_table th, #edit_recover_table th {color:#999;background:#f5f6fa;}
+#ban_table td, #ban_edit_table td, #recover_table td, #edit_recover_table td {color:#696969;text-align:center;} 
+
+/*0930*/
+.nsRight .specified-date, .nsRight2 .specified-date {display:block;width:468px;height:28px;line-height:28px;color:#696969;border:1px solid #ccc;background:#fff;}
+.calendar-icon {display:none;}
+.holiday_box {float:left;height:30px;border-right:1px solid #ccc;overflow:hidden;}
+.holiday_box div {float:left;width:auto;height:28px;line-height:28px;padding:0 18px;font-size:14px;color:#555;text-align:center;border:1px solid #ccc;border-right:none;background:#f7f7f7;cursor:pointer;}
+.holiday_box div.cur {color:#fff;background:#53b567;}
+
+/*1020*/
+.nsSelectTop .nsSelectBox, .selectbox.nsSelectBox dl {width:138px;}
+
+/*1102*/
+.ns-bottom {height:auto;overflow:hidden;}
+.ns-bottom label, .ns-bottom .nsDetermine {float:left;}
+.ns-bottom label {height:30px;line-height:30px;margin:0 20px 0 19px;font-size:0;cursor:pointer;}
+.ns-bottom .check-all {margin-top:-7px;margin-right:4px;vertical-align:middle;}
+.ns-bottom label span {font-size:12px;color:#696969;}
