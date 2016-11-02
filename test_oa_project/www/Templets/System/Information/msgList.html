@@ -65,8 +65,8 @@
                 【{{ v.msgtype_name }}】{{ v.title }}
             </div>
             <div class="list_time">{{ v.create_time }}</div>
-            <div class="list_icon">
-                <i class="layui-icon">&#xe640;</i>
+            <div class="list_icon dn">
+                <i class="layui-icon remove_msg_btn">&#xe640;</i>
             </div>
             <div class="list_content">
                 {{ v.content }}
@@ -83,6 +83,11 @@
     {{#  } }}
 </script>
 <script>
+    $(document).on('mouseover','.msg_list',function(){
+        $(this).find('.list_icon').removeClass('dn');
+    }).on('mouseout','.msg_list',function(){
+        $(this).find('.list_icon').addClass('dn');
+    });
     $(document).on('click','.msg_list',function(){
         if($(this).hasClass('msg_hgt_out')){
             $(this).addClass('msg_hgt_on').addClass('msg_list_hover').removeClass('msg_hgt_out');
@@ -93,6 +98,30 @@
         }else{
             $(this).addClass('msg_hgt_out').removeClass('msg_hgt_on').removeClass('msg_list_hover');
         };
+    });
+    $(document).on('click','.remove_msg_btn',function(e){
+        var data_id = $(this).parents('.msg_list').attr('data-id');
+        var data = {
+            message_id : data_id,
+            type : 'delMsg'
+        };
+        layer.confirm('您确定要删除改条通知吗？', {
+            title:'删除提示',
+            skin: '#4dbe88',
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $('.msg_list[data-id="'+data_id+'"]').addClass('dn');
+            common_ajax2(data,'','no',_delhtml,1);
+            layer.closeAll();
+            function _delhtml(redata){
+                if(redata.code!=0){
+                    layer.msg('删除失败',{icon:2});
+                    $('.msg_list[data-id="'+data_id+'"]').removeClass('dn');
+                };
+            };
+        }, function(){});
+
+        e.stopPropagation();
     });
     //TAB
     layui.use(['element', 'layer'], function(){
