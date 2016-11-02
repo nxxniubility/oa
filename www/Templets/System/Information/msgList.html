@@ -192,6 +192,7 @@
         };
         common_ajax2(data,'','no',_redata,1);
         function _redata(){
+            parent.$('#poll_total_msg').text(parent.$('#poll_total_msg').text()-1).attr('flag','yes');
             $('.msg_list[data-id="'+id+'"]').find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe638;');
         };
     };
