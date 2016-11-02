@@ -34,8 +34,8 @@
 .regionContMiddle .wFiv { width: 15%; padding-right: 15px;}
 .regionContMiddle .wSix { width: 5%;}
 .regionContMiddle .wSev { width: 5%;}
-.regionContMiddle .wEgi { width: 10%;}
-.regionContMiddle .wNin { width: 2%;}
+.regionContMiddle .wEgi { width: 9%;padding:0 5px;}
+.regionContMiddle .wNin { width: 6%;}
 .SequenceInp { display: block; width: 58px; height: 28px; line-height: 28px; margin: 6px 0; color: #707070; text-align: center; border: 1px solid #d8d6d6; background: #fff;}
 .SequenceInp:focus { border-color: #53b567;}
 .regionContMiddle .regionSelect { float: left; display: block; width: 40px; height: 40px;}
