@@ -93,7 +93,7 @@
     });
     $(document).on('click','.msg_list',function(){
         if(!$(this).hasClass('msg_hgt_on')){
-            $(this).css('height',$(this).children('.list_box').height()+'px').addClass('msg_list_hover');
+            $(this).css('height',($(this).children('.list_box').height()+10)+'px').addClass('msg_list_hover');
             if($(this).find('.title_icon').length>0){
                 $(this).find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe638;');
                 readMsg($(this).attr('data-id'));
