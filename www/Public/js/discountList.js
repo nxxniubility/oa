@@ -19,8 +19,8 @@ $('.addDiscount').on('click', function(){
     //  添加日期
     setTimeout(function(){
         var myDate = new Date();
-        ymd = myDate.getFullYear()+'/'+ myDate.getMonth()+'/'+myDate.getDate();
-        $(".discount-atime").val(ymd).glDatePicker({
+        //ymd = myDate.getFullYear()+'/'+ myDate.getMonth()+'/'+myDate.getDate();
+        $(".discount-atime").glDatePicker({
             selectableDateRange: [
                 {
                     //from: new Date(myDate.getFullYear(), (myDate.getMonth()-1), (myDate.getDate()-7)),
@@ -60,8 +60,8 @@ $('.editPreferential').on('click', function(){
     //  修改日期
     setTimeout(function(){
         var myDate = new Date();
-        ymd = myDate.getFullYear()+'/'+ myDate.getMonth()+'/'+myDate.getDate();
-        $(".discount-etime").val(ymd).glDatePicker({
+        //ymd = myDate.getFullYear()+'/'+ myDate.getMonth()+'/'+myDate.getDate();
+        $(".discount-etime").glDatePicker({
             selectableDateRange: [
                 {
                     //from: new Date(myDate.getFullYear(), (myDate.getMonth()-1), (myDate.getDate()-7)),
