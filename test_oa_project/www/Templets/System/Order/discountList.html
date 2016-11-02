@@ -30,7 +30,9 @@
 						<dt class="wFou">优惠详情</dt>
 						<dt class="wFiv">被禁止同时使用的优惠ID串</dt>
 						<dt class="wSix">是否启用</dt>
-						<dt class="wSev">操作</dt>
+						<dt class="wSev">优惠次数</dt>
+						<dt class="wEgi">优惠截止日期</dt>
+						<dt class="wNin">操作</dt>
 					</dl>
 					
 					<foreach name = "discountList" item = "v1">			
@@ -41,7 +43,9 @@
 						<dd class="wFou">{$v1['remark']}&nbsp;</dd>
 						<dd class="wFiv">{$v1['repeat']}&nbsp;</dd>
 						<dd class="wSix">{$v1['typeName']}&nbsp;</dd>
-						<dd class="wSev szOperation clearfix"  >
+						<dd class="wSev">{$v1['nums']}&nbsp;</dd>
+						<dd class="wEgi">{$v1['typetime']}&nbsp;</dd>
+						<dd class="wNin szOperation clearfix"  >
 							<a href="javascript:;" class="regionSelect"><i></i></a>
 							<div class="otherOperation">
 								<div class="triangle"></div>
@@ -139,6 +143,8 @@
 						<th>优惠名称</th>
 						<th>优惠金额</th>
 						<th>优惠详情</th>
+						<th>优惠可用次数</th>
+						<th>优惠截止日期</th>
 						<th>被禁止同时使用的优惠</th>
 					</tr>
 					<foreach name="discountList" item="v2">
@@ -150,6 +156,8 @@
 						<td name="dname" autocomplete="off">{$v2['dname']}</td>
 						<td name="dmoney" autocomplete="off">{$v2['dmoney']}</td>
 						<td name="remark" autocomplete="off">{$v2['remark']}</td>
+						<td name="nums" autocomplete="off">{$v2['nums']}</td>
+						<td name="typetime" autocomplete="off">{$v2['typetime']}</td>
 						<td name="type" autocomplete="off">{$v2['repeat']}</td>
 					</tr>
 					</foreach>

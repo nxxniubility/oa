@@ -285,6 +285,14 @@ class OrderController extends SystemController
             }else{
                 $value['typeName'] = '已下架';
             }
+            if ($value['nums'] == 0) {
+                $value['nums'] = "不限";
+            }
+            if ($value['typetime'] != 0) {
+                $value['typetime'] = date('Y-m-d H:m:s', $value['typetime']);
+            }else{
+                 $value['typetime'] = "长期有效";
+            }
             $parent = D("DiscountParent")->where("discount_parent_id = $value[pid]")->find();
             $value['pname'] = $parent['dname'];
             $discountList[$value['discount_id']] = $value;
@@ -325,10 +333,7 @@ class OrderController extends SystemController
         if (IS_POST) {
             $request = I("post.");
             $result = D('Order', 'Service')->createDiscount($request);
-            if ($result['code'] != 0) {
-                $this->ajaxReturn($result['code'],$result['msg']);
-            }
-            $this->ajaxReturn(0, $result['data']);
+            $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
         }
     }
 
@@ -341,10 +346,7 @@ class OrderController extends SystemController
         if (IS_POST) {
             $request = I("post.");
             $result = D('Order', 'Service')->createParentDiscount($request);
-            if ($result['code'] != 0) {
-                $this->ajaxReturn($result['code'], $result['msg']);
-            }
-            $this->ajaxReturn(0, $result['data']);
+            $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
         }
     }
 

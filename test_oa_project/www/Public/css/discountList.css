@@ -27,13 +27,15 @@
 .regionContMiddle dd { color: #696969;}
 .regionSequence span, .regionSequence .oergList { float: left;}
 .oergList { display: inline-block; width: 20px; height: 43px; background: url(../images/promotion_list-01.png) no-repeat center; cursor: pointer;}
-.regionContMiddle .wOne { width: 10%; padding-left: 15px; width: 5%;}
-.regionContMiddle .wTwo { width: 17%;}
+.regionContMiddle .wOne { width: 5%; padding-left: 15px; width: 5%;}
+.regionContMiddle .wTwo { width: 15%;}
 .regionContMiddle .wThr { width: 15%;}
-.regionContMiddle .wFou { width: 30%;}
-.regionContMiddle .wFiv { width: 18%; padding-right: 15px;}
-.regionContMiddle .wSix { width: 7%;}
-.regionContMiddle .wSev { width: 3%;}
+.regionContMiddle .wFou { width: 22%;}
+.regionContMiddle .wFiv { width: 15%; padding-right: 15px;}
+.regionContMiddle .wSix { width: 5%;}
+.regionContMiddle .wSev { width: 5%;}
+.regionContMiddle .wEgi { width: 10%;}
+.regionContMiddle .wNin { width: 2%;}
 .SequenceInp { display: block; width: 58px; height: 28px; line-height: 28px; margin: 6px 0; color: #707070; text-align: center; border: 1px solid #d8d6d6; background: #fff;}
 .SequenceInp:focus { border-color: #53b567;}
 .regionContMiddle .regionSelect { float: left; display: block; width: 40px; height: 40px;}
@@ -147,7 +149,7 @@
 .pcUploadBox .banDiscountList {padding:5px 8px;border:1px solid #ccc;color:#333;background:#fff;cursor:pointer;}
 .pcUploadBox .banDiscountList:hover {color:#53b567;border-color:#53b567;}
 /*禁选弹窗*/
-.forbiddenBox {position:relative;width:800px;background:#fff;}
+.forbiddenBox {position:relative;width:900px;background:#fff;}
 .forbiddenBox .fbCont {height:344px;margin:20px 0;padding:0 20px;overflow:auto;}
 .forbiddenBox .fbCont table {width:100%;border:1px solid #e1e6eb;border-bottom:none;}
 .forbiddenBox .fbCont tr {height:43px;line-height:43px;font-size:12px;}
