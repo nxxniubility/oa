@@ -222,6 +222,6 @@ a.sort{ display:block; float:left; height:30px; color:#333;  line-height:30px; p
 .hint_bady{padding: 20px; line-height: 22px; background-color: #fff;font-weight: 300;}
 .hint_bady .bg_msg_icon{width: 80px;height: 65px;background: url('../images/information_msg.png') no-repeat;float: left;}
 .hint_bady .ct_msg{width: 210px;height: 90px;float: left}
-.hint_bady .ct_msg .user_realname {color:#0055aa;}
-.hint_bady .ct_msg .user_realname:hover {color:#4dbd88;text-decoration:underline;}
+.user_realname {color:#0055aa;cursor:pointer;}
+.user_realname:hover {color:#4dbd88;text-decoration:underline;}
 
