@@ -11,9 +11,12 @@ use Common\Service\BaseService;
 
 class MessageService extends BaseService
 {
+    //初始化
+    protected $DB_PREFIX;
     public function _initialize()
     {
         parent::_initialize();
+        $this->DB_PREFIX = C('DB_PREFIX');
     }
 
     /*
@@ -92,7 +95,7 @@ class MessageService extends BaseService
         $param = array_filter($param);
          //获取弹窗信息
          $where['system_user_id'] = $this->system_user_id;
-         $where['message_id'] = $param['message_id'];
+         $where[$this->DB_PREFIX.'message.message_id'] = $param['message_id'];
          $join = '__MESSAGE_USER__ ON __MESSAGE_USER__.message_id = __MESSAGE__.message_id';
          $resuif = D('Message')->getFind($where, null, $join);
          // 补上转换
