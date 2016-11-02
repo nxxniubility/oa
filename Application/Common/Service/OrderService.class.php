@@ -749,31 +749,38 @@ class OrderService extends BaseService
     public function createDiscount($request)
     {
         if (!$request['dname'] && $request['dname']>0) {
-           return array(301,'请填写优惠名称');
+           return array('code'=>301, 'msg'=>'请填写优惠名称');
         }elseif(!preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\-]+$/u",$request['dname'])){
-           return array(302,'不能包含特殊字符');
+           return array('code'=>302, 'msg'=>'不能包含特殊字符');
         }
         if (strlen($request['dname'])>60) {
-           return array(303,'优惠名称不得超过20个字');
+           return array('code'=>303, 'msg'=>'优惠名称不得超过20个字');
         }
         if (!$request['dmoney']) {
-           return array(304,'请填写优惠金额');
+           return array('code'=>304, 'msg'=>'请填写优惠金额');
         }elseif($request['dmoney']>2000){
-           return array(305,'优惠金额不能大于2000');
+           return array('code'=>305, 'msg'=>'优惠金额不能大于2000');
         }
         if(!preg_match("/^(([1-9]\d{0,9})|0)(\.\d{1,2})?$/",$request['dmoney'])){
-           return array(306,"请输入正确的优惠金额");
+           return array('code'=>306, 'msg'=>"请输入正确的优惠金额");
+        }
+        if(!preg_match("/^-?[0-9]\d*$/",$request['nums'])){
+           return array('code'=>307, 'msg'=>"优惠次数请输入整数");
         }
         if (!$request['remark']) {
-           return array(307,'请填写优惠详情');
+           return array('code'=>308, 'msg'=>'请填写优惠详情');
         }
         if (strlen($request['remark'])>90) {
-           return array(308,'优惠详情不得超过30个字');
+           return array('code'=>309, 'msg'=>'优惠详情不得超过30个字');
         }
         if(!$request['pid']){
-           return array(309,'请选择优惠所属分类');
+           return array('code'=>310, 'msg'=>'请选择优惠所属分类');
         }
-
+        if(!$request['typetime']){
+           $request['typetime'] = 0;
+        }else{
+            $request['typetime'] = strtotime($request['typetime']) + 3600*24;
+        }
         if (!$request['repeat']) {
             $request['repeat'] = 0;
         }else{
@@ -794,7 +801,7 @@ class OrderService extends BaseService
                     $updata = D("Discount")->editData($save, $value);
                 }
             }
-            return array('code'=>0, 'data'=>$result['data']);
+            return array('code'=>0, 'msg'=>'创建优惠成功', 'data'=>$result['data']);
         }else{
             return array('code'=>201, 'msg'=>'创建优惠数据失败');
         }
@@ -860,7 +867,7 @@ class OrderService extends BaseService
         }
         $result = D("DiscountParent")->addData($param);
         if ($result['code'] == 0) {
-            return array('code'=>0, 'data'=>$result['data']);
+            return array('code'=>0, 'msg'=>'创建分类成功', 'data'=>$result['data']);
         }else{
             return array('code'=>201, 'msg'=>'创建失败');
         }
