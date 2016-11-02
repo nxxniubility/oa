@@ -159,8 +159,12 @@
 .nsSelectTop .nsSelectBox, .selectbox.nsSelectBox dl {width:138px;}
 
 /*1102*/
+.nsRight .send-msgcontent {width:460px;height:165px;}
 .ns-bottom {height:auto;overflow:hidden;}
 .ns-bottom label, .ns-bottom .nsDetermine {float:left;}
 .ns-bottom label {height:30px;line-height:30px;margin:0 20px 0 19px;font-size:0;cursor:pointer;}
 .ns-bottom .check-all {margin-top:-7px;margin-right:4px;vertical-align:middle;}
 .ns-bottom label span {font-size:12px;color:#696969;}
+.nsRight .nsSubmit {margin-top:0;}
+/*编辑器工具栏*/
+.edui-default .edui-toolbar {line-height:1.4;}

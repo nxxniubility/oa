@@ -6,7 +6,7 @@
     <title>系统首页-{$siteinfo.sitename}</title>
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
     <link rel="stylesheet" href="__PUBLIC__/js/asDatepicker/css/asDatepicker.css">
-    <link rel="stylesheet" href="__PUBLIC__/css/addaNewRule.css?v=20160923">
+    <link rel="stylesheet" href="__PUBLIC__/css/sendMsg.css">
     <script>
         var jump_code = "{$jump_code}";
     </script>
@@ -28,12 +28,6 @@
                 <div class="nsLeft"><i>&#42</i>消息标题:</div>
                 <div class="nsRight">
                     <input type="text" class="nsInp" name="title" placeholder="请输入消息标题" autocomplete="off">
-                </div>
-            </div>
-            <div class="nsRow clearfix">
-                <div class="nsLeft"><i>&#42</i>消息内容:</div>
-                <div class="nsRight">
-                    <textarea class="addTxt" name="content" value="" autocomplete="off"></textarea>
                 </div>
             </div>
             <div class="nsRow clearfix">
@@ -107,6 +101,15 @@
                 </div>
             </div>
             <div class="nsRow clearfix">
+                <div class="nsLeft"><i>&#42</i>消息内容:</div>
+                <div class="nsRight">
+                	<div class="send-msgcontent">
+	                    <!--<textarea class="addTxt" name="content" value="" autocomplete="off"></textarea>-->
+	                    <script id="editor" name="advantage"  type="text/plain" >{:htmlspecialchars_decode($data['userInfo']['remark'])}</script>
+	                </div>
+                </div>
+            </div>
+            <div class="nsRow clearfix">
                 <div class="nsLeft">&nbsp;</div>
                 <div class="nsRight">
                     <input type="submit" class="nsSubmit" value="提交">
@@ -153,7 +156,13 @@
                 </dl>
             </foreach>
         </div>
-        <input type="button" class="nsDetermine nsDetermineRole" value="确定">
+        <div class="ns-bottom clearfix">
+        	<label for="chk_all">
+        		<input type="checkbox" class="check-all" id="chk_all" />
+        		<span>全选</span>
+        	</label>
+	        <input type="button" class="nsDetermine nsDetermineRole" value="确定">
+        </div>
     </div>
 </div>
 <div id="search_body" style="display: none">
@@ -193,10 +202,25 @@
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
 <script src="__PUBLIC__/js/asDatepicker/dist/jquery-asDatepicker.js"></script>
-<script src="__PUBLIC__/js/addaNewRule.js?v=20160923"></script>
+<include file="Common@Html/ueditor_simple" />
+<script src="__PUBLIC__/js/sendMsg.js"></script>
 <script src="__PUBLIC__/js/common.js"></script>
 <script>
     $(function(){
+    	var ue = UE.getEditor('editor',{
+	        toolbars: [
+	            ['fontsize','fontfamily', 'undo', 'redo','underline', 'bold','insertimage','spechars','justifyleft','justifyright','justifycenter','emotion']
+	        ],
+	        initialFrameWidth:460,
+	        initialFrameHeight:100,       
+	        enableAutoSave:false,
+	        elementPathEnabled:false,
+	        maximumWords:1000,
+	        autoFloatEnabled:false
+	    });
+    	
+    	
+    	
         //选择部门职位
         $('.nsDetermineRole').click(function(){
             var role_id = '';

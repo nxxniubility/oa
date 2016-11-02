@@ -236,11 +236,6 @@ $(".specified-date").asDatepicker({
     calendars: 1,
 });
 
-
-setTimeout(function(){
-    $(':input[name="specify_days"]').val(specify_days);
-},1000);
-
 //  指定日期
 holiday();
 function holiday(){
