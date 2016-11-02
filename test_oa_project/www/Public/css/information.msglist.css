@@ -63,6 +63,6 @@
 .msg_list .list_box .list_title .title_icon2{color: #666;margin-right: 3px;}
 .msg_list .list_box .list_time{width: 20%;height: 65px;line-height: 65px;float: left}
 .msg_list .list_box .list_icon{width: 10%;height: 65px;line-height: 65px;float: left;}
-.msg_list .list_box .list_content{width: calc(100% - 50px);margin-left:20px;padding: 15px 5px;min-height: 65px;line-height: 30px;clear: both;background-color: #f2f2f2}
+.msg_list .list_box .list_content{width: calc(100% - 50px);margin-left:20px;padding: 15px 5px;min-height: 38px;line-height: 30px;clear: both;background-color: #f2f2f2}
 
 .paging{float: right;}
