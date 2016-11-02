@@ -23,9 +23,9 @@
 .moduleCont .mcRow .mcRowLeft { width: 240px; margin-right: 20px; color: #333; text-align: right;}
 .moduleCont .mcRow .mcRowLeft img { width: 100px; height: 100px; vertical-align: middle;}
 .moduleCont .mcRow .mcRowRight { width: 305px; color: #a6a7a7; text-align: left;}
-.moduleCont .mcRow .mcRowRight .uploadBox { position: relative; width: 69px; height: 100px;}
+.moduleCont .mcRow .mcRowRight .uploadBox {position:relative;width:69px;height:30px;margin-top:70px;}
 .moduleCont .mcRow .mcRowRight .uploadBox span, .moduleCont .mcRow .mcRowRight .uploadBox .uploadBtn { position: absolute; bottom: 0; left: 0; display: block; width: 69px; height: 30px;}
-.moduleCont .mcRow .mcRowRight .uploadBox span { line-height: 30px; color: #6e6d6e; text-align: center; background: #efefef; z-index: 2;}
+.moduleCont .mcRow .mcRowRight .uploadBox span { line-height: 30px; color: #6e6d6e; text-align: center; background: #efefef; z-index:1;}
 .moduleCont .mcRow .mcRowRight .uploadBox .uploadBtn { opacity: 0; filter: alpha(opacity='0'); z-index: 3; cursor: default;}
 
 /*changePWD*/
