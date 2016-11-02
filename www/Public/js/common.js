@@ -139,7 +139,9 @@ function common_ajax2(data,url,loca,fun,showload){
         type:'post',
         data:data,
         success:function(reflag){
-            layer.closeAll('loading');
+            if(!showload){
+                layer.closeAll('loading');
+            }
             if(fun){
                 fun(reflag);
                 return false;

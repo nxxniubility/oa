@@ -70,6 +70,9 @@
             </div>
             <div class="list_content">
                 {{ v.content }}
+                {{#  if(v.href){ }}
+                <a href="{{ v.href }}" style="color: #0055aa" target="_blank">查看详情</a>
+                {{#  }; }}
             </div>
         </div>
     </div>
@@ -89,14 +92,14 @@
         $(this).find('.list_icon').addClass('dn');
     });
     $(document).on('click','.msg_list',function(){
-        if($(this).hasClass('msg_hgt_out')){
-            $(this).addClass('msg_hgt_on').addClass('msg_list_hover').removeClass('msg_hgt_out');
+        if(!$(this).hasClass('msg_hgt_on')){
+            $(this).css('height',$(this).children('.list_box').height()+'px').addClass('msg_list_hover');
             if($(this).find('.title_icon').length>0){
                 $(this).find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe638;');
                 readMsg($(this).attr('data-id'));
             };
         }else{
-            $(this).addClass('msg_hgt_out').removeClass('msg_hgt_on').removeClass('msg_list_hover');
+            $(this).css('height','65px').removeClass('msg_hgt_on').removeClass('msg_list_hover');
         };
     });
     $(document).on('click','.remove_msg_btn',function(e){
@@ -185,6 +188,7 @@
     //更新已读信息
     function readMsg(id){
         parent.$('#poll_total_msg').text(parent.$('#poll_total_msg').text()-1).attr('flag','yes');
+        parent.layer.closeAll();
         $('.msg_list[data-id="'+id+'"]').find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe638;');
         var data = {
             message_id : id,
