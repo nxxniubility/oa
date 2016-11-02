@@ -133,24 +133,35 @@ class MessageService extends BaseService
     |--------------------------------------------------------------------------
     | 添加消息
     |--------------------------------------------------------------------------
-    | @author zgt
+    | @author nxx
     */
     public function addMsg($param)
     {
         $param['createtime'] = time();
-        $msg = $param;
-        unset($msg['system_user_id']);
-        $reid = D('Message')->addData($msg);
+        $reid = D('Message')->addData($param);
         if($reid['code']==0){
-            $msgUser['message_id'] = $reid['data'];
-            $msgUser['system_user_id'] = $param['system_user_id'];
-            D('MessageUser')->addData($msgUser);
+            return array('code'=>0, 'data'=>$reid['data']);
+        }else{
+            return array('code'=>$reid['code'], 'msg'=>$reid['msg']);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 添加消息
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function addMsgUser($param)
+    {
+        $reid = D('MessageUser')->addData($param);
+        if($reid['code']==0){
             return array('code'=>0, 'msg'=>'添加成功');
         }else{
             return array('code'=>$reid['code'], 'msg'=>$reid['msg']);
         }
-
     }
+
 
     /**
      * 状态处理
