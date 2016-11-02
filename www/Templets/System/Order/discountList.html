@@ -5,6 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
 		<title>优惠列表-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/discountList.css">
 		<script>
 			var jump_code = "{$jump_code}";
@@ -84,6 +85,10 @@
 					</div>
 				</div>
 				<div class="preRows clearfix">
+					<span>可选择次数：</span>
+					<input type="text" class="pre-frequency" name="remark" autocomplete="off" onkeyup="chkLength(this,30)">
+				</div>
+				<div class="preRows clearfix">
 					<span>优惠详情：</span>
 					<input type="text" class="preInt" name="remark" autocomplete="off" onkeyup="chkLength(this,30)">
 				</div>
@@ -111,7 +116,11 @@
 						</div>
 						<input type="hidden" name="repeat" autocomplete="off">
 					</div>
-				</div>		
+				</div>	
+				<div class="preRows clearfix">
+					<span>日期：</span>
+            		<input type="text" class="discount-atime" name="deposit_practicaltime" value="" readonly="readonly" >
+				</div>
 				<div class="preRows clearfix">
 					<div class="preBtns">
 						<input type="submit" class="newAreaSubmit" value="提交">
@@ -167,6 +176,10 @@
 					</div>
 				</div>
 				<div class="preRows clearfix">
+					<span>可选择次数：</span>
+					<input type="text" class="pre-frequency" name="remark" autocomplete="off" onkeyup="chkLength(this,30)">
+				</div>
+				<div class="preRows clearfix">
 					<span>优惠详情：</span>
 					<input type="text" class="preInt edit" name="edit_remark" onkeyup="chkLength(this,30)">
 				</div>
@@ -195,6 +208,10 @@
 					</select>
 				</div>	
 				<div class="preRows clearfix">
+					<span>日期：</span>
+            		<input type="text" class="discount-etime" name="deposit_practicaltime" value="" readonly="readonly" >
+				</div>
+				<div class="preRows clearfix">
 					<div class="preBtns">
 						<input type="submit" class="editAreaSubmit" value="提交">
 						<input type="button" class="preCancel" value="取消">
@@ -205,6 +222,7 @@
 		
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
 		<script src="__PUBLIC__/js/regionlManagement.js"></script>
 		<script src="__PUBLIC__/js/discountList.js"></script>
 		<script>

@@ -7,6 +7,7 @@ $('.addDiscount').on('click', function(){
         title: '添加分类', 		    //	不显示标题栏
         area: ['540px', 'auto'],
         closeBtn: 2,
+        zIndex: 5000,
         shade: .6, 					//	遮罩
         time: 0, 					//  关闭自动关闭
         shadeClose: false, 			//	遮罩控制关闭层
@@ -14,6 +15,24 @@ $('.addDiscount').on('click', function(){
         content: $(".preBox"),	    //  加载主体内容
         scrollbar: false
     });
+    
+    //  添加日期
+    setTimeout(function(){
+        var myDate = new Date();
+        ymd = myDate.getFullYear()+'/'+ myDate.getMonth()+'/'+myDate.getDate();
+        $(".discount-atime").val(ymd).glDatePicker({
+            selectableDateRange: [
+                {
+                    //from: new Date(myDate.getFullYear(), (myDate.getMonth()-1), (myDate.getDate()-7)),
+                    //to: new Date(myDate.getFullYear(), myDate.getMonth(), myDate.getDate())
+                    from: new Date(myDate.getFullYear(), myDate.getMonth(), myDate.getDate()),
+					to: new Date(2036, 0, 1)
+                }
+            ]
+        });
+    },1000)
+    
+    
 	$('.preCancel').on('click',function(){
         $(':input[name="fbChk"]').prop('checked',false);
 		layer.closeAll();
@@ -29,6 +48,7 @@ $('.editPreferential').on('click', function(){
         title: '修改优惠',          //  不显示标题栏
         area: ['540px', 'auto'],
         closeBtn: 2,
+        zIndex: 5000,
         shade: .6,                  //  遮罩
         time: 0,                    //  关闭自动关闭
         shadeClose: false,          //  遮罩控制关闭层
@@ -36,6 +56,22 @@ $('.editPreferential').on('click', function(){
         content: $(".preBox2"),      //  加载主体内容
         scrollbar: false
     });
+    
+    //  修改日期
+    setTimeout(function(){
+        var myDate = new Date();
+        ymd = myDate.getFullYear()+'/'+ myDate.getMonth()+'/'+myDate.getDate();
+        $(".discount-etime").val(ymd).glDatePicker({
+            selectableDateRange: [
+                {
+                    //from: new Date(myDate.getFullYear(), (myDate.getMonth()-1), (myDate.getDate()-7)),
+                    //to: new Date(myDate.getFullYear(), myDate.getMonth(), myDate.getDate())
+                    from: new Date(myDate.getFullYear(), myDate.getMonth(), myDate.getDate()),
+					to: new Date(2036, 0, 1)
+                }
+            ]
+        });
+    },1000)
     
     $('.preCancel').on('click',function(){
         layer.closeAll();
