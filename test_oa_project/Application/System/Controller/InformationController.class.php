@@ -102,7 +102,11 @@ class InformationController extends SystemController
     {
         if (IS_POST) {
             $request = I('post.');
-            $msg_list = D('Message', 'Service')->getMsgList($request);
+            if($request['type']=='getInfo'){
+                $msg_list = D('Message', 'Service')->getMsgInfo($request);
+            }else{
+                $msg_list = D('Message', 'Service')->getMsgList($request);
+            }
             if ($msg_list['code']==0) $this->ajaxReturn(0, '获取成功', $msg_list['data']);
             else $this->ajaxReturn(303);
         }

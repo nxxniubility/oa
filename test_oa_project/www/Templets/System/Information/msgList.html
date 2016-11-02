@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
     <link rel="stylesheet" href="__PUBLIC__/css/information.msglist.css">
     <link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
-    <link rel="stylesheet" href="http://res.layui.com/css/global.css?t=1477327002090">
 
 </head>
 <body>
@@ -55,7 +54,7 @@
 <!--列表模版-->
 <script id="demo" type="text/html">
     {{#  layui.each(d, function(k, v){ }}
-    <div class="msg_list msg_hgt_out">
+    <div class="msg_list msg_hgt_out" data-id="{{ v.message_id }}">
         <div class="list_box">
             <div class="list_title">
                 {{#  if(v.isread == 1){ }}
@@ -89,6 +88,7 @@
             $(this).addClass('msg_hgt_on').addClass('msg_list_hover').removeClass('msg_hgt_out');
             if($(this).find('.title_icon').length>0){
                 $(this).find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe638;');
+                readMsg($(this).attr('data-id'));
             };
         }else{
             $(this).addClass('msg_hgt_out').removeClass('msg_hgt_on').removeClass('msg_list_hover');
@@ -155,6 +155,17 @@
         };
     };
 
+    //更新已读信息
+    function readMsg(id){
+        var data = {
+            message_id : id,
+            type : 'getInfo'
+        };
+        common_ajax2(data,'','no',_redata,1);
+        function _redata(){
+            $('.msg_list[data-id="'+id+'"]').find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe638;');
+        };
+    };
 </script>
 
 </body>
