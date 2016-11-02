@@ -143,7 +143,6 @@ class InformationController extends SystemController
                 }else{
                     $request['readtype'] = 0;
                 }
-
                 if (!$request['system_user_id']) {
                     $where['role_id'] = array("IN", $request['role_id']);
                     $systemUsers = D("Role", 'Service')->getRoleUser($where);
@@ -151,9 +150,14 @@ class InformationController extends SystemController
                     $systemUsers['data'] = explode(',', $request['system_user_id']);
                     unset($request['system_user_id']);
                 }
+                $msgBackInfo = D("Message", 'Service')->addMsg($request);
+                if ($msgBackInfo['code'] != 0) {
+                    $this->ajaxReturn(201, "发送消息失败");
+                }
                 foreach ($systemUsers['data'] as $key => $systemUser) {
-                    $request['system_user_id'] = $systemUser;
-                    $result = D("Message", 'Service')->addMsg($request);
+                    $msgUser['system_user_id'] = $systemUser;
+                    $msgUser['message_id'] = $msgBackInfo['data'];
+                    $result = D("Message", 'Service')->addMsgUser($msgUser);
                     if ($result['code'] != 0) {
                         $this->ajaxReturn($result['code'], $result['msg']);
                     }

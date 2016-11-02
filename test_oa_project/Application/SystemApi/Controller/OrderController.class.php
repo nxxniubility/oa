@@ -230,6 +230,7 @@ class OrderController extends SystemApiController
         $param['remark'] = I('param.remark',null);
         $param['repeat'] = I('param.repeat',null);
         $param['type'] = I('param.type',null);
+        $param = array_filter($param);
         $result = D('Order', 'Service')->createDiscount($param);
         if ($result['code'] != 0) {
             $this->ajaxReturn($result['code'],$result['msg']);
@@ -246,6 +247,7 @@ class OrderController extends SystemApiController
         $param['dname'] = I('param.dname',null);
         $param['remark'] = I('param.remark',null);
         $param['type'] = I('param.type',null);
+        $param = array_filter($param);
         $result = D('Order', 'Service')->createDiscount($param);
         if ($result['code'] != 0) {
             $this->ajaxReturn($result['code'],$result['msg']);
