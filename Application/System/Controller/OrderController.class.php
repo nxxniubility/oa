@@ -289,7 +289,7 @@ class OrderController extends SystemController
                 $value['nums'] = "不限";
             }
             if ($value['typetime'] != 0) {
-                $value['typetime'] = date('Y-m-d H:m:s', $value['typetime']);
+                $value['typetime'] = date('Y-m-d', $value['typetime']);
             }else{
                  $value['typetime'] = "长期有效";
             }
