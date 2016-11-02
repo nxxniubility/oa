@@ -74,7 +74,11 @@ $(document).ready(function() {
     }
 });
 
-
+$(document).on('click','.user_realname',function(e){
+    $('.href_url').attr('href', '/System/User/detailUser/id/'+$(this).attr('data-id')).attr('target','_blank');
+    $('.href_url')[0].click();
+    e.stopPropagation();
+});
 
 function common_ajax(data,url,loca,fun){
     layer.load(2);

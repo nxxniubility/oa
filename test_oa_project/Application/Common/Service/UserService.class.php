@@ -367,7 +367,7 @@ class UserService extends BaseService
             //系统消息提醒
             $add_msg['system_user_id'] = $data['tosystem_user_id'];
             $_system_user_info = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$data['system_user_id']));
-            $add_msg['title'] = $_system_user_info['data']['realname'].' 将 '.count(explode(',',$data['user_id'])).'名客户转出到您库中';
+            $add_msg['title'] = $_system_user_info['data']['realname'].' 将'.count(explode(',',$data['user_id'])).'名客户转出到您库中';
             $add_msg['content'] = $_system_user_info['data']['realname'].' 将 ';
             //客户
             foreach($userList as $k=>$v){
@@ -470,7 +470,7 @@ class UserService extends BaseService
             //系统消息提醒
             $add_msg['system_user_id'] = $data['tosystem_user_id'];
             $_system_user_info = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$data['system_user_id']));
-            $add_msg['title'] = $_system_user_info['data']['realname'].' 将 '.count(explode(',',$data['user_id'])).'名客户出库到您库中';
+            $add_msg['title'] = $_system_user_info['data']['realname'].' 将'.count(explode(',',$data['user_id'])).'名客户出库到您库中';
             $add_msg['content'] = $_system_user_info['data']['realname'].' 将 ';
             //客户
             foreach($userList as $k=>$v){
