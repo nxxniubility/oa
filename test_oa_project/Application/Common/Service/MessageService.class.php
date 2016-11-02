@@ -162,7 +162,6 @@ class MessageService extends BaseService
         }
     }
 
-
     /**
      * 状态处理
      */
@@ -198,6 +197,40 @@ class MessageService extends BaseService
         }else{
             return $arrStr;
         }
+    }
+
+    /*
+        发送消息
+        nxx
+    */
+    public function sendMsgs($request)
+    {
+        $request['senduser_id'] = $this->system_user_id;
+        if ($request['msgtype'] == 20) {
+            $request['readtype'] = 1;
+        }else{
+            $request['readtype'] = 0;
+        }
+        if (!$request['system_user_id']) {
+            $where['role_id'] = array("IN", $request['role_id']);
+            $systemUsers = D("Role", 'Service')->getRoleUser($where);
+        }else{
+            $systemUsers['data'] = explode(',', $request['system_user_id']);
+            unset($request['system_user_id']);
+        }
+        $msgBackInfo = $this->addMsg($request);
+        if ($msgBackInfo['code'] != 0) {
+            return array('code'=>201, 'msg'=>"发送消息失败");
+        }
+        foreach ($systemUsers['data'] as $key => $systemUser) {
+            $msgUser['system_user_id'] = $systemUser;
+            $msgUser['message_id'] = $msgBackInfo['data'];
+            $result = $this->addMsgUser($msgUser);
+            if ($result['code'] != 0) {
+                return array('code'=>$result['code'], 'msg'=>$result['msg']);
+            }
+        }
+        return array('code'=>0, 'msg'=>'发送成功');
     }
 
 }

@@ -4,7 +4,7 @@
 $('.addDiscount').on('click', function(){
     layer.open({
         type: 1, 					//  页面层
-        title: '添加分类', 		    //	不显示标题栏
+        title: '添加优惠', 		    //	不显示标题栏
         area: ['540px', 'auto'],
         closeBtn: 2,
         zIndex: 5000,

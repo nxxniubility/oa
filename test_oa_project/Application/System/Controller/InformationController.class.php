@@ -133,34 +133,12 @@ class InformationController extends SystemController
                 $where['realname'] = !empty($request['keyname'])?array('LIKE', $request['keyname']):null;
                 //员工列表
                 $reflag = D('SystemUser','Service')->getSystemUsersList($where);
-
                 if ($reflag['code']==0) $this->ajaxReturn(0, '获取成功', $reflag['data']['data']);
                 else $this->ajaxReturn(303);
             }else{
-                $request['senduser_id'] = $this->system_user_id;
-                if ($request['msgtype'] == 20) {
-                    $request['readtype'] = 1;
-                }else{
-                    $request['readtype'] = 0;
-                }
-                if (!$request['system_user_id']) {
-                    $where['role_id'] = array("IN", $request['role_id']);
-                    $systemUsers = D("Role", 'Service')->getRoleUser($where);
-                }else{
-                    $systemUsers['data'] = explode(',', $request['system_user_id']);
-                    unset($request['system_user_id']);
-                }
-                $msgBackInfo = D("Message", 'Service')->addMsg($request);
-                if ($msgBackInfo['code'] != 0) {
-                    $this->ajaxReturn(201, "发送消息失败");
-                }
-                foreach ($systemUsers['data'] as $key => $systemUser) {
-                    $msgUser['system_user_id'] = $systemUser;
-                    $msgUser['message_id'] = $msgBackInfo['data'];
-                    $result = D("Message", 'Service')->addMsgUser($msgUser);
-                    if ($result['code'] != 0) {
-                        $this->ajaxReturn($result['code'], $result['msg']);
-                    }
+                $result = D('Message', 'Service')->sendMsgs($request);
+                if ($result['code'] != 0) {
+                    $this->ajaxReturn($result['code'], "发送失败");
                 }
                 $this->ajaxReturn(0, "发送成功",  U('System/Information/msgList'));
             }
