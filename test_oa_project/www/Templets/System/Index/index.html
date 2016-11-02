@@ -70,7 +70,13 @@
 		<a href="javascript:;" class="vsJum">查看客户信息</a>
 	</div>
 	<!-- 客户到访提醒 E -->
-<div class="dn">
+<div class="">
+	<div class="hint_bady" >
+		<div class="bg_msg_icon"></div>
+		<div class="ct_msg">
+
+		</div>
+	</div>
 </div>
 
 
@@ -83,6 +89,7 @@
 <script type="text/javascript" language="JavaScript" src="__PUBLIC__/js/peopleStatus.js?v=20161028"></script>
 <script type="text/javascript">
 	var ajax_url = "{:U('System/Index/index')}";
+	var msgList_url = "{:U('System/Information/msgList')}";
 	var detailUser_url = "{:U('System/User/detailUser')}";
 	var getMsgList_url = "{:U('SystemApi/Message/getMsgList')}";
 	var getMsgHint_url = "{:U('SystemApi/Message/getMsgHint')}";

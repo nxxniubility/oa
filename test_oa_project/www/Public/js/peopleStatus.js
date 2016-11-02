@@ -106,7 +106,7 @@ function msg_icon(){
         }
     };
 };
-
+var hint_tips = '';
 function getMsgHint_ajax(){
     common_ajax2(null,getMsgHint_url,'no',_hintbox,1);
     function _hintbox(redata){
@@ -114,7 +114,7 @@ function getMsgHint_ajax(){
             //消息数量
             if($('#poll_total_msg').text()!=redata.data.unread_count){
                 if($('#poll_total_msg').text()<redata.data.unread_count){
-                    layer.tips('有未读新消息哦！', '.message', {
+                    hint_tips = layer.tips('有未读新消息哦！', '.message', {
                         tips: 3,
                         time:0
                     });
@@ -124,26 +124,25 @@ function getMsgHint_ajax(){
             };
             //消息内容提示窗
             if(redata.data.read_msg){
+                $('.hint_bady').children('.ct_msg').html(redata.data.read_msg.content);
                 //公告层
                 layer.open({
                     type: 1
-                    ,title: redata.data.read_msg.msgtype_name+'提醒：'+redata.data.read_msg.title //不显示标题栏
+                    ,title: '【'+redata.data.read_msg.msgtype_name+'】'+redata.data.read_msg.title //不显示标题栏
                     ,closeBtn: false
-                    ,area: '300px;'
-                    ,shade: 0.8
+                    ,area: '330px;'
                     ,id: 'hone_open_id' //设定一个id，防止重复弹出
-                    ,btn: ['查看详情', '取消']
+                    ,btn: ['查看更多', '关闭']
                     ,moveType: 1 //拖拽模式，0或者1
-                    ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">'+redata.data.read_msg.content+'</div>'
+                    ,shade:0
+                    ,content: $('.hint_bady')
                     ,success: function(layero){
                         var btn = layero.find('.layui-layer-btn');
                         btn.css('text-align', 'center');
-                        if(redata.data.read_msg.href){
-                            btn.find('.layui-layer-btn0').attr({
-                                href : redata.data.read_msg.href,
-                                target: '_blank'
-                            });
-                        };
+                        btn.find('.layui-layer-btn0').attr({
+                            href : msgList_url,
+                            target: 'main'
+                        });
                     }
                 });
             };
@@ -153,7 +152,7 @@ function getMsgHint_ajax(){
 
 //获取消息列表
 function getMsgList_ajax(){
-    layer.closeAll();
+    layer.close(hint_tips);
     if($('#poll_total_msg').attr('flag')=='yes'){
         $('#poll_total_msg').attr('flag','no');
         var data = {isread : 1,page:'0,5'};
@@ -167,7 +166,7 @@ function getMsgList_ajax(){
                     var html = '';
                     $.each(reflag.data.data,function(k,v){
                         if(k<3){
-                            html += '<p> <a href="'+v.message_id+'" style="margin-top: 0px; width: 263px;">【'+v.msgtype_name+'】'+v.title+'</a> <span style="margin-right: 10px;width: 100px;">'+v.create_time.substr(5,11)+'</span> </p>';
+                            html += '<p> <a href="javascript:;" onclick="getMsgIngo('+v.message_id+',this)" data-href="'+v.href+'" data-content="'+v.content+'" style="margin-top: 0px; width: 263px;">【'+v.msgtype_name+'】'+v.title+'</a> <span style="margin-right: 10px;width: 100px;">'+v.create_time.substr(5,11)+'</span> </p>';
                         };
                     });
                     $('#poll_msg_bady').html(html).show().siblings('img').siblings('.MsgNull').hide();
@@ -177,6 +176,38 @@ function getMsgList_ajax(){
             $('#poll_msg_bady').siblings('img').hide();
         };
     };
+};
+
+//查看消息详细
+function getMsgIngo(id,thisObj){
+    $('.hint_bady').children('.ct_msg').html($(thisObj).attr('data-content'));
+    //公告层
+    layer.open({
+        type: 1
+        ,title: $(thisObj).html() //不显示标题栏
+        ,closeBtn: false
+        ,area: '330px;'
+        ,id: 'hone_open_id' //设定一个id，防止重复弹出
+        ,btn: ['查看更多', '取消']
+        ,moveType: 1 //拖拽模式，0或者1
+        ,shade:0
+        ,content: $('.hint_bady')
+        ,success: function(layero){
+            var btn = layero.find('.layui-layer-btn');
+            btn.css('text-align', 'center');
+            btn.find('.layui-layer-btn0').attr({
+                href : msgList_url,
+                target: 'main'
+            });
+        }
+    });
+    $('#poll_total_msg').text($('#poll_total_msg').text()-1).attr('flag','yes');
+    var data = {
+        message_id : id,
+        type : 'getInfo'
+    };
+    common_ajax2(data,msgList_url,'no',_redata,1);
+    function _redata(){};
 };
 
 //异步修改
