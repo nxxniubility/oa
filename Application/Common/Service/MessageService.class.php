@@ -176,6 +176,7 @@ class MessageService extends BaseService
         foreach($arrStr as $k=>$v){
             $arrStr[$k]['msgtype_name'] = $msg_type[$v['msgtype']];
             $arrStr[$k]['create_time'] = date('Y-m-d H:i', $v['createtime']);
+            $arrStr[$k]['content'] = htmlspecialchars_decode($v['content']);
             if(!empty($v['system_user_id'])){
                 $systemUser = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v['system_user_id']));
                 $arrStr[$k]['system_realname'] = $systemUser['data']['realname'];
