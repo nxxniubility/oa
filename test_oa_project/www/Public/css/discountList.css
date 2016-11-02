@@ -167,3 +167,11 @@
 
 /*1008*/
 .indent10 {text-indent:10px;}
+
+/*1102*/
+/*日期插件层级前置*/
+.gldp-default {z-index:10000 !important;}
+.discount-atime, .discount-etime {float:left;display:block;width:136px;height:28px;line-height:28px;color:#a6a7a7;text-indent:10px;border:1px solid #ccc;background:#fff url(../images/datePicker.png) no-repeat 110px center;}
+.discount-atime:hover, .discount-etime:hover {border-color:#53b567;background:#fff url(../images/datePicker_click.png) no-repeat 110px center;}
+.pre-frequency {display:block;width:358px;height:28px;line-height:28px;text-indent:10px;color:#767676;font-size:12px;border:1px solid #ccc;}
+.pre-frequency:focus {border-color:#53b567;}
