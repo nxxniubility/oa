@@ -167,7 +167,7 @@ function getMsgList_ajax(){
                     var html = '';
                     $.each(reflag.data.data,function(k,v){
                         if(k<3){
-                            html += '<p> <a href="'+v.message_id+'" style="margin-top: 0px; width: 263px;">'+v.title+'</a> <span style="margin-right: 10px;width: 100px;">'+v.create_time.substr(5,11)+'</span> </p>';
+                            html += '<p> <a href="'+v.message_id+'" style="margin-top: 0px; width: 263px;">【'+v.msgtype_name+'】'+v.title+'</a> <span style="margin-right: 10px;width: 100px;">'+v.create_time.substr(5,11)+'</span> </p>';
                         };
                     });
                     $('#poll_msg_bady').html(html).show().siblings('img').siblings('.MsgNull').hide();

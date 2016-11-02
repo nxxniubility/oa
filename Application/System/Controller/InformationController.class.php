@@ -104,6 +104,8 @@ class InformationController extends SystemController
             $request = I('post.');
             if($request['type']=='getInfo'){
                 $msg_list = D('Message', 'Service')->getMsgInfo($request);
+            }elseif($request['type']=='delMsg'){
+                $msg_list = D('Message', 'Service')->delMsg($request);
             }else{
                 $msg_list = D('Message', 'Service')->getMsgList($request);
             }

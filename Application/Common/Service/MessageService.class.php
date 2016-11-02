@@ -108,6 +108,26 @@ class MessageService extends BaseService
          }
         return array('code'=>0, 'data'=>$resuif);
     }
+    /*
+    |--------------------------------------------------------------------------
+    | 获取当前消息提示
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function delMsg($param)
+    {
+        if(empty($param['message_id'])) return array('code'=>300, 'msg'=>'参数异常');
+        $param = array_filter($param);
+        //获取弹窗信息
+        $where['system_user_id'] = $this->system_user_id;
+        $where['message_id'] = $param['message_id'];
+        $save['status'] = 0;
+        $result['read_msg'] = D('MessageUser')->where($where)->save($save);
+        if($result!==false){
+            return array('code'=>0, 'msg'=>'删除成功');
+        }
+        return array('code'=>100, 'msg'=>'删除失败');
+    }
 
     /*
     |--------------------------------------------------------------------------
