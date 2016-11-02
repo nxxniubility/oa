@@ -1,16 +1,4 @@
 //  闲
-/*$('.xian').on('click',function(){
- $.colorbox({
- inline: true,
- href: $("#xian"),
- overlayClose: false,
- title: "标记忙状态"
- });
- });
- $('.xCancel').on('click',function(){
- $('#xian').colorbox.close();
- });*/
-
 $('.xian').on('click',function(){
     layer.open({
         type: 1, 					//  页面层
@@ -31,17 +19,6 @@ $('.xCancel').on('click',function(){
 //  闲 end
 
 //  忙状态超过30min
-/*$('.chao').on('click',function(){
- $.colorbox({
- inline: true,
- href: $("#chao"),
- overlayClose: false,
- title: "标记忙状态"
- });
- });
- $('.chCancel').on('click',function(){
- $('#chao').colorbox.close();
- });*/
 $('.chao').on('click',function(){
     layer.open({
         type: 1, 					//  页面层
@@ -166,7 +143,7 @@ function getMsgList_ajax(){
                     var html = '';
                     $.each(reflag.data.data,function(k,v){
                         if(k<3){
-                            html += '<p> <a href="javascript:;" onclick="getMsgIngo('+v.message_id+',this)" data-href="'+v.href+'" data-content="'+v.content+'" style="margin-top: 0px; width: 263px;">【'+v.msgtype_name+'】'+v.title+'</a> <span style="margin-right: 10px;width: 100px;">'+v.create_time.substr(5,11)+'</span> </p>';
+                            html += '<p> <a href="javascript:;" onclick="getMsgIngo('+v.message_id+',this)" data-href="'+v.href+'" data-content="'+v.content+'">【'+v.msgtype_name+'】'+v.title+'</a> <span>'+v.create_time.substr(5,11)+'</span> </p>';
                         };
                     });
                     $('#poll_msg_bady').html(html).show().siblings('img').siblings('.MsgNull').hide();
