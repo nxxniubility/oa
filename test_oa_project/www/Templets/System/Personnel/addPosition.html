@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="__PUBLIC__/css/jquery.treetable.css">
     <link rel="stylesheet" href="__PUBLIC__/css/jquery.treetable.theme.default.css">
     <link rel="stylesheet" href="__PUBLIC__/css/addPermissions.css">
-    <script>
-        var jump_code = "{$jump_code}";
-    </script>
 </head>
 
 <body>
@@ -41,17 +38,13 @@
             </div>
             <div class="addPerRow clearfix">
                 <div class="addPerLeft"><i>&#42</i>所属部门:</div>
-                <div class="addPerRight">
+                <div class="addPerRight" >
                     <div class="selectbox l">
-                        <dl class="select">
+                        <dl class="select" id="dp-list">
                             <dt>
-                            <div class="select_title l" >请选择部门</div>
+                            <div class="select_title l">请选择部门</div>
                             <div class="arrow r" ></div>
                             </dt>
-                            <!-- 代码-->
-                            <foreach  name="data['departmentAll']['data']" item="v" key="k">
-                                <dd class="fxDone" data-value="{$v.department_id}">{$v.departmentname}</dd>
-                            </foreach>
                         </dl>
                         <input type="hidden" name="department_id">
                     </div>
@@ -61,16 +54,11 @@
                 <div class="addPerLeft"><i>&#42</i>直属上级:</div>
                 <div class="addPerRight">
                     <div class="selectbox l">
-                        <dl class="select">
+                        <dl class="select" id="role-list">
                             <dt>
                             <div class="select_title l">请选择上级</div>
                             <div class="arrow r" ></div>
                             </dt>
-                            <!-- 代码-->
-                            <dd class="fxDone" data-value="0">顶级</dd>
-                            <foreach  name="data['roleAll']['data']" item="v" key="k">
-                                <dd class="fxDone" data-value="{$v.id}">{$v.name}</dd>
-                            </foreach>
                         </dl>
                         <input type="hidden" name="pid">
                     </div>
@@ -125,19 +113,65 @@
             </div>
         </div>
     <input type="button" class="addSubmit" value="确定">
-
 </div>
+<!--部门列表模版-->
+<script id="demo" type="text/html">
+    <dt>
+    <div class="select_title l" >请选择部门</div>
+    <div class="arrow r" ></div>
+    </dt>
+    <!-- 代码-->
+    {{# layui.each(d, function(k, v){ }}
+        <dd class="fxDone" data-value="{{ v.department_id }}">{{ v.departmentname }}</dd>
+    {{#  }); }}
+</script>
+<!--职位列表模版-->
+<script id="demo2" type="text/html">
+    <dt>
+    <div class="select_title l">请选择上级</div>
+    <div class="arrow r" ></div>
+    </dt>
+    <!-- 代码-->
+    <dd class="fxDone" data-value="0">顶级</dd>
+    <!-- 代码-->
+    {{# layui.each(d, function(k, v){ }}
+        <dd class="fxDone" data-value="{{ v.id }}">{{ v.name }}</dd>
+    {{#  }); }}
+</script>
 <script src="__PUBLIC__/js/jquery-1.7.2.js"></script>
+<script src="__PUBLIC__/js/layui/layui.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
 <script src="__PUBLIC__/js/jquery.treetable.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        //获取部门列表
+        common_ajax2('','/SystemApi/Department/getDepartmentList','no',function(redata){
+            if(redata.data.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo.innerHTML).render(redata.data.data, function(result){
+                        $('#dp-list').html(result);
+                    });
+                });
+            };
+        },1);
+        //获取职位列表
+        common_ajax2('','/SystemApi/Role/getRoleList','no',function(redata){
+            if(redata.data.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo2.innerHTML).render(redata.data.data, function(result){
+                        $('#role-list').html(result);
+                    });
+                });
+            };
+        },1);
         //树配置
         $("#boxTabel").treeTable({
             expandable: true,
         });
         //提交
-        $('.addPerSubmit').click(function() {
+        $(document).on('click','.addPerSubmit',function() {
             //获取node_id
             var access='';
             if($('.radio:checked').length>0){
@@ -152,7 +186,7 @@
                 }
             }
             var data = {
-                positionname:$(':input[name="positionname"]').val(),
+                name:$(':input[name="positionname"]').val(),
                 remark:$(':input[name="remark"]').val(),
                 department_id:$(':input[name="department_id"]').val(),
                 pid:$(':input[name="pid"]').val(),
@@ -160,7 +194,13 @@
                 display:$(':input[name="display"]:checked').val(),
                 access:access
             };
-            common_ajax(data);
+            common_ajax2(data,'/SystemApi/Role/addRole',0,function(redata){
+                if(redata.code!=0){
+                    layer.msg(redata.msg,{icon:2});
+                }else{
+                    window.location.href = "{:U('/System/Personnel/position')}";
+                };
+            });
         });
     });
 </script>

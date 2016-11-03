@@ -54,11 +54,19 @@
     <tr>
         <th class="firItem">
             <span>排序</span>
-            <i class="oergList" onclick="location.href='{$data[\'url_sort\']}'"></i>
+            {{# if($.getUrlParam('order')=='sort asc'){ }}
+            <i class="oergList on_sort" data-value="sort desc"></i>
+            {{# }else{ }}
+            <i class="oergList on_sort" data-value="sort asc"></i>
+            {{# } }}
         </th>
         <th>
             <span>ID</span>
-            <i class="oergList" onclick="location.href='{$data[\'url_id\']}'"></i>
+            {{# if($.getUrlParam('order')=='sort asc'){ }}
+            <i class="oergList on_sort" data-value="department_id desc"></i>
+            {{# }else{ }}
+            <i class="oergList on_sort" data-value="department_id asc"></i>
+            {{# } }}
         </th>
         <th>职位名称</th>
         <th>所属部门</th>
@@ -75,7 +83,11 @@
         <td>{{ v.name }}</td>
         <td>{{ v.department_name }}</td>
         <td>{{ v.remark }}</td>
-        <td><?php echo $v['display']==1?'启用':'禁用'; ?></td>
+        {{# if(v.display==1){ }}
+        <td>启用</td>
+        {{# }else{ }}
+        <td>禁用</td>
+        {{# } }}
         <td class="lastItem">
             <div class="operating-cont">
                 <a href="javascript:;" class="rightsSelect"><i></i></a>
@@ -159,6 +171,9 @@
                 };
             };
         };
+        $(document).on('click','.on_sort',function(){
+            location.href='?order='+$(this).attr('data-value');
+        });
         //树配置
         $("#boxTabel").treeTable({
             expandable: true,
@@ -177,24 +192,18 @@
 				type:'sort'
 			};
 			common_ajax(data,"{:U('System/Personnel/dispostPosition')}",'reload');
-			
 		});
-	
 		//修改排序值
 		$('.SequenceInp').blur(function(){
-			
 			var v=parseInt($.trim($(this).val()));
-			
-			if(!v)
-			{
+			if(!v) {
 				$(this).val($(this).attr('oldSort'));
 			}else{
 				$(this).val(v);
-			}
-		})
-       
+			};
+		});
         //修改权限-前置
-        $('.addSubmit').click(function(){
+        $(document).on('click','.addSubmit',function(){
             var role_id = $(':input[name="role_id"]').val();
             if(role_id!=''){
                 //获取node_id
@@ -205,9 +214,9 @@
                             access+=$(this).val()+'-'+$(this).attr('pid')+'-'+$(this).attr('level');
                         }else{
                             access+=','+$(this).val()+'-'+$(this).attr('pid')+'-'+$(this).attr('level');
-                        }
+                        };
                     });
-                }
+                };
                 edit_access(role_id,access);
             }
         })
@@ -218,42 +227,29 @@
             btn: ['确定','取消'] //按钮
         }, function(){
             var data = {
-                role_id:role_id,
-                type:'del'
+                role_id:role_id
             };
-            common_ajax(data,"{:U('System/Personnel/dispostPosition')}",'reload');
+            common_ajax2(data,"/SystemApi/Role/delRole",'reload');
         }, function(){});
     }
     //职位权限修改
     function edit_access(role_id,access){
-        layer.load(2);
         var data = {
             role_id:role_id,
-            type:'access',
             access:access
         };
-        $.ajax({
-            url:"{:U('System/Personnel/dispostPosition')}",
-            dataType:'json',
-            type:'post',
-            data:data,
-            success:function(reflag){
-                layer.closeAll('loading');
-                if(reflag.code && reflag.code!=0){
-                    layer.closeAll();
-                    layer.msg(reflag.msg,{icon:2});
-                }else{
-                    layer.closeAll();
-                    layer.msg(reflag.msg,{icon:1});
-                }
-                $(':input[name="role_id"]').val('');
-            },
-            error:function(){
+        common_ajax2(data,"/SystemApi/Role/editRole",'reload',function(reflag){
+            layer.closeAll('loading');
+            if(reflag.code && reflag.code!=0){
                 layer.closeAll();
-                layer.msg('网络异常,请稍后再试！',{icon:2});
+                layer.msg(reflag.msg,{icon:2});
+            }else{
+                layer.closeAll();
+                layer.msg(reflag.msg,{icon:1});
             }
+            $(':input[name="role_id"]').val('');
         });
-    }
+    };
 </script>
 </body>
 </html>

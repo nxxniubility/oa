@@ -54,52 +54,8 @@ class PersonnelController extends SystemController {
     */
     public function position()
     {
-        //post=》列表页快捷修改权限
-        if(IS_POST){
-            $role_id = I('post.role_id');
-            //获取职位详情
-            $result = D('Role','Service')->getRoleNode(array('role_id'=>$role_id,'type'=>1));
-            if(!empty($result['data'])){
-                $roleAccess = '';
-                foreach($result['data'] as $k=>$v){
-                    if($k==0){
-                        $roleAccess.=$v['node_id'];
-                    }else{
-                        $roleAccess.=','.$v['node_id'];
-                    }
-                }
-            }
-            $this->ajaxReturn(0, '获取职位权成功', $roleAccess);
-        }
-        //获取参数
-        $request = I('get.');
-        //获取排序 分页参数
-        $re_page = isset($request['page'])?$request['page']:1;
-        $order = !empty($request['order'])?str_replace('-',' ',$request['order']):'sort desc';
-
-        if($request['order']=='sort-desc')
-        {
-            $data['url_sort'] = U('System/Personnel/position').'?order=sort-asc';
-        }else{
-            $data['url_sort'] = U('System/Personnel/position').'?order=sort-desc';
-        }
-        if($request['order']=='id-desc')
-        {
-            $data['url_id'] = U('System/Personnel/position').'?order=id-asc';
-        }else{
-            $data['url_id'] = U('System/Personnel/position').'?order=id-desc';
-        }
-        //获取数据
-        $where['order'] = $order;
-        $where['page'] = $re_page.',30';
-        $roleAll = D('Role','Service')->getRoleList($where);
-        //加载分页类
-        $data['paging'] = $this->Paging($re_page,30,$roleAll['data']['count'],$request);
-        $data['roleAll'] = $roleAll['data'];
         //获取节点列表
         $data['nodeHtml'] = $this->_getAllNodeHtml();
-        //加载分页类
-        $data['paging'] = $this->Paging($re_page,30,$data['roleAll']['count'],$request);
         $this->assign('data', $data);
         $this->display();
 
@@ -110,41 +66,10 @@ class PersonnelController extends SystemController {
      */
     public function addPosition()
     {
-        if(IS_POST) {
-            //获取参数 验证
-            $request = I('post.');
-            //权限内容处理
-            $access = explode(',', $request['access']);
-            if(!empty($access)){
-                $access_new = array();
-                foreach($access as $v){
-                    $v = explode('-', $v);
-                    $access_new[] = array('node_id'=>$v[0], 'pid'=>$v[1], 'level'=>$v[2]);
-                }
-                unset($request['access']);
-            }
-            $request['name'] = $request['positionname'];
-            $request['access'] = $access_new;
-            $result = D('Role','Service')->addRole($request);
-            //添加职位成功
-            if($result['code']==0){
-                $this->ajaxReturn(0,'添加职位成功',U('System/Personnel/position'));
-            }
-            $this->ajaxReturn($result['code'],$result['msg']);
-        }else{
-            //职位列表
-            $roleAll = D('Role','Service')->getRoleList();
-            $data['roleAll'] = $roleAll['data'];
-            //获取部门管理列表
-            $departmentAll = D('Department','Service')->getDepartmentList();
-            $data['departmentAll'] = $departmentAll['data'];
-            //获取节点列表
-            $data['nodeHtml'] = $this->_getAllNodeHtml();
-            //返回地址
-            $data['url_position'] = U('System/Personnel/position');
-            $this->assign('data', $data);
-            $this->display();
-        }
+        //获取节点列表
+        $data['nodeHtml'] = $this->_getAllNodeHtml();
+        $this->assign('data', $data);
+        $this->display();
     }
 
     /**
@@ -176,27 +101,8 @@ class PersonnelController extends SystemController {
             }
             $this->ajaxReturn($result['code'],$result['msg']);
         }
-        //职位列表
-        $roleAll = D('Role','Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
-        //获取部门管理列表
-        $departmentAll = D('Department','Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
         //获取节点列表
         $data['nodeHtml'] = $this->_getAllNodeHtml();
-        //获取职位详情
-        $role_info = D('Role','Service')->getRoleInfo(array('role_id'=>$role_id));
-        $data['roleInfo'] = $role_info['data'];
-        $roleAccess = D('Role','Service')->getRoleNode(array('role_id'=>$role_id));
-        $data['roleAccess'] = '';
-        foreach($roleAccess['data'] as $k=>$v){
-            if($k==0){
-                $data['roleAccess'].=$v['node_id'];
-            }else{
-                $data['roleAccess'].=','.$v['node_id'];
-            }
-        }
-        //返回地址
         $this->assign('data', $data);
         $this->display();
     }
@@ -237,26 +143,6 @@ class PersonnelController extends SystemController {
                         $this->ajaxReturn(1, '排序修改失败');
                     }
 				}
-            }else if( isset($type) && $type=='access' ){
-                $access = I('post.access',null);
-                if(empty($role_id)) $this->ajaxReturn(1, '职位ID不能为空', '', 'role_id');
-                if(!empty($access)){
-                    //权限内容处理
-                    $access = explode(',', $access);
-                    $access_new = array();
-                    foreach($access as $v){
-                        $v = explode('-', $v);
-                        $access_new[] = array('node_id'=>$v[0], 'pid'=>$v[1], 'level'=>$v[2]);
-                    }
-                    $request['access'] = $access_new;
-                }
-                $request['role_id'] = $role_id;
-                $result = D('Role','Service')->editRole($request);
-                //权限修改
-                if($result['code']==0){
-                    $this->ajaxReturn(0,'权限修改成功',U('System/Personnel/position'));
-                }
-                $this->ajaxReturn($result['code'],$result['msg']);
             }
         }
     }

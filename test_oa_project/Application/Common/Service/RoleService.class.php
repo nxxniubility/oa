@@ -96,9 +96,14 @@ class RoleService extends BaseService
                 $cahce_all['count'] =  $cahce_all['count']+1;
                 F('Cache/role', $cahce_all);
             }
-            foreach($param['access'] as $k=>$v){
-                $v['role_id'] = $result['data'];
-                D('Access')->addData($v);
+            if(!empty($param['access'])){
+                //权限内容处理
+                $access = explode(',', $param['access']);
+                foreach($access as $v){
+                    $v = explode('-', $v);
+                    $access_v = array('role_id'=>$result['data'], 'node_id'=>$v[0], 'pid'=>$v[1], 'level'=>$v[2]);
+                    D('Access')->addData($access_v);
+                }
             }
         }
         return $result;
@@ -132,10 +137,13 @@ class RoleService extends BaseService
             }
         }
         if(!empty($param['access'])){
+            //权限内容处理
             D('Access')->delData($param['role_id']);
-            foreach($param['access'] as $k=>$v){
-                $v['role_id'] = $param['role_id'];
-                D('Access')->addData($v);
+            $access = explode(',', $param['access']);
+            foreach($access as $v){
+                $v = explode('-', $v);
+                $access_v = array('role_id'=>$param['role_id'], 'node_id'=>$v[0], 'pid'=>$v[1], 'level'=>$v[2]);
+                D('Access')->addData($access_v);
             }
         }
         return $result;
@@ -283,4 +291,5 @@ class RoleService extends BaseService
         }
         return array('code'=>'0', 'data'=>$_array);
     }
+
 }

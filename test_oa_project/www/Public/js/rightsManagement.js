@@ -81,7 +81,7 @@ function otherSelectStatus() {
 }
 
 /*添加新/编辑模版*/
-$('.selectPermissions').on('click', function() {
+$(document).on('click','.selectPermissions', function() {
     layer.open({
         type: 1, //  页面层
         title: false, //    不显示标题栏
@@ -93,35 +93,32 @@ $('.selectPermissions').on('click', function() {
         shift: 1, //    出现动画
         content: $(".competenceBox") //  加载主体内容
     });
-    layer.load(2);
+    //职位节点
     $('.radio').attr('checked',false);
     var data = {
         role_id:$(this).attr('sid')
     };
     $(':input[name="role_id"]').val($(this).attr('sid'));
-    $.ajax({
-        url:window.location.href,
-        type:'post',
-        dataType:'json',
-        data:data,
-        success:function(reflag){
-            if(reflag.code && reflag.code!=0){
-                layer.closeAll();
-                layer.msg(reflag.msg,{icon:2});
-            }else{
-                layer.closeAll('loading');
-                var on_nodes=reflag.data;
+    common_ajax2(data,'/SystemApi/Role/getRoleNode','reload',function(reflag){
+        if(reflag.code && reflag.code!=0){
+            layer.closeAll();
+            layer.msg(reflag.msg,{icon:2});
+        }else{
+            layer.closeAll('loading');
+            var on_nodes=reflag.data;
+            if(on_nodes!=null){
                 on_nodes = on_nodes.split(',');
-                if(on_nodes.length>0){
+                if(on_nodes){
                     for(var i=0;i<on_nodes.length;i++){
-                        $('.radio-node-'+on_nodes[i]).attr('checked',true);
-                    }
-                }
-            }
-        }
+                        $('.radio-node-'+on_nodes[i]).prop('checked',true);
+                    };
+                };
+            };
+        };
     });
+    // 关闭
     $('.addPerClose').on('click', function() {
-        layer.closeAll(); // 关闭
+        layer.closeAll();
     });
 });
 

@@ -9,36 +9,34 @@ function selectbox() {
             $(".selectbox dt").parent().find("ul").removeClass("s");
         }
     });
-    $(".select").delegate("dt", "click",
-        function() {
-            $(this).parent().find("dd").toggle();
-            $(this).parent().find(".ddoption").toggle();
-            selectStatus($(this));
-            if ($(this).attr("class") == "on") {
-                if ($(this).parent().find("ul").height() > 200) {
-                    $(this).parent().find("ul").addClass("s");
-                };
-            } else {
-                $(this).parent().find("ul").removeClass("s");
-            }
-            return false;
-        });
+    $(".select").delegate("dt", "click", function() {
+        $(this).parent().find("dd").toggle();
+        $(this).parent().find(".ddoption").toggle();
+        selectStatus($(this));
+        if ($(this).attr("class") == "on") {
+            if ($(this).parent().find("ul").height() > 200) {
+                $(this).parent().find("ul").addClass("s");
+            };
+        } else {
+            $(this).parent().find("ul").removeClass("s");
+        }
+        return false;
+    });
 
-    $(".select").delegate("dd", "click",
-        function() {
-            var url = $(this).attr("data-url");
-            if (url != undefined) window.location.href = url;
-            var data_value = $(this).attr('data-value');
-            var data_name = $(this).text();
-            $(this).parent('.ddoption').toggle();
-            $(this).parent("dl").find(".select_title").text(data_name);
-            $(this).parent().parent().find(".select_title").text(data_name);
-            $(this).parents("dl").next().val(data_value);
-            $(this).parents("dl").find("dd").toggle();
-            selectStatus($(".select dd").parent("dl").find("dt"));
-            var callback = $(this).attr('callback');
-            if (callback) eval(callback + '(this)');
-        });
+    $(".select").delegate("dd", "click", function() {
+        var url = $(this).attr("data-url");
+        if (url != undefined) window.location.href = url;
+        var data_value = $(this).attr('data-value');
+        var data_name = $(this).text();
+        $(this).parent('.ddoption').toggle();
+        $(this).parent("dl").find(".select_title").text(data_name);
+        $(this).parent().parent().find(".select_title").text(data_name);
+        $(this).parents("dl").next().val(data_value);
+        $(this).parents("dl").find("dd").toggle();
+        selectStatus($(".select dd").parent("dl").find("dt"));
+        var callback = $(this).attr('callback');
+        if (callback) eval(callback + '(this)');
+    });
     $(document).click(function() {
         $(".select dd").hide();
         selectStatus($(".select dt"));

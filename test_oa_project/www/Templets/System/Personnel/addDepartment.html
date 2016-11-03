@@ -47,7 +47,13 @@
 					var data = {
 						departmentname:$(':input[name="departmentname"]').val()
 					};
-					common_ajax2(data,'/SystemApi/Department/addDepartment');
+					common_ajax2(data,'/SystemApi/Department/addDepartment',0,function(redata){
+						if(redata.code!=0){
+							layer.msg(redata.msg,{icon:2});
+						}else{
+							window.location.href = "{:U('/System/Personnel/department')}";
+						};
+					});
 				});
 			});
 		</script>
