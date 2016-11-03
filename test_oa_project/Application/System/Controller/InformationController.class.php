@@ -21,18 +21,6 @@ class InformationController extends SystemController
     */
     public function systemUserInfo()
     {
-        if (IS_POST) {
-            $user['face'] = I("post.face");
-            $updat = D('SystemUser', 'Service')->editSystemUserFace($user);
-            if ($updat['data']['code'] != 0) {
-                $this->ajaxReturn($updat['code'], '修改失败');
-            }
-            $this->system_user['face'] = $user['face'];
-            session('system_user',$this->system_user);
-            $this->ajaxReturn(0, '修改成功');
-        }
-        $userInfo = D('SystemUser', 'Service')->getSystemUserInfo(array('system_user_id'=>$system_user_id));
-        $this->assign('userInfo', $userInfo['data']);
         $this->display();
 
     }
@@ -79,18 +67,6 @@ class InformationController extends SystemController
     */
     public function msgList()
     {
-        if (IS_POST) {
-            $request = I('post.');
-            if($request['type']=='getInfo'){
-                $msg_list = D('Message', 'Service')->getMsgInfo($request);
-            }elseif($request['type']=='delMsg'){
-                $msg_list = D('Message', 'Service')->delMsg($request);
-            }else{
-                $msg_list = D('Message', 'Service')->getMsgList($request);
-            }
-            if ($msg_list['code']==0) $this->ajaxReturn(0, '获取成功', $msg_list['data']);
-            else $this->ajaxReturn(303);
-        }
         $this->display();
     }
 
