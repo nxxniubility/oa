@@ -37,11 +37,11 @@
 			<tr>
 				<th class="firItem">
 					<span>排序</span>
-					<i class="oergList" onclick="location.href='{$data[\'url_sort\']}'"></i>
+					<i class="oergList" id="on_sort" data-value="sort asc"></i>
 				</th>
 				<th>
 					<span>ID</span>
-					<i class="oergList" onclick="location.href='{$data[\'url_department_id\']}'"></i>
+					<i class="oergList" id="on_department_id" onclick="location.href='{$data[\'url_department_id\']}'"></i>
 				</th>
 				<th>部门名称</th>
 				<th class="lastItem">操作</th>
@@ -87,14 +87,13 @@
 		<script>
 			$(function(){
 				//获取页面参数
-				var page = location.hash.replace('#!page=', '');
-				if(page==''){
-					page = 1;
-				}
-				getAjax(page);
+				var page = $.getUrlParam('page',1);
+				var order = $.getUrlParam('order');
+				getAjax(page,order);
 				//获取列表内容
 				function getAjax(page){
 					var data = {
+						order:order,
 						page: ((page-1)*15)+',15'
 					};
 					common_ajax2(data,'/SystemApi/Department/getDepartmentList','no',_setHtml,1);
@@ -116,13 +115,12 @@
 									,first:'首页'
 									,last:'尾页'
 									,skin: '#4dbe88'
-									,hash: 'page' //自定义hash值
-									,curr: location.hash.replace('#!page=', '')
+									,curr: page
 									,jump: function(obj, first){
 										//得到了当前页，用于向服务端请求对应数据
 										var curr = obj.curr;
 										if(!first){
-											getAjax(curr);
+											location.href=$.getUrl('page',curr);
 										}
 									}
 								});
@@ -132,7 +130,7 @@
 				};
 
 				//修改排序值
-				$('#sort').click(function(){
+				$(document).on('click','#sort',function(){
 					var  ids_sort="";
 					$(".SequenceInp").each(function(index, element) {
                         if( $(this).val()!=$(this).attr('oldSort') ){							
@@ -149,18 +147,17 @@
 				});
 				//修改排序值
 				$('.SequenceInp').blur(function(){
-					
 					var v=parseInt($.trim($(this).val()));
-					
-					if(!v)
-					{
+					if(!v) {
 					    $(this).val($(this).attr('oldSort'));
 					}else{
 						$(this).val(v);
 					}
 				})
 			});
-
+			$(document).on('click','#on_sort',function(){
+				location.href='?order='+$(this).attr('data-value');
+			});
 			//部门删除
 			function del_department(dep_id){
 				layer.confirm('确定要删除该部门？', {
