@@ -194,9 +194,18 @@ function common_ajax2(data,url,loca,fun,showload){
 };
 //获取Url参数
 (function ($) {
-    $.getUrlParam = function (name) {
+    $.getUrlParam = function (name,re_default) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
-        if (r != null) return unescape(r[2]); return null;
-    }
+        if (r != null) return unescape(r[2]); return re_default;
+    };
+    $.getUrl = function (name,val) {
+        var reg = new RegExp("(^|&)page=([^&]*)(|$)");
+        var r = window.location.search.substr(1).replace(reg,'');
+        if(r){
+            r = '&'+r;
+        }
+        var _url = window.location.origin+window.location.pathname+'?'+name+'='+val+r;
+        return _url;
+    };
 })(jQuery);
