@@ -17,7 +17,7 @@
 				<div class="orgContTop clearfix">
 					<div class="topTit l"><span class="masterList">部门管理</span></div>
 					<div class="topRight r">
-						<a href="{$data['url_addDepartment']}" class="newDepartMent">新增部门</a>
+						<a href="{:U('/System/Personnel/addDepartment')}" class="newDepartMent">新增部门</a>
 					</div>
 				</div>
 				
@@ -37,11 +37,19 @@
 			<tr>
 				<th class="firItem">
 					<span>排序</span>
-					<i class="oergList" id="on_sort" data-id="sort" data-value="asc"></i>
+					{{# if($.getUrlParam('order')=='sort asc'){ }}
+					<i class="oergList on_sort" data-value="sort desc"></i>
+					{{# }else{ }}
+					<i class="oergList on_sort" data-value="sort asc"></i>
+					{{# } }}
 				</th>
 				<th>
 					<span>ID</span>
-					<i class="oergList" id="on_department_id" onclick="location.href='{$data[\'url_department_id\']}'"></i>
+					{{# if($.getUrlParam('order')=='sort asc'){ }}
+					<i class="oergList on_sort" data-value="department_id desc"></i>
+					{{# }else{ }}
+					<i class="oergList on_sort" data-value="department_id asc"></i>
+					{{# } }}
 				</th>
 				<th>部门名称</th>
 				<th class="lastItem">操作</th>
@@ -82,10 +90,11 @@
 		</script>
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/layui/layui.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script src="__PUBLIC__/js/common.js"></script>
 		<script src="__PUBLIC__/js/organization.js"></script>
 		<script>
-			$(function(){
+			$(function(){$.getUrl('page',1);
 				//获取页面参数
 				var page = $.getUrlParam('page',1);
 				getAjax(page);
@@ -142,7 +151,7 @@
 						sort_data:ids_sort,
 						type:'sort'
 					};
-					common_ajax2(data,'{$data[\'url_dispostDepartment\']}','reload');
+					common_ajax2(data,'/SystemApi/Department/editDepartmentSort','reload');
 				});
 				//修改排序值
 				$('.SequenceInp').blur(function(){
@@ -154,8 +163,8 @@
 					}
 				})
 			});
-			$(document).on('click','#on_sort',function(){
-				location.href='?order='+$(this).attr('data-id')+' '+$(this).attr('data-value');
+			$(document).on('click','.on_sort',function(){
+				location.href='?order='+$(this).attr('data-value');
 			});
 			//部门删除
 			function del_department(dep_id){
@@ -163,10 +172,10 @@
 					btn: ['确定','取消'] //按钮
 				}, function(){
 					var data = {
-						departmentname_id:dep_id,
+						department_id:dep_id,
 						type:'del'
 					};
-					common_ajax2(data,'{$data[\'url_dispostDepartment\']}','reload');
+					common_ajax2(data,'/SystemApi/Department/delDepartment','reload');
 				}, function(){});
 			}
 		</script>

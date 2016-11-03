@@ -131,7 +131,7 @@ function common_ajax(data,url,loca,fun){
 function common_ajax2(data,url,loca,fun,showload){
     if(!showload){
         layer.load(2);
-    }
+    };
     if(!url || url.length<1){
         url = window.location.href ;
     };
@@ -202,8 +202,10 @@ function common_ajax2(data,url,loca,fun,showload){
     $.getUrl = function (name,val) {
         var reg = new RegExp("(^|&)page=([^&]*)(|$)");
         var r = window.location.search.substr(1).replace(reg,'');
-    
-        var _url = window.location.origin+window.location.pathname+'?'+name+'='+val+r;
+        if(r.length>0){
+            r = r+'&';
+        };
+        var _url = window.location.origin+window.location.pathname+'?'+r+name+'='+val;
         return _url;
     };
 })(jQuery);

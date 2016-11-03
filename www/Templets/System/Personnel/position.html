@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="__PUBLIC__/css/jquery.treetable.css">
     <link rel="stylesheet" href="__PUBLIC__/css/jquery.treetable.theme.default.css">
     <link rel="stylesheet" href="__PUBLIC__/css/rightsManagement.css">
-    <script>
-        var jump_code = "{$jump_code}";
-    </script>
+    <link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
 </head>
 <body>
 <div class="wrapBox" id="posWrap">
@@ -23,69 +21,13 @@
         </div>
         
         <table cellpadding="0" cellspacing="0" id="positionTable">
-        	<tr>
-        		<th class="firItem">
-        			<span>排序</span>
-                    <i class="oergList" onclick="location.href='{$data[\'url_sort\']}'"></i>
-        		</th>
-        		<th>
-        			<span>ID</span>
-                    <i class="oergList" onclick="location.href='{$data[\'url_id\']}'"></i>
-        		</th>
-        		<th>职位名称</th>
-        		<th>所属部门</th>
-        		<th>职位描述</th>
-        		<th>状态</th>
-        		<th class="lastItem">操作</th>
-        	</tr>
-        	<foreach  name="data['roleAll']['data']" item="v" key="k">
-        		<tr>
-        			<td class="firItem">
-        				<input type="tel" class="sequenceInp" value="{$v.sort}" oldSort="{$v.sort}"  data-id="{$v.id}" placeholder="0" maxlength="4" autocomplete="off">
-        			</td>
-        			<td class="role_id">{$v.id}</td>
-        			<td>{$v.name}</td>
-        			<td>{$v.department_name}</td>
-        			<td>{$v.remark}</td>
-        			<td><?php echo $v['display']==1?'启用':'禁用'; ?></td>
-        			<td class="lastItem">
-        				<div class="operating-cont">
-	        				<a href="javascript:;" class="rightsSelect"><i></i></a>
-	                        <div class="otherOperation">
-	                            <div class="triangle"></div>
-	                            <div class="otherIcon">
-	                                <ul>
-	                                    <li>
-	                                        <a href="javascript:;" class="selectPermissions" sid="{$v.id}">
-	                                            <span class="set"></span>
-	                                            <em>权限设置</em>
-	                                        </a>
-	                                    </li>
-	                                    <li>
-	                                        <a href="{:U('System/Personnel/editPosition',array('role_id'=>$v['id']))}">
-	                                            <span class="modify"></span>
-	                                            <em>修改</em>
-	                                        </a>
-	                                    </li>
-	                                    <li>
-	                                        <a href="javascript:del_position('{$v.id}');">
-	                                            <span class="delete"></span>
-	                                            <em>删除</em>
-	                                        </a>
-	                                    </li>
-	                                </ul>
-	                            </div>
-	                        </div>
-	                   </div>
-        			</td>
-        		</tr>
-        	</foreach>
+
         </table>
 
         <div class="collegaPage">
             <a class="sort"  id="sort" href="javascript:void(0)">排序</a>
             <span class="spTips l">'排序'列表内输入框的数字是可修改，再点击左侧按钮进行再排序的.</span>
-            {$data['paging']}
+            <div class="paging"></div>
         </div>
     </div>
 </div>
@@ -105,15 +47,118 @@
         </div>
     </div>
     <input type="button" class="addSubmit" value="提交">
-
 </div>
-<script src="__PUBLIC__/js/jquery-1.7.2.js"></script>
+
+<!--列表模版-->
+<script id="demo" type="text/html">
+    <tr>
+        <th class="firItem">
+            <span>排序</span>
+            <i class="oergList" onclick="location.href='{$data[\'url_sort\']}'"></i>
+        </th>
+        <th>
+            <span>ID</span>
+            <i class="oergList" onclick="location.href='{$data[\'url_id\']}'"></i>
+        </th>
+        <th>职位名称</th>
+        <th>所属部门</th>
+        <th>职位描述</th>
+        <th>状态</th>
+        <th class="lastItem">操作</th>
+    </tr>
+    {{# layui.each(d, function(k, v){ }}
+    <tr>
+        <td class="firItem">
+            <input type="tel" class="sequenceInp" value="{{ v.sort }}" oldSort="{{ v.sort }}"  data-id="{{ v.id }}" placeholder="0" maxlength="4" autocomplete="off">
+        </td>
+        <td class="role_id">{{ v.id }}</td>
+        <td>{{ v.name }}</td>
+        <td>{{ v.department_name }}</td>
+        <td>{{ v.remark }}</td>
+        <td><?php echo $v['display']==1?'启用':'禁用'; ?></td>
+        <td class="lastItem">
+            <div class="operating-cont">
+                <a href="javascript:;" class="rightsSelect"><i></i></a>
+                <div class="otherOperation">
+                    <div class="triangle"></div>
+                    <div class="otherIcon">
+                        <ul>
+                            <li>
+                                <a href="javascript:;" class="selectPermissions" sid="{{ v.id }}">
+                                    <span class="set"></span>
+                                    <em>权限设置</em>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{:U('System/Personnel/editPosition')}?role_id={{ v.id }}">
+                                    <span class="modify"></span>
+                                    <em>修改</em>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:del_position('{{ v.id }}');">
+                                    <span class="delete"></span>
+                                    <em>删除</em>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    {{#  }); }}
+</script>
+<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+<script src="__PUBLIC__/js/layui/layui.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
 <script src="__PUBLIC__/js/jquery.treetable.js"></script>
 <script src="__PUBLIC__/js/common.js"></script>
 <script src="__PUBLIC__/js/rightsManagement.js"></script>
 <script>
     $(function(){
+        //获取页面参数
+        var page = $.getUrlParam('page',1);
+        getAjax(page);
+        //获取列表内容
+        function getAjax(page){
+            var order = $.getUrlParam('order');
+            var data = {
+                order:order,
+                page: ((page-1)*15)+',15'
+            };
+            common_ajax2(data,'/SystemApi/Role/getRoleList','no',_setHtml,1);
+            function _setHtml(redata){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo.innerHTML).render(redata.data.data, function(result){
+                        $('#positionTable').html(result);
+                    });
+                });
+                //分页
+                if(redata.data.count>0){
+                    layui.use(['laypage', 'layer'], function(){
+                        var laypage = layui.laypage,layer = layui.layer;
+                        laypage({
+                            cont:  $('.paging')
+                            ,pages:  Math.ceil(redata.data.count/15) //总页数
+                            ,groups: 5 //连续显示分页数
+                            ,first:'首页'
+                            ,last:'尾页'
+                            ,skin: '#4dbe88'
+                            ,curr: page
+                            ,jump: function(obj, first){
+                                //得到了当前页，用于向服务端请求对应数据
+                                var curr = obj.curr;
+                                if(!first){
+                                    location.href=$.getUrl('page',curr);
+                                }
+                            }
+                        });
+                    });
+                };
+            };
+        };
         //树配置
         $("#boxTabel").treeTable({
             expandable: true,
