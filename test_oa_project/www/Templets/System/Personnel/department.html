@@ -37,7 +37,7 @@
 			<tr>
 				<th class="firItem">
 					<span>排序</span>
-					<i class="oergList" id="on_sort" data-value="sort asc"></i>
+					<i class="oergList" id="on_sort" data-id="sort" data-value="asc"></i>
 				</th>
 				<th>
 					<span>ID</span>
@@ -87,12 +87,10 @@
 		<script>
 			$(function(){
 				//获取页面参数
-				getAjax();
+				var page = $.getUrlParam('page',1);
+				getAjax(page);
 				//获取列表内容
 				function getAjax(page){
-					if(!page){
-						page = 1;
-					};
 					var order = $.getUrlParam('order');
 					var data = {
 						order:order,
@@ -114,16 +112,15 @@
 									cont:  $('.paging')
 									,pages:  Math.ceil(redata.data.count/15) //总页数
 									,groups: 5 //连续显示分页数
-									,first: '首页'
-									,last: '尾页'
+									,first:'首页'
+									,last:'尾页'
 									,skin: '#4dbe88'
-									,curr: location.hash.replace('#!page=', '') //获取hash值为fenye的当前页
-									,hash: 'page' //自定义hash值
+									,curr: page
 									,jump: function(obj, first){
 										//得到了当前页，用于向服务端请求对应数据
 										var curr = obj.curr;
 										if(!first){
-											getAjax(curr);
+											location.href=$.getUrl('page',curr);
 										}
 									}
 								});
@@ -158,7 +155,7 @@
 				})
 			});
 			$(document).on('click','#on_sort',function(){
-				location.href='?order='+$(this).attr('data-value');
+				location.href='?order='+$(this).attr('data-id')+' '+$(this).attr('data-value');
 			});
 			//部门删除
 			function del_department(dep_id){
