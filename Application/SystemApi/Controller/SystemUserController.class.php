@@ -56,7 +56,7 @@ class SystemUserController extends SystemApiController
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
-        $result = D('SystemUser','Service')->getSystemUsersInfo($param);
+        $result = D('SystemUser','Service')->getSystemUserInfo($param);
         //返回参数
         if($result['code']==0){
             $this->ajaxReturn(0,'获取成功',$result['data']);
@@ -299,12 +299,12 @@ class SystemUserController extends SystemApiController
         $this->ajaxReturn($result['code'],$result['msg']);
     }
 
-    // /*
-    // |--------------------------------------------------------------------------
-    // | 修改密码
-    // |--------------------------------------------------------------------------
-    // | @author nxx
-    // */
+    /*
+    |--------------------------------------------------------------------------
+    | 修改密码
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
     // public function changePwd()
     // {
     //     $userInfo = $this->system_user;
@@ -322,5 +322,58 @@ class SystemUserController extends SystemApiController
         
     // }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 获取消息列表
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function getMsgList()
+    {
+        $msg_list = D('Message', 'Service')->getMsgList($request);
+        // }
+        if ($msg_list['code']==0) {
+            $this->ajaxReturn(0, '获取成功', $msg_list['data']);
+        }
+        else {
+            $this->ajaxReturn($msg_list['code'], $msg_list['msg']);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取消息列表
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function getMsgInfo()
+    {
+        $param['message_id'] = I('param.message_id', null);
+        $msg_list = D('Message', 'Service')->getMsgInfo($param);
+        if ($msg_list['code']==0) {
+            $this->ajaxReturn(0, '获取成功', $msg_list['data']);
+        }
+        else {
+            $this->ajaxReturn($msg_list['code'], $msg_list['msg']);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取消息列表
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function delMsg()
+    {
+        $param['message_id'] = I('param.message_id', null);
+        $msg_list = D('Message', 'Service')->delMsg($param);
+        if ($msg_list['code']==0) {
+            $this->ajaxReturn(0, '删除成功', $msg_list['data']);
+        }
+        else {
+            $this->ajaxReturn($msg_list['code'], $msg_list['msg']);
+        }
+    }
 
 }

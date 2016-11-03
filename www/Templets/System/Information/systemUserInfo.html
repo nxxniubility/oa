@@ -5,6 +5,7 @@
 		<title>系统首页-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/personalInformation.css">
+		<link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
 		<script type="text/javascript">
 			var webGetOssSignUrl="/System/Index/getOssSign.html";
 			var jump_code = "{$jump_code}";
@@ -27,35 +28,39 @@
 							<div class="mcLeft">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">姓名:</div>
-									<div class="mcRowRight">{$userInfo['realname']}</div>
+									<div class="mcRowRight">{{ d.realname }}</div>
 								</div>
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">生日:</div>
-									<div class="mcRowRight">{:$userInfo['birthday']!=0?$userInfo['birthday_time']:''}</div>
+									<div class="mcRowRight">
+										{{# if(d.birthday!=0){ }}
+											{{ d.birthday_time }}
+										{{# } }}
+									</div>
 								</div>
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">籍贯:</div>
-									<div class="mcRowRight">{$userInfo['nativeplace']}</div>
+									<div class="mcRowRight">{{ d.nativeplace }}</div>
 								</div>
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">性别:</div>
-									<div class="mcRowRight">{$userInfo['sex_name']}</div>
+									<div class="mcRowRight">{{ d.sex_name }}</div>
 								</div>
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">婚姻状态:</div>
-									<div class="mcRowRight">{$userInfo['marital_name']}</div>
+									<div class="mcRowRight">{{ d.marital_name }}</div>
 								</div>
 							</div>
 							<div class="mcRight">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">
-										<if condition = "!empty($userInfo[face])">
-											<img id="faceImg" src="{$userInfo[face]}">
-										<elseif condition="$userInfo[sex] eq '男'"/>
-											<img id="faceImg" src="__PUBLIC__/images/personalInfo_01-02.jpg">
-										<else/>
+										{{# if(d.face){ }}
+											<img id="faceImg" src="{{ d.face }}">
+										{{# }else if(d.sex!=1){ }}
 											<img id="faceImg" src="__PUBLIC__/images/personalInfo_01-01.jpg">
-										</if>
+										{{# }else{ }}
+											<img id="faceImg" src="__PUBLIC__/images/personalInfo_01-02.jpg">
+										{{# } }}
 									</div>
 									<div class="mcRowRight">
 										<div class="uploadBox">
@@ -78,13 +83,13 @@
 							<div class="mcLeft">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">学历:</div>
-									<div class="mcRowRight">{:$userInfo['education_name']}</div>
+									<div class="mcRowRight">{{ d.education_name }}</div>
 								</div>
 							</div>
 							<div class="mcRight">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">毕业院校:</div>
-									<div class="mcRowRight">{$userInfo['school']}</div>
+									<div class="mcRowRight">{{ d.school }}</div>
 								</div>
 							</div>
 						</div>
@@ -100,17 +105,17 @@
 							<div class="mcLeft">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">手机号码:</div>
-									<div class="mcRowRight">{$userInfo['username']}</div>
+									<div class="mcRowRight">{{ d.username }}</div>
 								</div>
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">私人邮箱:</div>
-									<div class="mcRowRight">{$userInfo['plivatemail']}</div>
+									<div class="mcRowRight">{{ d.plivatemail }}</div>
 								</div>
 							</div>
 							<div class="mcRight">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">公司邮箱:</div>
-									<div class="mcRowRight">{$userInfo['email']}</div>
+									<div class="mcRowRight">{{ d.email }}</div>
 								</div>
 							</div>
 						</div>
@@ -126,25 +131,25 @@
 							<div class="mcLeft">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">所属部门及职位:</div>
-									<div class="mcRowRight">{$userInfo['role_names']}</div>
+									<div class="mcRowRight">{{ d.role_names }}</div>
 								</div>
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">员工状态:</div>
-									<div class="mcRowRight">{$userInfo['usertype_name']}</div>
+									<div class="mcRowRight">{{ d.usertype_name }}</div>
 								</div>
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">转正时间:</div>
-									<div class="mcRowRight">{$userInfo['straigh_time']}</div>
+									<div class="mcRowRight">{{ d.straigh_time }}</div>
 								</div>
 							</div>
 							<div class="mcRight">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">所属区域:</div>
-									<div class="mcRowRight">{$userInfo['zonename']}</div>
+									<div class="mcRowRight">{{ d.zonename }}</div>
 								</div>
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">入职时间:</div>
-									<div class="mcRowRight">{$userInfo['entry_time']}</div>
+									<div class="mcRowRight">{{ d.entry_time }}</div>
 								</div>
 							</div>
 						</div>
@@ -160,13 +165,13 @@
 							<div class="mcLeft">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">社保电脑号:</div>
-									<div class="mcRowRight">{$userInfo['socialsecurity']}</div>
+									<div class="mcRowRight">{{ d.socialsecurity }}</div>
 								</div>
 							</div>
 							<div class="mcRight">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">公积金账号:</div>
-									<div class="mcRowRight">{$userInfo['providentfund']}</div>
+									<div class="mcRowRight">{{ d.providentfund }}</div>
 								</div>
 							</div>
 						</div>
@@ -182,12 +187,8 @@
 							<div class="mcLeft">
 								<div class="mcRow clearfix">
 									<div class="mcRowLeft">指纹编号:</div>
-									<div class="mcRowRight">{$userInfo['check_id']}</div>
+									<div class="mcRowRight">{{ d.check_id }}</div>
 								</div>
-								<!--<div class="mcRow clearfix">
-									<div class="mcRowLeft">备注:</div>
-									<div class="mcRowRight">{$userInfo['remark']}</div>
-								</div>-->
 							</div>
 							<div class="mcRight">&nbsp</div>
 						</div>
@@ -199,8 +200,28 @@
 		<script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script src="__PUBLIC__/js/common.js"></script>
+		<script src="__PUBLIC__/js/layui/layui.js"></script>
 		<include file="Common@Html/post_oss"/>
 		<script type="text/javascript">
+		$(function(){
+				getAjax();
+				//获取列表内容
+				function getAjax(){
+					var data = {
+
+					};
+					common_ajax2(data,'/SystemApi/SystemUser/getSystemUserInfo','no',_setHtml,1);
+					function _setHtml(redata){
+						layui.use('laytpl', function(){
+							var laytpl = layui.laytpl;
+							laytpl($('.infoContMiddle').html()).render(redata.data, function(result){
+								$('.infoContMiddle').html(result);
+							});
+						});
+					};
+				};
+
+			});
 			function upload_oss(url){
 				$('#faceImg').attr('src', url);
 				saveface(url);

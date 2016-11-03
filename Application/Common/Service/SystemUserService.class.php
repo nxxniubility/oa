@@ -576,6 +576,9 @@ class SystemUserService extends BaseService
     */
     public function getSystemUsersInfo($param)
     {
+        if (!$param['system_user_id']) {
+            $param['system_user_id'] = $this->system_user_id;
+        }
         if( F('Cache/systemUsers') ) {
             $systemUsers = F('Cache/systemUsers');
             if(!empty($systemUsers)){
@@ -1002,7 +1005,7 @@ class SystemUserService extends BaseService
         //时间格式
         $systemUserInfo['entry_time'] = $systemUserInfo['entrytime']!=0?date('Y-m-d', $systemUserInfo['entrytime']):'';
         $systemUserInfo['straigh_time'] = $systemUserInfo['straightime']!=0?date('Y-m-d', $systemUserInfo['straightime']):'';
-        $systemUserInfo['birthday_time'] = !empty($systemUserInfo['birthday'])?date('Y-m-d', $systemUserInfo['birthday']):null;
+        $systemUserInfo['birthday_time'] = !empty($systemUserInfo['birthday'])?date('Y-m-d', $systemUserInfo['birthday']):'';
 
         $usertypeList = C('FIELD_STATUS.SYSTEMUSERSTATUS');
         $systemUserInfo['usertype_name'] = $usertypeList[$systemUserInfo['usertype']];

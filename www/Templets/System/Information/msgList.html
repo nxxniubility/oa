@@ -114,7 +114,7 @@
             btn: ['确定','取消'] //按钮
         }, function(){
             $('.msg_list[data-id="'+data_id+'"]').addClass('dn');
-            common_ajax2(data,'','no',_delhtml,1);
+            common_ajax2(data,'/SystemApi/SystemUser/delMsg','no',_delhtml,1);
             layer.closeAll();
             function _delhtml(redata){
                 if(redata.code!=0){
@@ -151,7 +151,7 @@
             msgtype : type,
             page : ((page-1)*10)+',10'
         };
-        common_ajax2(data,'','no',_demoHtml,1);
+        common_ajax2(data,'/SystemApi/SystemUser/getMsgList','no',_demoHtml,1);
         function _demoHtml(redata){
             if(redata.code==0){
                 layui.use('laytpl', function(){
