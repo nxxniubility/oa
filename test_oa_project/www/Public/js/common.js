@@ -202,9 +202,7 @@ function common_ajax2(data,url,loca,fun,showload){
     $.getUrl = function (name,val) {
         var reg = new RegExp("(^|&)page=([^&]*)(|$)");
         var r = window.location.search.substr(1).replace(reg,'');
-        if(r){
-            r = '&'+r;
-        }
+    
         var _url = window.location.origin+window.location.pathname+'?'+name+'='+val+r;
         return _url;
     };
