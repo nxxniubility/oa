@@ -33,7 +33,7 @@ class OrderController extends SystemController
                 $_time = explode('--', str_replace('/', '-', $where[$k]));
                 if($_time[1]=='') $_time[1] = 'time';
                 if($_time[0]==''){
-                    $where['createtime'] = array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59')));
+                    $where['createtime'] = array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1].'23:59:59')));
                 }else{
                     $where['createtime'] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');
                 }
