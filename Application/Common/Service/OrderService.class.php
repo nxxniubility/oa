@@ -822,6 +822,7 @@ class OrderService extends BaseService
         }else{
             $repeatList = explode(",",$request['repeat']);
         }
+        D()->startTrans();
         $result = D("Discount")->addData($request);
         $discount_id = $result['data'];
         if ($discount_id) {
@@ -838,10 +839,12 @@ class OrderService extends BaseService
                     $updata = D("Discount")->editData($save, $value);
                 }
             }
+            D()->commit();
             return array('code'=>0, 'msg'=>'创建优惠成功', 'data'=>$result['data']);
-        }else{
-            return array('code'=>201, 'msg'=>'创建优惠数据失败');
         }
+        D()->rollback();
+        return array('code'=>201, 'msg'=>'创建优惠数据失败');
+        
     }
 
     /*
