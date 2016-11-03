@@ -82,7 +82,7 @@ class BaseService extends BaseModel {
             $department_new = $array_list;
             $array_list = null;
             foreach($department_new as $k=>$v){
-                if($k>=(($page[0]-1)*$page[1]) && $k<($page[0]*$page[1])){
+                if($k>=(($page[0])) && $k<($page[0]+$page[1])){
                     $array_list[] = $v;
                 }
             }

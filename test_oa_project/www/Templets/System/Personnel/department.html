@@ -6,6 +6,7 @@
 		<title>系统首页-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/organization.css">
+		<link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
 		<script>
 			var jump_code = "{$jump_code}";
 		</script>
@@ -21,67 +22,115 @@
 				</div>
 				
 				<table cellpadding="0" cellspacing="0" id="deparrTable">
-					<tr>
-						<th class="firItem">
-							<span>排序</span>
-							<i class="oergList" onclick="location.href='{$data[\'url_sort\']}'"></i>
-						</th>
-						<th>
-							<span>ID</span>
-							<i class="oergList" onclick="location.href='{$data[\'url_department_id\']}'"></i>
-						</th>
-						<th>部门名称</th>
-						<th class="lastItem">操作</th>
-					</tr>
-					<foreach name="data['departmentAll']['data']" item="v" key="k" >
-						<tr>
-							<td class="firItem">
-								<input type="tel" class="SequenceInp" placeholder="0" maxlength="4" value="{$v.sort}" data-id="{$v.department_id}" oldSort="{$v.sort}" autocomplete="off">
-							</td>
-							<td>{$v.department_id}</td>
-							<td>{$v.departmentname}</td>
-							<td class="lastItem">
-								<div class="operating-cont">
-									<a href="javascript:;" class="orgSelect"><i></i></a>
-									<div class="otherOperation">
-										<div class="triangle"></div>
-										<div class="otherIcon">
-											<ul>
-												<li>
-													<a href="<?php echo U('System/Personnel/editDepartment',array('dep_id'=>$v['department_id'])); ?>">
-														<span class="modify"></span>
-														<em>修改</em>
-													</a>
-												</li>
-												<li>
-													<a href="javascript:;" onclick="del_department('{$v.department_id}')">
-														<span class="delete"></span>
-														<em>删除</em>
-													</a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</td>
-						</tr>
-					</foreach>
+
 				</table>
-				
+
 				<div class='collegaPage'>
-                   <a class="sort"  id="sort" href="javascript:void(0)">修改排序</a>
-                   <span class="spTips l">'排序'列表内输入框的数字是可修改，再点击左侧按钮进行再排序的.</span>
-					{$data['paging']}
+					<a class="sort"  id="sort" href="javascript:void(0)">修改排序</a>
+					<span class="spTips l">'排序'列表内输入框的数字是可修改，再点击左侧按钮进行再排序的.</span>
+					<div class="paging"></div>
 				</div>
 			</div>
 		</div>
-
-		
+		<!--列表模版-->
+		<script id="demo" type="text/html">
+			<tr>
+				<th class="firItem">
+					<span>排序</span>
+					<i class="oergList" onclick="location.href='{$data[\'url_sort\']}'"></i>
+				</th>
+				<th>
+					<span>ID</span>
+					<i class="oergList" onclick="location.href='{$data[\'url_department_id\']}'"></i>
+				</th>
+				<th>部门名称</th>
+				<th class="lastItem">操作</th>
+			</tr>
+			{{# layui.each(d, function(k, v){ }}
+			<tr>
+				<td class="firItem">
+					<input type="tel" class="SequenceInp" placeholder="0" maxlength="4" value="{{ v.sort }}" data-id="{{ v.department_id }}" oldSort="{{ v.sort }}" autocomplete="off">
+				</td>
+				<td>{{ v.department_id }}</td>
+				<td>{{ v.departmentname }}</td>
+				<td class="lastItem">
+					<div class="operating-cont">
+						<a href="javascript:;" class="orgSelect"><i></i></a>
+						<div class="otherOperation">
+							<div class="triangle"></div>
+							<div class="otherIcon">
+								<ul>
+									<li>
+										<a href="<?php echo U('System/Personnel/editDepartment'); ?>?dep_id={{ v.department_id }}">
+											<span class="modify"></span>
+											<em>修改</em>
+										</a>
+									</li>
+									<li>
+										<a href="javascript:;" onclick="del_department('{{ v.department_id }}')">
+											<span class="delete"></span>
+											<em>删除</em>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+			{{#  }); }}
+		</script>
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/layui/layui.js"></script>
+		<script src="__PUBLIC__/js/common.js"></script>
 		<script src="__PUBLIC__/js/organization.js"></script>
 		<script>
 			$(function(){
+				//获取页面参数
+				var page = location.hash.replace('#!page=', '');
+				if(page==''){
+					page = 1;
+				}
+				getAjax(page);
+				//获取列表内容
+				function getAjax(page){
+					var data = {
+						page: ((page-1)*15)+',15'
+					};
+					common_ajax2(data,'/SystemApi/Department/getDepartmentList','no',_setHtml,1);
+					function _setHtml(redata){
+						layui.use('laytpl', function(){
+							var laytpl = layui.laytpl;
+							laytpl(demo.innerHTML).render(redata.data.data, function(result){
+								$('#deparrTable').html(result);
+							});
+						});
+						//分页
+						if(redata.data.count>0){
+							layui.use(['laypage', 'layer'], function(){
+								var laypage = layui.laypage,layer = layui.layer;
+								laypage({
+									cont:  $('.paging')
+									,pages:  Math.ceil(redata.data.count/15) //总页数
+									,groups: 5 //连续显示分页数
+									,first:'首页'
+									,last:'尾页'
+									,skin: '#4dbe88'
+									,hash: 'page' //自定义hash值
+									,curr: location.hash.replace('#!page=', '')
+									,jump: function(obj, first){
+										//得到了当前页，用于向服务端请求对应数据
+										var curr = obj.curr;
+										if(!first){
+											getAjax(curr);
+										}
+									}
+								});
+							});
+						};
+					};
+				};
+
 				//修改排序值
 				$('#sort').click(function(){
 					var  ids_sort="";
@@ -95,10 +144,9 @@
 						sort_data:ids_sort,
 						type:'sort'
 					};
-					common_ajax(data,'{$data[\'url_dispostDepartment\']}','reload');
+					common_ajax2(data,'{$data[\'url_dispostDepartment\']}','reload');
 					
 				});
-			
 				//修改排序值
 				$('.SequenceInp').blur(function(){
 					
@@ -111,7 +159,6 @@
 						$(this).val(v);
 					}
 				})
-				
 			});
 
 			//部门删除
@@ -123,7 +170,7 @@
 						departmentname_id:dep_id,
 						type:'del'
 					};
-					common_ajax(data,'{$data[\'url_dispostDepartment\']}','reload');
+					common_ajax2(data,'{$data[\'url_dispostDepartment\']}','reload');
 				}, function(){});
 			}
 		</script>

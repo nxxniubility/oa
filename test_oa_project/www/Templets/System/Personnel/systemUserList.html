@@ -150,7 +150,7 @@
 									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{$v.system_user_id}</td>
 									
 									<if condition = "!empty($v[face])">
-										<td class="sPic"><img src="{:$v[face].'@30w.jpg'}"></td>
+										<td class="sPic"><img src="{:$v[face].'?x-oss-process=image/resize,m_lfit,w_30'}"></td>
 									<elseif condition="$v[sex] eq 1"/>
 										<td class="sPic"><img src="__PUBLIC__/images/personalInfo_01-02.jpg"></td>
 									<else/>
