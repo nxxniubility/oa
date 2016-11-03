@@ -94,11 +94,19 @@
         <div class="addPerLeft"><i>&#42</i>状态:</div>
         <div class="addPerRight">
             <label for="radio1">
+                {{# if(d.display==1){ }}
+                <input type="radio" name="display" class="addPerRadio" id="radio1" value="1" checked="checked">
+                {{# }else{ }}
                 <input type="radio" name="display" class="addPerRadio" id="radio1" value="1">
+                {{# } }}
                 <span>启用</span>
             </label>
             <label for="radio2">
+                {{# if(d.display==0){ }}
+                <input type="radio" name="display" class="addPerRadio" id="radio2" value="0" checked="checked">
+                {{# }else{ }}
                 <input type="radio" name="display" class="addPerRadio" id="radio2" value="0">
+                {{# } }}
                 <span>禁用</span>
             </label>
         </div>
@@ -169,6 +177,9 @@
                     var laytpl = layui.laytpl;
                     laytpl(demo.innerHTML).render(redata.data.data, function(result){
                         $('#dp-list').html(result);
+                        var department_id = $(':input[name="department_id"]').val();
+                        var department_name = $('#dp-list').find('.fxDone[data-value="'+department_id+'"]').text();
+                        $('#dp-list').find('.select_title').text(department_name);
                     });
                 });
             };
@@ -180,9 +191,14 @@
                     var laytpl = layui.laytpl;
                     laytpl(demo2.innerHTML).render(redata.data.data, function(result){
                         $('#role-list').html(result);
+                        var role_id = $(':input[name="pid"]').val();
+                        var role_name = $('#role-list').find('.fxDone[data-value="'+role_id+'"]').text();
+                        $('#role-list').find('.select_title').text(role_name);
                     });
                 });
             };
+            selectbox();
+            checknode();
         },1);
         //树配置
         $("#boxTabel").treeTable({
@@ -222,6 +238,7 @@
                 }
             }
             var data = {
+                role_id:$.getUrlParam('role_id'),
                 positionname:$(':input[name="positionname"]').val(),
                 remark:$(':input[name="remark"]').val(),
                 department_id:$(':input[name="department_id"]').val(),
@@ -234,6 +251,7 @@
                 if(redata.code!=0){
                     layer.msg(redata.msg,{icon:2});
                 }else{
+                    layer.msg('操作成功',{icon:1});
                     window.location.href = "{:U('/System/Personnel/position')}";
                 };
             });
