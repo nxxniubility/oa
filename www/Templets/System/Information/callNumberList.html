@@ -7,6 +7,7 @@
 		<title>系统首页-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/callnumberlist.css">
+		<link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
 		<script>
 			var jump_code = "{$jump_code}";
 		</script>
@@ -21,26 +22,10 @@
 	            	<a href="javascript:;" class="add_number">添加号码</a>
 	            </div>
 	        </div>
-	        
 	        <div class="main">
 				<p class="fir_tips">如未设置启用号码，系统将默认使用帐号注册的手机号码</p>
 	        	<table cellpadding="0" cellspacing="0" id="numbeer_list">
-	        		<tr class="for_head">
-	        			<th class="first_item">号码</th>
-	        			<th>类型</th>
-	        			<th class="last_item">操作</th>
-	        		</tr>
-					<foreach name="data['numberList']['data']" item="v">
-						<tr data-id="{$v.call_number_id}" data-value="{$v.number}-#-{$v.number_type}" {:$v['number_start']==0?'class="curr"':''}>
-							<td class="first_item">{$v.number}</td>
-							<td>{$v.number_type_name}</td>
-							<td class="clearfix">
-								<a href="javascript:;" class="call_disable {:$v['number_start']==1?'call_stop':'call_start'}" data-start="{$v.number_start}">{$v.number_start_name}</a>
-								<a href="javascript:;" class="call_edit">修改</a>
-								<a href="javascript:;" class="call_del">删除</a>
-							</td>
-						</tr>
-					</foreach>
+	        		
 	        	</table>
 	        </div>
 		</div>
@@ -71,12 +56,60 @@
 			</div>
 		</div>
 		<input type="hidden" name="temp_id" autocomplete="off">
+
+		<!--列表模版-->
+		<script id="demo" type="text/html">
+			<tr class="for_head">
+				<th class="first_item">号码</th>
+				<th>类型</th>
+				<th class="last_item">操作</th>
+			</tr>	
+			{{# layui.each(d, function(k, v){ }}
+			<tr data-id="{{v.call_number_id}}" data-value="{{v.number}}-#-{{v.number_type}}" 
+			{{# if(v.number_start==0){ }}
+				class="curr" 
+			{{# } }}
+			>
+				<td class="first_item">{{v.number}}</td>
+				<td>{{v.number_type_name}}</td>
+				<td class="clearfix">
+					<a href="javascript:;" class="call_disable {{# if(v.number_start==1){ }}
+						call_stop 
+					{{# }else{ }}
+						call_start
+					{{# } }}" data-start="{{v.number_start}}">{{v.number_start_name}}</a>
+					<a href="javascript:;" class="call_edit">修改</a>
+					<a href="javascript:;" class="call_del">删除</a>
+				</td>
+			</tr>
+			{{#  }); }}
+		</script>
+
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script src="__PUBLIC__/js/common.js"></script>
+		<script src="__PUBLIC__/js/layui/layui.js"></script>
 		<script src="__PUBLIC__/js/callNumberList.js"></script>
 		<script>
+			$(function(){
+				getAjax();
+				//获取列表内容
+				function getAjax(){
+					var data = {
 
+					};
+					common_ajax2(data,'/SystemApi/SystemUser/getCallNumberList','no',_setHtml,1);
+					function _setHtml(redata){
+						layui.use('laytpl', function(){
+							var laytpl = layui.laytpl;
+							laytpl(demo.innerHTML).render(redata.data, function(result){
+								$('#numbeer_list').html(result);
+							});
+						});
+					};
+				};
+
+			});
 		</script>
 	</body>
 </html>

@@ -215,4 +215,112 @@ class SystemUserController extends SystemApiController
         $this->ajaxReturn($result['code'],$result['msg']);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | 呼叫号码设置列表
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function getCallNumberList()
+    {
+        //获取数据
+        $result = D('SystemUser','Service')->getCallNumber();
+        if($result['code']==0){
+            $this->ajaxReturn(0,'获取成功',$result['data']);
+        }
+        $this->ajaxReturn($result['code'],$result['msg']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 添加呼叫号码
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function addCallNumber()
+    { 
+        $param['number'] = I('param.number', null);
+        $param['number_type'] = I('param.number_type', null);
+        $result = D('SystemUser','Service')->addCallNumber($param);
+        if($result['code']==0){
+            $this->ajaxReturn(0,'获取成功',$result['data']);
+        }
+        $this->ajaxReturn($result['code'],$result['msg']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 删除呼叫号码
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function delCallNumber()
+    { 
+        $param['call_number_id'] = I('param.call_number_id', null);
+        $result = D('SystemUser','Service')->delCallNumber($param);
+        if($result['code']==0){
+            $this->ajaxReturn(0,'获取成功',$result['data']);
+        }
+        $this->ajaxReturn($result['code'],$result['msg']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 修改呼叫号码
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function editCallNumber()
+    {   
+        $param['call_number_id'] = I('param.call_number_id', null);
+        $param['number'] = I('param.number', null);
+        $param['number_type'] = I('param.number_type', null);
+        $result = D('SystemUser','Service')->editCallNumber($param);
+        if($result['code']==0){
+            $this->ajaxReturn(0,'获取成功',$result['data']);
+        }
+        $this->ajaxReturn($result['code'],$result['msg']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 启用呼叫号码
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function startCallNumber()
+    { 
+        $param['call_number_id'] = I('param.call_number_id', null);
+        $param['number_start'] = I('param.number_start', null);
+        $result = D('SystemUser','Service')->startCallNumber($param);
+        if($result['code']==0){
+            $this->ajaxReturn(0,'获取成功',$result['data']);
+        }
+        $this->ajaxReturn($result['code'],$result['msg']);
+    }
+
+    // /*
+    // |--------------------------------------------------------------------------
+    // | 修改密码
+    // |--------------------------------------------------------------------------
+    // | @author nxx
+    // */
+    // public function changePwd()
+    // {
+    //     $userInfo = $this->system_user;
+    //     $username = decryptPhone($userInfo['username'], C('PHONE_CODE_KEY'));
+    //     $request['confirmPassword'] = I('param.', null);
+    //     $request['oldPassword'] = I('param.oldPassword', null);
+    //     $request['password'] = I('param.password', null);
+    //     $request['phoneverify'] = I('param.phoneverify', null);
+    //     $reflag = D('SystemUser', 'Service')->editPwd($request);
+    //     if($reflag['code'] == 0) {
+    //         $this->ajaxReturn(0, '密码修改成功', U('System/Index/main'));
+    //     }else {
+    //         $this->ajaxReturn($reflag['code'], $reflag['msg']);
+    //     }
+        
+    // }
+
+
 }
