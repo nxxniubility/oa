@@ -1122,6 +1122,7 @@ class SystemUserService extends BaseService
     */
     public function getCallNumber($where)
     {
+        $where['system_user_id'] = $this->system_user_id;
         $where['number_status'] = 1;
         $result = D('CallNumber')->getList($where,'call_number_id,number,number_type,number_start');
         foreach($result as $k=>$v){
@@ -1156,6 +1157,7 @@ class SystemUserService extends BaseService
                 return array('code'=>202,'msg'=>'手机号码格式有误');
             }
         }
+        $data['system_user_id'] = $this->system_user_id;
         $result = D('CallNumber')->addData($data);
         //返回数据与状态
         return array('code'=>'0', 'data'=>$result);

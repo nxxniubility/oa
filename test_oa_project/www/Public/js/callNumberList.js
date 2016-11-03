@@ -1,5 +1,5 @@
 //  添加号码
-$('.add_number,.call_edit').on('click', function(){
+$(document).on('click','.add_number, .call_edit', function(){
     if($(this).hasClass('add_number')){
         var _title = '添加号码';
         $(':input[name="number"],:input[name="number_type"],:input[name="temp_id"]').val('');
@@ -29,13 +29,13 @@ $('.add_number,.call_edit').on('click', function(){
     });
 });
 //提交
-$('.btn_confirm').on('click', function(){
+$(document).on('click', '.btn_confirm',function(){
     if($(':input[name="temp_id"]').val().length==0){
         var data = {
-            type:'add',
             number:$(':input[name="number"]').val(),
             number_type:$(':input[name="number_type"]').val()
         };
+        common_ajax2(data,'/SystemApi/SystemUser/addCallNumber','reload');
     }else{
         var data = {
             type:'edit',
@@ -43,40 +43,38 @@ $('.btn_confirm').on('click', function(){
             number_type:$(':input[name="number_type"]').val(),
             call_number_id:$(':input[name="temp_id"]').val()
         };
+        common_ajax2(data,'/SystemApi/SystemUser/editCallNumber','reload');
     };
-    common_ajax2(data,'','reload');
 });
 //启动
-$('.call_start').on('click', function(){
+$(document).on('click', '.call_start',function(){
     var _data_id = $(this).parents('tr').attr('data-id');
     layer.confirm('是否要启动该号码作为网络电话默认接听号码？', {
         btn: ['确定','取消'], //按钮
         title: '提示信息'
     }, function(){
         var data = {
-            type:'start',
             call_number_id:_data_id,
             number_start:1
         };
-        common_ajax2(data,'','reload');
+        common_ajax2(data,'/SystemApi/SystemUser/startCallNumber','reload');
     }, function(){});
 });
-$('.call_stop').on('click', function(){
+$(document).on('click', '.call_stop',function(){
     var _data_id = $(this).parents('tr').attr('data-id');
     layer.confirm('是否要停止启动该号码？', {
         btn: ['确定','取消'], //按钮
         title: '提示信息'
     }, function(){
         var data = {
-            type:'start',
             call_number_id:_data_id,
             number_start:0
         };
-        common_ajax2(data,'','reload');
+        common_ajax2(data,'/SystemApi/SystemUser/startCallNumber','reload');
     }, function(){});
 });
 //删除
-$('.call_del').on('click', function(){
+$(document).on('click', '.call_del', function(){
     var _data_id = $(this).parents('tr').attr('data-id');
     layer.confirm('是否确定要删除该号码？', {
         btn: ['确定','取消'], //按钮
@@ -86,6 +84,6 @@ $('.call_del').on('click', function(){
             type:'del',
             call_number_id:_data_id
         };
-        common_ajax2(data,'','reload');
+        common_ajax2(data,'/SystemApi/SystemUser/delCallNumber','reload');
     }, function(){});
 });
