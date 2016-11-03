@@ -25,38 +25,6 @@ class PersonnelController extends SystemController {
     */
     public function department()
     {
-        //获取参数
-        $request = I('get.');
-        //返回、修改、操作地址
-        $data['url_addDepartment'] = U('System/Personnel/addDepartment');
-        $data['url_delDepartment'] = U('System/Personnel/delDepartment');
-        $data['url_dispostDepartment'] = U('System/Personnel/dispostDepartment');
-        //获取排序 分页参数
-        $re_page = isset($request['page'])?$request['page']:1;
-        unset($request['page']);
-        $order = !empty($request['order'])?str_replace('-',' ',$request['order']):'sort desc';
-
-        if($request['order']=='sort-desc')
-		{
-			$data['url_sort'] = U('System/Personnel/department').'?order=sort-asc';
-        }else {
-			$data['url_sort'] = U('System/Personnel/department').'?order=sort-desc';
-		}
-		
-		if($request['order']=='department_id-desc')
-		{
-			$data['url_department_id'] = U('System/Personnel/department').'?order=department_id-asc';
-		}else{
-			$data['url_department_id'] = U('System/Personnel/department').'?order=department_id-desc';
-		}
-        //获取部门管理列表
-        $where['order'] = $order;
-        $where['page'] = $re_page.',30';
-        $departmentAll = D('Department','Service')->getDepartmentList($where);
-        //加载分页类
-        $data['paging'] = $this->Paging($re_page,30,$departmentAll['data']['count'],$request);
-        $data['departmentAll'] = $departmentAll['data'];
-        $this->assign('data', $data);
         $this->display();
     }
     /**

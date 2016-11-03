@@ -31,8 +31,6 @@ Date.prototype.format = function(fmt) {
     }
     return fmt;
 }
-
-
 //解决ie9及以下不支持placehoder属性
 $(document).ready(function() {
     var doc = document,
@@ -73,13 +71,13 @@ $(document).ready(function() {
         }
     }
 });
-
+//全局事件
 $(document).on('click','.user_realname',function(e){
     $('.href_url').attr('href', '/System/User/detailUser/id/'+$(this).attr('data-id')).attr('target','_blank');
     $('.href_url')[0].click();
     e.stopPropagation();
 });
-
+//异步请求
 function common_ajax(data,url,loca,fun){
     layer.load(2);
     if(!url || url.length<1){
@@ -193,4 +191,12 @@ function common_ajax2(data,url,loca,fun,showload){
         //    return false;
         //}
     });
-}
+};
+//获取Url参数
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+})(jQuery);
