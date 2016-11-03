@@ -23,105 +23,7 @@
             </div>
         </div>
         <div class="addPerMiddle">
-            <div class="addPerRow clearfix">
-                <div class="addPerLeft"><i>&#42</i>职位名称:</div>
-                <div class="addPerRight">
-                    <input type="text" class="addPerInp" name="positionname" value="{$data['roleInfo']['name']}">
-                </div>
-            </div>
-            <div class="addPerRow clearfix">
-                <div class="addPerLeft"><i>&#42</i>职位描述:</div>
-                <div class="addPerRight">
-                    <input type="text" class="addPerInp" name="remark" value="{$data['roleInfo']['remark']}"  onkeyup="chkLength(this,30)">
-                </div>
-            </div>
-            <div class="addPerRow clearfix">
-                <div class="addPerLeft"><i>&#42</i>所属部门:</div>
-                <div class="addPerRight">
-                    <div class="selectbox l">
-                        <dl class="select">
-                            <dt>
-                                <if condition="$data['roleInfo']['department_id'] neq 0">
-                                    <foreach  name="data['departmentAll']['data']" item="v" key="k">
-                                        <if condition="$v['department_id'] eq $data['roleInfo']['department_id']">
-                                            <div class="select_title l">{$v.departmentname}</div>
-                                        </if>
-                                    </foreach>
-                                <else/>
-                                    <div class="select_title l" >请选择部门</div>
-                                </if>
-                            <div class="arrow r" ></div>
-                            </dt>
-                            <!-- 代码-->
-                            <foreach  name="data['departmentAll']['data']" item="v" key="k">
-                                <dd class="fxDone" data-value="{$v.department_id}">{$v.departmentname}</dd>
-                            </foreach>
-                        </dl>
-                        <input type="hidden" name="department_id" value="{$data['roleInfo']['department_id']}">
-                    </div>
-                </div>
-            </div>
-            <div class="addPerRow clearfix">
-                <div class="addPerLeft"><i>&#42</i>直属上级:</div>
-                <div class="addPerRight">
-                    <div class="selectbox l">
-                        <dl class="select">
-                            <dt>
-                            <if condition="$data['roleInfo']['superiorid'] neq 0">
-                                <foreach  name="data['roleAll']['data']" item="v" key="k">
-                                    <if condition="$v['id'] eq $data['roleInfo']['superiorid']">
-                                        <div class="select_title l">{$v.name}</div>
-                                        <?php break; ?>
-                                    </if>
-                                </foreach>
-                            <else/>
-                                <div class="select_title l">顶级</div>
-                            </if>
-                            <div class="arrow r" ></div>
-                            </dt>
-                            <!-- 代码-->
-                            <dd class="fxDone" data-value="0">顶级{$data['roleInfo']['superiorid']}</dd>
-                            <foreach  name="data['roleAll']['data']" item="v" key="k">
-                                <if condition="$v['id'] neq $data['roleInfo']['id']">
-                                    <dd class="fxDone" data-value="{$v.id}">{$v.name}</dd>
-                                </if>
-                            </foreach>
-                        </dl>
-                        <input type="hidden" name="superiorid" value="{$data['roleInfo']['superiorid']}">
-                    </div>
-                </div>
-            </div>
-            <div class="addPerRow clearfix">
-                <div class="addPerLeft"><i>&#42</i>权限设置:</div>
-                <div class="addPerRight">
-                    <span class="selectPermissions">选择权限</span>
-                </div>
-            </div>
-            <div class="addPerRow clearfix">
-                <div class="addPerLeft"><i>&#42</i>状态:</div>
-                <div class="addPerRight">
-                    <label for="radio1">
-                        <input type="radio" name="display" class="addPerRadio" id="radio1" value="1" <?php echo $data['roleInfo']['display']==1?'checked="checked"':''; ?> >
-                        <span>启用</span>
-                    </label>
-                    <label for="radio2">
-                        <input type="radio" name="display" class="addPerRadio" id="radio2" value="0" <?php echo $data['roleInfo']['display']==0?'checked="checked"':''; ?>>
-                        <span>禁用</span>
-                    </label>
-                </div>
-            </div>
-            <div class="addPerRow clearfix">
-                <div class="addPerLeft"><i>&#42</i>排序:</div>
-                <div class="addPerRight">
-                    <input type="tel" class="addPerInp w118" name="sort" value="{$data['roleInfo']['sort']}">
-                </div>
-            </div>
-            <div class="addPerRow clearfix">
-                <div class="addPerLeft">&nbsp;</div>
-                <div class="addPerRight">
-                    <input type="submit" class="addPerSubmit" value="提交">
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
@@ -141,25 +43,171 @@
     </div>
     <input type="button" class="addSubmit" value="确定">
 </div>
+<script id="demo_body" type="text/html">
+    <div class="addPerRow clearfix">
+        <div class="addPerLeft"><i>&#42</i>职位名称:</div>
+        <div class="addPerRight">
+            <input type="text" class="addPerInp" name="positionname" value="{{ d.name }}">
+        </div>
+    </div>
+    <div class="addPerRow clearfix">
+        <div class="addPerLeft"><i>&#42</i>职位描述:</div>
+        <div class="addPerRight">
+            <input type="text" class="addPerInp" name="remark" value="{{ d.remark }}"  onkeyup="chkLength(this,30)">
+        </div>
+    </div>
+    <div class="addPerRow clearfix">
+        <div class="addPerLeft"><i>&#42</i>所属部门:</div>
+        <div class="addPerRight" >
+            <div class="selectbox l">
+                <dl class="select" id="dp-list">
+                    <dt>
+                    <div class="select_title l">请选择部门</div>
+                    <div class="arrow r" ></div>
+                    </dt>
+                </dl>
+                <input type="hidden" name="department_id" value="{{ d.department_id }}">
+            </div>
+        </div>
+    </div>
+    <div class="addPerRow clearfix">
+        <div class="addPerLeft"><i>&#42</i>直属上级:</div>
+        <div class="addPerRight">
+            <div class="selectbox l">
+                <dl class="select" id="role-list">
+                    <dt>
+                    <div class="select_title l">请选择上级</div>
+                    <div class="arrow r" ></div>
+                    </dt>
+                </dl>
+                <input type="hidden" name="pid" value="{{ d.pid }}">
+            </div>
+        </div>
+    </div>
+    <div class="addPerRow clearfix">
+        <div class="addPerLeft"><i>&#42</i>权限设置:</div>
+        <div class="addPerRight">
+            <span class="selectPermissions">选择权限</span>
+        </div>
+    </div>
+    <div class="addPerRow clearfix">
+        <div class="addPerLeft"><i>&#42</i>状态:</div>
+        <div class="addPerRight">
+            <label for="radio1">
+                <input type="radio" name="display" class="addPerRadio" id="radio1" value="1">
+                <span>启用</span>
+            </label>
+            <label for="radio2">
+                <input type="radio" name="display" class="addPerRadio" id="radio2" value="0">
+                <span>禁用</span>
+            </label>
+        </div>
+    </div>
+    <div class="addPerRow clearfix">
+        <div class="addPerLeft"><i>&#42</i>排序:</div>
+        <div class="addPerRight">
+            <input type="tel" class="addPerInp w118" name="sort" value="{{ d.sort }}">
+        </div>
+    </div>
+    <div class="addPerRow clearfix">
+        <div class="addPerLeft">&nbsp;</div>
+        <div class="addPerRight">
+            <input type="submit" class="addPerSubmit" value="提交">
+        </div>
+    </div>
+</script>
+<!--部门列表模版-->
+<script id="demo" type="text/html">
+    <dt>
+    <div class="select_title l" >请选择部门</div>
+    <div class="arrow r" ></div>
+    </dt>
+    <!-- 代码-->
+    {{# layui.each(d, function(k, v){ }}
+    <dd class="fxDone" data-value="{{ v.department_id }}">{{ v.departmentname }}</dd>
+    {{#  }); }}
+</script>
+<!--职位列表模版-->
+<script id="demo2" type="text/html">
+    <dt>
+    <div class="select_title l">请选择上级</div>
+    <div class="arrow r" ></div>
+    </dt>
+    <!-- 代码-->
+    <dd class="fxDone" data-value="0">顶级</dd>
+    <!-- 代码-->
+    {{# layui.each(d, function(k, v){ }}
+    <dd class="fxDone" data-value="{{ v.id }}">{{ v.name }}</dd>
+    {{#  }); }}
+</script>
 <script src="__PUBLIC__/js/jquery-1.7.2.js"></script>
+<script src="__PUBLIC__/js/layui/layui.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
+<script src="__PUBLIC__/js/addPermissions.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
 <script src="__PUBLIC__/js/jquery.treetable.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        var data = {
+            role_id:$.getUrlParam('role_id')
+        };
+        //获取职位详情
+        common_ajax2(data,'/SystemApi/Role/getRoleInfo','no',function(redata){
+            if(redata.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo_body.innerHTML).render(redata.data, function(result){
+                        $('.addPerMiddle').html(result);
+                    });
+                });
+            };
+        },1);
+        //获取部门列表
+        common_ajax2('','/SystemApi/Department/getDepartmentList','no',function(redata){
+            if(redata.data.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo.innerHTML).render(redata.data.data, function(result){
+                        $('#dp-list').html(result);
+                    });
+                });
+            };
+        },1);
+        //获取职位列表
+        common_ajax2('','/SystemApi/Role/getRoleList','no',function(redata){
+            if(redata.data.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo2.innerHTML).render(redata.data.data, function(result){
+                        $('#role-list').html(result);
+                    });
+                });
+            };
+        },1);
         //树配置
         $("#boxTabel").treeTable({
             expandable: true,
         });
         //获取已有权限
-        var on_nodes='{$data[\'roleAccess\']}';
-        on_nodes = on_nodes.split(',');
-        if(on_nodes.length>0){
-            for(var i=0;i<on_nodes.length;i++){
-                $('#node-'+on_nodes[i]).children().children('.radio').attr('checked',true);
-            }
-        }
+        common_ajax2(data,'/SystemApi/Role/getRoleNode','no',function(reflag){
+            if(reflag.code && reflag.code!=0){
+                layer.closeAll();
+                layer.msg(reflag.msg,{icon:2});
+            }else{
+                layer.closeAll('loading');
+                var on_nodes=reflag.data;
+                if(on_nodes!=null){
+                    on_nodes = on_nodes.split(',');
+                    if(on_nodes){
+                        for(var i=0;i<on_nodes.length;i++){
+                            $('#node-'+on_nodes[i]).children().children('.radio').attr('checked',true);
+                        }
+                    };
+                };
+            };
+        },1);
         //提交
-        $('.addPerSubmit').click(function() {
+        $(document).on('click','.addPerSubmit',function() {
             //获取node_id
             var access='';
             if($('.radio:checked').length>0){
@@ -182,12 +230,16 @@
                 display:$(':input[name="display"]:checked').val(),
                 access:access
             };
-            common_ajax(data);
+            common_ajax2(data,'/SystemApi/Role/editRole',0,function(redata){
+                if(redata.code!=0){
+                    layer.msg(redata.msg,{icon:2});
+                }else{
+                    window.location.href = "{:U('/System/Personnel/position')}";
+                };
+            });
         });
     });
 </script>
-<script src="__PUBLIC__/js/addPermissions.js"></script>
-<script src="__PUBLIC__/js/common.js"></script>
 </body>
 
 </html>
