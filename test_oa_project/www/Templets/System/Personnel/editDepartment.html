@@ -5,6 +5,7 @@
 		<title>系统首页-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/organization.css">
+		<link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
 	</head>
 	<body>
 		<div class="wrapBox" id="departWrap">
@@ -15,37 +16,64 @@
 						<span><em>&gt;</em>修改部门 </span>
 					</div>
 					<div class="topRight r">
-						<a href="{:U('System/Personnel/department')}" class="return">返回</a>
+						<a href="javascript:history.go(-1)" class="return">返回</a>
 					</div>
 				</div>
 				<div class="departmentCont">
-					<div class="dtRows clearfix">
-						<div class="dtLeft"><i>*</i>部门名称:</div>
-						<div class="dtRight">
-							<input type="text" class="dtInp" name="departmentname" value="{$data['department']['departmentname']}">
-						</div>
-					</div><div class="dtRows clearfix">
-						<div class="dtLeft">&nbsp;</div>
-						<div class="dtRight">
-							<input type="submit" class="dtSubmitBtn" value="提交">
-						</div>
-					</div>
+
 				</div>
 			</div>	
 		</div>
 
+		<!--列表模版-->
+		<script id="demo" type="text/html">
+			<div class="dtRows clearfix">
+				<div class="dtLeft"><i>*</i>部门名称:</div>
+				<div class="dtRight">
+					<input type="text" class="dtInp" name="departmentname" value="{{ d.departmentname }}">
+				</div>
+			</div>
+			<div class="dtRows clearfix">
+				<div class="dtLeft">&nbsp;</div>
+				<div class="dtRight">
+					<input type="submit" class="dtSubmitBtn" value="提交">
+				</div>
+			</div>
+		</script>
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layui/layui.js"></script>
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/common.js"></script>
 		<script>
 			$(function(){
-				$('.dtSubmitBtn').click(function() {
+				//获取详情
+				var data = {
+					department_id : $.getUrlParam('dep_id')
+				};
+				common_ajax2(data,'/SystemApi/Department/getDepartmentInfo','no',_setHtml,1);
+				function _setHtml(redata){
+					layui.use('laytpl', function(){
+						var laytpl = layui.laytpl;
+						laytpl(demo.innerHTML).render(redata.data, function(result){
+							$('.departmentCont').html(result);
+						});
+					});
+				};
+				//提交
+				$(document).on('click','.dtSubmitBtn',function() {
 					var data = {
+						department_id : $.getUrlParam('dep_id'),
 						departmentname:$(':input[name="departmentname"]').val()
 					};
-					common_ajax(data);
+					common_ajax2(data,'/SystemApi/Department/editDepartment',0,function(redata){
+						if(redata.code!=0){
+							layer.msg(redata.msg,{icon:2});
+						}else{
+							window.location.href = "{:U('/System/Personnel/department')}";
+						};
+					});
 				});
 			});
 		</script>
-		<script src="__PUBLIC__/js/common.js"></script>
 	</body>
 </html>

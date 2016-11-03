@@ -33,16 +33,6 @@ class PersonnelController extends SystemController {
      */
     public function addDepartment()
     {
-        if(IS_POST) {
-            //获取参数 验证
-            $departmentname = I('post.departmentname',null);
-            $result = D('Department','Service')->addDepartment(array('departmentname'=>$departmentname));
-            //添加部门成功
-            if($result['code']==0){
-                $this->ajaxReturn(0,'添加部门成功',U('System/Personnel/department'));
-            }
-            $this->ajaxReturn($result['code'],$result['msg']);
-        }
         $this->display();
     }
     /**
@@ -53,63 +43,7 @@ class PersonnelController extends SystemController {
     {
         $department_id = I('get.dep_id',null);
         if( empty($department_id) )$this->error('非法请求！');
-        if(IS_POST) {
-            //获取参数 验证
-            $departmentname = I('post.departmentname',null);
-            $requery_data['departmentname'] = $departmentname;
-            $requery_data['department_id'] = $department_id;
-            $result = D('Department','Service')->editDepartment($requery_data);
-            //修改部门
-            if($result['code']==0){
-                $this->ajaxReturn(0,'部门修改成功',U('System/Personnel/department'));
-            }
-            $this->ajaxReturn($result['code'],$result['msg']);
-        }
-        //获取相关部门详情
-        $department = D('Department','Service')->getDepartmentInfo(array('department_id'=>$department_id));
-        $data['department'] = $department['data'];
-        $this->assign('data', $data);
         $this->display();
-    }
-    /**
-     * 部门管理-操作页(删除/修改排序)
-     * @author zgt
-     */
-    public function dispostDepartment()
-    {
-        if(IS_POST) {
-            //获取参数 验证
-            $department_id = I('post.departmentname_id',null);
-            $type = I('post.type',null);
-            if( isset($type) && $type=='del' ){
-                $requery_data['department_id'] = $department_id;
-                $result = D('Department','Service')->delDepartment($requery_data);
-                //删除部门
-                if($result['code']==0){
-                    $this->ajaxReturn(0,'数据删除成功',U('System/Personnel/department'));
-                }
-                $this->ajaxReturn($result['code'],$result['msg']);
-            }else if( isset($type) && $type=='sort' ){
-                $sort_data = I('post.sort_data','');
-                if(empty($sort_data)) $this->ajaxReturn(1, '请输入要修改的排序值');
-				if($sort_data!='') {
-					$sort_data=explode(',',$sort_data);
-					$new_sort_data=array();
-					foreach($sort_data  as $k=>$v) {
-						$tmp=explode('-',$v);
-						$new_sort_data[$tmp[0]]=$tmp[1];
-					}
-					$result = D('Department')->batch_update($new_sort_data,'department_id','sort');
-                    //排序修改
-                    if($result!==false){
-                        F('Cache/department', null);
-                        $this->ajaxReturn(0, '排序修改成功', U('System/Personnel/position'));
-                    }else{
-                        $this->ajaxReturn(1, '排序修改失败');
-                    }
-				}
-            }
-        }
     }
 
     /*

@@ -39,22 +39,14 @@ class DepartmentController extends SystemApiController
 
     /*
    |--------------------------------------------------------------------------
-   | 添加课程列表
+   | 添加部门
    |--------------------------------------------------------------------------
    | @author zgt
    */
     public function addDepartment()
     {
         //获取请求？
-        $param['coursename'] = I('param.coursename',null);
-        $param['type'] = I('param.type',null);
-        $param['keywords'] = I('param.keywords',null);
-        $param['description'] = I('param.description',null);
-        $param['pic'] = I('param.pic',null);
-        $param['litpic'] = I('param.litpic',null);
-        $param['sortrank'] = I('param.sortrank',null);
-        $param['body'] = I('param.body',null);
-        $param['tpl'] = I('param.tpl',null);
+        $param['departmentname'] = I('param.departmentname',null);
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
@@ -69,23 +61,15 @@ class DepartmentController extends SystemApiController
 
     /*
    |--------------------------------------------------------------------------
-   | 修改课程列表
+   | 修改部门详情
    |--------------------------------------------------------------------------
    | @author zgt
    */
     public function editDepartment()
     {
         //获取请求？
-        $param['course_id'] = I('param.course_id',null);
-        $param['coursename'] = I('param.coursename',null);
-        $param['type'] = I('param.type',null);
-        $param['keywords'] = I('param.keywords',null);
-        $param['description'] = I('param.description',null);
-        $param['pic'] = I('param.pic',null);
-        $param['litpic'] = I('param.litpic',null);
-        $param['sortrank'] = I('param.sortrank',null);
-        $param['body'] = I('param.body',null);
-        $param['tpl'] = I('param.tpl',null);
+        $param['department_id'] = I('param.department_id',null);
+        $param['departmentname'] = I('param.departmentname',null);
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
@@ -106,7 +90,7 @@ class DepartmentController extends SystemApiController
     public function delDepartment()
     {
         //获取请求？
-        $param['channel_id'] = I('param.channel_id',null);
+        $param['department_id'] = I('param.department_id',null);
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
@@ -127,7 +111,7 @@ class DepartmentController extends SystemApiController
     public function getDepartmentInfo()
     {
         //获取请求？
-        $param['channel_id'] = I('param.channel_id',null);
+        $param['department_id'] = I('param.department_id',null);
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
@@ -137,5 +121,37 @@ class DepartmentController extends SystemApiController
             $this->ajaxReturn(0,'获取成功',$result['data']);
         }
         $this->ajaxReturn($result['code'],$result['msg']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 修改部门排序
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function editDepartmentSort()
+    {
+        //获取请求？
+        $param['sort_data'] = I('param.sort_data',null);
+        //去除数组空值
+        $param = array_filter($param);
+        if(empty($param['sort_data'])) $this->ajaxReturn(301, '请输入要修改的排序值');
+        $sort_data = $param['sort_data'];
+        if($sort_data!='') {
+            $sort_data=explode(',',$sort_data);
+            $new_sort_data=array();
+            foreach($sort_data  as $k=>$v) {
+                $tmp=explode('-',$v);
+                $new_sort_data[$tmp[0]]=$tmp[1];
+            }
+            $result = D('Department')->batch_update($new_sort_data,'department_id','sort');
+            //排序修改
+            if($result!==false){
+                F('Cache/department', null);
+                $this->ajaxReturn(0, '排序修改成功');
+            }else{
+                $this->ajaxReturn(100, '排序修改失败');
+            }
+        }
     }
 }
