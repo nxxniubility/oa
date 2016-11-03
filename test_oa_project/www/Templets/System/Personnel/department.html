@@ -87,11 +87,13 @@
 		<script>
 			$(function(){
 				//获取页面参数
-				var page = $.getUrlParam('page',1);
-				var order = $.getUrlParam('order');
-				getAjax(page,order);
+				getAjax();
 				//获取列表内容
 				function getAjax(page){
+					if(!page){
+						page = 1;
+					};
+					var order = $.getUrlParam('order');
 					var data = {
 						order:order,
 						page: ((page-1)*15)+',15'
@@ -112,15 +114,16 @@
 									cont:  $('.paging')
 									,pages:  Math.ceil(redata.data.count/15) //总页数
 									,groups: 5 //连续显示分页数
-									,first:'首页'
-									,last:'尾页'
+									,first: '首页'
+									,last: '尾页'
 									,skin: '#4dbe88'
-									,curr: page
+									,curr: location.hash.replace('#!page=', '') //获取hash值为fenye的当前页
+									,hash: 'page' //自定义hash值
 									,jump: function(obj, first){
 										//得到了当前页，用于向服务端请求对应数据
 										var curr = obj.curr;
 										if(!first){
-											location.href=$.getUrl('page',curr);
+											getAjax(curr);
 										}
 									}
 								});
@@ -143,7 +146,6 @@
 						type:'sort'
 					};
 					common_ajax2(data,'{$data[\'url_dispostDepartment\']}','reload');
-					
 				});
 				//修改排序值
 				$('.SequenceInp').blur(function(){
