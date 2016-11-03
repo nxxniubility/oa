@@ -51,6 +51,7 @@
 						if(redata.code!=0){
 							layer.msg(redata.msg,{icon:2});
 						}else{
+							layer.msg('操作成功',{icon:1});
 							window.location.href = "{:U('/System/Personnel/department')}";
 						};
 					});

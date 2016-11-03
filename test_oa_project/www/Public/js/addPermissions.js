@@ -1,6 +1,6 @@
 $(document).ready(function(){
-	selectbox();
-	checknode();
+    selectbox();
+    checknode();
 });
 //下拉框
 function selectbox() {
@@ -68,7 +68,7 @@ function otherSelectStatus() {
 }
 
 /*添加新/编辑模版*/
-$('.selectPermissions').on('click', function() {
+$(document).on('click','.selectPermissions', function() {
     layer.open({
         type: 1, //  页面层
         title: false, //    不显示标题栏
