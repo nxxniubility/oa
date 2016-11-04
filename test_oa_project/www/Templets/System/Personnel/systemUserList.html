@@ -23,7 +23,7 @@
 				</div>
 				<div class="feMiddle">
 					<div class="feMiddleTop">
-						<form id="foem1" action="{:U('System/Personnel/systemUserList')}" method="get" target="main" onsubmit="return false;">
+						<form id="foem1" action="{:U('System/Personnel/systemUserList')}" method="get" >
 							<div class="selectbox2 area l" id="role_li">
 								<dl class="select">
 									<dt>
@@ -32,41 +32,15 @@
 									</dt>
 								</dl>
 							</div>
-							<?php if(!empty($data['zoneAll']['level']) && $data['zoneAll']['level']<4 ){ ?>
-							<div class="selectbox2 area l">
-								<dl class="select2">
+							<div class="selectbox2 area l" id="zone_li">
+								<dl class="select">
 									<dt>
-										<div class="select_title l">选择大区及城市</div>
-										<div class="arrow r"></div>
+									<div class="select_title l">选择大区及城市</div>
+									<div class="arrow r"></div>
 									</dt>
-									<?php if(!empty($data['zoneAll']['level']) && $data['zoneAll']['level']==1){ ?>
-									<dt class="caption2">
-										<div class="select_title3 l dt_btn" data-name='zone_id' onclick="getArea();" data-value="{$data['zoneAll']['zone_id']}">总部</div>
-									</dt>
-									<?php } ?>
-									<?php if(!empty($data['zoneAll']['level']) && $data['zoneAll']['level']<4 ){ ?>
-										<foreach name="data['zoneAll']['children']" item="v" key="k">
-											<?php if( $v['level'] == 2 ){ ?>
-												<?php if( !empty($v['children']) ){ ?>
-													<dt class="caption">
-														<div class="select_title2 l dt_btn" onclick="getArea();" data-name='zone_id' data-value="{$v.zone_id}">{$v.name}</div>
-													</dt>
-													<?php if( !empty($v['children']) ){ ?>
-														<foreach name="v['children']" item="v2" key="k2">
-															<dd class="fxDone" onclick="getArea('{$v2.zone_id}');" data-name='zone_id' data-value="{$v2.zone_id}">{$v2.name}</dd>
-														</foreach>
-													<?php } ?>
-												<?php } ?>
-											<?php }else{ ?>
-												<dd class="fxDone" onclick="getArea('{$v.zone_id}');" data-name='zone_id' data-value="{$v.zone_id}">{$v.name}</dd>
-											<?php } ?>
-										</foreach>
-									<?php } ?>
 								</dl>
 							</div>
-							<?php } ?>
 							<div class="selectbox chooseCenter l" id="areaBody" style="display: none"></div>
-							<input type="hidden" name="zone_id" value="<?php echo !empty($data['requery']['zone_id'])?$data['requery']['zone_id']:0; ?>">
 							<div class="selectbox employeeStatus l" id="usertype_li">
 								<dl class="select">
 									<dt>
@@ -79,7 +53,7 @@
 								<div class="selectbox searchInp l">
 									<dl class="select">
 										<dt>
-											<div class="select_title l"><?php echo $data['requery']['key_name']=='realname'?'真实姓名':($data['requery']['key_name']=='email'?'电子邮箱':($data['requery']['key_name']=='system_user_id'?'用户ID':'请选择搜索类型')) ?></div>
+											<div class="select_title l">请选择搜索类型</div>
 											<div class="arrow r"></div>
 										</dt>
 										<dd class="fxDone" data-value="realname">真实姓名</dd>
@@ -95,7 +69,6 @@
 						</form>
 					</div>
 					<div class="feMiddleTop" id="pjax_body">
-						
 
 					</div>
 					<dl class="feOptions clearfix">
@@ -226,15 +199,13 @@
 			</table>
 		</script>
 		<!--列表模版-->
-		<script id="demo2" type="text/html">
+		<script id="demo1" type="text/html">
 			<dl class="select2">
 				<dt>
 					<div class="select_title l">全部职位</div>
 					<div class="arrow r"></div>
 				</dt>
-				<dt class="caption">
-				<div class="select_title2 l dt_btn" data-name="role_id" data-value="0">全部职位</div>
-				</dt>
+				<dd class="fxDone" data-name="role_id" data-value="0">全部职位</dd>
 				{{# layui.each(d, function(k, v){ }}
 					<dt class="caption">
 					<div class="select_title2 l " data-name="role_id" data-value="{{ v.department_id }}">{{ v.departmentname }}</div>
@@ -245,6 +216,25 @@
 				{{# }); }}
 			</dl>
 			<input type="hidden" name="role_id" value="{{# $.getUrlParam('role_id'); }}">
+		</script>
+		<script id="demo2" type="text/html">
+			<dl class="select">
+				<dt>
+				<div class="select_title l">选择大区及城市</div>
+				<div class="arrow r"></div>
+				</dt>
+				<dd class="fxDone" data-value="0" data-name="zone_id" style="padding-left: 10px" data-value="{{ d.zone_id }}">{{ d.name }}</dd>
+				{{# layui.each(d.children, function(k, v){ }}
+					<dd class="fxDone" data-name="zone_id" style="padding-left: 20px" data-value="{{ v.zone_id }}">{{ v.name }}</dd>
+					{{# layui.each(v.children, function(k2, v2){ }}
+						<dd class="fxDone" data-name="zone_id" style="padding-left: 30px" data-value="{{ v2.zone_id }}">{{ v2.name }}</dd>
+						{{# layui.each(v2.children, function(k3, v3){ }}
+							<dd class="fxDone" data-name="zone_id" style="padding-left: 40px" data-value="{{ v3.zone_id }}">{{ v3.name }}</dd>
+						{{# }); }}
+					{{# }); }}
+				{{# }); }}
+			</dl>
+			<input type="hidden" name="zone_id" value="{{# $.getUrlParam('zone_id'); }}">
 		</script>
 		<!--列表模版-->
 		<script id="demo3" type="text/html">
@@ -269,79 +259,5 @@
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script src="__PUBLIC__/js/common.js"></script>
 		<script src="__PUBLIC__/js/personnel.systemuserlist.js"></script>
-		<script>
-			//获取页面参数
-			var thisObj = $('#pjax_body');
-			var page = $.getUrlParam('page',1);
-			thisObj.html(getLoding());
-			getAjax(page);
-			//获取列表内容
-			function getAjax(page){
-				var order = $.getUrlParam('order');
-				var data = {
-					zone_id: $.getUrlParam('zone_id'),
-					role_ids: $.getUrlParam('role_id'),
-					realname:"",
-					usertype: $.getUrlParam('usertype',"neq,10"),
-					page: ((page-1)*20)+',20'
-				};
-				common_ajax2(data,'/SystemApi/SystemUser/getSystemUserList','no',function(redata){
-					if(redata.data.data){
-						layui.use('laytpl', function(){
-							var laytpl = layui.laytpl;
-							laytpl(demo.innerHTML).render(redata.data.data, function(result){
-								thisObj.html(result);
-							});
-						});
-					}else{
-						thisObj.html(getNullHint());
-					};
-					//分页
-					if(redata.data.count>0){
-						layui.use(['laypage', 'layer'], function(){
-							var laypage = layui.laypage,layer = layui.layer;
-							laypage({
-								cont:  $('.paging')
-								,pages:  Math.ceil(redata.data.count/20) //总页数
-								,groups: 5 //连续显示分页数
-								,first:'首页'
-								,last:'尾页'
-								,skin: '#4dbe88'
-								,curr: page
-								,jump: function(obj, first){
-									//得到了当前页，用于向服务端请求对应数据
-									var curr = obj.curr;
-									if(!first){
-										location.href=$.getUrl('page',curr);
-									}
-								}
-							});
-						});
-					};
-				},1);
-			};
-			//获取部门职位列表
-			common_ajax2('','/SystemApi/Department/getDepartmentRoleList','no',function(redata){
-				if(redata.data.data){
-					layui.use('laytpl', function(){
-						var laytpl = layui.laytpl;
-						laytpl(demo2.innerHTML).render(redata.data.data, function(result){
-							$('#role_li').html(result);
-						});
-					});
-				};
-			},1);
-			//获取员工状态列表
-			common_ajax2({name:'SYSTEMUSERSTATUS'},'/SystemApi/Config/getStatusList','no',function(redata){
-				if(redata.data){
-					layui.use('laytpl', function(){
-						var laytpl = layui.laytpl;
-						laytpl(demo3.innerHTML).render(redata.data, function(result){
-							$('#usertype_li').html(result);
-						});
-					});
-				};
-			},1);
-		</script>
 	</body>
 </html>
