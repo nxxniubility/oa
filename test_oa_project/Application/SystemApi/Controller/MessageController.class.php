@@ -26,6 +26,7 @@ class MessageController extends SystemApiController
     {
         //获取请求？
         $param['isread'] = I('param.isread',null);
+        $param['msgtype'] = I('param.msgtype',null);
         $param['page'] = I('param.page',null);
         //获取接口服务层
         $result = D('Message','Service')->getMsgList($param);
