@@ -151,7 +151,7 @@
             msgtype : type,
             page : ((page-1)*10)+',10'
         };
-        common_ajax2(data,'/SystemApi/SystemUser/getMsgList','no',_demoHtml,1);
+        common_ajax2(data,'/SystemApi/Message/getMsgList','no',_demoHtml,1);
         function _demoHtml(redata){
             if(redata.code==0){
                 layui.use('laytpl', function(){
