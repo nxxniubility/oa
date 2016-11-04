@@ -225,3 +225,10 @@ a.sort{ display:block; float:left; height:30px; color:#333;  line-height:30px; p
 .user_realname {color:#0055aa;cursor:pointer;}
 .user_realname:hover {color:#4dbd88;text-decoration:underline;}
 
+.news-box {padding: 0 56px;}
+.news-box-empty {background: rgba(0, 0, 0, 0) url("../images/news_icon.png") no-repeat scroll 3px -246px;  color: #a5a5a5;  font-size: 14px;  font-weight: 700;  height: 60px;  line-height: 60px;  margin: 130px auto 0;  padding-left: 70px;  text-align: right;  width: 90px;  }
+.news-box-null {background: rgba(0, 0, 0, 0) url("../images/lose_01-02.png") no-repeat;  color: #a5a5a5;  font-size: 14px;  font-weight: 700;  height: 69px;  line-height: 60px;  margin: 130px auto 0;  padding-left: 70px;  text-align: right;  width: 90px;  }
+
+.news-box-loding {color: #a5a5a5;  font-size: 14px;  font-weight: 700;  height: 60px;  line-height: 60px;  margin: 130px auto 0;  text-align: right;  width: 150px;  }
+.news-box-loding i{font-size: 35px;float: left;}
+.news-box-loding span{line-height: 60px;float: left;}

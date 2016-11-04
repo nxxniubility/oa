@@ -24,13 +24,11 @@ class SystemUserController extends SystemApiController
    */
     public function getSystemUserList()
     {
-        //获取请求？
-        $param['role_ids'] = I('param.role_ids',null);
+        //获取请求？x
         $param['zone_id'] = I('param.zone_id',null);
-        $realname = I('param.realname');
-        $param['realname'] = !empty($realname)?array('LIKE', $realname):null;
+        $param['realname'] = I('param.realname',null);
         $param['usertype'] = I('param.usertype',null);
-        $param['order'] = I('param.role_ids',null);
+        $param['role_ids'] = I('param.role_ids',null);
         $param['page'] = I('param.page',null);
         //去除数组空值
         $param = array_filter($param);

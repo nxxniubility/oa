@@ -56,6 +56,6 @@ class ConfigController extends SystemApiController
         }
 
         //返回参数
-        $this->ajaxReturn(0,'OK',$_re_arr);
+        $this->ajaxReturn(0,'获取成功',$_re_arr);
     }
 }

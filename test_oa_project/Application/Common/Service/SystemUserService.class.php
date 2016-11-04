@@ -619,15 +619,21 @@ class SystemUserService extends BaseService
                 $_array = $array;
             }
             $systemUserStatus = C('FIELD_STATUS.SYSTEMUSERSTATUS');
+            $sexStatus = C('FIELD_STATUS.SEX');
             foreach($_array as $k=>$v){
                 //标识名称
                 $_array[$k]['sign_realname'] = $v['sign'].'-'.$v['realname'];
                 //员工状态
                 $_array[$k]['usertype_name'] = $systemUserStatus[$v['usertype']];
+                //员工性别
+                $_array[$k]['sex_name'] = $sexStatus[$v['sex']];
                 //员工状态
                 $_array[$k]['username'] = decryptPhone($v['username'],  C('PHONE_CODE_KEY'));
                 //区域名称
                 $_where_zone['zone_id'] = $v['zone_id'];
+                //时间
+                $_array[$k]['create_time'] = date('Y-m-d H:i:s',$v['createtime']);
+                $_array[$k]['login_time'] =  ($v['logintime']!=0)?date('Y-m-d H:i:s',$v['logintime']):' ';
                 $zone_list = D('Zone','Service')->getZoneInfo($_where_zone);
                 $_array[$k]['zone_id'] = $zone_list['data']['zone_id'];
                 $_array[$k]['zonelevel'] = $zone_list['data']['level'];

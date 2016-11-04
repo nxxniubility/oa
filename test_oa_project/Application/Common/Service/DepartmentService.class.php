@@ -56,6 +56,24 @@ class DepartmentService extends BaseService
 
     /*
     |--------------------------------------------------------------------------
+    | 获取部门及职位列表
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getDepartmentRoleList()
+    {
+        $department_list = $this->getDepartmentList();
+        if($department_list['data']['data']){
+            foreach($department_list['data']['data'] as $k=>$v){
+                $roel_list = D('Role','Service')->getRoleList(array('department_id'=>$v['department_id']));
+                $department_list['data']['data'][$k]['children'] = $roel_list['data']['data'];
+            }
+        }
+        return array('code'=>'0', 'data'=>$department_list['data']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | 添加部门---更新文件缓存
     |--------------------------------------------------------------------------
     | @author zgt
