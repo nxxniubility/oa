@@ -72,4 +72,24 @@ class MessageController extends SystemApiController
         }
         $this->ajaxReturn($result['code'],$result['msg']);
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 删除消息
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function delMsg()
+    {
+        $param['message_id'] = I('param.message_id', null);
+        $msg_list = D('Message', 'Service')->delMsg($param);
+        if ($msg_list['code']==0) {
+            $this->ajaxReturn(0, '删除成功', $msg_list['data']);
+        }
+        else {
+            $this->ajaxReturn($msg_list['code'], $msg_list['msg']);
+        }
+    }
+
 }

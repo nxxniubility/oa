@@ -322,58 +322,24 @@ class SystemUserController extends SystemApiController
         
     // }
 
-    /*
-    |--------------------------------------------------------------------------
-    | 获取消息列表
-    |--------------------------------------------------------------------------
-    | @author nxx
-    */
-    public function getMsgList()
-    {
-        $msg_list = D('Message', 'Service')->getMsgList($request);
-        // }
-        if ($msg_list['code']==0) {
-            $this->ajaxReturn(0, '获取成功', $msg_list['data']);
-        }
-        else {
-            $this->ajaxReturn($msg_list['code'], $msg_list['msg']);
-        }
-    }
+    // /*
+    // |--------------------------------------------------------------------------
+    // | 获取消息列表
+    // |--------------------------------------------------------------------------
+    // | @author nxx
+    // */
+    // public function getMsgList()
+    // {
+    //     $param['msgtype'] = I('param.msgtype', null);
+    //     $msg_list = D('Message', 'Service')->getMsgList($request);
+    //     // }
+    //     if ($msg_list['code']==0) {
+    //         $this->ajaxReturn(0, '获取成功', $msg_list['data']);
+    //     }
+    //     else {
+    //         $this->ajaxReturn($msg_list['code'], $msg_list['msg']);
+    //     }
+    // }
 
-    /*
-    |--------------------------------------------------------------------------
-    | 获取消息列表
-    |--------------------------------------------------------------------------
-    | @author nxx
-    */
-    public function getMsgInfo()
-    {
-        $param['message_id'] = I('param.message_id', null);
-        $msg_list = D('Message', 'Service')->getMsgInfo($param);
-        if ($msg_list['code']==0) {
-            $this->ajaxReturn(0, '获取成功', $msg_list['data']);
-        }
-        else {
-            $this->ajaxReturn($msg_list['code'], $msg_list['msg']);
-        }
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 获取消息列表
-    |--------------------------------------------------------------------------
-    | @author nxx
-    */
-    public function delMsg()
-    {
-        $param['message_id'] = I('param.message_id', null);
-        $msg_list = D('Message', 'Service')->delMsg($param);
-        if ($msg_list['code']==0) {
-            $this->ajaxReturn(0, '删除成功', $msg_list['data']);
-        }
-        else {
-            $this->ajaxReturn($msg_list['code'], $msg_list['msg']);
-        }
-    }
-
+    
 }
