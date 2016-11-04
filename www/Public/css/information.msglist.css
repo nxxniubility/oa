@@ -49,8 +49,6 @@
 .numbeer_list tr.curr th, .numbeer_list tr.curr td, .numbeer_list tr.curr a {color:#767676;}
 
 
-.news-box {padding: 0 56px;}
-.news-box-empty {background: rgba(0, 0, 0, 0) url("../images/news_icon.png") no-repeat scroll 3px -246px;  color: #a5a5a5;  font-size: 14px;  font-weight: 700;  height: 60px;  line-height: 60px;  margin: 130px auto 0;  padding-left: 70px;  text-align: right;  width: 90px;  }
 
 .msg_list{width: 100%;position: relative;overflow: hidden;border: 1px dashed #ddd;color: #666;margin-top: 8px;cursor: pointer}
 

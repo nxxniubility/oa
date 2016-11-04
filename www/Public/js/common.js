@@ -209,3 +209,15 @@ function common_ajax2(data,url,loca,fun,showload){
         return _url;
     };
 })(jQuery);
+function getLoding(val){
+    if(!val){
+        val = '正在加载中...';
+    };
+    return '<div class="news-box"> <div class="news-box-loding"> <p><i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop">&#xe63e;</i><span> '+val+'</span></p> </div> </div>';
+};
+function getNullHint(val){
+    if(!val){
+        val = '暂无数据';
+    };
+    return '<div class="news-box"> <div class="news-box-null"> <p>'+val+'</p> </div> </div>';
+};

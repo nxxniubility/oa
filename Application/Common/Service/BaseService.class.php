@@ -112,13 +112,31 @@ class BaseService extends BaseModel {
                 }
             }else{
                 if( count(explode(',', $value))>1 ){
-                    if(in_array($v[$key],explode(',', $value))) $department_new[] = $v;
+                    $value = $value_arr = explode(',', $value);
+                    unset($value_arr[0]);
+                    if(strtoupper($value[0])=='IN'){
+                        if(is_array($v[$key])){
+                            if(array_intersect($v[$key],$value_arr)){
+                                $department_new[] = $v;
+                            }
+                        }elseif(in_array($v[$key],$value_arr)) {
+                            $department_new[] = $v;
+                        }
+                    }elseif(strtoupper($value[0])=='NEQ'){
+                        if(!in_array($v[$key],$value_arr)) $department_new[] = $v;
+                    }elseif(strtoupper($value[0])=='LIKE'){
+                        if(strpos($v[$key], $value_arr[0])!==false) $department_new[] = $v;
+                    }elseif(in_array($v[$key],$value)){
+                        $department_new[] = $v;
+                    }
                 }else{
                     if(is_array($v[$key])){
                         if(in_array($value, $v[$key])){
                             $department_new[] = $v;
                         }
-                    }elseif($v[$key]==$value) $department_new[] = $v;
+                    }elseif($v[$key]==$value) {
+                        $department_new[] = $v;
+                    }
                 }
             }
         }

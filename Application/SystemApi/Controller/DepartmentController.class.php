@@ -39,6 +39,23 @@ class DepartmentController extends SystemApiController
 
     /*
    |--------------------------------------------------------------------------
+   | 获取部门及职位列表
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function getDepartmentRoleList()
+    {
+        //获取接口服务层
+        $result = D('Department','Service')->getDepartmentRoleList();
+        //返回参数
+        if($result['code']==0){
+            $this->ajaxReturn(0,'获取成功',$result['data']);
+        }
+        $this->ajaxReturn($result['code'],$result['msg']);
+    }
+
+    /*
+   |--------------------------------------------------------------------------
    | 添加部门
    |--------------------------------------------------------------------------
    | @author zgt

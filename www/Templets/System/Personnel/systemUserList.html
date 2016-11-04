@@ -6,10 +6,8 @@
 		<title>系统首页-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/employeesList.css">
+		<link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-		<script>
-			var jump_code = "{$jump_code}";
-		</script>
 	</head>
 	<body>
 		<div class="wrapBox" id="sUserWrap">
@@ -26,35 +24,13 @@
 				<div class="feMiddle">
 					<div class="feMiddleTop">
 						<form id="foem1" action="{:U('System/Personnel/systemUserList')}" method="get" target="main" onsubmit="return false;">
-							<div class="selectbox2 area l">
-								<dl class="select2">
+							<div class="selectbox2 area l" id="role_li">
+								<dl class="select">
 									<dt>
-										<if condition="$data['requery']['role_id'] eq 0">
-											<div class="select_title l">全部职位</div>
-										<else />
-											<foreach name="data['roleAll']['data']" item="v" key="k">
-												<if condition="($v['id'] eq $data['requery']['role_id'])">
-													<div class="select_title l">{$v.name}</div>
-												</if>
-											</foreach>
-										</if>
-										<div class="arrow r"></div>
+									<div class="select_title l">全部职位</div>
+									<div class="arrow r"></div>
 									</dt>
-									<dt class="caption">
-										<div class="select_title2 l dt_btn" data-name="role_id" data-value="0">全部职位</div>
-									</dt>
-									<foreach name="data['departmentAll']['data']" item="v" key="k">
-										<dt class="caption">
-											<div class="select_title2 l " data-name="role_id" data-value="{$v2.id}">{$v.departmentname}</div>
-										</dt>
-										<foreach name="data['roleAll']['data']" item="v2" key="k2">
-											<if condition="$v['department_id'] eq $v2['department_id']">
-												<dd class="fxDone" data-name="role_id" data-value="{$v2.id}">{$v2.name}</dd>
-											</if>
-										</foreach>
-									</foreach>
 								</dl>
-								<input type="hidden" name="role_id" value="<?php echo !empty($data['requery']['role_id'])?$data['requery']['role_id']:0; ?>">
 							</div>
 							<?php if(!empty($data['zoneAll']['level']) && $data['zoneAll']['level']<4 ){ ?>
 							<div class="selectbox2 area l">
@@ -91,18 +67,13 @@
 							<?php } ?>
 							<div class="selectbox chooseCenter l" id="areaBody" style="display: none"></div>
 							<input type="hidden" name="zone_id" value="<?php echo !empty($data['requery']['zone_id'])?$data['requery']['zone_id']:0; ?>">
-							<div class="selectbox employeeStatus l">
+							<div class="selectbox employeeStatus l" id="usertype_li">
 								<dl class="select">
 									<dt>
-										<div class="select_title l"><?php echo $data['requery']['usertype']==14?'正式员工':($data['requery']['usertype']==13?'试用期':($data['requery']['usertype']==12?'实习生':($data['requery']['usertype']==11?'兼职':'全部员工状态'))) ?></div>
-										<div class="arrow r"></div>
+									<div class="select_title l">全部员工状态</div>
+									<div class="arrow r"></div>
 									</dt>
-									<dd class="fxDone" data-value="0" data-name="usertype">全部员工状态</dd>
-									<foreach name="data['systemUserStatus']" item="v" key="k">
-										<dd class="fxDone" data-value="{$k}" data-name="usertype">{$v}</dd>
-									</foreach>
 								</dl>
-								<input type="hidden" name="usertype" value="<?php echo !empty($data['requery']['usertype'])?$data['requery']['usertype']:0; ?>">
 							</div>
 							<div class="feSearchBox l">
 								<div class="selectbox searchInp l">
@@ -123,302 +94,254 @@
 							</div>
 						</form>
 					</div>
-					
-					<div id="pjax_body">
-						<table cellpadding="0" cellspacing="0" id="sUserListTable">
-							<tr>
-								<th class="firItem">选中</th>
-								<th>
-									<span>ID</span>
-								</th>
-								<th>头像</th>
-								<th>真实姓名</th>
-								<th>所属区域</th>
-								<th>所属部门及职位</th>
-								<th>性别</th>
-								<th>员工状态</th>
-								<th>注册时间</th>
-								<th>登录时间</th>
-								<th>操作</th>
-							</tr>
-							
-							<foreach name="data['systemUserAll']['data']" item="v" key="k">
-								<tr>
-									<td class="firItem">
-										<input type="checkbox" name="feCheck" class="feCheckBox" value="{$v.system_user_id}" autocomplete="off">
-									</td>
-									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{$v.system_user_id}</td>
-									
-									<if condition = "!empty($v[face])">
-										<td class="sPic"><img src="{:$v[face].'?x-oss-process=image/resize,m_lfit,w_30'}"></td>
-									<elseif condition="$v[sex] eq 1"/>
-										<td class="sPic"><img src="__PUBLIC__/images/personalInfo_01-02.jpg"></td>
-									<else/>
-										<td class="sPic"><img src="__PUBLIC__/images/personalInfo_01-01.jpg"></td>
-									</if>
-									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{$v.realname}</td>
-									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{$v.zonename}</td>
-									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{$v.role_names}</td>
-									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{:$v['sex']==1?'男':($v['sex']==2?'女':'未知')}</td>
-									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{:$v['usertype_name']}</td>
-									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{:date('Y-m-d H:i:s',$v['createtime'])}</td>
-									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>{:!empty($v['logintime'])?date('Y-m-d H:i:s',$v['logintime']):'--'}</td>
-									<td {:$v['isuserinfo']==0?'style="color:red !important;"':''}>
-										<a href="javascript:;" class="proSelect"><i></i></a>
-										<div class="otherOperation">
-											<div class="triangle"></div>
-					                        <div class="otherIcon">
-					                            <ul>
-													<if condition="($v['isuserinfo'] eq 0)">
-														<li>
-															<a href="javascript:;" onclick="layer.msg('该员工还未添加档案内容',{icon:2});">
-																<span class="fileDetail"></span>
-																<em>档案详情</em>
-															</a>
-														</li>
-													<else />
-														<li>
-															<a href="{:U('System/Personnel/systemUserInfo').'?user_id='.$v['system_user_id']}">
-																<span class="fileDetail"></span>
-																<em>档案详情</em>
-															</a>
-														</li>
-														<li>
-															<a href="{:U('System/Personnel/editSystemUserInfo').'?user_id='.$v['system_user_id']}">
-																<span class="fileChange"></span>
-																<em>修改档案</em>
-															</a>
-														</li>
-													</if>
-													<li>
-														<a href="javascript:;" class="Offline" data-id="{$v['system_user_id']}">
-															<span class="fileChange"></span>
-															<em>强制离线</em>
-														</a>
-													</li>
-					                                <!--<li>
-					                                	<a href="javascript:;" onclick="dayu_call('{$v.username}');">
-						                                    <span class="phone"></span>
-						                                    <em>打电话</em>
-						                                </a>
-					                                </li>
-					                                <li>
-					                                	<a href="javascript:;" onclick="layer.msg('功能暂未开放',{icon:2});">
-						                                    <span class="sendEmail"></span>
-						                                    <em>发邮件</em>
-						                                </a>
-					                                </li>-->
-					                                <li>
-					                                	<a href="javascript:;" class="usertypeBtn">
-						                                    <span class="turnoverSettings"></span>
-						                                    <em>离职设置</em>
-						                                </a>
-					                                </li>
-					                                <li>
-					                                	<a href="<?php echo U('System/Personnel/editSystemUser').'?user_id='.$v['system_user_id']; ?>">
-						                                    <span class="modify"></span>
-						                                    <em>修改账号</em>
-						                                </a>    
-					                                </li>
-					                                <li>
-					                                	<a href="javascript:;" class="delSystemUser">
-						                                    <span class="delete"></span>
-						                                    <em>删除账号</em>
-						                                </a>    
-					                                </li>
-					                            </ul>
-					                        </div>
-					                    </div>
-									</td>
-								</tr>
-							</foreach>
-						</table>
+					<div class="feMiddleTop" id="pjax_body">
 						
-						<dl class="feOptions clearfix">
-							<div class="leftChoose">
-								<label for="feCheckBox1">
-									<input type="checkbox" id="feCheckBox1" value="1" autocomplete="off">
-									<span>全选</span>
-								</label>
-								<input type="button" value="删除所选" class="delInp">
-							</div>
-							<div class="collegaPage" id="paging">
-				                {$data['paging']}
-							</div>
-						</dl>
+
 					</div>
+					<dl class="feOptions clearfix">
+						<div class="leftChoose">
+							<label for="feCheckBox1">
+								<input type="checkbox" id="feCheckBox1" value="1" autocomplete="off">
+								<span>全选</span>
+							</label>
+							<input type="button" value="删除所选" class="delInp">
+						</div>
+						<div class="collegaPage paging" id="paging">
+
+						</div>
+					</dl>
 				</div>
 			</div>
 		</div>
 
-
+		<!--列表模版-->
+		<script id="demo" type="text/html">
+			<table cellpadding="0" cellspacing="0" id="sUserListTable">
+				<tr>
+					<th class="firItem">选中</th>
+					<th>
+						<span>ID</span>
+					</th>
+					<th>头像</th>
+					<th>真实姓名</th>
+					<th>所属区域</th>
+					<th>所属部门及职位</th>
+					<th>性别</th>
+					<th>员工状态</th>
+					<th>注册时间</th>
+					<th>登录时间</th>
+					<th>操作</th>
+				</tr>
+				{{# layui.each(d, function(k, v){ }}
+				<tr>
+					<td class="firItem">
+						<input type="checkbox" name="feCheck" class="feCheckBox" value="{{ v.system_user_id }}" autocomplete="off">
+					</td>
+					{{# if(v.isuserinfo==0){ }}
+					<td style="color:red !important;">{{ v.system_user_id }}</td>
+					{{# }else{ }}
+					<td>{{ v.system_user_id }}</td>
+					{{# } }}
+					{{# if(v.face){ }}
+					<td class="sPic"><img src="{{ v.face }}?x-oss-process=image/resize,m_lfit,w_30"></td>
+					{{# }else if(v.sex==1){ }}
+					<td class="sPic"><img src="__PUBLIC__/images/personalInfo_01-02.jpg"></td>
+					{{# }else{ }}
+					<td class="sPic"><img src="__PUBLIC__/images/personalInfo_01-01.jpg"></td>
+					{{# } }}
+					{{# if(v.isuserinfo==0){ }}
+					<td style="color:red !important;">{{ v.realname }}</td>
+					<td style="color:red !important;">{{ v.zonename }}</td>
+					<td style="color:red !important;">{{ v.role_names }}</td>
+					<td style="color:red !important;">{{ v.sex_name }}</td>
+					<td style="color:red !important;">{{ v.usertype_name }}</td>
+					<td style="color:red !important;">{{ v.create_time }}</td>
+					<td style="color:red !important;">{{ v.login_time }}</td>
+					{{# }else{ }}
+					<td>{{ v.realname }}</td>
+					<td>{{ v.zonename }}</td>
+					<td>{{ v.role_names }}</td>
+					<td>{{ v.sex_name }}</td>
+					<td>{{ v.usertype_name }}</td>
+					<td>{{ v.create_time }}</td>
+					<td>{{ v.login_time }}</td>
+					{{# } }}
+					<td>
+						<a href="javascript:;" class="proSelect"><i></i></a>
+						<div class="otherOperation">
+							<div class="triangle"></div>
+							<div class="otherIcon">
+								<ul>
+									{{# if(v.isuserinfo==0){ }}
+									<li>
+										<a href="javascript:;" onclick="layer.msg('该员工还未添加档案内容',{icon:2});">
+											<span class="fileDetail"></span>
+											<em>档案详情</em>
+										</a>
+									</li>
+									{{# }else{ }}
+									<li>
+										<a href="{:U('System/Personnel/systemUserInfo')}'?user_id={{ v.system_user_id }}">
+											<span class="fileDetail"></span>
+											<em>档案详情</em>
+										</a>
+									</li>
+									<li>
+										<a href="{:U('System/Personnel/editSystemUserInfo')}'?user_id={{ v.system_user_id }}">
+											<span class="fileChange"></span>
+											<em>修改档案</em>
+										</a>
+									</li>
+									{{# } }}
+									<li>
+										<a href="javascript:;" class="Offline" data-id="{{ v.system_user_id }}">
+											<span class="fileChange"></span>
+											<em>强制离线</em>
+										</a>
+									</li>
+									<li>
+										<a href="javascript:;" class="usertypeBtn">
+											<span class="turnoverSettings"></span>
+											<em>离职设置</em>
+										</a>
+									</li>
+									<li>
+										<a href="{:U('System/Personnel/editSystemUser')}'?user_id={{ v.system_user_id }}">
+											<span class="modify"></span>
+											<em>修改账号</em>
+										</a>
+									</li>
+									<li>
+										<a href="javascript:;" class="delSystemUser">
+											<span class="delete"></span>
+											<em>删除账号</em>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</td>
+				</tr>
+				{{#  }); }}
+			</table>
+		</script>
+		<!--列表模版-->
+		<script id="demo2" type="text/html">
+			<dl class="select2">
+				<dt>
+					<div class="select_title l">全部职位</div>
+					<div class="arrow r"></div>
+				</dt>
+				<dt class="caption">
+				<div class="select_title2 l dt_btn" data-name="role_id" data-value="0">全部职位</div>
+				</dt>
+				{{# layui.each(d, function(k, v){ }}
+					<dt class="caption">
+					<div class="select_title2 l " data-name="role_id" data-value="{{ v.department_id }}">{{ v.departmentname }}</div>
+					</dt>
+					{{# layui.each(v.children, function(k2, v2){ }}
+						<dd class="fxDone" data-name="role_id" data-value="{{ v2.id }}">{{ v2.name }}</dd>
+					{{# }); }}
+				{{# }); }}
+			</dl>
+			<input type="hidden" name="role_id" value="{{# $.getUrlParam('role_id'); }}">
+		</script>
+		<!--列表模版-->
+		<script id="demo3" type="text/html">
+			<dl class="select">
+				<dt>
+					<div class="select_title l">全部员工状态</div>
+					<div class="arrow r"></div>
+				</dt>
+				<dd class="fxDone" data-value="0" data-name="usertype">全部员工状态</dd>
+				{{# layui.each(d, function(k, v){ }}
+					{{# if(k!=10){ }}
+					<dd class="fxDone" data-value="{{ k }}" data-name="usertype">{{ v }}</dd>
+					{{# } }}
+				{{# }); }}
+			</dl>
+			<input type="hidden" name="usertype" value="{{# $.getUrlParam('usertype'); }}">
+		</script>
 		<link rel="stylesheet" href="__PUBLIC__/js/pjax/css/nprogress.css">
 		<script type="text/javascript" src="__PUBLIC__/js/pjax/js/jquery.pjax.js"></script>
 		<script type="text/javascript" src="__PUBLIC__/js/pjax/js/nprogress.js"></script>
-
+		<script src="__PUBLIC__/js/layui/layui.js"></script>
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script src="__PUBLIC__/js/common.js"></script>
-		<script src="__PUBLIC__/js/employeesList.js"></script>
+		<script src="__PUBLIC__/js/personnel.systemuserlist.js"></script>
 		<script>
-			$(function(){
-				if(navigator.userAgent.indexOf("MSIE")>0)
-				{
-					if(navigator.userAgent.indexOf("MSIE 6.0")>0)
-					{
-						$('#foem1').attr('onsubmit',' ');
-					}
-					if(navigator.userAgent.indexOf("MSIE 7.0")>0)
-					{
-						$('#foem1').attr('onsubmit',' ');
-					}
-					if(navigator.userAgent.indexOf("MSIE 8.0")>0)
-					{
-						//	alert("ie8");
-						$('#foem1').attr('onsubmit',' ');
-					}
-				}
-				//pjax
-				$(document).pjax('a', '#pjax_body' ,{fragment:'#pjax_body', timeout:8000});
-				$('form').submit(function (event) {
-					$.pjax.submit(event, '#pjax_body', {fragment:'#pjax_body', timeout:6000});
-				});
-				//pjax链接点击后显示加载动画
-				$(document).on('pjax:send', function() {
-					//加载层-默认风格 loading
-					layer.load(2);
-				});
-				//pjax链接加载完成后隐藏加载动画
-				$(document).on('pjax:complete', function() {
-					//此处 关闭loading
-					layer.closeAll('loading');
-				});
-				//全选
-				$('#feCheckBox1').change(function(e){
-					
-					if($(this).is(':checked')){
-						$(":input[name='feCheck']").each(function(){
-							$(this)[0].checked = true 
-						});
-					}else{
-						$(":input[name='feCheck']").each(function(){
-							$(this).removeAttr("checked");
-						});
-						
-					}
-				});
-				//强制离线
-				$(document).on('click','.Offline',function(){
-					var data_id = $(this).attr('data-id');
-					if(data_id==''){
-						var title = '确定要强制离线全体员工吗？';
-					}else{
-						var title = '确定要强制离线该员工吗？';
-					}
-					layer.confirm(title, {
-						btn: ['确定','取消'] //按钮
-					}, function(){
-						var data = {
-							system_user_id : data_id
-						};
-						common_ajax(data,"{:U('System/Personnel/SystemUserOffline')}", 'no');
-					}, function(){});
-				});
-				//离职设置-前置判断
-				$(document).on('click','.usertypeBtn',function(){
-					var system_user_id = $(this).parents('tr').children('td').eq(1).text();
-					var data = {
-						system_user_id:system_user_id,
-						type:'usertype'
-					};
-					layer.confirm('确定要设置离职？如该员工拥有客户，将被全部回库！', {
-						btn: ['确定','取消'] //按钮
-					}, function(){
-						common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
-					}, function(){});
-				})
-				//账号删除
-				$(document).on('click','.delSystemUser',function(){
-					var system_user_id = $(this).parents('tr').children('td').eq(1).text();
-					var data = {
-						system_user_id:system_user_id,
-						type:'del'
-					};
-					layer.confirm('确定要删除该账号？', {
-						btn: ['确定','取消'] //按钮
-					}, function(){
-						common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
-					}, function(){});
-				});
-				//账号批量删除
-				$(document).on('click','.delInp',function(){
-					var users = '';
-					$(':input[name="feCheck"]:checked').each(function(k,v){
-						if(k==0){
-							users = $(this).val();
-						}else{
-							users += ','+$(this).val();
-						}
-					});
-					var data = {
-						users:users,
-						type:'dels'
-					};
-					layer.confirm('确定要批量删除选中的账号？', {
-						btn: ['确定','取消'] //按钮
-					}, function(){
-						common_ajax(data,"{:U('System/Personnel/dispostSystemUser')}",'reload');
-					}, function(){});
-				});
-			});
-			//获取中心
-			function getArea(zoneid){
-				if(zoneid){
-					$.ajax({
-						url:"{:U('System/Personnel/getZoneList')}",
-						dataType:'json',
-						type:'post',
-						data:{zone_id:zoneid},
-						success:function(redata){
-							if(redata.code==0) {
-								if(redata.data.children.length!=''){
-									$('#areaBody').show();
-									var str = '<dl class="select2"><dt><div class="select_title l">所有中心</div> <div class="arrow r"></div></dt>';
-									$.each(redata.data.children, function (n, value) {
-										str += '<dd class="fxDone" data-name="zone_id" data-value="'+value.zone_id+'">'+value.name+'</dd>'
-									});
-									str += '</dl>';
-									$('#areaBody').html(str);
-								}else{
-									$('#areaBody').hide();
-								}
-							}
-						}
-					});
-				}else{
-					$('#areaBody').hide();
+			//获取页面参数
+			var thisObj = $('#pjax_body');
+			var page = $.getUrlParam('page',1);
+			thisObj.html(getLoding());
+			getAjax(page);
+			//获取列表内容
+			function getAjax(page){
+				var order = $.getUrlParam('order');
+				var data = {
+					zone_id: $.getUrlParam('zone_id'),
+					role_ids: $.getUrlParam('role_id'),
+					realname:"",
+					usertype: $.getUrlParam('usertype',"neq,10"),
+					page: ((page-1)*20)+',20'
 				};
+				common_ajax2(data,'/SystemApi/SystemUser/getSystemUserList','no',function(redata){
+					if(redata.data.data){
+						layui.use('laytpl', function(){
+							var laytpl = layui.laytpl;
+							laytpl(demo.innerHTML).render(redata.data.data, function(result){
+								thisObj.html(result);
+							});
+						});
+					}else{
+						thisObj.html(getNullHint());
+					};
+					//分页
+					if(redata.data.count>0){
+						layui.use(['laypage', 'layer'], function(){
+							var laypage = layui.laypage,layer = layui.layer;
+							laypage({
+								cont:  $('.paging')
+								,pages:  Math.ceil(redata.data.count/20) //总页数
+								,groups: 5 //连续显示分页数
+								,first:'首页'
+								,last:'尾页'
+								,skin: '#4dbe88'
+								,curr: page
+								,jump: function(obj, first){
+									//得到了当前页，用于向服务端请求对应数据
+									var curr = obj.curr;
+									if(!first){
+										location.href=$.getUrl('page',curr);
+									}
+								}
+							});
+						});
+					};
+				},1);
 			};
-			//网络通话
-			function dayu_call(userKey){
-				layer.confirm('您要与该员工进行网络通话吗？', {
-					btn: ['确定','取消'] //按钮
-				}, function(){
-					$.ajax({
-						url:"{:U('System/Personnel/dispostSystemUser')}",
-						dataType:'json',
-						type:'post',
-						data:{userKey:userKey,type:'call'},
-						success:function(redata){
-							if(redata.code==0) {
-								layer.msg(redata.msg, {icon:1});
-							}else{
-								layer.msg(redata.msg, {icon:2});
-							}
-						}
+			//获取部门职位列表
+			common_ajax2('','/SystemApi/Department/getDepartmentRoleList','no',function(redata){
+				if(redata.data.data){
+					layui.use('laytpl', function(){
+						var laytpl = layui.laytpl;
+						laytpl(demo2.innerHTML).render(redata.data.data, function(result){
+							$('#role_li').html(result);
+						});
 					});
-				}, function(){});
-			}
-
+				};
+			},1);
+			//获取员工状态列表
+			common_ajax2({name:'SYSTEMUSERSTATUS'},'/SystemApi/Config/getStatusList','no',function(redata){
+				if(redata.data){
+					layui.use('laytpl', function(){
+						var laytpl = layui.laytpl;
+						laytpl(demo3.innerHTML).render(redata.data, function(result){
+							$('#usertype_li').html(result);
+						});
+					});
+				};
+			},1);
 		</script>
 	</body>
 </html>

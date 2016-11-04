@@ -130,7 +130,9 @@
 <script>
     $(function(){
         //获取页面参数
+        var thisObj = $('#positionTable');
         var page = $.getUrlParam('page',1);
+        thisObj.html(getLoding());
         getAjax(page);
         //获取列表内容
         function getAjax(page){
@@ -139,12 +141,11 @@
                 order:order,
                 page: ((page-1)*15)+',15'
             };
-            common_ajax2(data,'/SystemApi/Role/getRoleList','no',_setHtml,1);
-            function _setHtml(redata){
+            common_ajax2(data,'/SystemApi/Role/getRoleList','no',function(redata){
                 layui.use('laytpl', function(){
                     var laytpl = layui.laytpl;
                     laytpl(demo.innerHTML).render(redata.data.data, function(result){
-                        $('#positionTable').html(result);
+                        thisObj.html(result);
                     });
                 });
                 //分页
@@ -169,7 +170,7 @@
                         });
                     });
                 };
-            };
+            },1);
         };
         $(document).on('click','.on_sort',function(){
             location.href='?order='+$(this).attr('data-value');

@@ -7,9 +7,6 @@
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/organization.css">
 		<link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
-		<script>
-			var jump_code = "{$jump_code}";
-		</script>
 	</head>
 	<body>
 		<div class="wrapBox" id="departWrap">
@@ -96,7 +93,9 @@
 		<script>
 			$(function(){$.getUrl('page',1);
 				//获取页面参数
+				var thisObj = $('#deparrTable');
 				var page = $.getUrlParam('page',1);
+				thisObj.html(getLoding());
 				getAjax(page);
 				//获取列表内容
 				function getAjax(page){
@@ -110,7 +109,7 @@
 						layui.use('laytpl', function(){
 							var laytpl = layui.laytpl;
 							laytpl(demo.innerHTML).render(redata.data.data, function(result){
-								$('#deparrTable').html(result);
+								thisObj.html(result);
 							});
 						});
 						//分页

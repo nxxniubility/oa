@@ -157,45 +157,6 @@ class PersonnelController extends SystemController {
     {
         //获取参数 页码
         $requestG = I('get.');
-        $where['usertype'] = !empty($requestG['usertype'])?$requestG['usertype']:array('neq',10);
-        $where['status'] = 1;
-        $re_page = isset($requestG['page'])?$requestG['page']:1;
-        //查询条件where处理
-        if(!empty($requestG['key_value']) && !empty($requestG['key_name'])) {
-            if($requestG['key_name']=='username'){
-                $where['username'] = (trim($requestG['key_value']));
-            }else{
-                $where[$requestG['key_name']] = array('like', $requestG['key_value']);
-            }
-        }
-        if(!empty($requestG['role_id'])) $where['role_ids'] = $requestG['role_id'];
-        $where['zone_id'] = !empty($requestG['zone_id'])?$requestG['zone_id']:$this->system_user['zone_id'];
-        //员工列表
-        $_param = $where;
-        $_param['page'] = $re_page.',30';
-        $_param['order'] = 'system_user_id desc';
-        $systemUserAll = D('SystemUser','Service')->getSystemUsersList($_param);
-        $data['systemUserAll'] = $systemUserAll['data'];
-        //加载分页类
-        $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $data['systemUserAll']['count'], $requestG);
-        $data['paging'] = $paging_data;
-        //获取职位及部门
-        $departmentAll = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
-        $roleAll = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
-        //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
-        $data['zoneAll'] = $zoneAll['data'];
-        //员工状态
-        $data['systemUserStatus'] = C('FIELD_STATUS.SYSTEMUSERSTATUS');
-        foreach($data['systemUserStatus'] as $k=>$v){
-            if($v=='离职'){
-                unset($data['systemUserStatus'][$k]);
-            }
-        }
-        $data['requery'] = $requestG;
-        $this->assign('data', $data);
         $this->display();
     }
 
