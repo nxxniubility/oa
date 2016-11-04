@@ -11,17 +11,38 @@ use Common\Service\SystemZoneService;
 
 class ZoneController extends SystemApiController
 {
-	/*
+    /*
     |--------------------------------------------------------------------------
     | 区域列表
     |--------------------------------------------------------------------------
     | @author nxx
     */
-    public function zoneList
+    public function zoneList()
     {
         //获取请求？
         $param['zone_id'] = I('param.zone_id',null);
         $param['addusr'] = I('param.addusr',null);
+        //去除数组空值
+        $param = array_filter($param);
+        //获取接口服务层
+        $result = D('Zone','Service')->getZoneList($param);
+        //返回参数
+        if($result['code']==0){
+            $this->ajaxReturn(0,'获取成功',$result['data']);
+        }
+        $this->ajaxReturn($result['code'],$result['msg']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 区域列表-自己权限
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getZoneList()
+    {
+        //获取请求？
+        $param['zone_id'] = $this->system_user['zone_id'];
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层

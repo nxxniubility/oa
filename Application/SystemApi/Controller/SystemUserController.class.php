@@ -25,11 +25,20 @@ class SystemUserController extends SystemApiController
     public function getSystemUserList()
     {
         //获取请求？x
-        $param['zone_id'] = I('param.zone_id',null);
-        $param['realname'] = I('param.realname',null);
+        $param['page'] = I('param.page',null);
+        $param['zone_id'] = I('param.zone_id',$this->system_user['zone_id']);
         $param['usertype'] = I('param.usertype',null);
         $param['role_ids'] = I('param.role_ids',null);
-        $param['page'] = I('param.page',null);
+        $param['key_name'] = I('param.key_name',null);
+        $param['key_value'] = I('param.key_value',null);
+        if($param['key_name'] && $param['key_value']){
+            if($param['key_name']=='username'){
+                $param[$param['username']] = encryptPhone($param['key_value'],  C('PHONE_CODE_KEY'));
+            }else{
+                $param[$param['key_name']] = array('LIKE',$param['key_value']);
+            }
+        }
+        unset($param['key_name']);unset($param['key_value']);
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层

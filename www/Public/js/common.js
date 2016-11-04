@@ -197,7 +197,7 @@ function common_ajax2(data,url,loca,fun,showload){
     $.getUrlParam = function (name,re_default) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
-        if (r != null) return unescape(r[2]); return re_default;
+        if (r != null) return unescape(decodeURI(r[2])); return re_default;
     };
     $.getUrl = function (name,val) {
         var reg = new RegExp("(^|&)page=([^&]*)(|$)");
