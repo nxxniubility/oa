@@ -6,6 +6,7 @@
 		<title>系统首页-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/regionlManagement.css">
+		<link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
 		<script>
 			var jump_code = "{$jump_code}";
 		</script>
@@ -15,210 +16,14 @@
 			<div class="regionCont">
 				<div class="regionContTop clearfix">
 					<div class="topTit l"><span class="masterList">区域列表</span></div>
-					<div class="topRight r">
-						<a href="<?php echo U('System/Zone/addZone'); ?>" class="addZones">添加区域</a>
-						<a href="<?php echo U('System/Zone/newCenter'); ?>" class="return">添加中心</a>
-					</div>
 				</div>
-				<div class="regionContMiddle">
-					<dl class="regionTit  clearfix">
-						<dt class="wOne regionSequence clearfix">
-							<span>排序</span>
-							<i class="oergList"></i>
-						</dt>
-						<dt class="wTwo regionSequence clearfix">
-							<span>ID</span>
-							<!-- <i class="oergList"></i> -->
-						</dt>
-						<dt class="wThr">区域名称</dt>
-						<dt class="wFou">操作</dt>
-					</dl>
-					<dl class="oneRegions clearfix">
-					<dd class="wOne regionSequence clearfix">
-						<input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-					</dd>
-
-					<dd class="wTwo regionSequence clearfix">{$zoneList['zone_id']}</dd>
-					<dd class="wThr">{$zoneList['name']}</dd>
-					<dd class="wFou osOperation clearfix">
-						<a href="javascript:;" class="regionSelect"><i></i></a>
-						<div class="otherOperation">
-							<div class="triangle"></div>
-	                        <div class="otherIcon">
-						<ul> 
-				    	<li>
-                        	<a href="<?php echo U('System/Zone/addZone',array('zone_id'=>$zoneList['zone_id']));?>" class="addZone">
-                                <span class="addZone add"></span>
-                                <em>添加大区</em>
-                            </a>    
-                        </li>
-                        <li class="seeDetails" detailInfo="<?php echo $zoneList['tel'].'_'.$zoneList['email'].'_'.$zoneList['name'].'_'.$zoneList['address'].'_'.$zoneList['abstract']; ?>">
-                            	<a href="javascript:;">
-                                    <span class="view"></span>
-                                    <em>查看</em>
-                                </a>    
-                            </li>
-                            <li>
-                            	<a href="<?php echo U('System/Zone/editZone',array('zone_id'=>$zoneList['zone_id'])); ?>">
-                                    <span class="modify"></span>
-                                    <em>修改</em>
-                                </a>    
-                            </li>
-                            <li onclick="delZone('{$zoneList.zone_id}')">
-                            	<a href="javascript:;">
-                                    <span class="delete"></span>
-                                    <em>删除</em>
-                                </a>    
-                            </li>
-                        </ul>
-	                        </div>
-	                    </div>
+				<div class="regionContMiddle" id="regionContMiddle">
 					
-					</dd>
-					</dl>
-					
-	        	<foreach name = "zoneList['children']" item = "v1">			
-					<!-- 二级 -->
-					<if condition = "$v1['level'] eq 2">
-						<dl class="secondaryZoneRow clearfix  ">
-							<dd class="wOne regionSequence clearfix">
-								<input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-							</dd>
-							<dd class="wTwo regionSequence clearfix">{$v1['zone_id']}</dd>
-							<dd class="wThr szName"><span>{$v1['name']}</span></dd>
-							<dd class="wFou szOperation clearfix"  >
-								<a href="javascript:;" class="regionSelect"><i></i></a>
-								<div class="otherOperation">
-									<div class="triangle"></div>
-			                        <div class="otherIcon">
-			                            <ul>
-			                            	<li>
-			                                	<a href="<?php echo U('System/Zone/addZone',array('zone_id'=>$v1['zone_id']));?>" class="addZone">
-				                                    <span class="addZone add"></span>
-				                                    <em>添加城市</em>
-				                                </a>    
-			                                </li>
-			                            	<li class="seeDetails" detailInfo="<?php echo $v1['tel'].'_'.$v1['email'].'_'.$v1['name'].'_'.$v1['address'].'_'.$v1['abstract']; ?>">
-			                                	<a href="javascript:;">
-				                                    <span class="view"></span>
-				                                    <em>查看</em>
-				                                </a>    
-			                                </li>
-			                                <li>
-				                            <a href="<?php echo U('System/Zone/editZone',array('zone_id'=>$v1['zone_id']));?>">
-					                                    <span class="editZone modify"></span>
-					                                    <em>修改</em>
-					                                </a>    
-				                                </li>
-			                                <li onclick="delZone('{$v1.zone_id}')">
-			                                	<a href="javascript:;">
-				                                    <span class="delete"></span>
-				                                    <em>删除</em>
-				                                </a>    
-			                                </li>
-			                            </ul>
-			                        </div>
-			                    </div>
-			                    <if condition = "!empty($v1['children'])">
-			                    	<span class="switchBtnShow" title="展开"  zone-id="{$v1['zone_id']}" ><i></i></span>
-			                    </if>
-							</dd>
-						</dl>			
-						<!-- 三级 -->
-						<foreach name = "v1['children']" item = "v2">
-
-							<dl class="threeRegionsRow dn clearfix  pzone_{$v1['zone_id']}">
-								<dd class="wOne regionSequence clearfix">
-									<input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-								</dd>
-								<dd class="wTwo regionSequence clearfix">{$v2['zone_id']}</dd>
-								<dd class="wThr trName"><span>{$v2['name']}</span></dd>
-								<dd class="wFou trOperation clearfix"  >
-									<a href="javascript:;" class="regionSelect"><i></i></a>
-									<div class="otherOperation">
-										<div class="triangle"></div>
-				                        <div class="otherIcon">
-				                            <ul>
-				                            	<li>
-				                                	<a href="<?php echo U('System/Zone/newCenter',array('zone_id'=>$v2['zone_id']));?>" class="newCenter">
-				                                    	<span class="newCenter regionalCenterIcon"></span>
-					                                    <em>添加中心</em>
-					                                </a>    
-				                                </li>
-				                            	<li class="seeDetails" detailInfo="<?php echo $v2['tel'].'_'.$v2['email'].'_'.$v1['name'].'-'.$v2['name'].'_'.$v2['address'].'_'.$v2['abstract']; ?>">
-			                                	<a href="javascript:;">
-					                                    <span class="view"></span>
-					                                    <em>查看</em>
-					                                </a>    
-				                                </li>
-				                                <li>
-				                                	<a href="<?php echo U('System/Zone/editZone',array('zone_id'=>$v2['zone_id']));?>">
-					                                    <span class="editZone modify"></span>
-					                                    <em>修改</em>
-					                                </a>    
-				                                </li>
-				                                <li onclick="delZone('{$v2.zone_id}')">
-			                                		<a href="javascript:;">
-					                                    <span class="delete"></span>
-					                                    <em>删除</em>
-					                                </a>    
-				                                </li>
-				                            </ul>
-				                        </div>
-				                    </div>
-				                    <if condition = "!empty($v2['children'])">
-			                    		<span class="switchBtnShow" title="展开"  zone-id="{$v2['zone_id']}" ><i></i></span>
-			                    	</if>
-								</dd>
-							</dl>
-							<foreach name = "v2['children']" item = "v3">
-								<dl class="regionalCenter dn clearfix  pzone_{$v2['zone_id']}">
-									<dd class="wOne regionSequence clearfix">
-										<input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
-									</dd>
-									<dd class="wTwo regionSequence clearfix">{$v3['zone_id']}</dd>
-									<dd class="wThr rcName"><span>{$v3['name']}</span></dd>
-									<dd class="wFou rcOperation clearfix"  >
-										<a href="javascript:;" class="regionSelect"><i></i></a>
-										<div class="otherOperation">
-											<div class="triangle"></div>
-					                        <div class="otherIcon">
-					                            <ul>
-					                            	
-					                            	<li class="seeDetails" detailInfo="<?php echo $v3['tel'].'_'.$v3['email'].'_'.$v1['name'].'-'.$v2['name'].'-'.$v3['name'].'_'.$v3['address'].'_'.$v3['abstract']; ?>">
-					                                	<a href="javascript:;">
-						                                    <span class="view"></span>
-						                                    <em>查看</em>
-						                                </a>    
-					                                </li>
-					                                <li>
-					                                	<a href="<?php echo U('System/Zone/editZone',array('zone_id'=>$v3['zone_id'],'center'=>1)); ?>">
-						                                    <span class="modify"></span>
-						                                    <em>修改</em>
-						                                </a>    
-					                                </li>
-					                                <li onclick="delZone('{$v3.zone_id}')">
-					                                	<a href="javascript:;">
-						                                    <span class="delete"></span>
-						                                    <em>删除</em>
-						                                </a>    
-					                                </li>
-					                            </ul>
-					                        </div>
-					                    </div>
-									</dd>
-								</dl>
-							</foreach>
-						</foreach>
-					</if>
-				</foreach>
-
-
-					<!-- 中心 -->
 				</div>
+				
 			</div>
 		</div>
-		
+
 		<!-- 详情 S -->
 		<div class="desBox">
 			<div class="topBox clearfix">
@@ -229,7 +34,7 @@
 				<div class="container">
 					<h3>区域简介</h3>
 					<div class="desContBox">
-						<h4 id="zone_name">华南区-深圳市-南山中心</h4>
+						<h4 id="zone_name"></h4>
 						<div class="desContent" id="zone_abstract">
 							
 						</div>
@@ -238,39 +43,202 @@
 				<div class="container mb34">
 					<h3>基本信息</h3>
 					<div class="desContBox">
-						<p>联系电话：<span id="zone_tel">0755-12345678</span></p>
-						<p>电子邮箱：<span id="zone_email">ervice@zelinonline.com</span></p>
-						<p>详细地址：<span id="zone_address">深圳市南山区大冲国际中心5号楼13层</span></p>
+						<p>联系电话：<span id="zone_tel"></span></p>
+						<p>电子邮箱：<span id="zone_email"></span></p>
+						<p>详细地址：<span id="zone_address"></span></p>
 					</div>
 				</div>
 			</div>
 		</div>
 		<!-- 详情 E -->
-		
-		
-		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-		<script src="__PUBLIC__/js/layer/layer.js"></script>
-		<script src="__PUBLIC__/js/regionlManagement.js"></script>
-		<script>
-			
-		    function delZone(zone_id){
-		        layer.confirm('确定要删除该区域？', {
-		            btn: ['确定','取消'] //按钮
-		        }, function(){
-		            var data = {
-		                zone_id:zone_id,
-		                type:'del'
-		            };
-		            common_ajax(data,'{$urlDelZone}','reload');
-		        }, function(){});
-		    }
-    
-		</script>
-		<script src="__PUBLIC__/js/common.js"></script>
 
-
-
-
-
+<!--列表模版-->
+<script id="demo" type="text/html">
+	<dl class="regionTit  clearfix">
+		<dt class="wOne regionSequence clearfix">
+			<span>排序</span>
+			<i class="oergList"></i>
+		</dt>
+		<dt class="wTwo regionSequence clearfix">
+			<span>ID</span>
+		</dt>
+		<dt class="wThr">区域名称</dt>
+		<dt class="wFou">操作</dt>
+	</dl>
+	<dl class="oneRegions clearfix">
+	<dd class="wOne regionSequence clearfix">
+		<input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+	</dd>
+	<dd class="wTwo regionSequence clearfix">{{ d.zone_id }}</dd>
+	<dd class="wThr">{{ d.name }}</dd>
+	<dd class="wFou osOperation clearfix">
+		<a href="javascript:;" class="regionSelect"><i></i></a>
+		<div class="otherOperation">
+			<div class="triangle"></div>
+            <div class="otherIcon">
+				<ul> 
+			    	<li>
+                    	<a href="<?php echo U('System/Zone/addZone');?>?zone_id={{ d.zone_id }}" class="addZone">
+                            <span class="addZone add"></span>
+                            <em>添加大区</em>
+                        </a>    
+                    </li>
+                    <li class="seeDetails" detailInfo="{{ d.tel }}_{{ d.email }}_{{ d.name }}_{{ d.address }}_{{ d.abstract }}">
+                        <a href="javascript:;">
+                            <span class="view"></span>
+                            <em>查看</em>
+                        </a>    
+                    </li>
+                    <li>
+                    	<a href="<?php echo U('System/Zone/editZone');?>?zone_id={{ d.zone_id }}">
+                            <span class="modify"></span>
+                            <em>修改</em>
+                        </a>    
+                    </li>
+                    <li onclick="delZone('{$zoneList.zone_id}')">
+                    	<a href="javascript:;">
+                            <span class="delete"></span>
+                            <em>删除</em>
+                        </a>    
+                    </li>
+                </ul>
+            </div>
+        </div>
+	</dd>
+	</dl>
+    {{# layui.each(d.children, function(k, v){ }}
+		{{# if(v.level == 2){ }}
+			<dl class="secondaryZoneRow clearfix  ">
+				<dd class="wOne regionSequence clearfix">
+					<input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+				</dd>
+				<dd class="wTwo regionSequence clearfix">{{ v.zone_id }}</dd>
+				<dd class="wThr szName"><span>{{ v.name }}</span></dd>
+				<dd class="wFou szOperation clearfix"  >
+					<a href="javascript:;" class="regionSelect"><i></i></a>
+					<div class="otherOperation">
+						<div class="triangle"></div>
+                        <div class="otherIcon">
+                            <ul>
+                            	<li>
+                                	<a href="<?php echo U('System/Zone/addZone');?>?zone_id={{ v.zone_id }}" class="addZone">
+	                                    <span class="addZone add"></span>
+	                                    <em>添加城市</em>
+	                                </a>    
+                                </li>
+                            	<li class="seeDetails" detailInfo="{{ v.tel }}_{{ v.email }}_{{ v.name }}_{{ v.address }}_{{ v.abstract }}">
+                                	<a href="javascript:;">
+	                                    <span class="view"></span>
+	                                    <em>查看</em>
+	                                </a>    
+                                </li>
+                                <li>
+	                            <a href="<?php echo U('System/Zone/editZone');?>?zone_id={{ v.zone_id }}">
+                                    <span class="editZone modify"></span>
+                                    <em>修改</em>
+                                </a>    
+                                </li>
+                                <li onclick="delZone('{{ v.zone_id }}')">
+                                	<a href="javascript:;">
+	                                    <span class="delete"></span>
+	                                    <em>删除</em>
+	                                </a>    
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                	{{# if(v.children){ }}
+                    	<span class="switchBtnShow" title="展开"  zone-id="{{ v.zone_id }}" ><i></i></span>
+                    {{# } }}
+				</dd>
+			</dl>			
+			{{# layui.each(v.children, function(k2, v2){ }}
+				<dl class="threeRegionsRow dn clearfix  pzone_{{ v.zone_id }}">
+					<dd class="wOne regionSequence clearfix">
+						<input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+					</dd>
+					<dd class="wTwo regionSequence clearfix">{{ v2.zone_id }}</dd>
+					<dd class="wThr trName"><span>{{ v2.name }}</span></dd>
+					<dd class="wFou trOperation clearfix"  >
+						<a href="javascript:;" class="regionSelect"><i></i></a>
+						<div class="otherOperation">
+							<div class="triangle"></div>
+	                        <div class="otherIcon">
+	                            <ul>
+	                            	<li>
+	                                	<a href="<?php echo U('System/Zone/addZone');?>?zone_id={{ v2.zone_id }}" class="newCenter">
+	                                    	<span class="newCenter regionalCenterIcon"></span>
+		                                    <em>添加中心</em>
+		                                </a>    
+	                                </li>
+	                            	<li class="seeDetails" detailInfo="{{ v2.tel }}_{{ v2.email }}_{{ v2.name }}_{{ v2.address }}_{{ v2.abstract }}">
+                                	<a href="javascript:;">
+		                                    <span class="view"></span>
+		                                    <em>查看</em>
+		                                </a>    
+	                                </li>
+	                                <li>
+	                                	<a href="<?php echo U('System/Zone/editZone');?>?zone_id={{ v2.zone_id }}">
+		                                    <span class="editZone modify"></span>
+		                                    <em>修改</em>
+		                                </a>    
+	                                </li>
+	                                <li onclick="delZone('{{ v2.zone_id }}')">
+                                		<a href="javascript:;">
+		                                    <span class="delete"></span>
+		                                    <em>删除</em>
+		                                </a>    
+	                                </li>
+	                            </ul>
+	                        </div>
+	                    </div>
+	                    {{# if(v2.children){ }}
+	                    	<span class="switchBtnShow" title="展开"  zone-id="{{ v2.zone_id }}" ><i></i></span>
+	                    {{# } }}
+					</dd>
+				</dl>
+				{{#  layui.each(v2.children, function(k3, v3){ }}
+					<dl class="regionalCenter dn clearfix  pzone_{{ v2.zone_id }}">
+						<dd class="wOne regionSequence clearfix">
+							<input type="tel" class="SequenceInp" placeholder="0" maxlength="4">
+						</dd>
+						<dd class="wTwo regionSequence clearfix">{{ v3.zone_id }}</dd>
+						<dd class="wThr rcName"><span>{{ v3.name }}</span></dd>
+						<dd class="wFou rcOperation clearfix"  >
+							<a href="javascript:;" class="regionSelect"><i></i></a>
+							<div class="otherOperation">
+								<div class="triangle"></div>
+		                        <div class="otherIcon">
+		                            <ul>
+		                            	
+		                            	<li class="seeDetails" detailInfo="{{ v3.tel }}_{{ v3.email }}_{{ v3.name }}_{{ v3.address }}_{{ v3.abstract }}">
+		                                	<a href="javascript:;">
+			                                    <span class="view"></span>
+			                                    <em>查看</em>
+			                                </a>    
+		                                </li>
+		                                <li>
+		                                	<a href="<?php echo U('System/Zone/editZone'); ?>?zone_id={{ v3.zone_id }}">
+			                                    <span class="modify"></span>
+			                                    <em>修改</em>
+			                                </a>    
+		                                </li>
+		                                <li onclick="delZone('{{ v3.zone_id }}')">
+		                                	<a href="javascript:;">
+			                                    <span class="delete"></span>
+			                                    <em>删除</em>
+			                                </a>    
+		                                </li>
+		                            </ul>
+		                        </div>
+		                    </div>
+						</dd>
+					</dl>
+				{{#  }); }}
+			{{#  }); }}
+		{{#  } }}	
+    {{#  }); }}
+</script>
+		<Zelin:js  src="jquery-1.9.1.min,layer/layer,regionlManagement,common,layui/layui"  />
 	</body>
 </html>

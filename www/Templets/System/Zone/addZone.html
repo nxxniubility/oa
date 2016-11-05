@@ -4,108 +4,124 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>系统首页-{$siteinfo.sitename}</title>
 		<Zelin:css src="common,newArea"  />
+		<link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
 	</head>
 	<body>
 		<div class="wrapBox">
 			<div class="newCont">
-
 				<div class="newContTop clearfix">
 					<div class="topTit l">
 						<span class="masterList">区域列表</span>
 						<span><em>&gt;</em>添加区域</span>
 					</div>
 					<div class="topRight r">
-						<a href="<?php echo U('System/Zone/zoneList'); ?>" class="return">返回</a>
+						<a href="{:U('System/Zone/zoneList')}" class="return">返回</a>
 					</div>
 				</div>
 				<div class="newMiddle">
-					<div class="newRows clearfix">
-						<div class="newRowsLeft"><i>&#42</i>区域或城市名称:</div>
-						<div class="newRowsRight">
-							<input type="text" class="newInp" name="name">
-						</div>
-					</div>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft"><i>&#42</i>所属区域:</div>
-						<div class="newRowsRight">
-						<?php if(!empty($zone)){ ?>
-					        <div class="select_title l" value="{$zone['name']}">{$zone['name']}</div>
-						<?php }else{ ?>
-							<div class="selectbox2 l">
-	            		<dl class="select2">
-											<dt>
-	                        <div class="select_title l" >请选择所属区域</div>
-	                        <div class="arrow r" ></div>
-                      </dt>
-									<foreach name = "zoneList['children']" item = "v1">
-											<if condition = "$v1['level'] eq 1">
-                      		<dd class="fxDone" data-value="{$v1['zone_id']}">{$v1['name']}</dd>
-                      <elseif condition = "$v1['level'] eq 2">
-                        	<foreach name = "v1['children']" item = "v2">
-                        		<dd class="fxDone" data-value="{$v2['zone_id']}">{$v2['name']}</dd>
-                        	</foreach>
-                      </elseif>
-                      </if>
-									</foreach>
-                  </dl>
-                  <input type="hidden" name="zone_id" >
-              </div>
-          	<?php } ?>
-						</div>
-					</div>
-
-					<div class="newRows clearfix">
-						<div class="newRowsLeft">详情地址:</div>
-						<div class="newRowsRight">
-							<input type="text" class="newInp" name="address" value="">
-						</div>
-					</div>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft">联系电话:</div>
-						<div class="newRowsRight">
-							<input type="tel" class="newInp" name="tel" value="">
-						</div>
-					</div>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft">电子邮箱:</div>
-						<div class="newRowsRight">
-							<input type="email" class="newInp" name="email" value="">
-						</div>
-					</div>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft">区域简介:</div>
-						<div class="newRowsRight">
-							<textarea class="newTxt" name="abstract" value=""></textarea>
-						</div>
-					</div>
-					<div class="newRows clearfix">
-						<div class="newRowsLeft">&nbsp;</div>
-						<div class="newRowsRight">
-							<input type="submit" class="newAreaSubmit" value="提交">
-						</div>
-					</div>
+					
 				</div>
-
 			</div>
 		</div>
+<script id="demo_body" type="text/html">
+	<div class="newRows clearfix">
+		<div class="newRowsLeft"><i>&#42</i>区域名称:</div>
+		<div class="newRowsRight">
+			<input type="text" class="newInp" name="name">
+		</div>
+	</div>
+	<div class="newRows clearfix" >
+		<div class="newRowsLeft"><i>&#42</i>所属区域:</div>
+		<div class="newRowsRight">
+			<div class="selectbox2 l">
+				<dl class="select2" id="choose">
+				<dt>
+		            <div class="select_title l" >{{ d.name }}</div>
+		           
+		      	</dt>
+		      	</dl>
+		  		<input type="hidden" name="zone_id" value="{{ d.zone_id }}">
+		  	</div>
+		</div>
+	</div>
+	<div class="newRows clearfix">
+		<div class="newRowsLeft">详情地址:</div>
+		<div class="newRowsRight">
+			<input type="text" class="newInp" name="address" value="">
+		</div>
+	</div>
+	<div class="newRows clearfix">
+		<div class="newRowsLeft">联系电话:</div>
+		<div class="newRowsRight">
+			<input type="tel" class="newInp" name="tel" value="">
+		</div>
+	</div>
+	<div class="newRows clearfix">
+		<div class="newRowsLeft">电子邮箱:</div>
+		<div class="newRowsRight">
+			<input type="email" class="newInp" name="email" value="">
+		</div>
+	</div>
+	<div class="newRows clearfix">
+		<div class="newRowsLeft">区域简介:</div>
+		<div class="newRowsRight">
+			<textarea class="newTxt" name="abstract" value=""></textarea>
+		</div>
+	</div>
+	<div class="newRows clearfix">
+		<div class="newRowsLeft">&nbsp;</div>
+		<div class="newRowsRight">
+			<input type="submit" class="newAreaSubmit" value="提交">
+		</div>
+	</div>
+</script>		
 
-		<Zelin:js  src="jquery-1.9.1.min,newArea,addPermissions,common_ajax"  />
+		<Zelin:js  src="jquery-1.9.1.min,newArea,addPermissions,common"  />
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/layui/layui.js"></script>
 		<script type="text/javascript">
-		    $(document).ready(function() {
-		        //提交
-		        $('.newAreaSubmit').click(function() {
-		            var data = {
-		                name:$(':input[name="name"]').val(),
-		                zone_id:$(':input[name="zone_id"]').val(),
-		                address:$(':input[name="address"]').val(),
-		                tel:$(':input[name="tel"]').val(),
-		                email:$(':input[name="email"]').val(),
-		                abstract:$(':input[name="abstract"]').val(),
-		            };
-		            common_ajax(data);
-		        });
-		    });
+			$(function(){
+				//获取页面参数
+				var zone_id = $.getUrlParam('zone_id');
+				getAjax(zone_id);
+				//获取列表内容
+				function getAjax(zone_id){
+					var data={
+						zone_id:zone_id
+					};
+					//获取职位详情
+					common_ajax2(data,'/SystemApi/Zone/getZoneInfo','no',function(redata){
+						if(redata.data){
+						    layui.use('laytpl', function(){
+						        var laytpl = layui.laytpl;
+						        laytpl(demo_body.innerHTML).render(redata.data, function(result){
+						            $('.newMiddle').html(result);
+						        });
+						    });
+						};
+					},1);
+				};
+			});
+
+	        //提交
+	        $(document).on('click', '.newAreaSubmit', function() {
+	            var data = {
+	                name:$(':input[name="name"]').val(),
+	                zone_id:$(':input[name="zone_id"]').val(),
+	                address:$(':input[name="address"]').val(),
+	                tel:$(':input[name="tel"]').val(),
+	                email:$(':input[name="email"]').val(),
+	                abstract:$(':input[name="abstract"]').val(),
+	            };
+	            common_ajax2(data,'/SystemApi/Zone/addZone',0,function(redata){
+	                if(redata.code!=0){
+	                    layer.msg(redata.msg,{icon:2});
+	                }else{
+	                    layer.msg('操作成功',{icon:1});
+	                    window.location.href = "{:U('/System/Zone/zoneList')}";
+	                };
+	            });
+	        });
 		</script>
 	</body>
 </html>

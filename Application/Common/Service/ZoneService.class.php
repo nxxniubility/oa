@@ -27,6 +27,9 @@ class ZoneService extends BaseService
     */
     public function getZoneList($param)
     {
+        if (!$param['zone_id']) {
+            $param['zone_id'] = $this->system_user['zone_id'];
+        }
         if (F('Cache/zone')) {
             $zoneList = F('Cache/zone');
         }else{
@@ -40,8 +43,8 @@ class ZoneService extends BaseService
         }
         //数组分级
         $Arrayhelps = new \Org\Arrayhelps\Arrayhelps();
-        $children_ZoneList = $Arrayhelps->createTree($zoneList,$param['zone_id'],'zone_id','parentid');
-
+        $children_ZoneList = $Arrayhelps->createTree($zoneList,1,'zone_id','parentid');
+        $newZoneList['zoneinfo'] = $zoneInfo;
         $newZoneList['children'] = $children_ZoneList;
         return array('code'=>0,'data'=>$newZoneList);
     }
@@ -83,16 +86,19 @@ class ZoneService extends BaseService
             $zoneList = D('Zone')->getList(array('status'=>1));
             F('Cache/zone', $zoneList);
         }
-        if(!empty($zoneList)){
-            foreach($zoneList as $k=>$v){
-                if($v['zone_id']==$param['zone_id']){
-                    $newZoneList = $v;
-                }
+        foreach($zoneList as $k=>$v){
+            if($v['zone_id']==$param['zone_id']){
+                $newZoneList = $v;
+                break;
             }
-        }  
-        if ($param['zone_id'] != 1) {
+        }
+        if ($param['zone_id'] != 1 && $param['zone_id']) {
             $pid = $newZoneList['parentid'];
-            $newZoneList['parent'] = D('Zone')->where("zone_id = $pid")->field('zone_id,name')->find();
+            $parent = D('Zone')->where("zone_id = $pid")->field('zone_id,name')->find();
+            $newZoneList['parentname'] = $parent['name'];
+        }elseif($param['zone_id'] == 1){
+            $parent = D('Zone')->where("zone_id = 1")->field('zone_id,name')->find();
+            $newZoneList['parentname'] = $parent['name'];
         }
         return array('code'=>0,'data'=>$newZoneList);
     }
@@ -117,12 +123,9 @@ class ZoneService extends BaseService
         $param['status'] = 1;
         $param['createtime'] = time();
         if(!(str_replace(' ','',$param['name']))) {
-            if ($param['centersign']) {
-                return array('code'=>301,'msg'=>'中心名称不能为空');
-            }
             return array('code'=>301,'msg'=>'区域名称不能为空');
         }
-        if(!empty($param['parentid'])) {
+        if(empty($param['parentid'])) {
             return array('code'=>302,'msg'=>'请选择所属区域');
         }
         $result1 = $this->checkMobile($param['tel']);
@@ -137,6 +140,9 @@ class ZoneService extends BaseService
         }
         $parentZone = D("Zone")->getFind(array('zone_id'=>$param['parentid'],'status'=>1));
         $param['level']  = $parentZone['level']+1;
+        if ($param['level'] == 4) {
+            $param['centersign'] = 10;
+        }
         $sameZone = D("Zone")->getFind(array('name'=>$param['name'],'status'=>1));
         if ($sameZone) {
             $zoneAllList = D('Zone')->getList(array('status'=>1));
@@ -157,7 +163,7 @@ class ZoneService extends BaseService
     修改区域
     @author nxx
     */
-    public function editZone($param, $zone_id, $center)
+    public function editZone($param, $zone_id)
     {
         $param = array_filter($param);
         $param['addusr'] = $this->system_user_id;
@@ -166,9 +172,6 @@ class ZoneService extends BaseService
             return array('code'=>401,'msg'=>'无权限修改');
         }
         if(empty($param['name'])) {
-            if ($center) {
-                return array('code'=>301,'msg'=>'中心名称不能为空');
-            }
             return array('code'=>301,'msg'=>'区域名称不能为空');
         }
         if($zone_id != 1 && empty($param['parentid'])) {
@@ -203,7 +206,7 @@ class ZoneService extends BaseService
     {
         $zone = D("Zone")->getFind($param);
         if (!$zone) {
-            return array('code'=>301,'msg'=>'请选择所属区域');
+            return array('code'=>301,'msg'=>'参数有误');
         }
         $level = $zone['level']-1;
         $zones = D("Zone")->getList(array('level'=>$level,'status'=>1));

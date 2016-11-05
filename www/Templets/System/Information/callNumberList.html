@@ -92,6 +92,8 @@
 		<script src="__PUBLIC__/js/callNumberList.js"></script>
 		<script>
 			$(function(){
+			 	var thisObj = $('#numbeer_list');
+        		thisObj.html(getLoding());
 				getAjax();
 				//获取列表内容
 				function getAjax(){
@@ -103,7 +105,7 @@
 						layui.use('laytpl', function(){
 							var laytpl = layui.laytpl;
 							laytpl(demo.innerHTML).render(redata.data, function(result){
-								$('#numbeer_list').html(result);
+								thisObj.html(result);
 							});
 						});
 					};

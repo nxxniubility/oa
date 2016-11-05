@@ -22,32 +22,6 @@ class ZoneController extends SystemController {
 	*/
     public function addZone()
     {
-        $zone_id = I("get.zone_id");
-        if(IS_POST) {
-            if ($zone_id) {
-                $zone['parentid'] = $zone_id;
-            }else{
-                $zone['parentid'] = I('post.zone_id');
-            }
-            $zone['name'] = I('post.name');
-            $zone['email'] = I('post.email');
-            $zone['tel'] = I('post.tel');
-            $zone['abstract'] = I('post.abstract');
-            $zone['address'] = I('post.address');
-            $result = D('Zone', 'Service')->createZone($zone);
-            if ($result['code'] == 0) {
-                $this->ajaxReturn(0, $result['msg'], U('System/Zone/zoneList'));
-            }else{
-                $this->ajaxReturn($result['code'], $result['msg']);
-            }
-        }
-        if ($zone_id) {
-            $zone = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone_id));
-        }else{
-            $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>0));
-        }
-        $this->assign('zone', $zone['data']);
-        $this->assign('zoneList', $zoneList['data']);
         $this->display();
     }
 
@@ -162,13 +136,13 @@ class ZoneController extends SystemController {
     */
     public function zoneList()
     {
-    	$zone_id = 1;//超级管理员
-    	$zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone_id));
-        if (!$zoneList['data']) {
-            $this->ajaxReturn(1,'没有可供管理的区域');
-        }
-        $this->assign('zoneList', $zoneList['data']);
-        $this->assign('urlDelZone', U("System/Zone/delZone"));
+        // $zone_id = 1;//超级管理员
+    	// $zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone_id));
+     //    if (!$zoneList['data']) {
+     //        $this->ajaxReturn(1,'没有可供管理的区域');
+     //    }
+     //    $this->assign('zoneList', $zoneList['data']);
+     //    $this->assign('urlDelZone', U("System/Zone/delZone"));
         $this->display();
     }
 
