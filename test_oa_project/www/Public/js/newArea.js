@@ -79,3 +79,47 @@ function otherSelectStatus() {
     $("[class^=select]").find("dd,.select_title2").hide();
     $("[class^=select]").find("dl").removeClass("zindex4");
 }
+
+$(function(){
+    //获取页面参数
+    var zone_id = $.getUrlParam('zone_id');
+    getAjax(zone_id);
+    //获取列表内容
+    function getAjax(zone_id){
+        var data={
+            zone_id:zone_id
+        };
+        //获取职位详情
+        common_ajax2(data,'/SystemApi/Zone/getZoneInfo','no',function(redata){
+            if(redata.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo_body.innerHTML).render(redata.data, function(result){
+                        $('.newMiddle').html(result);
+                    });
+                });
+            };
+        },1);
+    };
+});
+
+//提交
+$(document).on('click', '.newAreaSubmit', function() {
+    var data = {
+        name:$(':input[name="name"]').val(),
+        zone_id:$(':input[name="zone_id"]').val(),
+        address:$(':input[name="address"]').val(),
+        tel:$(':input[name="tel"]').val(),
+        email:$(':input[name="email"]').val(),
+        abstract:$(':input[name="abstract"]').val(),
+    };
+    common_ajax2(data,'/SystemApi/Zone/addZone',0,function(redata){
+        if(redata.code!=0){
+            layer.msg(redata.msg,{icon:2});
+        }else{
+            layer.msg('操作成功',{icon:1});
+            window.location.href = "{:U('/System/Zone/zoneList')}";
+        };
+    });
+});
+
