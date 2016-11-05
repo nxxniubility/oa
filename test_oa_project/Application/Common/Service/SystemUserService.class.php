@@ -621,6 +621,7 @@ class SystemUserService extends BaseService
             $systemUserStatus = C('FIELD_STATUS.SYSTEMUSERSTATUS');
             $sexStatus = C('FIELD_STATUS.SEX');
             foreach($_array as $k=>$v){
+                unset($_array[$k]['password']);
                 //标识名称
                 $_array[$k]['sign_realname'] = $v['sign'].'-'.$v['realname'];
                 //员工状态
