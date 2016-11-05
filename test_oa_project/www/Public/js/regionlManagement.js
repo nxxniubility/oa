@@ -12,37 +12,34 @@ $(document).on('click', '.regionSelect',
 });
 
 
-
 //  显示一级区域
-$('.osOperation').find('.switchBtnShow').on('click',function(){
-	var os = $(this).closest('dl.oneRegions');
+$(document).on('click', '.switchBtnShow', function(){
+	var parClick = $(this).parents('.osOperation');
+	var os = parClick.closest('dl.oneRegions');
 	var	pzone_id=$(this).attr('zone-id');
-	
-	var szc= os.nextAll('.pzone_'+pzone_id),
-		_this=$(this);
-		szc.each(function (index,element){
-			if($(this).is(':hidden')){
-				$(this).removeClass('dn');
-				_this.addClass('switchBtnHide');
-				_this.attr('title','收起');
-			}else {
-				$(this).addClass('dn');
-				_this.removeClass('switchBtnHide');
-				_this.attr('title','展开');
-			}
-		})
+	var szc= os.nextAll('.pzone_'+pzone_id);
+	szc.each(function (index,element){
+		if($(this).is(':hidden')){
+			$(this).removeClass('dn');
+			$(this).addClass('switchBtnHide');
+			$(this).attr('title','收起');
+		}else {
+			$(this).addClass('dn');
+			$(this).removeClass('switchBtnHide');
+			$(this).attr('title','展开');
+		}
+	})
 	
 });
 
 
 //  显示二级区域
-$('.szOperation').find('.switchBtnShow').on('click',function(){
-	var sz = $(this).closest('dl.secondaryZoneRow');
-	var pzone_id=$(this).attr('zone-id');
-	
+$(document).on('click', '.switchBtnShow', function(){
+	var parentclick = $(this).parents('.szOperation');
+	var sz = parentclick.closest('dl.secondaryZoneRow');
+	var pzone_id = $(this).attr('zone-id');
 	var tr= sz.nextAll('.pzone_'+pzone_id);
-	var _this=$(this);
-	
+	var _this = $(this);
 	tr.each(function (index,element){
 		if($(this).is(':hidden')){
 			$(this).removeClass('dn');
@@ -63,11 +60,12 @@ $('.szOperation').find('.switchBtnShow').on('click',function(){
 
 
 //  显示中心区域
-$('.trOperation').find('.switchBtnShow').on('click',function(){
-	var trs = $(this).closest('.threeRegionsRow');
+$(document).on('click', '.switchBtnShow', function(){
+	var pclick = $(this).parents('.trOperation');
+	var trs = pclick.closest('.threeRegionsRow');
 	var pzone_id=$(this).attr('zone-id');
 	var rc = trs.nextAll('.pzone_'+pzone_id);
-	var _this=$(this);
+	var _this = $(this);
 	rc.each(function (index,element){
        if($(this).is(':hidden')){
 			$(this).removeClass('dn');
@@ -84,7 +82,7 @@ $('.trOperation').find('.switchBtnShow').on('click',function(){
 });
 
 
-$('.seeDetails').on('click',function(){
+$(document).on('click','.seeDetails',function(){
 	var detailInfo = $(this).attr('detailInfo');
 	detailInfo = detailInfo.split('_');
 	$('#zone_tel').html(detailInfo[0]);
@@ -103,7 +101,41 @@ $('.seeDetails').on('click',function(){
 		shift: 1,					//	出现动画
 		content: $(".desBox") 	//  加载主体内容
 	});
-	$('.desClose').on('click',function(){
+	$(document).on('click','.desClose',function(){
 		layer.closeAll(); 		// 关闭
 	});
+
 });
+
+$(function(){
+	getAjax();
+	//获取列表内容
+	function getAjax(){
+		var data = {
+
+		};
+		common_ajax2(data,'/SystemApi/Zone/getZoneList','no',_setHtml,1);
+		function _setHtml(redata){
+			layui.use('laytpl', function(){
+				var laytpl = layui.laytpl;
+				laytpl(demo.innerHTML).render(redata.data, function(result){
+					$('.regionContMiddle').html(result);
+				});
+			});
+		};
+	};
+
+});
+
+function delZone(zone_id){
+    layer.confirm('确定要删除该区域？', {
+        btn: ['确定','取消'] //按钮
+    }, function(){
+        var data = {
+            zone_id:zone_id,
+        };
+        common_ajax2(data,'/SystemApi/Zone/delZone','reload');
+    }, function(){
+
+    });
+}

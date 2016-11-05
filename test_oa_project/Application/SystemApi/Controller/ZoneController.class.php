@@ -17,34 +17,9 @@ class ZoneController extends SystemApiController
     |--------------------------------------------------------------------------
     | @author nxx
     */
-    public function zoneList()
-    {
-        //获取请求？
-        $param['zone_id'] = I('param.zone_id',null);
-        $param['addusr'] = I('param.addusr',null);
-        //去除数组空值
-        $param = array_filter($param);
-        //获取接口服务层
-        $result = D('Zone','Service')->getZoneList($param);
-        //返回参数
-        if($result['code']==0){
-            $this->ajaxReturn(0,'获取成功',$result['data']);
-        }
-        $this->ajaxReturn($result['code'],$result['msg']);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 区域列表-自己权限
-    |--------------------------------------------------------------------------
-    | @author zgt
-    */
     public function getZoneList()
     {
-        //获取请求？
-        $param['zone_id'] = $this->system_user['zone_id'];
-        //去除数组空值
-        $param = array_filter($param);
+        $param['zone_id'] = I("param.zone_id", null);
         //获取接口服务层
         $result = D('Zone','Service')->getZoneList($param);
         //返回参数
@@ -68,6 +43,7 @@ class ZoneController extends SystemApiController
         $param['tel'] = I('param.tel',null);
         $param['abstract'] = I('param.abstract',null);
         $param['address'] = I('param.address',null);
+        $param['parentid'] = I('param.zone_id',null);
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
@@ -79,33 +55,6 @@ class ZoneController extends SystemApiController
         $this->ajaxReturn($result['code'],$result['msg']);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | 添加中心
-    |--------------------------------------------------------------------------
-    | @author nxx
-    */
-    public function newCenter()
-    {
-        //获取请求？
-        $param['parentid'] = I('param.zone_id',null);
-        $param['name'] = I('param.name',null);
-        $param['email'] = I('param.email',null);
-        $param['tel'] = I('param.tel',null);
-        $param['abstract'] = I('param.abstract',null);
-        $param['address'] = I('param.address',null);
-        //去除数组空值
-        $param = array_filter($param);
-        $param['centersign'] = 10;
-        $param['level'] = 4;
-        //获取接口服务层
-        $result = D('Zone','Service')->createZone($param);
-        //返回参数
-        if($result['code']==0){
-            $this->ajaxReturn(0,'获取成功',$result['data']);
-        }
-        $this->ajaxReturn($result['code'],$result['msg']);
-    }
 
     /*
     |--------------------------------------------------------------------------
@@ -117,8 +66,6 @@ class ZoneController extends SystemApiController
     {
         //获取请求？
         $param['zone_id'] = I('param.zone_id',null);
-        $center = I("param.center",null);
-        $sign = I('param.sign',null);
         $param['name'] = I('param.name',null);
         $param['email'] = I('param.email',null);
         $param['tel'] = I('param.tel',null);
@@ -128,7 +75,7 @@ class ZoneController extends SystemApiController
         //去除数组空值
         $param = array_filter($param);
         //获取接口服务层
-        $result = D('Zone', 'Service')->editZone($param, $param['zone_id'], $center);
+        $result = D('Zone', 'Service')->editZone($param, $param['zone_id']);
         //返回参数
         if($result['code']==0){
             $this->ajaxReturn(0,'获取成功',$result['data']);
@@ -144,12 +91,25 @@ class ZoneController extends SystemApiController
     {
         $zone_id = I('param.zone_id',null);
         $zone = D('Zone', 'Service')->getZoneInfo(array('zone_id'=>$zone_id));
-        if (!$zone['data']) {
+        if ($zone['code'] != 0) {
             $this->ajaxReturn($zone['code'],'没有可供管理的区域');
         }
-        $this->ajaxReturn($zone['code'], $zone['data']);
+        $this->ajaxReturn($zone['code'], '', $zone['data']);
 
     }
+
+    
+    /*
+    获取区域父级列表
+    @author Nixx
+    */
+    public function getParentZoneList()
+    {
+        $zone_id = I('param.zone_id',null);
+        $zoneList = D('Zone', 'Service')->getPidZone(array('zone_id'=>$zone_id));
+        $this->ajaxReturn(0,'',$zoneList['data']);
+    }
+
 
     /*
     获取区域信息
@@ -164,22 +124,6 @@ class ZoneController extends SystemApiController
         }
         $this->ajaxReturn(0,'',$zoneList['data']);
     }
-
-    // /*
-    // 获取区域信息列表
-    // @author Nixx
-    // */
-    // public function zoneList()
-    // {
-    // 	$zone_id = 1;//超级管理员
-    // 	$zoneList = D('Zone', 'Service')->getZoneList(array('zone_id'=>$zone_id));
-    //     if (!$zoneList['data']) {
-    //         $this->ajaxReturn(1,'没有可供管理的区域');
-    //     }
-    //     $this->assign('zoneList', $zoneList['data']);
-    //     $this->assign('urlDelZone', U("System/Zone/delZone"));
-    //     $this->display();
-    // }
 
     /*
     删除区域信息
