@@ -4,9 +4,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
 		<title>系统首页-{$siteinfo.sitename}</title>
-		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
-		<link rel="stylesheet" href="__PUBLIC__/css/employeesList.css">
 		<link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
+		<link rel="stylesheet" href="__PUBLIC__/js/pjax/css/nprogress.css">
+		<Zelin:css  src="common,employeesList"  />
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 	</head>
 	<body>
@@ -154,13 +154,13 @@
 									</li>
 									{{# }else{ }}
 									<li>
-										<a href="{:U('System/Personnel/systemUserInfo')}'?user_id={{ v.system_user_id }}">
+										<a href="{:U('System/Personnel/systemUserInfo')}?user_id={{ v.system_user_id }}">
 											<span class="fileDetail"></span>
 											<em>档案详情</em>
 										</a>
 									</li>
 									<li>
-										<a href="{:U('System/Personnel/editSystemUserInfo')}'?user_id={{ v.system_user_id }}">
+										<a href="{:U('System/Personnel/editSystemUserInfo')}?user_id={{ v.system_user_id }}">
 											<span class="fileChange"></span>
 											<em>修改档案</em>
 										</a>
@@ -179,7 +179,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="{:U('System/Personnel/editSystemUser')}'?user_id={{ v.system_user_id }}">
+										<a href="{:U('System/Personnel/editSystemUser')}?user_id={{ v.system_user_id }}">
 											<span class="modify"></span>
 											<em>修改账号</em>
 										</a>
@@ -205,7 +205,7 @@
 					<div class="select_title l">全部职位</div>
 					<div class="arrow r"></div>
 				</dt>
-				<dd class="fxDone" data-name="role_id" data-value="0">全部职位</dd>
+				<dd class="fxDone" data-name="role_id" style="padding-left: 10px" data-value="0">全部职位</dd>
 				{{# layui.each(d, function(k, v){ }}
 					<dt class="caption">
 					<div class="select_title2 l " data-name="role_id" data-value="{{ v.department_id }}">{{ v.departmentname }}</div>
@@ -252,12 +252,6 @@
 			</dl>
 			<input type="hidden" name="usertype" value="{{# $.getUrlParam('usertype'); }}">
 		</script>
-		<link rel="stylesheet" href="__PUBLIC__/js/pjax/css/nprogress.css">
-		<script type="text/javascript" src="__PUBLIC__/js/pjax/js/jquery.pjax.js"></script>
-		<script type="text/javascript" src="__PUBLIC__/js/pjax/js/nprogress.js"></script>
-		<script src="__PUBLIC__/js/layui/layui.js"></script>
-		<script src="__PUBLIC__/js/layer/layer.js"></script>
-		<script src="__PUBLIC__/js/common.js"></script>
-		<script src="__PUBLIC__/js/personnel.systemuserlist.js"></script>
+		<Zelin:js  src="/pjax/js/nprogress,/pjax/js/jquery.pjax,/layui/layui,/layer/layer,common,personnel.systemuserlist"  />
 	</body>
 </html>

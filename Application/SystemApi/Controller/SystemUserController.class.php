@@ -26,6 +26,7 @@ class SystemUserController extends SystemApiController
     {
         //获取请求？x
         $param['page'] = I('param.page',null);
+        $param['order'] = I('param.order',null);
         $param['zone_id'] = I('param.zone_id',$this->system_user['zone_id']);
         $param['usertype'] = I('param.usertype',null);
         $param['role_ids'] = I('param.role_ids',null);
