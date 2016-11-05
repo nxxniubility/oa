@@ -41,8 +41,7 @@ function selectbox() {
         $(".select dd").hide();
         selectStatus($(".select dt"));
     });
-
-}
+};
 
 //当前下拉菜单状态
 function selectStatus(obj) {
@@ -56,9 +55,8 @@ function selectStatus(obj) {
         obj.addClass("on");
         obj.parent().addClass("on zindex4");
         obj.find(".arrow").addClass("arrow_on");
-
-    }
-}
+    };
+};
 //其他下拉菜单状态
 function otherSelectStatus() {
     $("[class^=select]").parent().find(".on").removeClass("on");
@@ -101,8 +99,8 @@ function checknode(obj) {
         if (eval(le) < eval(level_top)) {
             chk.eq(i).attr("checked", 'checked');
             var level_top = level_top - 1;
-        }
-    }
+        };
+    };
     for (var j = num + 1; j < count; j++) {
         var le = chk.eq(j).attr('level');
         if (chk.eq(num).attr("checked") == 'checked') {
@@ -111,9 +109,9 @@ function checknode(obj) {
         } else {
             if (eval(le) > eval(level_bottom)) chk.eq(j).attr("checked", false);
             else if (eval(le) == eval(level_bottom)) break;
-        }
-    }
-}
+        };
+    };
+};
 // 限制字符长度
 function chkLength(el,size){
 	if(el.value.length > size){
