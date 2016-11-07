@@ -62,42 +62,28 @@ class DataController extends SystemApiController
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function addDataLogs($requesr=null)
+    public function addDataLogs()
     {
         //外部调用？
-        if($requesr===null){
-            $where['operattype'] = I('param.operattype',null);
-            $where['operator_user_id'] = I('param.operator_user_id',null);
-            $where['user_id'] = I('param.user_id',null);
-            $where['createuser_id'] = I('param.createuser_id',null);
-            $where['updateuser_id'] = I('param.updateuser_id',null);
-            $where['system_user_id'] = I('param.system_user_id',null);
-            $where['zone_id'] = I('param.zone_id',null);
-            $where['channel_id'] = I('param.channel_id',null);
-            $where['infoquality'] = I('param.infoquality',null);
-        }else{
-            $where = $requesr;
-        }
-        $getService = function($where) {
+        $param['operator_user_id'] = I('param.operator_user_id',null);
+        $param['operattype'] = I('param.operattype',null);
+        $param['user_id'] = I('param.user_id',null);
+        $getService = function($param) {
             //去除数组空值
-            $where = array_filter($where);
+            $param = array_filter($param);
             //参数添加
-            $where['logtime'] = time();
+            $param['logtime'] = time();
             //获取接口服务层
             $DataService = new DataService();
-            $result = $DataService->addDataLogs($where);
+            $result = $DataService->addDataLogs($param);
             //返回参数
             if($result['code']==0){
                 return array('code'=>0,'msg'=>'获取成功','data'=>$result['data']);
             }
             return array('code'=>$result['code'],'msg'=>$result['msg']);
         };
-        $reData = $getService($where);
-        if(!empty($request)){
-            return $reData;
-        }else{
-            $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
-        }
+        $reData = $getService($param);
+        $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
     }
 
 

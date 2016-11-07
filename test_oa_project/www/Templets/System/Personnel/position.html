@@ -4,11 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
     <title>系统首页-{$siteinfo.sitename}</title>
-    <link rel="stylesheet" href="__PUBLIC__/css/common.css">
-    <link rel="stylesheet" href="__PUBLIC__/css/jquery.treetable.css">
-    <link rel="stylesheet" href="__PUBLIC__/css/jquery.treetable.theme.default.css">
-    <link rel="stylesheet" href="__PUBLIC__/css/rightsManagement.css">
     <link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
+    <Zelin:css  src="common,jquery.treetable,jquery.treetable.theme.default,rightsManagement"  />
 </head>
 <body>
 <div class="wrapBox" id="posWrap">
@@ -19,10 +16,10 @@
                 <a href="{:U('System/Personnel/addPosition')}" class="addPermissions">添加职位权限</a>
             </div>
         </div>
-        
-        <table cellpadding="0" cellspacing="0" id="positionTable">
 
-        </table>
+        <div id="get_body_list">
+
+        </div>
 
         <div class="collegaPage">
             <a class="sort"  id="sort" href="javascript:void(0)">排序</a>
@@ -51,206 +48,78 @@
 
 <!--列表模版-->
 <script id="demo" type="text/html">
-    <tr>
-        <th class="firItem">
-            <span>排序</span>
-            {{# if($.getUrlParam('order')=='sort asc'){ }}
-            <i class="oergList on_sort" data-value="sort desc"></i>
+    <table cellpadding="0" cellspacing="0" id="positionTable">
+        <tr>
+            <th class="firItem">
+                <span>排序</span>
+                {{# if($.getUrlParam('order')=='sort asc'){ }}
+                <i class="oergList on_sort" data-value="sort desc"></i>
+                {{# }else{ }}
+                <i class="oergList on_sort" data-value="sort asc"></i>
+                {{# } }}
+            </th>
+            <th>
+                <span>ID</span>
+                {{# if($.getUrlParam('order')=='role_id asc'){ }}
+                <i class="oergList on_sort" data-value="role_id desc"></i>
+                {{# }else{ }}
+                <i class="oergList on_sort" data-value="role_id asc"></i>
+                {{# } }}
+            </th>
+            <th>职位名称</th>
+            <th>所属部门</th>
+            <th>职位描述</th>
+            <th>状态</th>
+            <th class="lastItem">操作</th>
+        </tr>
+        {{# layui.each(d, function(k, v){ }}
+        <tr>
+            <td class="firItem">
+                <input type="tel" class="sequenceInp" value="{{ v.sort }}" oldSort="{{ v.sort }}"  data-id="{{ v.id }}" placeholder="0" maxlength="4" autocomplete="off">
+            </td>
+            <td class="role_id">{{ v.id }}</td>
+            <td>{{ v.name }}</td>
+            <td>{{ v.department_name }}</td>
+            <td>{{ v.remark }}</td>
+            {{# if(v.display==1){ }}
+            <td>启用</td>
             {{# }else{ }}
-            <i class="oergList on_sort" data-value="sort asc"></i>
+            <td>禁用</td>
             {{# } }}
-        </th>
-        <th>
-            <span>ID</span>
-            {{# if($.getUrlParam('order')=='role_id asc'){ }}
-            <i class="oergList on_sort" data-value="role_id desc"></i>
-            {{# }else{ }}
-            <i class="oergList on_sort" data-value="role_id asc"></i>
-            {{# } }}
-        </th>
-        <th>职位名称</th>
-        <th>所属部门</th>
-        <th>职位描述</th>
-        <th>状态</th>
-        <th class="lastItem">操作</th>
-    </tr>
-    {{# layui.each(d, function(k, v){ }}
-    <tr>
-        <td class="firItem">
-            <input type="tel" class="sequenceInp" value="{{ v.sort }}" oldSort="{{ v.sort }}"  data-id="{{ v.id }}" placeholder="0" maxlength="4" autocomplete="off">
-        </td>
-        <td class="role_id">{{ v.id }}</td>
-        <td>{{ v.name }}</td>
-        <td>{{ v.department_name }}</td>
-        <td>{{ v.remark }}</td>
-        {{# if(v.display==1){ }}
-        <td>启用</td>
-        {{# }else{ }}
-        <td>禁用</td>
-        {{# } }}
-        <td class="lastItem">
-            <div class="operating-cont">
-                <a href="javascript:;" class="rightsSelect"><i></i></a>
-                <div class="otherOperation">
-                    <div class="triangle"></div>
-                    <div class="otherIcon">
-                        <ul>
-                            <li>
-                                <a href="javascript:;" class="selectPermissions" sid="{{ v.id }}">
-                                    <span class="set"></span>
-                                    <em>权限设置</em>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{:U('System/Personnel/editPosition')}?role_id={{ v.id }}">
-                                    <span class="modify"></span>
-                                    <em>修改</em>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:del_position('{{ v.id }}');">
-                                    <span class="delete"></span>
-                                    <em>删除</em>
-                                </a>
-                            </li>
-                        </ul>
+            <td class="lastItem">
+                <div class="operating-cont">
+                    <a href="javascript:;" class="rightsSelect"><i></i></a>
+                    <div class="otherOperation">
+                        <div class="triangle"></div>
+                        <div class="otherIcon">
+                            <ul>
+                                <li>
+                                    <a href="javascript:;" class="selectPermissions" sid="{{ v.id }}">
+                                        <span class="set"></span>
+                                        <em>权限设置</em>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{:U('System/Personnel/editPosition')}?role_id={{ v.id }}">
+                                        <span class="modify"></span>
+                                        <em>修改</em>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:del_position('{{ v.id }}');">
+                                        <span class="delete"></span>
+                                        <em>删除</em>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </td>
-    </tr>
-    {{#  }); }}
+            </td>
+        </tr>
+        {{#  }); }}
+    </table>
 </script>
-<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-<script src="__PUBLIC__/js/layui/layui.js"></script>
-<script src="__PUBLIC__/js/layer/layer.js"></script>
-<script src="__PUBLIC__/js/jquery.treetable.js"></script>
-<script src="__PUBLIC__/js/common.js"></script>
-<script src="__PUBLIC__/js/rightsManagement.js"></script>
-<script>
-    $(function(){
-        //获取页面参数
-        var thisObj = $('#positionTable');
-        var page = $.getUrlParam('page',1);
-        thisObj.html(getLoding());
-        getAjax(page);
-        //获取列表内容
-        function getAjax(page){
-            var order = $.getUrlParam('order');
-            var data = {
-                order:order,
-                page: ((page-1)*15)+',15'
-            };
-            common_ajax2(data,'/SystemApi/Role/getRoleList','no',function(redata){
-                layui.use('laytpl', function(){
-                    var laytpl = layui.laytpl;
-                    laytpl(demo.innerHTML).render(redata.data.data, function(result){
-                        thisObj.html(result);
-                    });
-                });
-                //分页
-                if(redata.data.count>0){
-                    layui.use(['laypage', 'layer'], function(){
-                        var laypage = layui.laypage,layer = layui.layer;
-                        laypage({
-                            cont:  $('.paging')
-                            ,pages:  Math.ceil(redata.data.count/15) //总页数
-                            ,groups: 5 //连续显示分页数
-                            ,first:'首页'
-                            ,last:'尾页'
-                            ,skin: '#4dbe88'
-                            ,curr: page
-                            ,jump: function(obj, first){
-                                //得到了当前页，用于向服务端请求对应数据
-                                var curr = obj.curr;
-                                if(!first){
-                                    location.href=$.getUrl('page',curr);
-                                }
-                            }
-                        });
-                    });
-                };
-            },1);
-        };
-        $(document).on('click','.on_sort',function(){
-            location.href='?order='+$(this).attr('data-value');
-        });
-        //树配置
-        $("#boxTabel").treeTable({
-            expandable: true,
-        });
-		//修改排序值
-		$('#sort').click(function(){
-			var  ids_sort="";
-			$(".sequenceInp").each(function(index, element) {
-				if( $(this).val()!=$(this).attr('oldSort') ){							
-					ids_sort+=','+$(this).attr('data-id')+'-'+$(this).val();
-				}
-			});
-			if(ids_sort!="")ids_sort=ids_sort.substr(1);					
-			var data = {
-				sort_data:ids_sort,
-				type:'sort'
-			};
-			common_ajax(data,"{:U('System/Personnel/dispostPosition')}",'reload');
-		});
-		//修改排序值
-		$('.SequenceInp').blur(function(){
-			var v=parseInt($.trim($(this).val()));
-			if(!v) {
-				$(this).val($(this).attr('oldSort'));
-			}else{
-				$(this).val(v);
-			};
-		});
-        //修改权限-前置
-        $(document).on('click','.addSubmit',function(){
-            var role_id = $(':input[name="role_id"]').val();
-            if(role_id!=''){
-                //获取node_id
-                var access='';
-                if($('.radio:checked').length>0){
-                    $('.radio:checked').each(function(i){
-                        if(i==0){
-                            access+=$(this).val()+'-'+$(this).attr('pid')+'-'+$(this).attr('level');
-                        }else{
-                            access+=','+$(this).val()+'-'+$(this).attr('pid')+'-'+$(this).attr('level');
-                        };
-                    });
-                };
-                edit_access(role_id,access);
-            }
-        })
-    })
-    //职位删除
-    function del_position(role_id){
-        layer.confirm('确定要删除该职位？', {
-            btn: ['确定','取消'] //按钮
-        }, function(){
-            var data = {
-                role_id:role_id
-            };
-            common_ajax2(data,"/SystemApi/Role/delRole",'reload');
-        }, function(){});
-    }
-    //职位权限修改
-    function edit_access(role_id,access){
-        var data = {
-            role_id:role_id,
-            access:access
-        };
-        common_ajax2(data,"/SystemApi/Role/editRole",'reload',function(reflag){
-            layer.closeAll('loading');
-            if(reflag.code && reflag.code!=0){
-                layer.closeAll();
-                layer.msg(reflag.msg,{icon:2});
-            }else{
-                layer.closeAll();
-                layer.msg(reflag.msg,{icon:1});
-            }
-            $(':input[name="role_id"]').val('');
-        });
-    };
-</script>
+<Zelin:js  src="jquery-1.9.1.min,/pjax/js/nprogress,/pjax/js/jquery.pjax,/layui/layui,/layer/layer,jquery.treetable,common,personnel.posltion"  />
 </body>
 </html>

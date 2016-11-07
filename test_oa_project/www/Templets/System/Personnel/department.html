@@ -17,10 +17,9 @@
 						<a href="{:U('/System/Personnel/addDepartment')}" class="newDepartMent">新增部门</a>
 					</div>
 				</div>
-				
-				<table cellpadding="0" cellspacing="0" id="deparrTable">
+				<div id="get_body_list">
 
-				</table>
+				</div>
 
 				<div class='collegaPage'>
 					<a class="sort"  id="sort" href="javascript:void(0)">修改排序</a>
@@ -31,59 +30,61 @@
 		</div>
 		<!--列表模版-->
 		<script id="demo" type="text/html">
-			<tr>
-				<th class="firItem">
-					<span>排序</span>
-					{{# if($.getUrlParam('order')=='sort asc'){ }}
-					<i class="oergList on_sort" data-value="sort desc"></i>
-					{{# }else{ }}
-					<i class="oergList on_sort" data-value="sort asc"></i>
-					{{# } }}
-				</th>
-				<th>
-					<span>ID</span>
-					{{# if($.getUrlParam('order')=='department_id asc'){ }}
-					<i class="oergList on_sort" data-value="department_id desc"></i>
-					{{# }else{ }}
-					<i class="oergList on_sort" data-value="department_id asc"></i>
-					{{# } }}
-				</th>
-				<th>部门名称</th>
-				<th class="lastItem">操作</th>
-			</tr>
-			{{# layui.each(d, function(k, v){ }}
-			<tr>
-				<td class="firItem">
-					<input type="tel" class="SequenceInp" placeholder="0" maxlength="4" value="{{ v.sort }}" data-id="{{ v.department_id }}" oldSort="{{ v.sort }}" autocomplete="off">
-				</td>
-				<td>{{ v.department_id }}</td>
-				<td>{{ v.departmentname }}</td>
-				<td class="lastItem">
-					<div class="operating-cont">
-						<a href="javascript:;" class="orgSelect"><i></i></a>
-						<div class="otherOperation">
-							<div class="triangle"></div>
-							<div class="otherIcon">
-								<ul>
-									<li>
-										<a href="<?php echo U('System/Personnel/editDepartment'); ?>?dep_id={{ v.department_id }}">
-											<span class="modify"></span>
-											<em>修改</em>
-										</a>
-									</li>
-									<li>
-										<a href="javascript:;" onclick="del_department('{{ v.department_id }}')">
-											<span class="delete"></span>
-											<em>删除</em>
-										</a>
-									</li>
-								</ul>
+			<table cellpadding="0" cellspacing="0" id="deparrTable">
+				<tr>
+					<th class="firItem">
+						<span>排序</span>
+						{{# if($.getUrlParam('order')=='sort asc'){ }}
+						<i class="oergList on_sort" data-value="sort desc"></i>
+						{{# }else{ }}
+						<i class="oergList on_sort" data-value="sort asc"></i>
+						{{# } }}
+					</th>
+					<th>
+						<span>ID</span>
+						{{# if($.getUrlParam('order')=='department_id asc'){ }}
+						<i class="oergList on_sort" data-value="department_id desc"></i>
+						{{# }else{ }}
+						<i class="oergList on_sort" data-value="department_id asc"></i>
+						{{# } }}
+					</th>
+					<th>部门名称</th>
+					<th class="lastItem">操作</th>
+				</tr>
+				{{# layui.each(d, function(k, v){ }}
+				<tr>
+					<td class="firItem">
+						<input type="tel" class="SequenceInp" placeholder="0" maxlength="4" value="{{ v.sort }}" data-id="{{ v.department_id }}" oldSort="{{ v.sort }}" autocomplete="off">
+					</td>
+					<td>{{ v.department_id }}</td>
+					<td>{{ v.departmentname }}</td>
+					<td class="lastItem">
+						<div class="operating-cont">
+							<a href="javascript:;" class="orgSelect"><i></i></a>
+							<div class="otherOperation">
+								<div class="triangle"></div>
+								<div class="otherIcon">
+									<ul>
+										<li>
+											<a href="<?php echo U('System/Personnel/editDepartment'); ?>?dep_id={{ v.department_id }}">
+												<span class="modify"></span>
+												<em>修改</em>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:;" onclick="del_department('{{ v.department_id }}')">
+												<span class="delete"></span>
+												<em>删除</em>
+											</a>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
-					</div>
-				</td>
-			</tr>
-			{{#  }); }}
+					</td>
+				</tr>
+				{{#  }); }}
+			</table>
 		</script>
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/layui/layui.js"></script>
@@ -91,9 +92,9 @@
 		<script src="__PUBLIC__/js/common.js"></script>
 		<script src="__PUBLIC__/js/organization.js"></script>
 		<script>
-			$(function(){$.getUrl('page',1);
+			$(function(){
 				//获取页面参数
-				var thisObj = $('#deparrTable');
+				var thisObj = $('#get_body_list');
 				var page = $.getUrlParam('page',1);
 				thisObj.html(getLoding());
 				getAjax(page);
