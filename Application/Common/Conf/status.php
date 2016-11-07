@@ -106,6 +106,10 @@ return array(
             14 => '在线咨询',
             15 => '其他'
         ),
+        //更新重复量时，设置保护期限
+        'UPDATE_PROTECT'=>array(
+            1=>'7',//单位：天
+        ),
     ),
     //最近跟进结果
     'SYSTEM_USER_STATUS'=>array(
