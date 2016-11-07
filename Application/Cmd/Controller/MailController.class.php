@@ -125,7 +125,7 @@ class MailController extends BaseController {
             }
 			$data['zl_user_info']['channel_id'] = $pattern['channel_id'];
             //判断简历是否存在
-            $data['zl_user']['username'] = encryptPhone($data['zl_user']['username'], C('PHONE_CODE_KEY'))
+            $data['zl_user']['username'] = encryptPhone($data['zl_user']['username'], C('PHONE_CODE_KEY'));
             $isSameUsername = $this->UserDB->getFind(array('username'=>$data['zl_user']['username']));
             $isSameUserqq = $this->UserDB->getFind(array('username'=>$data['zl_user']['qq']));
             $isSameUsertel = $this->UserDB->getFind(array('username'=>$data['zl_user']['tel']));
