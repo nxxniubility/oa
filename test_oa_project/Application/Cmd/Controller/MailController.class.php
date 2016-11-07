@@ -130,18 +130,28 @@ class MailController extends BaseController {
             $isSameUserqq = $this->UserDB->getFind(array('username'=>$data['zl_user']['qq']));
             $isSameUsertel = $this->UserDB->getFind(array('username'=>$data['zl_user']['tel']));
             $save['createupdatetime'] = time();
+            $protectTime = C('FIELD_STATUS.UPDATE_PROTECT')*24*3600;
             if(!empty($isSameUsername)) {
-            	$update = $this->UserDB->editData($save, $isSameUser['user_id']);
+                //如果创建时间+保护时间小于当前时间，则更新
+                if (($isSameUsername['createtime'] + $protectTime) < $save['createupdatetime']){
+                    $update = $this->UserDB->editData($save, $isSameUsername['user_id']);
+                }
                 $this->delete_mail($i);
                 $this->msg .= '当前简历已经入库过'."\r\n";
                 continue;
             }elseif (!empty($isSameUserqq)) {
-            	$update = $this->UserDB->editData($save, $isSameUserqq['user_id']);
+                //如果创建时间+保护时间小于当前时间，则更新
+                if (($isSameUserqq['createtime'] + $protectTime) < $save['createupdatetime']){
+                    $update = $this->UserDB->editData($save, $isSameUserqq['user_id']);
+                }
                 $this->delete_mail($i);
                 $this->msg .= '当前简历已经入库过'."\r\n";
                 continue;
             }elseif (!empty($isSameUsertel)) {
-            	$update = $this->UserDB->editData($save, $isSameUsertel['user_id']);
+                //如果创建时间+保护时间小于当前时间，则更新
+                if (($isSameUsertel['createtime'] + $protectTime) < $save['createupdatetime']){
+                    $update = $this->UserDB->editData($save, $isSameUsertel['user_id']);
+                }
                 $this->delete_mail($i);
                 $this->msg .= '当前简历已经入库过'."\r\n";
                 continue;
