@@ -20,12 +20,10 @@ class FeeController extends SystemController
         $request = I('get.');
         $re_page = isset($request['page']) ? $request['page'] : 1;
         unset($request['page']);
-
         if (!empty($request)) {
             $searchtype = trim($request['key_name']);
             $keyValue = trim($request['key_value']);
             if (!empty($keyValue) || $keyValue == '0') {
-
                 switch ($searchtype) {
                     case 'qq':
                         $where['zl_user.qq'] = array('like', '%' . $keyValue . '%');
@@ -45,6 +43,7 @@ class FeeController extends SystemController
                 $where['zl_fee_logs.receivetype'] = $request['receivetype'];
             }
         }
+        
         $where['zl_fee_logs.paytype'] = array('IN', array('1', '3')); //1是预报状态, 3是退费状态
         $where['zl_fee_logs.auditor_status'] = array('IN', array('10', '30'));//10是审核中, 30是通过, 20失败不显示
         $where['zl_user.status'] = array('IN', array('60', '120')); //60预报状态, 120是退费状态
