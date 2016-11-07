@@ -175,7 +175,12 @@ class MailController extends BaseController {
                 $this->msg .= '插入 zl_user_info 失败'."\r\n";
                 continue;
             }
-            
+			//添加转出人 出库量
+			$dataLog['operattype'] = 1;
+			$dataLog['operator_user_id'] = 0;
+			$dataLog['user_id'] = $user_id;
+			$dataLog['logtime'] = time();
+			D('Data', 'Service')->addDataLogs($dataLog);
             $this->UserDB->commit();
             //读取完毕删除 
             $this->delete_mail($i);

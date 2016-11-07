@@ -77,9 +77,7 @@ class DataService extends BaseService
             $add_arr = array();
             $userIds = array();
             foreach($userList as $k=>$v){
-                if($v['status']==160 && $data['operattype']==15){
-                    continue;
-                }elseif($v['status']==160 && $data['operattype']==5){
+                if($v['status']==160){
                     continue;
                 }
                 $add_arr[] = array(
@@ -99,7 +97,6 @@ class DataService extends BaseService
                 $temp_system_user_id = $v['system_user_id'];
                 $temp_zone_id = $v['zone_id'];
                 $userIds[] = $v['user_id'];
-
             }
             $addLog_flag = D('DataLogs')->addAll($add_arr);
             //添加营销统计---------------------
@@ -238,14 +235,20 @@ class DataService extends BaseService
 
             //员工
             if(empty($newArr['systemuser'][$v['system_user_id']]['system_user_id'])){
-                $sys_where['system_user_id'] = $v['system_user_id'];
-                $sys_where['usertype'] = 1;
-                $info = D('SystemUser','Service')->getSystemUsersInfo($sys_where);
-                $info = $info['data'];
-                $newArr['systemuser'][$v['system_user_id']]['realname'] = $info['realname'];
-                $newArr['systemuser'][$v['system_user_id']]['role_id'] = $info['roles'][0]['role_id'];
-                $newArr['systemuser'][$v['system_user_id']]['rolename'] = $info['role_names'];
-                $newArr['systemuser'][$v['system_user_id']]['system_user_id'] = $v['system_user_id'];
+                if($v['system_user_id']==0){
+                    $newArr['systemuser'][$v['system_user_id']]['realname'] = '系统创建';
+                    $newArr['systemuser'][$v['system_user_id']]['role_id'] = '';
+                    $newArr['systemuser'][$v['system_user_id']]['rolename'] = '';
+                    $newArr['systemuser'][$v['system_user_id']]['system_user_id'] = 0;
+                }else{
+                    $sys_where['system_user_id'] = $v['system_user_id'];
+                    $info = D('SystemUser','Service')->getSystemUsersInfo($sys_where);
+                    $info = $info['data'];
+                    $newArr['systemuser'][$v['system_user_id']]['realname'] = $info['realname'];
+                    $newArr['systemuser'][$v['system_user_id']]['role_id'] = $info['roles'][0]['role_id'];
+                    $newArr['systemuser'][$v['system_user_id']]['rolename'] = $info['role_names'];
+                    $newArr['systemuser'][$v['system_user_id']]['system_user_id'] = $v['system_user_id'];
+                }
             }
             $newArr['systemuser'][$v['system_user_id']]['addcount'] = $newArr['systemuser'][$v['system_user_id']]['addcount']+$v['addnum'];
             $newArr['systemuser'][$v['system_user_id']]['acceptcount'] = $newArr['systemuser'][$v['system_user_id']]['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum']+$v['redeemnum'];
@@ -375,7 +378,7 @@ class DataService extends BaseService
     public function addDataMarket($where)
     {
         //必须参数
-        if(empty($where['system_user_id'])) return array('code'=>2,'msg'=>'参数异常');
+        if(empty($where['system_user_id'])) $where['system_user_id'] = 0;
         $_time = time();
         //$where['num'] =  +1/-1
         $data_where['daytime'] = date('Ymd');

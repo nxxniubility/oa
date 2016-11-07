@@ -32,6 +32,7 @@ class SystemUserController extends SystemApiController
         $param['role_ids'] = I('param.role_ids',null);
         $param['key_name'] = I('param.key_name',null);
         $param['key_value'] = I('param.key_value',null);
+        $param['status'] = 1;
         if($param['key_name'] && $param['key_value']){
             if($param['key_name']=='username'){
                 $param[$param['username']] = encryptPhone($param['key_value'],  C('PHONE_CODE_KEY'));
