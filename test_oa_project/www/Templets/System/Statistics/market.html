@@ -730,7 +730,7 @@
 								<foreach name="data['dataMarket']['systemuser']" item="v" key="k">
 									<tr class="sr_li">
 										<td>{$v.realname}</td>
-										<td>{$v.rolename}</td>
+										<td class="min-width130">{$v.rolename}</td>
 										<td {:!empty($v['redaddcount'])?'class="red"':''}>{$v.addcount}</td>
 										<td {:!empty($v['redallocationcount'])?'class="red"':''}>{$v.allocationcount}</td>
 										<td {:!empty($v['redacceptcount'])?'class="red"':''}>{$v.acceptcount}</td>

@@ -170,3 +170,6 @@
 /*1019*/
 #sr_everyday th.one-item, #sr_everyday td.one-item {min-width:110px;}
 #sr_everyday .container i {width:20px;}
+
+/*1107*/
+#sr_staff td.min-width130 {min-width:130px;}
