@@ -110,6 +110,10 @@ return array(
         'UPDATE_PROTECT'=>array(
             1=>'7',//单位：天
         ),
+        //更新重复量时，设置保护期限
+        'SET_ATTITUDE'=>array(
+            1=>'8000',//单位：元
+        ),
     ),
     //最近跟进结果
     'SYSTEM_USER_STATUS'=>array(

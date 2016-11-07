@@ -125,7 +125,6 @@ class MailController extends BaseController {
             }
 			$data['zl_user_info']['channel_id'] = $pattern['channel_id'];
             //判断简历是否存在
-            $data['zl_user']['username'] = encryptPhone($data['zl_user']['username'], C('PHONE_CODE_KEY'));
             $isSameUsername = $this->UserDB->getFind(array('username'=>$data['zl_user']['username']));
             $isSameUserqq = $this->UserDB->getFind(array('username'=>$data['zl_user']['qq']));
             $isSameUsertel = $this->UserDB->getFind(array('username'=>$data['zl_user']['tel']));
@@ -160,6 +159,9 @@ class MailController extends BaseController {
             $data['zl_user']['jointime'] = $header_info['date'];
             //入库
             $this->UserDB->startTrans(); 
+            if ($data['zl_user']['wantsalary']>=C('FIELD_STATUS.SET_ATTITUDE')) {
+                $data['zl_user']['attitude_id'] = 13;
+            }
             $user_id = $this->UserDB->add($data['zl_user']);
             if(empty($user_id)) {
                 $this->UserDB->rollback(); //插入失败，回滚

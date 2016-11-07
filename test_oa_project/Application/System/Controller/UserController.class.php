@@ -1343,16 +1343,17 @@ class UserController extends SystemController
                 if (strlen($user['postcode']) != 6) {  //邮编验证
                     unset($user['postcode']);
                 }
-                if ($user['lastsalary']) {  //目前薪资
-                    $user['lastsalary'] = str_replace('万', '0000', $user['lastsalary']);
-                    $user['lastsalary'] = str_replace('k', '000', $user['lastsalary']);
-                    $user['lastsalary'] = str_replace('-', '_', $user['lastsalary']);
-                    $user['lastsalary'] = preg_replace('[\W]', '', $user['lastsalary']);
+                
+                if ($user['wantsalary']) {  //目前薪资
+                    $user['wantsalary'] = str_replace('万', '0000', $user['wantsalary']);
+                    $user['wantsalary'] = str_replace('k', '000', $user['wantsalary']);
+                    $user['wantsalary'] = str_replace('-', '_', $user['wantsalary']);
+                    $user['wantsalary'] = preg_replace('[\W]', '', $user['wantsalary']);
 
-                    $user['lastsalary'] = explode('_', $user['lastsalary']);
-                    $user['lastsalary'] = max($user['lastsalary']);
+                    $user['wantsalary'] = explode('_', $user['wantsalary']);
+                    $user['wantsalary'] = max($user['wantsalary']);
                 } else {
-                    $user['lastsalary'] = 0;//  0-表示面议    年薪未处理
+                    $user['wantsalary'] = 0;//  0-表示面议    年薪未处理
                 }
 
                 if ($user['workyear']) {  //目前薪资
@@ -1497,16 +1498,15 @@ class UserController extends SystemController
                     unset($user['postcode']);
                 }
     
-                if ($user['lastsalary']) {  //目前薪资
-                    $user['lastsalary'] = str_replace('万', '0000', $user['lastsalary']);
-                    $user['lastsalary'] = str_replace('k', '000', $user['lastsalary']);
-                    $user['lastsalary'] = str_replace('-', '_', $user['lastsalary']);
-                    $user['lastsalary'] = preg_replace('[\W]', '', $user['lastsalary']);
-    
-                    $user['lastsalary'] = explode('_', $user['lastsalary']);
-                    $user['lastsalary'] = max($user['lastsalary']);
+                if ($user['wantsalary']) {  //目前薪资
+                    $user['wantsalary'] = str_replace('万', '0000', $user['wantsalary']);
+                    $user['wantsalary'] = str_replace('k', '000', $user['wantsalary']);
+                    $user['wantsalary'] = str_replace('-', '_', $user['wantsalary']);
+                    $user['wantsalary'] = preg_replace('[\W]', '', $user['wantsalary']);
+                    $user['wantsalary'] = explode('_', $user['wantsalary']);
+                    $user['wantsalary'] = max($user['wantsalary']);
                 } else {
-                    $user['lastsalary'] = 0;//  0-表示面议    年薪未处理
+                    $user['wantsalary'] = 0;//  0-表示面议    年薪未处理
                 }
     
                 if ($user['workyear']) {  //目前薪资
