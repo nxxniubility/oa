@@ -66,14 +66,14 @@ class MongoModel extends Model{
      */
     public function flush() {
         // 缓存不存在则查询数据表信息
-        $fields =   $this->db->getFields();
+        $fields = $this->db->getFields();
         if(!$fields) { // 暂时没有数据无法获取字段信息 下次查询
             return false;
         }
-        $this->fields   =   array_keys($fields);
+        $this->fields = array_keys($fields);
         foreach ($fields as $key=>$val){
             // 记录字段类型
-            $type[$key]    =   $val['type'];
+            $type[$key] = $val['type'];
         }
         // 记录字段类型信息
         if(C('DB_FIELDTYPE_CHECK'))   $this->fields['_type'] =  $type;
