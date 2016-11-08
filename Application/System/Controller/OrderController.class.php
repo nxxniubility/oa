@@ -249,7 +249,6 @@ class OrderController extends SystemController
                         }
                     }
                 }
-
                 $requestP['system_user_id'] = $system_user_id;
                 if (!$requestP['zone_id']) {
                     $requestP['zone_id'] = $this->system_user['zone_id'];
