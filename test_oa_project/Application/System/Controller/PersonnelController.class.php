@@ -80,27 +80,6 @@ class PersonnelController extends SystemController {
     {
         $role_id = I('get.role_id',null);
         if( empty($role_id) )$this->error('非法请求！');
-        if(IS_POST) {
-            $request = I('post.');
-            $access = explode(',', $request['access']);
-            if(!empty($access)){
-                $access_new = array();
-                foreach($access as $v){
-                    $v = explode('-', $v);
-                    $access_new[] = array('node_id'=>$v[0], 'pid'=>$v[1], 'level'=>$v[2]);
-                }
-                unset($request['access']);
-            }
-            $request['name'] = $request['positionname'];
-            $request['access'] = $access_new;
-            $request['role_id'] = $role_id;
-            $result = D('Role','Service')->editRole($request);
-            //添加职位成功
-            if($result['code']==0){
-                $this->ajaxReturn(0,'修改职位成功',U('System/Personnel/position'));
-            }
-            $this->ajaxReturn($result['code'],$result['msg']);
-        }
         //获取节点列表
         $data['nodeHtml'] = $this->_getAllNodeHtml();
         $this->assign('data', $data);
@@ -155,8 +134,6 @@ class PersonnelController extends SystemController {
     */
     public function systemUserList()
     {
-        //获取参数 页码
-        $requestG = I('get.');
         $this->display();
     }
 
@@ -168,39 +145,7 @@ class PersonnelController extends SystemController {
     */
     public function leaveSystemUserList()
     {
-        //获取参数 页码
-        $requestG = I('get.');
-        $where['usertype'] = 10;
-        $where['status'] = 1;
-        $re_page = isset($requestG['page'])?$requestG['page']:1;
-        //查询条件where处理
-        if(!empty($requestG['key_value']) && !empty($requestG['key_name'])) {
-            if($requestG['key_name']=='username'){
-                $where['username'] = (trim($requestG['key_value']));
-            }else{
-                $where[$requestG['key_name']] = array('like', $requestG['key_value']);
-            }
-        }
-        if(!empty($requestG['role_id'])) $where['role_ids'] = $requestG['role_id'];
-        $where['zone_id'] = !empty($requestG['zone_id'])?$requestG['zone_id']:$this->system_user['zone_id'];
-        //员工列表
-        $_param = $where;
-        $_param['page'] = $re_page.',30';
-        $_param['order'] = 'system_user_id desc';
-        $systemUserAll = D('SystemUser','Service')->getSystemUsersList($_param);
-        $data['systemUserAll'] = $systemUserAll['data'];
-        //加载分页类
-        $paging_data = $this->Paging((empty($requestG['page'])?1:$requestG['page']), 30, $data['systemUserAll']['count'], $requestG);
-        $data['paging'] = $paging_data;
-        //获取职位及部门
-        $departmentAll = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
-        $roleAll = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
-        $data['requery'] = $requestG;
-        $this->assign('data', $data);
         $this->display();
-		
     }
 
     /**
@@ -224,32 +169,6 @@ class PersonnelController extends SystemController {
     */
     public function addSystemUser()
     {
-        if(IS_POST) {
-            //获取参数 验证
-            $request = I('post.');
-            //获取 数据判断
-            $addSystemUser = D('SystemUser','Service')->addSystemUser($request);
-            if($addSystemUser['code']==0) $this->ajaxReturn(0, $addSystemUser['msg'], U('System/Personnel/systemUserList'));
-            else $this->ajaxReturn($addSystemUser['code'], $addSystemUser['msg']);
-        }
-        //获取职位及部门
-        $departmentAll = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
-        $roleAll = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
-        //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
-        $data['zoneAll'] = $zoneAll['data'];
-        //员工状态
-        $data['systemUserStatus'] = C('FIELD_STATUS.SYSTEMUSERSTATUS');
-        foreach($data['systemUserStatus'] as $k=>$v){
-            if($v=='离职'){
-                unset($data['systemUserStatus'][$k]);
-            }
-        }
-        $data['url_systemUser'] = U('System/Personnel/systemUserList');
-        $data['url_getZoneSelect'] = U('System/Personnel/getZoneSelect');
-        $this->assign('data', $data);
         $this->display();
     }
 

@@ -90,9 +90,8 @@ class ValidateModel extends Model {
      * @author Sunles
      * @return boolean
      */
-    public function checkIsCompanyEmail($email){
-        $RegExp='/^[a-z0-9][a-z\.0-9-_]+@zelinonline.com$/i';
-        return preg_match($RegExp,$email)?true:false;
+    public function checkIsCompanyEmail($mail){
+        return preg_match('/^[a-z0-9][a-z\.0-9-_]+@zelinonline.com$/i',$mail)?true:false;
     }
     
     /**

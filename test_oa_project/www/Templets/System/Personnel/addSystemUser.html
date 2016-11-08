@@ -3,11 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>系统首页-{$siteinfo.sitename}</title>
-    <Zelin:css  src="common,newEmployees" />
-    <link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
-    <script>
-        var jump_code = "{$jump_code}";
-    </script>
+    <Zelin:css  src="common,newEmployees,../js/glDatePicker/glDatePicker.default" />
 </head>
 <body>
 <div class="wrapBox" id="sUserAddWrap">
@@ -43,30 +39,9 @@
             <div class="nsRow thrSix clearfix">
                 <div class="nsLeft"><i>&#42</i>所属区域:</div>
                 <div class="nsRight">
-                    <div class="selectbox nsArea l">
-                        <dl class="select region">
-                            <dt>
-                            <div class="select_title l">请选择所属区域</div>
-                            <div class="arrow r"></div>
-                            </dt>
-                            <dd class="fxDone" data-level="{$data.zoneAll.level}" data-value="{$data.zoneAll.zone_id}">{$data.zoneAll.name}</dd>
-                            <foreach name="data['zoneAll']['children']" item="v" key="k">
-                                <dd class="fxDone" data-level="{$v.level}" data-value="{$v.zone_id}">{$v.name}</dd>
-                                <!--<foreach name="v['children']" item="v2" key="k2">-->
-                                <!--<dd class="fxDone" data-level="{$v2.level}" data-value="{$v2.zone_id}">{$v2.name}</dd>-->
-                                <!--</foreach>-->
-                            </foreach>
-                        </dl>
+                    <div class="selectbox nsArea l" id="zone_li">
+
                     </div>
-                    <div class="selectbox nsArea l" >
-                        <dl class="select city" style="display: none">
-                        </dl>
-                    </div>
-                    <div class="selectbox nsArea l">
-                        <dl class="select area" style="display: none">
-                        </dl>
-                    </div>
-                    <input type="hidden" name="zone_id" value="<?php echo (!empty($data['zoneAll']['children'])?$data['zoneAll']['children'][0]['zone_id']:'') ?>">
                 </div>
             </div>
             <div class="nsRow thrSix clearfix">
@@ -100,17 +75,8 @@
             <div class="nsRow thrSix clearfix">
                 <div class="nsLeft"><i>&#42</i>员工状态:</div>
                 <div class="nsRight">
-                    <div class="selectbox nsArea l">
-                        <dl class="select typeselect">
-                            <dt>
-                            <div class="select_title l">选择员工状态</div>
-                            <div class="arrow r"></div>
-                            </dt>
-                            <foreach name="data['systemUserStatus']" item="v" key="k">
-                                <dd class="fxDone" data-value="{$k}" data-name="usertype">{$v}</dd>
-                            </foreach>
-                        </dl>
-                        <input type="hidden" name="usertype" value="">
+                    <div class="selectbox nsArea l" id="usertype_li">
+
                     </div>
                 </div>
             </div>
@@ -159,109 +125,67 @@
             <input type="text" class="nsSelectSearch l" name="nsSelectSearch">
             <input type="submit" class="nsSearchSubmit l" value="搜索">
         </div>
-        <div class="nsDeparMiddle">
+        <div class="nsDeparMiddle" id="role_li">
             <dl class="nsTit clearfix department_title">
                 <dt class="wNsOne">选中</dt>
                 <dt class="wNsTwo">所属部门</dt>
                 <dt class="wNsThr">职位名称</dt>
             </dl>
-            <foreach name="data['roleAll']['data']" item="v" key="k">
-                <dl class="clearfix department_content">
-                    <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}"></dd>
-                    <dd class="wNsTwo">{$v.department_name}</dd>
-                    <dd class="wNsThr">{$v.name}</dd>
-                </dl>
-            </foreach>
+
         </div>
         <input type="button" class="nsDetermine" value="确定">
     </div>
 </div>
+
 <div id="search_body" style="display: none">
-    <foreach name="data['roleAll'][data]" item="v" key="k">
-        <dl class="clearfix department_content">
-            <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}"></dd>
-            <dd class="wNsTwo">{$v.department_name}</dd>
-            <dd class="wNsThr">{$v.name}</dd>
-        </dl>
-    </foreach>
+
 </div>
 <!-- 选择部门 E -->
 
-<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-<script src="__PUBLIC__/js/layer/layer.js"></script>
-<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
-<script src="__PUBLIC__/js/newEmployees.js"></script>
-<script>
-    var url_ZoneSelect = "{$data['url_getZoneSelect']}";
-    $("#afBirthday").glDatePicker({onClick:function(el, cell, date, data) {
-        el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
-    }});
-    $("#afBirthday2").glDatePicker({onClick:function(el, cell, date, data) {
-        el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
-    }});
-    $(function(){
-        $('.nsDetermine').click(function(){
-            var role_id = '';
-            var role_name = ''
-            if($(':input[name="nsChk"]:checked').length>3){
-                layer.msg('职位添加不能超过三个', {icon:2});
-                return false;
-            }
-            for(var i=0;i<$(':input[name="nsChk"]:checked').length;i++){
-                if(i==0){
-                    role_id += $(':input[name="nsChk"]:checked').eq(i).val();
-                    role_name += $(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsTwo').text()+'/'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text();
-                }else{
-                    role_id += ','+$(':input[name="nsChk"]:checked').eq(i).val();
-                    role_name += '，'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsTwo').text()+'/'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text();
-                }
-            }
-            $(':input[name="role_id"]').val(role_id);
-            $(':input[name="role_name"]').val(role_name);
-            layer.closeAll();
-        });
-        //搜索职位相关-检索
-        $('.nsSearchSubmit').click(function(){
-            $(':input[name="nsChk"]').attr('checked',false);
-            var val = $(':input[name="nsSelectSearch"]').val();
-            var d_val = $('.nsSelectSearch_d').text();
-            $('.nsDeparMiddle .department_content').remove();
-            if(val.length>0 || d_val!='全部'){
-                $('#search_body .department_content').each(function(i){
-                    var zmnumReg=new RegExp( val ,'gim');
-                    var zmnumReg2=new RegExp( d_val ,'gim');
-                    var name=$(this);
-                    if(d_val!='全部'){
-                        if( zmnumReg.test(name.children('.wNsThr').text()) && zmnumReg2.test(name.children('.wNsTwo').text()) ){
-                            $('.department_title').after(name.clone());
-                        }
-                    }else{
-                        if( zmnumReg.test(name.children('.wNsThr').text()) ){
-                            $('.department_title').after(name.clone());
-                        }
-                    }
-                });
-            }else{
-                $('.department_title').after( $('#search_body .department_content').clone() );
-            };
-        });
-        $('.nsSubmit').click(function() {
-            var data = {
-                realname:$(':input[name="realname"]').val(),
-                username:$(':input[name="username"]').val(),
-                email:$(':input[name="email"]').val(),
-                sex:$(':input[name="sex"]:checked').val(),
-                zone_id:$(':input[name="zone_id"]').val(),
-                role_id:$(':input[name="role_id"]').val(),
-                usertype:$(':input[name="usertype"]').val(),
-                check_id:$(':input[name="check_id"]').val(),
-                entrytime:$(':input[name="entrytime"]').val(),
-                straightime:$(':input[name="straightime"]').val(),
-            };
-            common_ajax(data);
-        });
-    });
+<!--列表模版-->
+<script id="demo1" type="text/html">
+    {{# layui.each(d, function(k, v){ }}
+    <dl class="clearfix department_content">
+        <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{{ v.id }}"></dd>
+        <dd class="wNsTwo">{{ v.department_name }}</dd>
+        <dd class="wNsThr">{{ v.name }}</dd>
+    </dl>
+    {{#  }); }}
 </script>
-<script src="__PUBLIC__/js/common.js"></script>
+<script id="demo2" type="text/html">
+    <dl class="select">
+        <dt>
+        <div class="select_title l">选择大区及城市</div>
+        <div class="arrow r"></div>
+        </dt>
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 10px" data-value="{{ d.zone_id }}">{{ d.name }}</dd>
+        {{# layui.each(d.children, function(k, v){ }}
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 10px" data-value="{{ v.zone_id }}">｜－{{ v.name }}</dd>
+        {{# layui.each(v.children, function(k2, v2){ }}
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 10px" data-value="{{ v2.zone_id }}">｜－－{{ v2.name }}</dd>
+        {{# layui.each(v2.children, function(k3, v3){ }}
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 10px" data-value="{{ v3.zone_id }}">｜－－－{{ v3.name }}</dd>
+        {{# }); }}
+        {{# }); }}
+        {{# }); }}
+    </dl>
+    <input type="hidden" name="zone_id" value="">
+</script>
+<script id="demo3" type="text/html">
+    <dl class="select">
+        <dt>
+        <div class="select_title l">全部员工状态</div>
+        <div class="arrow r"></div>
+        </dt>
+        <dd class="fxDone" data-value="0" data-name="usertype">全部员工状态</dd>
+        {{# layui.each(d, function(k, v){ }}
+        {{# if(k!=10){ }}
+        <dd class="fxDone" data-value="{{ k }}" data-name="usertype">{{ v }}</dd>
+        {{# } }}
+        {{# }); }}
+    </dl>
+    <input type="hidden" name="usertype" value="{{# $.getUrlParam('usertype'); }}">
+</script>
+<Zelin:js src="jquery-1.9.1.min,layer/layer,layui/layui,glDatePicker/glDatePicker,common,personnel.addsystemuser"/>
 </body>
 </html>

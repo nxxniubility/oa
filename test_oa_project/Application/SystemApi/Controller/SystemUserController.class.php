@@ -85,6 +85,8 @@ class SystemUserController extends SystemApiController
         //获取请求？
         $param['realname'] = I('param.realname',null);
         $param['username'] = I('param.username',null);
+        $param['email'] = I('param.email',null);
+        $param['sex'] = I('param.sex',null);
         $param['zone_id'] = I('param.zone_id',null);
         $param['role_id'] = I('param.role_id',null);
         $param['usertype'] = I('param.usertype',null);
@@ -97,7 +99,7 @@ class SystemUserController extends SystemApiController
         $result = D('SystemUser','Service')->addSystemUser($param);
         //返回参数
         if($result['code']==0){
-            $this->ajaxReturn(0,'获取成功',$result['data']);
+            $this->ajaxReturn(0,'操作成功',$result['data']);
         }
         $this->ajaxReturn($result['code'],$result['msg']);
     }
@@ -125,7 +127,7 @@ class SystemUserController extends SystemApiController
         $result = D('SystemUser','Service')->editSystemUser($param);
         //返回参数
         if($result['code']==0){
-            $this->ajaxReturn(0,'获取成功',$result['data']);
+            $this->ajaxReturn(0,'操作成功',$result['data']);
         }
         $this->ajaxReturn($result['code'],$result['msg']);
     }
