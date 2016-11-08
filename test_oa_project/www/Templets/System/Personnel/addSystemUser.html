@@ -14,7 +14,7 @@
                 <span><em>&gt;</em>新增员工</span>
             </div>
             <div class="topRight r">
-                <a href="{$data['url_systemUser']}" class="return">返回</a>
+                <a href="javascript:history.go(-1)" class="return">返回</a>
             </div>
         </div>
         <div class="nsMiddle">
@@ -110,18 +110,6 @@
     </div>
     <div class="nsCont">
         <div class="nsSelectTop clearfix">
-            <div class="selectbox nsSelectBox l">
-                <dl class="select">
-                    <dt>
-                    <div class="select_title l nsSelectSearch_d">全部</div>
-                    <div class="arrow r"></div>
-                    </dt>
-                    <dd class="fxDone" data-value="">全部</dd>
-                    <foreach name="data['departmentAll'][data]" item="v" key="k">
-                        <dd class="fxDone" data-value="{$v.department_id}">{$v.departmentname}</dd>
-                    </foreach>
-                </dl>
-            </div>
             <input type="text" class="nsSelectSearch l" name="nsSelectSearch">
             <input type="submit" class="nsSearchSubmit l" value="搜索">
         </div>
@@ -160,11 +148,11 @@
         </dt>
         <dd class="fxDone" data-name="zone_id" style="padding-left: 10px" data-value="{{ d.zone_id }}">{{ d.name }}</dd>
         {{# layui.each(d.children, function(k, v){ }}
-        <dd class="fxDone" data-name="zone_id" style="padding-left: 10px" data-value="{{ v.zone_id }}">｜－{{ v.name }}</dd>
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 20px" data-value="{{ v.zone_id }}">{{ v.name }}</dd>
         {{# layui.each(v.children, function(k2, v2){ }}
-        <dd class="fxDone" data-name="zone_id" style="padding-left: 10px" data-value="{{ v2.zone_id }}">｜－－{{ v2.name }}</dd>
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 30px" data-value="{{ v2.zone_id }}">{{ v2.name }}</dd>
         {{# layui.each(v2.children, function(k3, v3){ }}
-        <dd class="fxDone" data-name="zone_id" style="padding-left: 10px" data-value="{{ v3.zone_id }}">｜－－－{{ v3.name }}</dd>
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 40px" data-value="{{ v3.zone_id }}">{{ v3.name }}</dd>
         {{# }); }}
         {{# }); }}
         {{# }); }}

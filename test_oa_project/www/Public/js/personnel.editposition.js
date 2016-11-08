@@ -93,58 +93,57 @@ $(document).ready(function() {
                 });
             });
         };
-    },1);
-    //获取部门列表
-    common_ajax2('','/SystemApi/Department/getDepartmentList','no',function(redata){
-        if(redata.data.data){
-            layui.use('laytpl', function(){
-                var laytpl = layui.laytpl;
-                laytpl(demo.innerHTML).render(redata.data.data, function(result){
-                    $('#dp-list').html(result);
-                    var department_id = $(':input[name="department_id"]').val();
-                    var department_name = $('#dp-list').find('.fxDone[data-value="'+department_id+'"]').text();
-                    $('#dp-list').find('.select_title').text(department_name);
-
+        //获取部门列表
+        common_ajax2('','/SystemApi/Department/getDepartmentList','no',function(redata){
+            if(redata.data.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo.innerHTML).render(redata.data.data, function(result){
+                        $('#dp-list').html(result);
+                        var department_id = $(':input[name="department_id"]').val();
+                        var department_name = $('#dp-list').find('.fxDone[data-value="'+department_id+'"]').text();
+                        $('#dp-list').find('.select_title').text(department_name);
+                    });
                 });
-            });
-        };
-    },1);
-    //获取职位列表
-    common_ajax2('','/SystemApi/Role/getRoleList','no',function(redata){
-        if(redata.data.data){
-            layui.use('laytpl', function(){
-                var laytpl = layui.laytpl;
-                laytpl(demo2.innerHTML).render(redata.data.data, function(result){
-                    $('#role-list').html(result);
-                    var role_id = $(':input[name="pid"]').val();
-                    var role_name = $('#role-list').find('.fxDone[data-value="'+role_id+'"]').text();
-                    $('#role-list').find('.select_title').text(role_name);
+            };
+        },1);
+        //获取职位列表
+        common_ajax2('','/SystemApi/Role/getRoleList','no',function(redata){
+            if(redata.data.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo2.innerHTML).render(redata.data.data, function(result){
+                        $('#role-list').html(result);
+                        var role_id = $(':input[name="pid"]').val();
+                        var role_name = $('#role-list').find('.fxDone[data-value="'+role_id+'"]').text();
+                        $('#role-list').find('.select_title').text(role_name);
 
+                    });
                 });
-            });
-        };
-    },1);
-    //树配置
-    $("#boxTabel").treeTable({
-        expandable: true,
-    });
-    //获取已有权限
-    common_ajax2(data,'/SystemApi/Role/getRoleNode','no',function(reflag){
-        if(reflag.code && reflag.code!=0){
-            layer.closeAll();
-            layer.msg(reflag.msg,{icon:2});
-        }else{
-            layer.closeAll('loading');
-            var on_nodes=reflag.data;
-            if(on_nodes!=null){
-                on_nodes = on_nodes.split(',');
-                if(on_nodes){
-                    for(var i=0;i<on_nodes.length;i++){
-                        $('#node-'+on_nodes[i]).children().children('.radio').attr('checked',true);
-                    }
+            };
+        },1);
+        //树配置
+        $("#boxTabel").treeTable({
+            expandable: true,
+        });
+        //获取已有权限
+        common_ajax2(data,'/SystemApi/Role/getRoleNode','no',function(reflag){
+            if(reflag.code && reflag.code!=0){
+                layer.closeAll();
+                layer.msg(reflag.msg,{icon:2});
+            }else{
+                layer.closeAll('loading');
+                var on_nodes=reflag.data;
+                if(on_nodes!=null){
+                    on_nodes = on_nodes.split(',');
+                    if(on_nodes){
+                        for(var i=0;i<on_nodes.length;i++){
+                            $('#node-'+on_nodes[i]).children().children('.radio').attr('checked',true);
+                        }
+                    };
                 };
             };
-        };
+        },1);
     },1);
     //提交
     $(document).on('click','.addPerSubmit',function() {

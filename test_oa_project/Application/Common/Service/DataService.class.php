@@ -74,6 +74,7 @@ class DataService extends BaseService
         $userList = D('User')->field('user_id,status,createuser_id,updateuser_id,system_user_id,zone_id,course_id,attitude_id,channel_id,infoquality')->where(array('user_id'=>array('IN',$data['user_id'])))->select();
         if(!empty($userList)){
             //获取记录数据集合 -> 批量添加
+            $addLog_flag = $addMarket_flag = true;
             $add_arr = array();
             $userIds = array();
             foreach($userList as $k=>$v){
@@ -98,14 +99,16 @@ class DataService extends BaseService
                 $temp_zone_id = $v['zone_id'];
                 $userIds[] = $v['user_id'];
             }
-            $addLog_flag = D('DataLogs')->addAll($add_arr);
-            //添加营销统计---------------------
-            $statusArr = $this->statusArr;
-            $dataMarket['name'] = $statusArr[$data['operattype']];
-            $dataMarket['system_user_id'] = $temp_system_user_id;
-            $dataMarket['zone_id'] = $temp_zone_id;
-            $dataMarket['user_id'] = $userIds;
-            $addMarket_flag = $this->addDataMarket($dataMarket);
+            if(!empty($add_arr) && count($add_arr)>0){
+                $addLog_flag = D('DataLogs')->addAll($add_arr);
+                //添加营销统计---------------------
+                $statusArr = $this->statusArr;
+                $dataMarket['name'] = $statusArr[$data['operattype']];
+                $dataMarket['system_user_id'] = $temp_system_user_id;
+                $dataMarket['zone_id'] = $temp_zone_id;
+                $dataMarket['user_id'] = $userIds;
+                $addMarket_flag = $this->addDataMarket($dataMarket);
+            }
         }
         if($addLog_flag!==false && $addMarket_flag!==false){
             return array('code'=>0,'msg'=>'数据添加成功');
