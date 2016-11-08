@@ -2369,4 +2369,335 @@ class UserService extends BaseService
         return array('code'=>0, 'data'=>$setpages_id);
     }
 
+    /*
+    导出客户
+    */
+    public function outputUser($request)
+    {
+        session('outputUser_path',null);
+        if (!$request['setpages_id']) {
+            $this->error("请选择模板");
+        }
+        $res = D('Proid', 'Service')->getSetPagesInfos($request['setpages_id']);
+        $letters = $res['data'];
+        unset($request['setpages_id']);
+        $request['status'] = isset($request['status']) ? $request['status'] : 0;
+        if ($request['status'] == 0) {
+            $where[C('DB_PREFIX') . 'user.status'] = array('IN', array(20, 30, 70, 160));
+            unset($request['status']);
+        }     
+        
+        foreach ($request as $k => $v) {
+            if (!empty($request[$k])) {
+                if ($k == 'allocationtime' || $k == 'updatetime' || $k == 'createtime' || $k == 'lastvisit' || $k == 'nextvisit' || $k == 'visittime') {
+                    $_time = explode('@', str_replace('/', '-', $request[$k]));
+                    $where[C('DB_PREFIX') . 'user.' . $k] = array(array('EGT', ($_time[0] == 'time' ? time() : strtotime($_time[0]))), array('LT', ($_time[1] == 'time' ? time() : strtotime($_time[1] . ' 23:59:59'))), 'AND');    
+                } elseif (!empty($request['key_name']) && !empty($request['key_value'])) {
+                    if ($request['key_name'] == 'username') $where[C('DB_PREFIX') . 'user.' . $request['key_name']] = encryptPhone(trim($request['key_value']), C('PHONE_CODE_KEY'));
+                    else $where[C('DB_PREFIX') . 'user.' . $request['key_name']] = array('like', '%' . $request['key_value'] . '%');
+                } elseif ($k == 'channel_id') {
+                    $res = $channelMain->getChannelIds($request['channel_id']);
+                    $channelIds = $res['data'];
+                    foreach($channelIds as $k=>$v){
+                        $newIds[] = $v['channel_id'];
+                    }
+                    $where[C('DB_PREFIX') . 'user.channel_id'] = array('IN',$newIds);
+                }elseif ($k != 'type') {
+                    if ($k == 'studytype') $where[C('DB_PREFIX') . 'fee.studytype'] = $v;
+                    else $where[C('DB_PREFIX') . 'user.' . $k] = $v;
+                }
+            }
+        }
+        foreach ($letters as $k1 => $value) {
+            $letter[$k1] = $value['pagehead'];
+            $heads[$k1] = $value['headname'];
+        }
+        foreach ($heads as $k2 => $head) {
+            $heads_val[] = L($head);
+        }               
+        $zone_id = $this->system_user['zone_id'];
+        $zoneIds = D('Zone', 'Service')->getZoneIds($zone_id);
+        foreach ($zoneIds['data'] as $key => $value) {
+            if ($zoneIdString) {
+                $zoneIdString = $zoneIdString.",".$value['zone_id'];
+            }else{
+                $zoneIdString = $value['zone_id'];
+            }
+        }
+        $where[C('DB_PREFIX') . 'user.zone_id'] = array("IN", $zoneIdString);  
+        if(in_array('course',$heads))
+        {
+             $all_course_tmp=M("Course")->field('course_id,coursename')->select();
+             $all_course=array();
+             foreach($all_course_tmp as $k=>$v)
+             {
+                 $all_course[$v['course_id']]=$v['coursename'];                  
+             }
+        }
+        $userList = D('User')->where($where)->field($heads)->limit('0,30000')->select();
+        if (!$userList) {
+            session('outputUser_path',array('code'=>4, 'msg'=>'此条件下没有数据可导出！'));
+            exit;
+        }
+        foreach ($userList as $key => $user) {
+            if(in_array('mark',$heads))
+            {
+                if ($user['mark'] == 1) {
+                    $user['mark'] = '普通';
+                } else {
+                    $user['mark'] = '重点';
+                }
+            }
+            if(in_array('reservetype',$heads))
+            {
+                if ($user['reservetype'] == 10) {
+                    $user['reservetype'] = '审核中';
+                } elseif ($user['reservetype'] == 20) {
+                    $user['reservetype'] = '审核失败';
+                }elseif ($user['reservetype'] == 30){
+                    $user['reservetype'] = '审核通过';
+                }
+            }
+            if(in_array('username',$heads))
+            {
+                if ($user['username']) {
+                    $user['username'] = decryptPhone($user['username'], C('PHONE_CODE_KEY'));
+                }
+            }
+            if(in_array('status',$heads))
+            {
+                if ($user['status'] == 20) {
+                    $user['status'] = '待联系';
+                } elseif ($user['status'] == 30) {
+                    $user['status'] = '待跟进';
+                } elseif ($user['status'] == 70) {
+                    $user['status'] = '交易';
+                }elseif ($user['status'] == 160) {
+                    $user['status'] = '回库';
+                }else{
+                    $user['status'] = '其他';
+                }
+            }
+            if(in_array('infoquality',$heads))
+            {
+                if ($user['infoquality'] == 1) {
+                    $user['infoquality'] = 'A';
+                } elseif ($user['infoquality'] == 2) {
+                    $user['infoquality'] = 'B';
+                } elseif ($user['infoquality'] == 3) {
+                    $user['infoquality'] = 'C';
+                } elseif ($user['infoquality'] == 4) {
+                    $user['infoquality'] = 'D';
+                }
+            }
+            if(in_array('visittime',$heads))
+            {
+                if ($user['visittime']) {
+                    $user['visittime'] = date('Y-m-d H:i:s', $user['visittime']);
+                }
+            }
+            if(in_array('updatetime',$heads))
+            {
+                if ($user['updatetime']) {
+                    $user['updatetime'] = date('Y-m-d H:i:s', $user['updatetime']);
+                }
+            }
+            if(in_array('allocationtime',$heads))
+            {
+                if ($user['allocationtime']) {
+                    $user['allocationtime'] = date('Y-m-d H:i:s', $user['allocationtime']);
+                }
+            }
+            if(in_array('createtime',$heads))
+            {
+                if ($user['createtime']) {
+                    $user['createtime'] = date('Y-m-d H:i:s', $user['createtime']);
+                }
+            }
+            if(in_array('createtime',$heads))
+            {
+                if ($user['lastvisit']) {
+                    $user['lastvisit'] = date('Y-m-d H:i:s', $user['lastvisit']);
+                }
+            }
+            if(in_array('nextvisit',$heads))
+            {
+                if ($user['nextvisit']) {
+                    $user['nextvisit'] = date('Y-m-d H:i:s', $user['nextvisit']);
+                }
+            }
+            if(in_array('course',$heads))
+            {
+                if ($user['course_id']) {
+                    $user['course'] = $all_course[$user['course_id']];
+                }
+            }
+            if(in_array('createname',$heads))
+            {
+                if (!$user['createname']) {
+                    $user['createname'] = "系统创建";
+                }
+            }
+            if(in_array('learningtype',$heads))
+            {
+                if ($user['learningtype'] == 1) {
+                    $user['learningtype'] = '泽林';
+                } elseif ($user['learningtype'] == 2) {
+                    $user['learningtype'] = '8点1课';
+                } else {
+                    $user['learningtype'] = '其他';
+                }
+            }
+            if(in_array('attitude_id',$heads))
+            {
+                $result = C("USER_ATTITUDE");
+                foreach ($result as $k12 => $value) {
+                    if ($user['attitude_id'] == $k12) {
+                        $user['attitude_id'] = $value['text'];
+                    }
+                }
+            }
+            foreach ($heads as $k3 => $head) {
+                $newArr[$key][$k3] = $user[$head];
+            }
+        }
+        $newArr = array_chunk($newArr, 5000);
+        $k = count($newArr); 
+        for ($i=0; $i < $k; $i++) {
+            $arr = $newArr[$i];
+            $cache_type = 3;
+            $res[] = outExecls('user', $heads_val, $arr, $letter, $cache_type);
+        }
+        $name = "$setpages[system_user_id]".date("Ymdhis");
+        foreach ($res as $key => $value) {
+            $dirFiles[] = "./Uploads/excel/{$value}";
+        } 
+        create_zip($dirFiles,"./Uploads/excel/{$name}.zip");
+        $path = "/Uploads/excel/{$name}.zip"; 
+        if (!empty($path)) {
+            session('outputUser_path',array('code'=>0, 'msg'=>'导出成功！','data'=>$path));
+            exit();
+        }
+    }
+    
+    /**
+    导入客户
+    */
+    public function inputUser($request, $datas)
+    {
+        session('faile_import', null);
+        session('success_import', null);
+        $resSetPages = D('Proid', 'Service')->getSetPages($request);
+        $setpagesInfo = $resSetPages['data'];
+        $resPagesInfo = D('Proid', 'Service')->getSetPagesInfo($request['setpages_id']);
+        $letters = $resPagesInfo['data'];
+        foreach ($letters as $k1 => $letter) {
+            $k1 = $k1 + 1;
+            $users[$k1][] = $letter['pagehead'];
+            $users[$k1][] = $letter['headname'];
+        }
+
+        /*对生成的数组进行字段对接*/
+        foreach ($users as $key => $user) {
+            foreach ($datas as $k => $v) {
+                if ($k > 1) {
+                    $keys = array_keys($v);
+                    foreach ($keys as $k2 => $v1) {
+                        if ($user[0] == $v1) {
+                            $userList[$k - 2]["$user[1]"] = $v[$v1];
+                        }
+                    }
+                }
+            }
+        }
+        //对接完成后转换相应的数据：年龄、邮箱等，去除非法数据
+        foreach ($userList as $key => $user) {
+            if ($user['username']) {   //手机格式处理
+                $user['username'] = str_replace(' ','',$user['username']);
+                $num = strlen($user['username']);
+                if ($num > 11) {
+                    $user['username'] = substr($user['username'], ($num - 11), $num);
+                }
+            }
+            if ($user['qq'] && !$user['email']) {  //邮箱
+                $user['email'] = $user['qq'] . '@qq' . '.com';
+            }
+            if ($user['sex'] == '男') {  //性别
+                $user['sex'] = 1;
+            } elseif ($user['sex'] == '女') {
+                $user['sex'] = 2;
+            } else {
+                $user['sex'] == 0;
+            }
+            if ($user['birthday']) {   //出生日期
+                $num = strlen($user['birthday']);
+                if ($num <= 2) {
+                    $b = $user['birthday'];
+                    $a = date('Y', strtotime("-{$b} years"));
+                    $a = $a . '-01' . '-01';
+                    $user['birthday'] = strtotime($a);
+                } else {
+                    $bir = preg_replace('/[^\d]/', '-', $user['birthday']) . '-' . '01';
+                    $user['birthday'] = strtotime($bir);
+                }
+                //当出现年月字段时未做处理
+            }
+            if ($user['educationname']) {  //学历处理
+                $education_array = C('EDUCATION_ARRAY');
+                foreach($education_array as $k=>$v){
+                    if($v==$user['educationname']){
+                        $user['education_id'] = $k;
+                    }
+                }
+                unset($user['educationname']);
+            }
+            if (strlen($user['postcode']) != 6) {  //邮编验证
+                unset($user['postcode']);
+            }
+            
+            if ($user['wantsalary']) {  //目前薪资
+                $user['wantsalary'] = str_replace('万', '0000', $user['wantsalary']);
+                $user['wantsalary'] = str_replace('k', '000', $user['wantsalary']);
+                $user['wantsalary'] = str_replace('-', '_', $user['wantsalary']);
+                $user['wantsalary'] = preg_replace('[\W]', '', $user['wantsalary']);
+
+                $user['wantsalary'] = explode('_', $user['wantsalary']);
+                $user['wantsalary'] = max($user['wantsalary']);
+            } else {
+                $user['wantsalary'] = 0;//  0-表示面议    年薪未处理
+            }
+
+            if ($user['workyear']) {  //目前薪资
+                $user['workyear'] = explode('.', $user['workyear']);
+                if (!empty($user['workyear'][1]) && $user['workyear'][1] >= 5) {
+                    $user['workyear'] = $user['workyear'][0] + 1;
+                } elseif (!empty($user['workyear'][1]) && $user['workyear'][1] < 5) {
+                    $user['workyear'] = $user['workyear'][0];
+                } else {
+                    $user['workyear'] = str_replace('-', '_', $user['workyear']);
+                    $user['workyear'] = preg_replace('[\W]', '', $user['workyear']);
+                    $user['workyear'] = explode('_', $user['workyear'][0]);
+                    $max = max($user['workyear']);
+                    $min = min($user['workyear']);
+                    $user['workyear'] = (int)ceil(($max + $min) / 2);
+                }
+            } else {
+                $user['workyear'] = 0;//  0-表示面议
+            }
+            $user['infoquality'] = 4;   //信息质量不明确
+            $user['channel_id'] = $setpagesInfo[0]['channel_id'];
+            $user['course_id'] = 0;
+            $result = $this->addUser($user);
+            if ($result['code'] != 0) {
+                $userList[$key]['msg'] = $result['msg'];
+                $errorData[$key] = $userList[$key];
+                unset($userList[$key]);
+                continue;
+            }
+
+        }
+        session('faile_import', $errorData);
+        session('success_import', $userList);
+    }
+
 }
