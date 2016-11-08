@@ -814,11 +814,36 @@ class SystemUserService extends BaseService
                 }
             }
             F('Cache/systemUsers', $cahce_all);
+            if($userInfo['zone_id'] != $data['zone_id']){
+                $is_user_list = D('User')->getCount(array("system_user_id"=>$system_user_id,'status'=>array('IN','20,30')));
+                if($is_user_list>0){
+                    return array('code'=>'2', 'msg'=>'该客户客户底下有'.$is_user_list.'个待跟进与待联系客户，是否 带走客户所属区域？');
+                }
+            }
             return array('code'=>'0', 'msg'=>'操作成功');
         }else{
             D()->rollback();
             return array('code'=>100, 'msg'=>$result['msg']);
         }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | 调整员工下客户区域
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function editUserZone($data)
+    {
+        if(empty($data['system_user_id'])) return array('code'=>300, 'msg'=>'参数异常');
+        $user_info = D('SystemUser')->getFind($data,'zone_id');
+        $data['status'] = array('IN','20,30');
+        $flag = D('User')->where($data)->save(array('zone_id'=>$user_info['zone_id']));
+        if($flag!==false){
+            return array('code'=>'0', 'msg'=>'操作成功');
+        }
+        return array('code'=>'100', 'msg'=>'操作失败');
     }
 
     /*
@@ -921,22 +946,6 @@ class SystemUserService extends BaseService
         return array('code'=>'1', 'msg'=>'操作失败');
     }
 
-    /*
-   |--------------------------------------------------------------------------
-   | 修改员工 所属客户地区
-   |--------------------------------------------------------------------------
-   | @author zgt
-   */
-    public function editUserZone($where)
-    {
-        $userInfo = D('SystemUser')->field('system_user_id,zone_id')->where(array('system_user_id' => $where['system_user_id']))->find();
-        $flag = D('User')->where(array('system_user_id' => $where['system_user_id'], 'status' => array('IN', '20,30')))->save(array('zone_id' => $userInfo['zone_id']));
-        if ($flag !== false) {
-            return array('code' => '0', 'msg' => '数据操作成功');
-        }
-        return array('code' => '100', 'msg' => '数据操作失败');
-
-    }
 
     /**
      * 获取员工信息详情

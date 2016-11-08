@@ -95,7 +95,7 @@ $("#afBirthday2").glDatePicker({onClick:function(el, cell, date, data) {
 
 
 $(function(){
-    $('.nsDetermine').click(function(){
+    $(document).on('click','.nsDetermine',function(){
         var role_id = '';
         var role_name = ''
         if($(':input[name="nsChk"]:checked').length>3){
@@ -116,7 +116,7 @@ $(function(){
         layer.closeAll();
     });
     //搜索职位相关-检索
-    $('.nsSearchSubmit').click(function(){
+    $(document).on('click','.nsSearchSubmit',function(){
         $(':input[name="nsChk"]').attr('checked',false);
         var val = $(':input[name="nsSelectSearch"]').val();
         var d_val = $('.nsSelectSearch_d').text();
@@ -140,7 +140,7 @@ $(function(){
             $('.department_title').after( $('#search_body .department_content').clone() );
         };
     });
-    $('.nsSubmit').click(function() {
+    $(document).on('click','.nsSubmit',function(){
         var data = {
             realname:$(':input[name="realname"]').val(),
             username:$(':input[name="username"]').val(),
