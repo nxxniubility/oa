@@ -29,13 +29,6 @@ class RecoverController extends BaseController {
             $abandons = $UserAbandonDB->getAbandonList(array('user_abandon_id'=>$abandon_id));
         }else{
             $abandons = $UserAbandonDB->getAbandonList(array('status'=>1,'start'=>1));
-            //前两天是否节假日？ -- 自动回收保护期限
-            $get_holiday_auto = D('Api','Service')->getApiHoliday(date('Ymd',strtotime('-2 day')));
-            if($get_holiday_auto['code']==0){
-                if($get_holiday_auto['data']==2){
-                    echo  '失败原因:今天在节假日保护期限，停止规则进行自动回收！;'.'执行时间:'.date('Y-m-d H:i:s');exit();
-                }
-            }
         }
         
         //获取所有渠道
@@ -111,12 +104,33 @@ class RecoverController extends BaseController {
             $map = array();
 
             $where['callbacknum'] = array('LT',$abandon['callbacknum']);
-            $lastvisit = $nowtime - (($abandon['unsatisfieddays'] * 86400) - (3600*5));//2016-10-26 回收保护期减5小时
+            //未到达保护天数 加上节假日处理 20161108
+            $_curr_time = strtotime(data('Y-m-d',$time_now));
+            $_day_interval['day_time'] = array(
+                array('ELT', $_curr_time),
+                array('EGT', ($_curr_time-($abandon['unsatisfieddays'] * 86400)) )
+            );
+            $_day_interval['day_type'] = 2;
+            //获取区间节假日天数
+            $_holidays = D('holiday')->where($_day_interval)->count();
+            //计算一共保护天数
+            $_unsatisfieddays = $abandon['unsatisfieddays'] + $_holidays;
+            $lastvisit = $nowtime - (($_unsatisfieddays * 86400) - (3600*5));//2016-10-26 未达到要求保护天数减5小时
             $where['lastvisit'] = array('LT',$lastvisit);
             $where['_logic'] = 'and';
-            
+
+            //保护天数 加上节假日处理 20161108
+            //重置查询条件day_time时间区间
+            $_day_interval['day_time'] = array(
+                array('ELT', $_curr_time),
+                array('EGT', ($_curr_time-($abandon['attaindays'] * 86400)) )
+            );
+            //获取区间节假日天数
+            $_holidays = D('holiday')->where($_day_interval)->count();
+            //计算一共保护天数
+            $_attaindays = $abandon['attaindays'] + $_holidays;
             $where1['callbacknum'] = array('EGT',$abandon['callbacknum']);
-            $lastvisit1 = $nowtime - (($abandon['attaindays'] * 86400) - (3600*5));//2016-10-26 回收保护期减5小时
+            $lastvisit1 = $nowtime - (($_attaindays * 86400) - (3600*5));//2016-10-26 达到要求保护天数减5小时
             $where1['lastvisit'] = array('LT',$lastvisit1);
             
             $map['_complex'][] = $where;

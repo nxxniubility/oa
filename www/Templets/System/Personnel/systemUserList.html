@@ -66,10 +66,14 @@
 								<input type="text" class="feInp" name="key_value" value="">
 								<input type="submit" class="feSearchSubmit" value="搜索">
 							</div>
+							<input type="hidden" name="page" value="1">
 						</form>
 					</div>
 					<div class="feMiddleTop" id="pjax_body">
-
+						<script>
+							//获取页面参数
+							$(function(){getAjax();});
+						</script>
 					</div>
 					<dl class="feOptions clearfix">
 						<div class="leftChoose">
@@ -223,7 +227,7 @@
 				<div class="select_title l">选择大区及城市</div>
 				<div class="arrow r"></div>
 				</dt>
-				<dd class="fxDone" data-value="0" data-name="zone_id" style="padding-left: 10px" data-value="{{ d.zone_id }}">{{ d.name }}</dd>
+				<dd class="fxDone" data-name="zone_id" style="padding-left: 10px" data-value="{{ d.zone_id }}">{{ d.name }}</dd>
 				{{# layui.each(d.children, function(k, v){ }}
 					<dd class="fxDone" data-name="zone_id" style="padding-left: 20px" data-value="{{ v.zone_id }}">{{ v.name }}</dd>
 					{{# layui.each(v.children, function(k2, v2){ }}
