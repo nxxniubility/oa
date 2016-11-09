@@ -276,4 +276,21 @@ class DataController extends SystemApiController
         }
         $this->ajaxReturn($result['code'], $result['msg'], $result['data']);
     }
+
+    /*
+   |--------------------------------------------------------------------------
+   | 添加部门算法公式项
+   |--------------------------------------------------------------------------
+   | @author nxx
+   */
+   public function createDepartmentFormula()
+   {
+        $dataJSON = I('param.jsonData', null);
+        $data = json_decode($dataJSON,true);
+
+        $result = D('Data', 'Service')->addDepartmentFormula($data);
+        $this->ajaxReturn($result['code'], $result['msg']);
+
+   }
+
 }
