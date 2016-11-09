@@ -659,4 +659,34 @@ class DataService extends BaseService
         }
         return $systemUserArr;
     }
+
+    /**
+     * 添加部门算法公式项
+     * @author nxx
+     */
+    public function addDepartmentFormula($data)
+    {
+        $data = array(
+            'department_id'=>1,
+            'object'=>array(
+                array(
+                    'statistics_type'=>1,
+                    'formula'=>'1+2',
+                ),
+                array(
+                    'statistics_type'=>1,
+                    'formula'=>'1+3+2',
+                )
+            )
+        );
+        foreach ($data['object'] as $key => $value) {
+            $addData[$key]['department_id'] = $data['department_id'];
+            $addData[$key] = $value;
+        }
+        $result = M("data_formula")->addAll($addData);
+        if ($result == false) {
+            return array('code'=>201,'msg'=>'添加失败');
+        }
+        return array('code'=>0,'msg'=>'添加成功');
+    }
 }
