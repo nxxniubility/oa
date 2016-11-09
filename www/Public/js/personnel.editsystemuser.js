@@ -162,7 +162,7 @@ $(function(){
         };
         var data2 = {
             system_user_id:$.getUrlParam('user_id')
-        }
+        };
         common_ajax2(data,'/SystemApi/SystemUser/editSystemUser','no',function(reflag) {
             if(reflag.code==0){
                 layer.msg(reflag.msg,{icon:1});
@@ -188,7 +188,7 @@ $(function(){
                         layer.msg(reflag.msg,{icon:2});
                     };
                 };
-            };
+            }
             layer.closeAll('loading');
             return false;
         },1);
