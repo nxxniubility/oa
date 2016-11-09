@@ -180,58 +180,6 @@ class PersonnelController extends SystemController {
     {
         $system_user_id = I('get.user_id',null);
         if( empty($system_user_id) )$this->error('非法请求！');
-        if(IS_POST) {
-            //获取参数 验证
-            $request = I('post.');
-            if(!empty($request['type']) && $request['type']=='editzone'){
-                $where['system_user_id'] = $system_user_id;
-                $editUserZone = D('SystemUser','Service')->editUserZone($where);
-                if($editUserZone['code']==0) $this->ajaxReturn(0, '已修改成功', U('System/Personnel/systemUserList'));
-                else $this->ajaxReturn($editUserZone['code'], $editUserZone['msg']);
-            }else{
-                //获取 数据判断
-                $request['system_user_id'] = $system_user_id;
-                $editSystemUser = D('SystemUser','Service')->editSystemUser($request);
-                if($editSystemUser['code']==0){
-                    $where_user['system_user_id'] = $system_user_id;
-                    $where_user['status'] = array('IN','20,30,60');
-                    $getUserCount = D('User')->getCount($where_user);
-                    if($getUserCount>0){
-                        $this->ajaxReturn(2001, '该员工下面有客户，是否需要带走客户');
-                    }
-                    $this->ajaxReturn(0, '员工账号修改成功', U('System/Personnel/systemUserList'));
-                }
-                $this->ajaxReturn($editSystemUser['code'], $editSystemUser['msg']);
-            }
-        }
-        //获取员工信息
-        $systemUserInfo = D('SystemUser','Service')->getSystemUserInfo(array('system_user_id'=>$system_user_id));
-        $data['SystemUserInfo'] = $systemUserInfo['data'];
-        //获取职位及部门
-        $departmentAll = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
-        $roleAll = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
-        //获取区域ID 获取下拉框
-        $zoneAll = D('Zone', 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
-        $data['zoneAll'] = $zoneAll['data'];
-        //员工状态
-        $data['systemUserStatus'] = C('FIELD_STATUS.SYSTEMUSERSTATUS');
-        foreach($data['systemUserStatus'] as $k=>$v){
-            if($v=='离职'){
-                unset($data['systemUserStatus'][$k]);
-            }
-        }
-        if(!empty($systemUserInfo['data']['user_roles'])){
-            foreach($systemUserInfo['data']['user_roles'] as $k=>$v){
-                $data['is_roles'][] = $v['id'];
-                if($k==0) $data['roles'] .= $v['id'];
-                else $data['roles'] .= ','.$v['id'];
-            }
-        }
-        $data['url_systemUser'] = U('System/Personnel/systemUserList');
-        $data['system_user_id'] = $system_user_id;
-        $this->assign('data', $data);
         $this->display();
     }
 
