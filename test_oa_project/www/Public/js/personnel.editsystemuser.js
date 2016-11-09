@@ -188,7 +188,7 @@ $(function(){
                         layer.msg(reflag.msg,{icon:2});
                     };
                 };
-            }
+            };
             layer.closeAll('loading');
             return false;
         },1);
