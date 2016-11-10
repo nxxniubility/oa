@@ -666,21 +666,9 @@ class DataService extends BaseService
      */
     public function addDepartmentFormula($data)
     {
-        $data = array(
-            'department_id'=>1,
-            'object'=>array(
-                array(
-                    'statistics_type'=>1,
-                    'formula'=>'1+2',
-                ),
-                array(
-                    'statistics_type'=>1,
-                    'formula'=>'1+3+2',
-                )
-            )
-        );
         foreach ($data['object'] as $key => $value) {
-            $addData[$key]['department_id'] = $data['department_id'];
+            $value['department_id'] = $data['department_id'];
+            $value['about_user'] = $data['about_user'];
             $addData[$key] = $value;
         }
         $result = M("data_formula")->addAll($addData);
