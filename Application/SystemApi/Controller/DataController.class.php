@@ -96,35 +96,27 @@ class DataController extends SystemApiController
     | @ role_id (可多选 ‘,’隔开)
     | @author zgt
     */
-    public function getDataMarket($requesr=null)
+    public function getDataMarket()
     {
         //外部调用？
-        if($requesr===null){
-            $where['daytime'] = I('param.daytime',null);
-            $where['role_id'] = I('param.role_id',null);
-            $where['zone_id'] = I('param.zone_id',null);
-            $where['system_user_id'] = I('param.system_user_id',null);
-        }else{
-            $where = $requesr;
-        }
-        $getService = function($where){
+        $param['logtime'] = I('param.logtime',null);
+        $param['department_id'] = I('param.department_id',null);
+        $param['zone_id'] = I('param.zone_id',null);
+//        $param['system_user_id'] = I('param.system_user_id',null);
+        $getService = function($param){
             //去除数组空值
-            $where = array_filter($where);
+            $param = array_filter($param);
             //获取接口服务层
             $DataService = new DataService();
-            $result = $DataService->getDataMarket($where);
+            $result = $DataService->getDataMarket($param);
             //返回参数
             if($result['code']==0){
                 return array('code'=>0,'msg'=>'获取成功','data'=>$result['data']);
             }
             return array('code'=>$result['code'],'msg'=>$result['msg']);
         };
-        $reData = $getService($where);
-        if(!empty($requesr)){
-            return $reData;
-        }else{
-            $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
-        }
+        $reData = $getService($param);
+        $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
     }
 
 
