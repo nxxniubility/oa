@@ -138,8 +138,139 @@ class DataService extends BaseService
     |  //总转率 （ordernum-refundnum）/出库量
     | @author zgt
     */
-    public function getDataMarket($where)
+    public function getDataMarket($param)
     {
+        //必传参数
+        if(empty($param['logtime'])) return array('code'=>301,'msg'=>'请选择搜索时间');
+        //必传参数
+        if(empty($param['department_id'])) return array('code'=>302,'msg'=>'请选择部门');
+        //获取部门相关公式
+        $_department_config = D('DataFormula')->getFind(array('department_id'=>$param['department_id']));
+        //是否有配置公式
+        if(empty($_department_config)) return array('code'=>201,'msg'=>'该部门未设置统计公式');
+        //时间区间转化格式
+        $logtime = explode('@', $param['logtime']);
+        //获取数据字段
+        $_data_flied = C('FIELD_STATUS.DATA_FLIED');
+        //获取显示项
+        $_data_show = C('FIELD_STATUS.DATA_SHOW');
+        //创建新集合
+        $_market = array();
+        //获取关联职位
+        $_where_role_id = $this->getDepartmentRole($_department_config['department_id']);
+        if($_department_config['about_user']=='createuser_id'){
+            $_where_log['create_role_id'] = array('IN', $_where_role_id);
+        }elseif($_department_config['about_user']=='updateuser_id'){
+            $_where_log['update_role_id'] = array('IN', $_where_role_id);
+        }elseif($_department_config['about_user']=='system_user_id'){
+            $_where_log['system_role_id'] = array('IN', $_where_role_id);
+        }
+        //获取条件 时间区间
+        $_where_log['logtime'] = array(array('EGT',strtotime($logtime[0])),array('ELT',strtotime($logtime[1])));
+        //查询时间段内产生数据的员工
+        $_data_user = D('DataLogs')->field($_department_config['about_user'])->where($_where_log)->group($_department_config['about_user'])->select();
+        //获取部门公式列表
+        $_formula_list = D('DataFormula')->getList(array('department_id'=>$param['department_id']));
+        //补全数据
+        foreach($_data_user as $k=>$v){
+            //显示列-数据运算
+            foreach($_formula_list as $v2){
+                //获取运算结果内容
+                $_data_num = $this->setAnswer($v[$_department_config['about_user']],$v2['formula'],$v2['formula_user'],$logtime);
+                $_data_user_show[$_data_show[$v2['statistics_type']]] = (!empty($_data_num))?$_data_num:0;
+            }
+            $_user_list[] = array(
+                'user_id' => $v[$_department_config['about_user']],
+                'data'=>$_data_user_show
+            );
+        }
+
+        print_r($_user_list);exit;
+    }
+
+    /*
+     * 公式计算
+     */
+    protected function setAnswer($user_id,$formula,$formula_user,$logtime)
+    {
+        //换取运运算符号
+        $_reg = "/\+|\-|\*|\/|\)\*|\)\//";
+        preg_match_all($_reg, $formula,$_regs);
+        $_formula_symbol = $_regs[0];
+        //获取参数type
+        $_formula_arr = explode(',', preg_replace($_reg,',',$formula));
+        $_formula_user = explode(',', $formula_user);
+        //公式ID转化真实数量
+        $_operator_mun = array();
+        foreach($_formula_user as $k=>$v){
+            $_is_dep = explode('-', $v);
+            $_where_log[$v] = $user_id;
+            $_where_log['operattype'] = $_formula_arr[$k];
+            $_where_log['logtime'] = array(array('EGT',strtotime($logtime[0])),array('ELT',strtotime($logtime[1])));
+            $_data_num = D('DataLogs')->where($_where_log)->count();
+            //获取总数
+            $_operator_mun[] = $_data_num;
+        }
+        //计算公式得数 先乘除
+        if(!empty($_formula_symbol)){
+            foreach($_formula_symbol as $k=>$v){
+                if($k==0 && $v != '*' && $v != '/'){
+                    $_operator_mun_start[] = $_operator_mun[0];
+                }
+                if($v == '*'){
+                    $_operator_mun_start[] = $_formula_symbol[($k+1)] = (int) $_operator_mun[$k] * (int) $_operator_mun[($k+1)];
+                }elseif($v == '/'){
+                    $_operator_mun_start[] = $_formula_symbol[($k+1)] = (int) $_operator_mun[$k] / (int) $_operator_mun[($k+1)];
+                }else{
+                    $_formula_symbol_start[] = $v;
+                    $_operator_mun_start[] = $_operator_mun[$k];
+                }
+            }
+        }else{
+            $_operator_mun_start[] = $_operator_mun[0];
+        }
+        //计算公式得数 按顺序运算
+        if(!empty($_formula_symbol_start)){
+            $_formula_answer = '';
+            foreach($_formula_symbol_start as $k=>$v){
+                if($k == 0){
+                    $_formula_answer = (int) $_operator_mun_start[0];
+                }
+                if($v=='+'){
+                    $_formula_answer = $_formula_answer + (int) $_operator_mun_start[($k+1)];
+                }elseif($v=='-'){
+                    $_formula_answer = $_formula_answer - (int) $_operator_mun_start[($k+1)];
+                }elseif($v=='*'){
+                    $_formula_answer = $_formula_answer * (int) $_operator_mun_start[($k+1)];
+                }elseif($v=='/'){
+                    $_formula_answer = $_formula_answer / (int) $_operator_mun_start[($k+1)];
+                }
+            }
+        }else{
+            $_formula_answer = $_operator_mun_start[0];
+        }
+        return $_formula_answer;
+    }
+
+    protected function getDepartmentRole($department_id)
+    {
+        //获取关联职位
+        $_role_list = D('Role','Service')->getRoleList(array('department_id'=>$department_id));
+        foreach($_role_list['data']['data'] as $v){
+            $_role_ids[] = $v['id'];
+        }
+        return $_role_ids;
+    }
+
+
+    public function getDataMarket2($where)
+    {
+
+
+    }
+    public function getDataMarket3($where)
+    {
+
         //时间格式转换
         if(!empty($where['daytime'])){
             $daytime = explode(',', $where['daytime']);
