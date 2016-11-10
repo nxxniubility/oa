@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="../../../Public/css/common.css">
+		<link rel="stylesheet" href="../../../Public/js/glDatePicker/glDatePicker.default.css">
+		<link rel="stylesheet" href="../../../Public/css/system.market.index.css">
+		<script>
+			var jump_code = "{$jump_code}";
+		</script>
+	</head>
+	<body>
+		<div class="wrapper_box">
+			<div class="title clearfix">
+	            <div class="title_left">
+	            	<span class="title_text">营销统计管理</span>
+	            </div>
+	            <div class="title_right fr clearfix">
+	            	<a href="{:U('System/Statistics/marketStandard')}" class="setup_btn">设置部门统计项</a>
+	            	<a href="{:U('System/Statistics/marketStandard')}" class="return">设置合格标准</a>
+	            	<!--<a href="javascript:;" class="export_btn">导出数据</a>-->
+	            </div>
+	        </div>
+	        <div class="main">
+	        	<div class="index-row">
+	        		<div class="left-name"><i>&#42</i>统计区域：</div>
+	        		<div class="right-content">
+	        			<span class="index-region"><em>南山中心</em><i></i></span>
+	        			<div class="choice-comtainer dn">
+	        				<div class="comtainer-title">请选择区域</div>
+	        				<div class="comtainer-cont">
+	        					<ul class="city_largearea clearfix">
+									<li class="cur"><a href="javascript:;">华南</a></li>
+									<li class="cur"><a href="javascript:;">华北</a></li>
+									<li class="cur"><a href="javascript:;">华西</a></li>		        					
+	        					</ul>
+								<div class="show_city_cont active">
+									<div class="section">
+										<span id="zone_6" data-level="3" data-value="6">深圳</span>
+										<ul class="city_partition clearfix">
+											<li><a href="javascript:;" data-level="4" id="zone_2" data-value="2">福田中心</a></li>
+											<li><a href="javascript:;" data-level="4" id="zone_3" data-value="3">宝安中心</a></li>
+											<li><a href="javascript:;" data-level="4" id="zone_4" data-value="4">南山中心</a></li>
+										</ul>
+									</div>
+								</div>
+								<div class="show_city_cont active">
+									<div class="section">
+										<span id="zone_182" data-level="3" data-value="182">北京</span>
+										<ul class="city_partition clearfix">
+											<li><a href="javascript:;" data-level="4" id="zone_183" data-value="183">海淀</a></li>
+										</ul>
+									</div>
+								</div>
+								<div class="show_city_cont active">
+									<div class="section">
+										<span id="zone_186" data-level="3" data-value="186">石家庄</span>
+											<ul class="city_partition clearfix">
+											</ul>
+									</div>
+								</div>
+								<div class="show_city_cont active">
+									<div class="section">
+										<span id="zone_187" data-level="3" data-value="187">123</span>
+											<ul class="city_partition clearfix">
+											</ul>
+									</div>
+								</div>
+								<div class="show_city_cont active">
+											<div class="section">
+												<span id="zone_188" data-level="3" data-value="188">333</span>
+												<ul class="city_partition clearfix">
+																										</ul>
+											</div>
+										</div><div class="show_city_cont active">
+											<div class="section">
+												<span id="zone_190" data-level="3" data-value="190">乌鲁木齐</span>
+												<ul class="city_partition clearfix">
+													<li><a href="javascript:;" data-level="4" id="zone_191" data-value="191">乌鲁木齐中心</a></li><li><a href="javascript:;" data-level="4" id="zone_192" data-value="192">中心2</a></li>													</ul>
+											</div>
+										</div>									<input type="button" class="reset_btn" value="重置">
+								<input type="hidden" name="zone_id" value="4" autocomplete="off">
+	        				</div>
+	        			</div>
+	        		</div>
+	        	</div>
+	        </div>
+		</div>	
+			
+		<div id="mask"></div>
+		<script>
+			var get_info_url = '/SystemApi/Data/getDataMarketInfo';
+			var market_daytime = '{$data.request.daytime}';
+			var market_zone_id = '{$data.request.zone_id}';
+			var market_role_id = '{$data.request.role_id}';
+			var market_system_user_id = '';
+		</script>
+		<script src="../../../Public/js/jquery-1.9.1.min.js"></script>
+		<script src="../../../Public/js/layer/layer.js"></script>
+		<script src="../../../Public/js/common.js"></script>
+		<script src="_../../../Public/js/glDatePicker/glDatePicker.js"></script>
+		<script src="../../../Public/js/system.market.index.js"></script>
+		<script>
+			var my_id = "{$data.my_zone_id}";
+			if($('#zone_'+my_id).attr('data-level')==3){
+//				$('#zone_'+my_id).hide().next().hide();
+			}else if($('#zone_'+my_id).attr('data-level')==4){
+				$('.seach_city_show').find('span[data-level="3"]').attr('data-value','');
+				$('#zone_'+my_id).parents('li').siblings().hide();
+			}
+		</script>
+	</body>
+</html>
