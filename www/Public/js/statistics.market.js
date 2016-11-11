@@ -1,25 +1,7 @@
-//初始化-职位
-//if(market_zone_id!=''){
-//    if($('#zone_'+market_zone_id).text().length>0){
-//        $('.city_title em').text($('#zone_'+market_zone_id).text());
-//    }
-//};
-//if(market_role_id!=''){
-//    var temp_role_id = market_role_id.split(',');
-//    var temp_role_names = '';
-//    $.each(temp_role_id, function(k, v){
-//        if(temp_role_names==''){
-//            temp_role_names += $('#sale'+v).attr('data-name');
-//        }else{
-//            temp_role_names += ','+$('#sale'+v).attr('data-name');
-//        }
-//    });
-//    if(temp_role_names.length>13){
-//        temp_role_names = temp_role_names.substring(0,13)+'...';
-//    }
-//    $('.position_name em').text(temp_role_names);
-//};
 
+//获取当前时分秒
+var oDate = new Date();
+var time_his = ' '+oDate.getHours()+':'+oDate.getMinutes()+':'+oDate.getSeconds();
 //  单项指标左侧列表都添加点击事件
 $(function(){
     //$('.chart_tab').children('li').eq(0).trigger('click');
@@ -275,7 +257,7 @@ $(document).on('click', '.chart_tab li', function(){
 });
 
 //  选择指标select切换
-$('.chart_topright select').change(function(){
+$(document).on('change','.chart_topright select',function(){
     var _curVal = $(this).children('option:selected').val(),
         _chartnav=$('.chart_tab .cur').attr('data-value'),
         _chartname=$('.chart_tab .cur').text(),
@@ -295,11 +277,11 @@ $('.chart_topright select').change(function(){
     _please_select.hide();
     //获取接口
     var data = {
-        daytime:market_daytime,
-        role_id:market_role_id,
-        zone_id:market_zone_id,
-        system_user_id:market_system_user_id,
-        type:_chartnav
+        type : _chartnav.replace('btn_',''),
+        zone_id : $.getUrlParam('zone_id'),
+        role_id : $.getUrlParam('role_id'),
+        department_id : $.getUrlParam('department_id'),
+        logtime : $.getUrlParam('logtime')+time_his,
     };
     if(_chartnav == 'totalratio' || _chartnav == 'chargebackratio' || _chartnav == 'conversionratio' || _chartnav == 'visitratio'){
         var navnum = {
@@ -335,7 +317,7 @@ $('.chart_topright select').change(function(){
         }
         return false;
     };
-    common_ajax2(data,get_info_url,'no',getHighcharts);
+    common_ajax2(data,'/SystemApi/Data/getDataMarketInfo','no',getHighcharts);
     function getHighcharts(redata){
         if(redata.code==0){
             if(_curVal == '1'){
@@ -775,7 +757,7 @@ $(function(){
         zone_id : $.getUrlParam('zone_id'),
         role_id : $.getUrlParam('role_id'),
         department_id : $.getUrlParam('department_id'),
-        logtime : $.getUrlParam('logtime')
+        logtime : $.getUrlParam('logtime')+time_his
     };
     $('#count_body,#btn_body,#demo_body').hide();
     common_ajax2(data, '/SystemApi/data/getDataMarket', 'no', function(redata){
