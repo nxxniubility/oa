@@ -101,6 +101,7 @@ class DataController extends SystemApiController
         //外部调用？
         $param['logtime'] = I('param.logtime',null);
         $param['department_id'] = I('param.department_id',null);
+        $param['role_id'] = I('param.role_id',null);
         $param['zone_id'] = I('param.zone_id',null);
 //        $param['system_user_id'] = I('param.system_user_id',null);
         $getService = function($param){
