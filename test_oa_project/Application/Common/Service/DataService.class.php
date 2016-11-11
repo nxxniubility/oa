@@ -154,8 +154,6 @@ class DataService extends BaseService
         $_data_flied = C('FIELD_STATUS.DATA_FLIED');
         //获取显示项
         $_data_show = C('FIELD_STATUS.DATA_SHOW');
-        //创建新集合
-        $_market = array();
         //获取关联职位
         $_where_role_id = $this->getDepartmentRole($_department_config['department_id']);
         if($_department_config['about_user']=='createuser_id'){
@@ -171,21 +169,66 @@ class DataService extends BaseService
         $_data_user = D('DataLogs')->field($_department_config['about_user'])->where($_where_log)->group($_department_config['about_user'])->select();
         //获取部门公式列表
         $_formula_list = D('DataFormula')->getList(array('department_id'=>$param['department_id']));
-        //补全数据
-        foreach($_data_user as $k=>$v){
-            //显示列-数据运算
-            foreach($_formula_list as $v2){
-                //获取运算结果内容
-                $_data_num = $this->setAnswer($v[$_department_config['about_user']],$v2['formula'],$v2['formula_user'],$logtime);
-                $_data_user_show[$_data_show[$v2['statistics_type']]] = (!empty($_data_num))?$_data_num:0;
+        //补全天数内容
+        $_start = $logtime[0];
+        $_end = $logtime[1];
+        $_diff = strtotime($_end) - strtotime($_start);
+        $_diffDay = $_diff / (24*60*60);
+        for ($i = 0; $i <= $_diffDay; $i++){
+            $_new_time = (strtotime($_start) + $i * 24 * 60 * 60 );
+            if(empty($_days_count[date('Y-m-d',$_new_time)])) $_days_count[date('Y-m-d',$_new_time)] = array();
+            //人员数据
+            foreach($_data_user as $k=>$v){
+                //显示列-数据运算
+                foreach($_formula_list as $v2){
+                    //获取运算结果内容
+                    $_data_num = $this->setAnswer($v[$_department_config['about_user']],$v2['formula'],$v2['formula_user'],$_new_time);
+                    $_data_num = (!empty($_data_num))?$_data_num:0;
+                    $_data_user_show[$v2['statistics_type']] = $_data_num;
+                }
+                //获取涉案员工
+                if(empty($_user_list[$v[$_department_config['about_user']]])) {
+                    $_info = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v[$_department_config['about_user']]));
+                    $_user_list[$v[$_department_config['about_user']]] = array(
+                        'system_user_id'=>$_info['data']['system_user_id'],
+                        'realname'=>$_info['data']['realname'],
+                        'face'=>$_info['data']['face'],
+                        'role_names'=>$_info['data']['role_names']
+                    );
+                }
+                $_statistics[$v[$_department_config['about_user']]][$_new_time] = $_data_user_show;
             }
-            $_user_list[] = array(
-                'user_id' => $v[$_department_config['about_user']],
-                'data'=>$_data_user_show
-            );
         }
-
-        print_r($_user_list);exit;
+        //组合输出数组
+        foreach($_statistics as $k=>$v){
+            foreach($v as $k2=>$v2){
+                foreach($v2 as $k3=>$v3){
+                    if(empty($_statistics_name[$k3])){
+                        $_statistics_name[$k3] = array('name'=>$_data_show[$k3],'show_id'=>$k3);
+                    }
+                    if(empty($_days_count[date('Y-m-d',$k2)][$k3])){
+                        $_days_count[date('Y-m-d',$k2)][$k3] = array('name'=>$_data_show[$k3],'show_id'=>$k3,'count'=>$v3);
+                    }else{
+                        $_days_count[date('Y-m-d',$k2)][$k3]['count'] = $_days_count[date('Y-m-d',$k2)][$k3]['count'] + $v3;
+                    }
+                    if(empty($_user_list[$k]['data'][$k3])){
+                        $_user_list[$k]['data'][$k3] = array('name'=>$_data_show[$k3],'show_id'=>$k3,'count'=>$v3);
+                    }else{
+                        $_user_list[$k]['data'][$k3]['count'] = $_user_list[$k]['data'][$k3]['count'] + $v3;
+                    }
+                    if(empty($_data_count[$k3])){
+                        $_data_count[$k3] = array('name'=>$_data_show[$k3],'show_id'=>$k3,'count'=>$v3);
+                    }else{
+                        $_data_count[$k3]['count'] = $_data_count[$k3]['count'] + $v3;
+                    }
+                }
+            }
+        }
+        $_put_data['user_list'] = $_user_list;
+        $_put_data['days'] = $_days_count;
+        $_put_data['count'] = array_values($_data_count);
+        $_put_data['statistics'] = array_values($_statistics_name);
+        return array('code'=>0, 'msg'=>'获取成功', 'data'=>$_put_data);
     }
 
     /*
@@ -206,7 +249,7 @@ class DataService extends BaseService
             $_is_dep = explode('-', $v);
             $_where_log[$v] = $user_id;
             $_where_log['operattype'] = $_formula_arr[$k];
-            $_where_log['logtime'] = array(array('EGT',strtotime($logtime[0])),array('ELT',strtotime($logtime[1])));
+            $_where_log['logtime'] = array(array('EGT',$logtime),array('ELT',strtotime(date('Y-m-d',$logtime).' 23:59:59')));
             $_data_num = D('DataLogs')->where($_where_log)->count();
             //获取总数
             $_operator_mun[] = $_data_num;
@@ -263,11 +306,6 @@ class DataService extends BaseService
     }
 
 
-    public function getDataMarket2($where)
-    {
-
-
-    }
     public function getDataMarket3($where)
     {
 
