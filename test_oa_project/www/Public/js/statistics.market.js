@@ -759,12 +759,17 @@ $(document).ready(function(){
 
 $(function(){
     $(':input[name="logtime"]').val($.getUrlParam('logtime'));
-    var loading_start = layer.alert('正在获取统计数据....', {
-        title:0
+    var str = '<div class=\"wait\"><i></i>正在获取统计数据....</div>';
+    var loading_start = layer.open({
+    	type:1
+    	,area:['260px','auto']
+        ,title:false
+        ,shade:.6
         ,time: 0 //不自动关闭
-        ,btn: 0
-        ,icon:7
-        ,closeBtn:0
+        ,shadeClose:false
+        ,shift: 1
+        ,closeBtn:false
+        ,content:str
     });
     var data = {
         role_id : $.getUrlParam('role_id'),
@@ -773,7 +778,7 @@ $(function(){
     };
     $('#count_body,#btn_body,#demo_body').hide();
     common_ajax2(data, '/SystemApi/data/getDataMarket', 'no', function(redata){
-        layer.close(loading_start);
+        layer.close(loading_start);    		//  关闭加载提示
         if(redata.data){
             layui.use('laytpl', function(){
                 var laytpl = layui.laytpl;
