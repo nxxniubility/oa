@@ -12,7 +12,6 @@ class ProidController extends SystemController
      */
     public function servJsList()
     {
-
         //获取参数
         $request = I('get.');
         //获取排序 分页参数
