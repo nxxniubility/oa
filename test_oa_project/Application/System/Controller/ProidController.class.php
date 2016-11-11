@@ -12,6 +12,7 @@ class ProidController extends SystemController
      */
     public function servJsList()
     {
+
         //获取参数
         $request = I('get.');
         //获取排序 分页参数
@@ -187,7 +188,7 @@ class ProidController extends SystemController
                 $this->ajaxReturn(0,'专题页添加成功，可以添加导航，或者返回专题页列表',U('System/Proid/addPagesNav?pages_id='.$result['data']));
             }
         }else{
-            //模板分类列表
+            //专题页分类列表
             $pagesType = D('Proid', 'Service')->getAllPagesType();
             $data['pagesType'] = $pagesType['data'];
             //课程列表
@@ -205,7 +206,7 @@ class ProidController extends SystemController
     }
 
     /**
-     * 添加模板 导航
+     * 添加专题页 导航
      * @author zgt
      */
     public function addPagesNav()
@@ -222,7 +223,7 @@ class ProidController extends SystemController
         }else{
             $detail = D('Proid', 'Service')->getPagesNav($pages_id);
             $data['detail'] = $detail['data'];
-            //模板分类列表
+            //专题页分类列表
             $pagesType = D('Proid', 'Service')->getAllPagesType();
             $data['pagesType'] = $pagesType['data'];
             //课程列表
@@ -239,7 +240,7 @@ class ProidController extends SystemController
     }
 
     /**
-     * 修改模板
+     * 修改专题页
      * @author zgt
      */
     public function editPages()
@@ -255,10 +256,10 @@ class ProidController extends SystemController
                 $this->ajaxReturn(0, '专题页修改成功，可以修改导航，或者返回专题页列表', U('System/Proid/addPagesNav?pages_id='.$pages_id));
             }
         }
-        //模板详情
+        //专题页详情
         $pagesInfo = D('Proid', 'Service')->getPagesInfo(array('pages_id'=>$pages_id));
         $data['pagesInfo'] = $pagesInfo['data'];
-        //模板分类列表
+        //专题页分类列表
         $pagesType = D('Proid', 'Service')->getAllPagesType();
         $data['pagesType'] = $pagesType['data'];
         //课程列表
@@ -275,7 +276,7 @@ class ProidController extends SystemController
     }
 
     /**
-     * 模板详情
+     * 专题页详情
      * @author zgt
      */
     public function detailPage()
@@ -286,10 +287,10 @@ class ProidController extends SystemController
         if(!empty($channel_id)){
             $where[C('DB_PREFIX').'channel.channel_id'] = $channel_id;
         }
-        //模板详情
+        //专题页详情
         $pageInfo = D('Proid', 'Service')->getPagesInfo(array('pages_id'=>$pages_id));
         $data['pagesInfo'] = $pageInfo['data'];
-        //模板相关计划列表
+        //专题页相关计划列表
         $proList = D('Proid', 'Service')->getPagesPromote($pages_id, $where,(($re_page-1)*15).',15');
         $data['promoteList'] = $proList['data'];
         //终端列表
@@ -307,7 +308,7 @@ class ProidController extends SystemController
     }
 
     /**
-     * 模板 修改专题页备注
+     * 专题页 修改专题页备注
      * @author zgt
      */
     public function editPagesRemark(){
@@ -323,7 +324,7 @@ class ProidController extends SystemController
     }
 
     /**
-     * 模板 删除
+     * 专题页 删除
      * @author zgt
      */
     public function delPages(){
@@ -340,7 +341,7 @@ class ProidController extends SystemController
     }
 
     /**
-     * 获取指定类型模板
+     * 获取指定类型专题页
      * @author Nixx
      */
     public function pagesList()
