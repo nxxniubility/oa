@@ -143,7 +143,11 @@ class DataService extends BaseService
         //必传参数
         if(empty($param['logtime'])) return array('code'=>301,'msg'=>'请选择搜索时间');
         //必传参数
-        if(empty($param['department_id'])) return array('code'=>302,'msg'=>'请选择部门');
+        if(empty($param['department_id']) && empty($param['role_id'])) return array('code'=>302,'msg'=>'请选择部门或者职位');
+        if(!empty($param['role_id'])){
+            $_role_id = explode(',',$param['role_id']);
+            D('Role','Service')
+        }
         //获取部门相关公式
         $_department_config = D('DataFormula')->getFind(array('department_id'=>$param['department_id']));
         //是否有配置公式
@@ -155,7 +159,11 @@ class DataService extends BaseService
         //获取显示项
         $_data_show = C('FIELD_STATUS.DATA_SHOW');
         //获取关联职位
-        $_where_role_id = $this->getDepartmentRole($_department_config['department_id']);
+        if(!empty($param['department_id'])){
+            $_where_role_id = $this->getDepartmentRole($param['department_id']);
+        }else{
+            $_where_role_id = $param['role_id'];
+        }
         if($_department_config['about_user']=='createuser_id'){
             $_where_log['create_role_id'] = array('IN', $_where_role_id);
         }elseif($_department_config['about_user']=='updateuser_id'){

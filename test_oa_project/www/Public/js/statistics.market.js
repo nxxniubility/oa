@@ -767,6 +767,7 @@ $(function(){
         ,closeBtn:0
     });
     var data = {
+        role_id : $.getUrlParam('role_id'),
         department_id : $.getUrlParam('department_id'),
         logtime : $.getUrlParam('logtime')
     };
