@@ -46,7 +46,6 @@ function centralAssignment(){
         var txt = $.trim($(this).text()),
             cityShow = $(this).closest('.seach_city_show'),
             finalZone = $(this).closest('.search_region');
-
         finalZone.find('.city_title em').text(txt);
         finalZone.find(':input[name="zone_id"]').val($(this).attr('data-value'));
         cityShow.addClass('dn');
@@ -103,8 +102,6 @@ $(document).on('click', '.position_name', function(){
     cancelClose();
 });
 
-//  展开部门职位
-openPosition();
 //  展开部门职位
 function openPosition(){
     var _this = $('.position_department'),
@@ -758,4 +755,88 @@ $(document).ready(function(){
     };
 });
 
-$(':input[name="logtime"]').val($.getUrlParam('logtime'));
+
+
+$(function(){
+    $(':input[name="logtime"]').val($.getUrlParam('logtime'));
+    var loading_start = layer.alert('正在获取统计数据....', {
+        title:0
+        ,time: 0 //不自动关闭
+        ,btn: 0
+        ,icon:7
+        ,closeBtn:0
+    });
+    var data = {
+        department_id : $.getUrlParam('department_id'),
+        logtime : $.getUrlParam('logtime')
+    };
+    $('#count_body,#btn_body,#demo_body').hide();
+    common_ajax2(data, '/SystemApi/data/getDataMarket', 'no', function(redata){
+        layer.close(loading_start);
+        if(redata.data){
+            layui.use('laytpl', function(){
+                var laytpl = layui.laytpl;
+                laytpl(templets_count.innerHTML).render(redata.data, function(result){
+                    $('#count_body').append(result).show();
+                });
+                laytpl(templets_btn.innerHTML).render(redata.data, function(result){
+                    $('#btn_body').append(result).show();
+                });
+                laytpl(templets_content.innerHTML).render(redata.data, function(result){
+                    $('#demo_body').append(result).show();
+                });
+                $('#stTab1 .sr_time').text('统计时间：'+$.getUrlParam('logtime','@').split('@')[0]+' 至 '+$.getUrlParam('logtime','@').split('@')[1]);
+                $('#stTab2 .sr_time').text('统计员工：'+$('#sr_staff .sr_li').length+' 人');
+            });
+        }else{
+            layer.msg(redata.msg, {icon:2});
+            $('.main').append(getNullHint());
+        };
+        //获取区域列表
+        common_ajax2('','/SystemApi/Zone/getZoneList','no',function(redata){
+            if(redata.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(templets_zone.innerHTML).render(redata.data, function(result){
+                        $('#zone_body').html(result);
+                        $('.show_city_cont').eq(0).addClass('active');
+                        $('.city_largearea li').eq(0).addClass('cur');
+                        if($.getUrlParam('zone_id')){
+                            if($('#zone_'+$.getUrlParam('zone_id')).text().length>0){
+                                $('.city_title em').text($('#zone_'+$.getUrlParam('zone_id')).text());
+                            }
+                        };
+                    });
+                });
+            };
+        },1);
+        //获取部门职位列表
+        common_ajax2('','/SystemApi/Department/getDepartmentRoleList','no',function(redata){
+            if(redata.data.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(templets_role.innerHTML).render(redata.data.data, function(result){
+                        $('#role_body').html(result);
+                        //展开部门职位
+                        openPosition();
+                        if($.getUrlParam('role_id')){
+                            var temp_role_id = $.getUrlParam('role_id').split(',');
+                            var temp_role_names = '';
+                            $.each(temp_role_id, function(k, v){
+                                if(temp_role_names==''){
+                                    temp_role_names += $('#sale'+v).attr('data-name');
+                                }else{
+                                    temp_role_names += ','+$('#sale'+v).attr('data-name');
+                                }
+                            });
+                            if(temp_role_names.length>13){
+                                temp_role_names = temp_role_names.substring(0,13)+'...';
+                            }
+                            $('.position_name em').text(temp_role_names);
+                        };
+                    });
+                });
+            };
+        },1);
+    },1);
+});
