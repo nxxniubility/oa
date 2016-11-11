@@ -261,224 +261,14 @@ class DataService extends BaseService
         return array('code'=>0, 'msg'=>'获取成功', 'data'=>$_put_data);
     }
 
-    /*
-     * 公式计算
-     */
-    protected function setAnswer($user_id,$formula,$formula_user,$logtime)
-    {
-        //换取运运算符号
-        $_reg = "/\+|\-|\*|\/|\)\*|\)\//";
-        preg_match_all($_reg, $formula,$_regs);
-        $_formula_symbol = $_regs[0];
-        //获取参数type
-        $_formula_arr = explode(',', preg_replace($_reg,',',$formula));
-        $_formula_user = explode(',', $formula_user);
-        //公式ID转化真实数量
-        $_operator_mun = array();
-        foreach($_formula_user as $k=>$v){
-            $_is_dep = explode('-', $v);
-            $_where_log[$v] = $user_id;
-            $_where_log['operattype'] = $_formula_arr[$k];
-            $_where_log['logtime'] = array(array('EGT',$logtime),array('ELT',strtotime(date('Y-m-d',$logtime).' 23:59:59')));
-            $_data_num = D('DataLogs')->where($_where_log)->count();
-            //获取总数
-            $_operator_mun[] = $_data_num;
-        }
-        //计算公式得数 先乘除
-        if(!empty($_formula_symbol)){
-            foreach($_formula_symbol as $k=>$v){
-                if($k==0 && $v != '*' && $v != '/'){
-                    $_operator_mun_start[] = $_operator_mun[0];
-                }
-                if($v == '*'){
-                    $_operator_mun_start[] = $_formula_symbol[($k+1)] = (int) $_operator_mun[$k] * (int) $_operator_mun[($k+1)];
-                }elseif($v == '/'){
-                    $_operator_mun_start[] = $_formula_symbol[($k+1)] = (int) $_operator_mun[$k] / (int) $_operator_mun[($k+1)];
-                }else{
-                    $_formula_symbol_start[] = $v;
-                    $_operator_mun_start[] = $_operator_mun[$k];
-                }
-            }
-        }else{
-            $_operator_mun_start[] = $_operator_mun[0];
-        }
-        //计算公式得数 按顺序运算
-        if(!empty($_formula_symbol_start)){
-            $_formula_answer = '';
-            foreach($_formula_symbol_start as $k=>$v){
-                if($k == 0){
-                    $_formula_answer = (int) $_operator_mun_start[0];
-                }
-                if($v=='+'){
-                    $_formula_answer = $_formula_answer + (int) $_operator_mun_start[($k+1)];
-                }elseif($v=='-'){
-                    $_formula_answer = $_formula_answer - (int) $_operator_mun_start[($k+1)];
-                }elseif($v=='*'){
-                    $_formula_answer = $_formula_answer * (int) $_operator_mun_start[($k+1)];
-                }elseif($v=='/'){
-                    $_formula_answer = $_formula_answer / (int) $_operator_mun_start[($k+1)];
-                }
-            }
-        }else{
-            $_formula_answer = $_operator_mun_start[0];
-        }
-        return $_formula_answer;
-    }
 
-    protected function getDepartmentRole($department_id)
-    {
-        //获取关联职位
-        $_role_list = D('Role','Service')->getRoleList(array('department_id'=>$department_id));
-        foreach($_role_list['data']['data'] as $v){
-            $_role_ids[] = $v['id'];
-        }
-        return $_role_ids;
-    }
-
-
-    public function getDataMarket3($where)
-    {
-
-        //时间格式转换
-        if(!empty($where['daytime'])){
-            $daytime = explode(',', $where['daytime']);
-            if(count($daytime)>1){
-                $where['daytime'] = array(array('EGT',date('Ymd', strtotime($daytime[0]))),array('ELT',date('Ymd', strtotime($daytime[1]))));
-            }else{
-                $where['daytime'] = date('Ymd', strtotime($daytime[0]));
-            }
-        }
-        //获取区域子集
-        if(!empty($where['zone_id'])){
-            $zoneIds = $this->getZoneIds($where['zone_id']);
-            $_where['zone_id'] = array('IN',$zoneIds);
-        }
-        //获取区域子集
-        if(!empty($where['role_id'])){
-            $systemIds = $this->getRoleIds($where['role_id']);
-            $_where['system_user_id'] = array('IN',$systemIds);
-        }elseif(!empty($where['system_user_id'])){
-            $_where['system_user_id'] = $where['system_user_id'];
-        }
-        $_where['daytime'] = $where['daytime'];
-        $result = D('DataMarket')->where($_where)->select();
-        $newArr = array();
-        //补全天数内容
-        if(!empty($daytime)){
-            $start = $daytime[0];
-            $end = $daytime[1];
-            $diff = strtotime($end) - strtotime($start);
-            $diffDay = $diff / (24*60*60);
-            for ($i = 0; $i <= $diffDay; $i++){
-                $new_time = (strtotime($start) + $i * 24 * 60 * 60 );
-                if(empty($newArr['days'][date('Ymd', $new_time)])){
-                    $newArr['days'][date('Ymd', $new_time)] = array(
-                        'day' => date('Y-m-d', $new_time),
-                        'addcount'=>0,
-                        'acceptcount'=>0,
-                        'switchcount'=>0,
-                        'restartcount'=>0,
-                        'recyclecount'=>0,
-                        'redeemcount'=>0,
-                        'callbackcount'=>0,
-                        'attitudecount'=>0,
-                        'allocationcount'=>0,
-                        'visitcount'=>0,
-                        'ordercount'=>0,
-                        'refundcount'=>0,
-                        'visitratio'=>0,
-                        'conversionratio'=>0,
-                        'chargebackratio'=>0,
-                        'totalratio'=>0,
-                    );
-                }
-            }
-        }
-        foreach($result as $k=>$v){
-            $_count = count($result);
-            //总数
-            $newArr['count']['addcount'] = $newArr['count']['addcount']+$v['addnum'];
-            $newArr['count']['acceptcount'] = $newArr['count']['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum']+$v['redeemnum'];
-            $newArr['count']['switchcount'] = $newArr['count']['switchcount']+$v['switchnum']+$v['switchmanagenum'];
-            $newArr['count']['restartcount'] = $newArr['count']['restartcount']+$v['restartnum'];
-            $newArr['count']['recyclecount'] = $newArr['count']['recyclecount']+$v['recyclenum'];
-            $newArr['count']['redeemcount'] = $newArr['count']['redeemcount']+$v['redeemnum'];
-            $newArr['count']['callbackcount'] = $newArr['count']['callbackcount']+$v['callbacknum'];
-            $newArr['count']['attitudecount'] = $newArr['count']['attitudecount']+$v['attitudenum'];
-            $newArr['count']['allocationcount'] = $newArr['count']['acceptcount']-$newArr['count']['switchcount'];
-            $newArr['count']['visitcount'] = $newArr['count']['visitcount']+$v['visitnum'];
-            $newArr['count']['ordercount'] = $newArr['count']['ordercount']+$v['ordernum'];
-            $newArr['count']['refundcount'] = $newArr['count']['refundcount']+$v['refundnum'];
-            if(($_count-1)==$k){
-                $newArr['count']['visitratio'] = round($newArr['count']['visitcount']/$newArr['count']['acceptcount'],4)*100;
-                $newArr['count']['conversionratio'] = round($newArr['count']['ordercount']/$newArr['count']['visitcount'],4)*100;
-                $newArr['count']['chargebackratio'] = round($newArr['count']['refundcount']/$newArr['count']['ordercount'],4)*100;
-                $newArr['count']['totalratio'] = round(($newArr['count']['ordercount']-$newArr['count']['refundcount'])/$newArr['count']['acceptcount'],4)*100;
-            }
-            //天数单位
-            $newArr['days'][$v['daytime']]['day'] = mb_substr($v['daytime'],0,4).'-'.mb_substr($v['daytime'],4,2).'-'.mb_substr($v['daytime'],6,2);
-            $newArr['days'][$v['daytime']]['addcount'] = $newArr['days'][$v['daytime']]['addcount'] + $v['addnum'];
-            $newArr['days'][$v['daytime']]['acceptcount'] = $newArr['days'][$v['daytime']]['acceptcount'] + $v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum']+$v['redeemnum'];
-            $newArr['days'][$v['daytime']]['switchcount'] = $newArr['days'][$v['daytime']]['switchcount'] + $v['switchnum']+$v['switchmanagenum'];
-            $newArr['days'][$v['daytime']]['restartcount'] = $newArr['days'][$v['daytime']]['restartcount'] + $v['restartnum'];
-            $newArr['days'][$v['daytime']]['recyclecount'] = $newArr['days'][$v['daytime']]['recyclecount'] + $v['recyclenum'];
-            $newArr['days'][$v['daytime']]['redeemcount'] = $newArr['days'][$v['daytime']]['redeemcount'] + $v['redeemnum'];
-            $newArr['days'][$v['daytime']]['callbackcount'] = $newArr['days'][$v['daytime']]['callbackcount'] + $v['callbacknum'];
-            $newArr['days'][$v['daytime']]['attitudecount'] = $newArr['days'][$v['daytime']]['attitudecount'] + $v['attitudenum'];
-            $newArr['days'][$v['daytime']]['allocationcount'] = $newArr['days'][$v['daytime']]['acceptcount'] - $newArr['days'][$v['daytime']]['switchcount'];
-            $newArr['days'][$v['daytime']]['visitcount'] = $newArr['days'][$v['daytime']]['visitcount'] + $v['visitnum'];
-            $newArr['days'][$v['daytime']]['ordercount'] = $newArr['days'][$v['daytime']]['ordercount'] + $v['ordernum'];
-            $newArr['days'][$v['daytime']]['refundcount'] = $newArr['days'][$v['daytime']]['refundcount'] + $v['refundnum'];
-            //-率
-            $newArr['days'][$v['daytime']]['visitratio'] = round($newArr['days'][$v['daytime']]['visitcount']/$newArr['days'][$v['daytime']]['acceptcount'],4)*100;
-            $newArr['days'][$v['daytime']]['conversionratio'] = round($newArr['days'][$v['daytime']]['ordercount']/$newArr['days'][$v['daytime']]['visitcount'],4)*100;
-            $newArr['days'][$v['daytime']]['chargebackratio'] = round($newArr['days'][$v['daytime']]['refundcount']/$newArr['days'][$v['daytime']]['ordercount'],4)*100;
-            $newArr['days'][$v['daytime']]['totalratio'] = round(($newArr['days'][$v['daytime']]['ordercount']-$newArr['days'][$v['daytime']]['refundcount'])/$newArr['days'][$v['daytime']]['acceptcount'],4)*100;
-
-            //员工
-            if(empty($newArr['systemuser'][$v['system_user_id']]['system_user_id'])){
-                if($v['system_user_id']==0){
-                    $newArr['systemuser'][$v['system_user_id']]['realname'] = '系统创建';
-                    $newArr['systemuser'][$v['system_user_id']]['role_id'] = '';
-                    $newArr['systemuser'][$v['system_user_id']]['rolename'] = '';
-                    $newArr['systemuser'][$v['system_user_id']]['system_user_id'] = 0;
-                }else{
-                    $sys_where['system_user_id'] = $v['system_user_id'];
-                    $info = D('SystemUser','Service')->getSystemUsersInfo($sys_where);
-                    $info = $info['data'];
-                    $newArr['systemuser'][$v['system_user_id']]['realname'] = $info['realname'];
-                    $newArr['systemuser'][$v['system_user_id']]['role_id'] = $info['roles'][0]['role_id'];
-                    $newArr['systemuser'][$v['system_user_id']]['rolename'] = $info['role_names'];
-                    $newArr['systemuser'][$v['system_user_id']]['system_user_id'] = $v['system_user_id'];
-                }
-            }
-            $newArr['systemuser'][$v['system_user_id']]['addcount'] = $newArr['systemuser'][$v['system_user_id']]['addcount']+$v['addnum'];
-            $newArr['systemuser'][$v['system_user_id']]['acceptcount'] = $newArr['systemuser'][$v['system_user_id']]['acceptcount']+$v['addnum']+$v['acceptnum']+$v['directoroutnum']+$v['applynum']+$v['redeemnum'];
-            $newArr['systemuser'][$v['system_user_id']]['switchcount'] = $newArr['systemuser'][$v['system_user_id']]['switchcount']+$v['switchnum']+$v['switchmanagenum'];
-            $newArr['systemuser'][$v['system_user_id']]['restartcount'] = $newArr['systemuser'][$v['system_user_id']]['restartcount']+$v['restartnum'];
-            $newArr['systemuser'][$v['system_user_id']]['recyclecount'] = $newArr['systemuser'][$v['system_user_id']]['recyclecount']+$v['recyclenum'];
-            $newArr['systemuser'][$v['system_user_id']]['redeemcount'] = $newArr['systemuser'][$v['system_user_id']]['redeemcount']+$v['redeemnum'];
-            $newArr['systemuser'][$v['system_user_id']]['callbackcount'] = $newArr['systemuser'][$v['system_user_id']]['callbackcount']+$v['callbacknum'];
-            $newArr['systemuser'][$v['system_user_id']]['attitudecount'] = $newArr['systemuser'][$v['system_user_id']]['attitudecount']+$v['attitudenum'];
-            $newArr['systemuser'][$v['system_user_id']]['allocationcount'] = $newArr['systemuser'][$v['system_user_id']]['acceptcount']-$newArr['systemuser'][$v['system_user_id']]['switchcount'];
-            $newArr['systemuser'][$v['system_user_id']]['visitcount'] = $newArr['systemuser'][$v['system_user_id']]['visitcount']+$v['visitnum'];
-            $newArr['systemuser'][$v['system_user_id']]['ordercount'] = $newArr['systemuser'][$v['system_user_id']]['ordercount']+$v['ordernum'];
-            $newArr['systemuser'][$v['system_user_id']]['refundcount'] = $newArr['systemuser'][$v['system_user_id']]['refundcount']+$v['refundnum'];
-            //-率
-            $newArr['systemuser'][$v['system_user_id']]['visitratio'] = round($newArr['systemuser'][$v['system_user_id']]['visitcount']/$newArr['systemuser'][$v['system_user_id']]['acceptcount'],4)*100;
-            $newArr['systemuser'][$v['system_user_id']]['conversionratio'] = round($newArr['systemuser'][$v['system_user_id']]['ordercount']/$newArr['systemuser'][$v['system_user_id']]['visitcount'],4)*100;
-            $newArr['systemuser'][$v['system_user_id']]['chargebackratio'] = round($newArr['systemuser'][$v['system_user_id']]['refundcount']/$newArr['systemuser'][$v['system_user_id']]['ordercount'],4)*100;
-            $newArr['systemuser'][$v['system_user_id']]['totalratio'] = round(($newArr['systemuser'][$v['system_user_id']]['ordercount']-$newArr['systemuser'][$v['system_user_id']]['refundcount'])/$newArr['systemuser'][$v['system_user_id']]['acceptcount'],4)*100;
-        }
-        return array('code'=>0,'data'=>$newArr);
-    }
     /*
     |--------------------------------------------------------------------------
     | 获取营销数据
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getDataMarketInfo($where)
+    public function getDataMarketInfo($param)
     {
         $arr = array(
             'addcount'=>'1',
@@ -494,6 +284,9 @@ class DataService extends BaseService
             'ordercount'=>'13',
             'refundcount'=>'14',
         );
+        if(empty($param['logtime'])) return array('code'=>301,'msg'=>'请选择搜索时间');
+        if(empty($param['logtime'])) return array('code'=>301,'msg'=>'请选择搜索时间');
+        print_r($param);exit;
         //时间格式转换
         if(!empty($where['daytime'])){
             $daytime = explode(',', $where['daytime']);
@@ -879,5 +672,83 @@ class DataService extends BaseService
             return array('code'=>201,'msg'=>'添加失败');
         }
         return array('code'=>0,'msg'=>'添加成功');
+    }
+
+
+    /*
+     * 公式计算
+     */
+    protected function setAnswer($user_id,$formula,$formula_user,$logtime)
+    {
+        //换取运运算符号
+        $_reg = "/\+|\-|\*|\/|\)\*|\)\//";
+        preg_match_all($_reg, $formula,$_regs);
+        $_formula_symbol = $_regs[0];
+        //获取参数type
+        $_formula_arr = explode(',', preg_replace($_reg,',',$formula));
+        $_formula_user = explode(',', $formula_user);
+        //公式ID转化真实数量
+        $_operator_mun = array();
+        foreach($_formula_user as $k=>$v){
+            $_is_dep = explode('-', $v);
+            $_where_log[$v] = $user_id;
+            $_where_log['operattype'] = $_formula_arr[$k];
+            $_where_log['logtime'] = array(array('EGT',$logtime),array('ELT',strtotime(date('Y-m-d',$logtime).' 23:59:59')));
+            $_data_num = D('DataLogs')->where($_where_log)->count();
+            //获取总数
+            $_operator_mun[] = $_data_num;
+        }
+        //计算公式得数 先乘除
+        if(!empty($_formula_symbol)){
+            foreach($_formula_symbol as $k=>$v){
+                if($k==0 && $v != '*' && $v != '/'){
+                    $_operator_mun_start[] = $_operator_mun[0];
+                }
+                if($v == '*'){
+                    $_operator_mun_start[] = $_formula_symbol[($k+1)] = (int) $_operator_mun[$k] * (int) $_operator_mun[($k+1)];
+                }elseif($v == '/'){
+                    $_operator_mun_start[] = $_formula_symbol[($k+1)] = (int) $_operator_mun[$k] / (int) $_operator_mun[($k+1)];
+                }else{
+                    $_formula_symbol_start[] = $v;
+                    $_operator_mun_start[] = $_operator_mun[$k];
+                }
+            }
+        }else{
+            $_operator_mun_start[] = $_operator_mun[0];
+        }
+        //计算公式得数 按顺序运算
+        if(!empty($_formula_symbol_start)){
+            $_formula_answer = '';
+            foreach($_formula_symbol_start as $k=>$v){
+                if($k == 0){
+                    $_formula_answer = (int) $_operator_mun_start[0];
+                }
+                if($v=='+'){
+                    $_formula_answer = $_formula_answer + (int) $_operator_mun_start[($k+1)];
+                }elseif($v=='-'){
+                    $_formula_answer = $_formula_answer - (int) $_operator_mun_start[($k+1)];
+                }elseif($v=='*'){
+                    $_formula_answer = $_formula_answer * (int) $_operator_mun_start[($k+1)];
+                }elseif($v=='/'){
+                    $_formula_answer = $_formula_answer / (int) $_operator_mun_start[($k+1)];
+                }
+            }
+        }else{
+            $_formula_answer = $_operator_mun_start[0];
+        }
+        return $_formula_answer;
+    }
+
+    /*
+     * 部门获取关联职位
+     */
+    protected function getDepartmentRole($department_id)
+    {
+        //获取关联职位
+        $_role_list = D('Role','Service')->getRoleList(array('department_id'=>$department_id));
+        foreach($_role_list['data']['data'] as $v){
+            $_role_ids[] = $v['id'];
+        }
+        return $_role_ids;
     }
 }

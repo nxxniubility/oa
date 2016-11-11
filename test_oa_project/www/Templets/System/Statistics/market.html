@@ -162,7 +162,11 @@
 			<div class="chart_container">
 				<ul class="chart_tab fl clearfix">
 					{{# layui.each(d.statistics, function(k, v){ }}
-					<li data-value="btn_{{ v.show_id }}">{{ v.name }}</li>
+						{{# if(k==0){ }}
+						<li class="cur" data-value="btn_{{ v.show_id }}">{{ v.name }}</li>
+						{{# }else{ }}
+						<li data-value="btn_{{ v.show_id }}">{{ v.name }}</li>
+						{{# } }}
 					{{# }); }}
 				</ul>
 				{{# layui.each(d.count, function(k, v){ }}

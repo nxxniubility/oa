@@ -127,18 +127,14 @@ class DataController extends SystemApiController
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getDataMarketInfo($requesr=null)
+    public function getDataMarketInfo()
     {
         //外部调用？
-        if($requesr===null){
-            $where['type'] = I('param.type',null);
-            $where['daytime'] = I('param.daytime',null);
-            $where['role_id'] = I('param.role_id',null);
-            $where['zone_id'] = I('param.zone_id',null);
-            $where['system_user_id'] = I('param.system_user_id',null);
-        }else{
-            $where = $requesr;
-        }
+        $where['type'] = I('param.type',null);
+        $where['logtime'] = I('param.logtime',null);
+        $where['role_id'] = I('param.role_id',null);
+        $where['zone_id'] = I('param.zone_id',null);
+        $where['system_user_id'] = I('param.system_user_id',null);
 
         $getService = function($where){
             //去除数组空值
@@ -153,11 +149,7 @@ class DataController extends SystemApiController
             return array('code'=>$result['code'],'msg'=>$result['msg']);
         };
         $reData = $getService($where);
-        if(!empty($requesr)){
-            return $reData;
-        }else{
-            $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
-        }
+        $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
     }
 
     /*
