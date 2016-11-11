@@ -112,7 +112,7 @@ class DataController extends SystemApiController
             $result = $DataService->getDataMarket($param);
             //返回参数
             if($result['code']==0){
-                return array('code'=>0,'msg'=>'获取成功','data'=>$result['data']);
+                return array('code'=>0,'msg'=>$result['msg'],'data'=>$result['data']);
             }
             return array('code'=>$result['code'],'msg'=>$result['msg']);
         };

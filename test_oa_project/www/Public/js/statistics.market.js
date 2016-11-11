@@ -772,6 +772,7 @@ $(function(){
         ,content:str
     });
     var data = {
+        zone_id : $.getUrlParam('zone_id'),
         role_id : $.getUrlParam('role_id'),
         department_id : $.getUrlParam('department_id'),
         logtime : $.getUrlParam('logtime')
@@ -790,7 +791,7 @@ $(function(){
                 });
                 laytpl(templets_content.innerHTML).render(redata.data, function(result){
                     $('#demo_body').append(result).show();
-                });
+                }); 
                 $('#stTab1 .sr_time').text('统计时间：'+$.getUrlParam('logtime','@').split('@')[0]+' 至 '+$.getUrlParam('logtime','@').split('@')[1]);
                 $('#stTab2 .sr_time').text('统计员工：'+$('#sr_staff .sr_li').length+' 人');
             });
@@ -811,6 +812,7 @@ $(function(){
                             if($('#zone_'+$.getUrlParam('zone_id')).text().length>0){
                                 $('.city_title em').text($('#zone_'+$.getUrlParam('zone_id')).text());
                             }
+                            $(':input[name="zone_id"]').val($.getUrlParam('zone_id'));
                         };
                     });
                 });
@@ -839,6 +841,7 @@ $(function(){
                                 temp_role_names = temp_role_names.substring(0,13)+'...';
                             }
                             $('.position_name em').text(temp_role_names);
+                            $(':input[name="role_id"]').val($.getUrlParam('role_id'));
                         };
                     });
                 });
