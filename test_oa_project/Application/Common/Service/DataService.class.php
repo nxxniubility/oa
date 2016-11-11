@@ -270,98 +270,94 @@ class DataService extends BaseService
     */
     public function getDataMarketInfo($param)
     {
-        $arr = array(
-            'addcount'=>'1',
-            'acceptcount'=>'1,2,3,4,9',
-            'switchcount'=>'5,15',
-            'allocationcount'=>'1,2,3,4,9',//分配量 还要减'5,15'
-            'restartcount'=>'6',
-            'recyclecount'=>'7',
-            'redeemcount'=>'9',
-            'callbackcount'=>'10',
-            'attitudecount'=>'11',
-            'visitcount'=>'12',
-            'ordercount'=>'13',
-            'refundcount'=>'14',
-        );
+        if(empty($param['type'])) return array('code'=>300,'msg'=>'请选择搜索时间');
         if(empty($param['logtime'])) return array('code'=>301,'msg'=>'请选择搜索时间');
-        if(empty($param['logtime'])) return array('code'=>301,'msg'=>'请选择搜索时间');
-        print_r($param);exit;
-        //时间格式转换
-        if(!empty($where['daytime'])){
-            $daytime = explode(',', $where['daytime']);
-            if(count($daytime)>1){
-                $where['daytime'] = array(array('EGT',strtotime($daytime[0])),array('ELT',strtotime($daytime[1].'2359')));
-            }else{
-                $where['daytime'] = $daytime[0];
+        if(empty($param['role_id'])) return array('code'=>302,'msg'=>'请选择相关职位');
+        //获取职位部门
+        if(!empty($param['role_id'])){
+            $_role_id = explode(',',$param['role_id']);
+            $_role_info = D('Role','Service')->getRoleInfo(array('role_id'=>$_role_id[0]));
+            $_department_id = $_role_info['data']['department_id'];
+        }else{
+            $_department_id = $param['department_id'];
+        }
+        //获取部门相关公式
+        $_department_config = D('DataFormula')->getFind(array('statistics_type'=>$param['type'],'department_id'=>$_department_id));
+        //是否有配置公式
+        if(empty($_department_config)) return array('code'=>201,'msg'=>'该部门未设置统计公式');
+        //获取关联地区
+        if(!empty($param['zone_id'])){
+            $_zone_arr = D('Zone','Service')->getZoneIds(array('zone_id'=>$param['zone_id']));
+            if(!empty($_zone_arr['data'])){
+                foreach($_zone_arr['data'] as $k=>$v){
+                    $_zone_ids[] = $v['zone_id'];
+                }
             }
+            $_where_log['zone_id'] = array('IN', $_zone_ids);
         }
-        //获取区域子集
-        if(!empty($where['zone_id'])){
-            $zoneIds = $this->getZoneIds($where['zone_id']);
-            $_where['zone_id'] = array('IN',$zoneIds);
+        if($_department_config['about_user']=='createuser_id'){
+            $_where_log['create_role_id'] = array('IN', $param['role_id']);
+        }elseif($_department_config['about_user']=='updateuser_id'){
+            $_where_log['update_role_id'] = array('IN', $param['role_id']);
+        }elseif($_department_config['about_user']=='system_user_id'){
+            $_where_log['system_role_id'] = array('IN', $param['role_id']);
         }
-        //获取职位员工
-        if(!empty($where['role_id'])){
-            $systemIds = $this->getRoleIds($where['role_id']);
-            $_where['system_user_id'] = array('IN',$systemIds);
-        }elseif(!empty($where['system_user_id'])){
-            $_where['system_user_id'] = $where['system_user_id'];
+        //时间区间转化格式
+        $_logtime = explode('@', $param['logtime']);
+        //获取条件 时间区间
+        $_where_log['logtime'] = array(array('EGT',strtotime($_logtime[0])),array('ELT',strtotime($_logtime[1])));
+        //查询时间段内产生数据的员工
+        $_data_user = D('DataLogs')->field($_department_config['about_user'])->where($_where_log)->group($_department_config['about_user'])->select();
+        foreach($_data_user as $k=>$v){
+            $user_ids[] = $v[$_department_config['about_user']];
         }
-        $_where['operattype'] = array('IN',$arr[$where['type']]);
-        $_where['logtime'] = $where['daytime'];
-        $redata = D('DataLogs')->where($_where)->order('logtime asc')->select();
-
-        $channel_list = D('Channel','Service')->getChannelList();
-        $channel_list = $channel_list['data']['data'];
-        $newArr = array();
-        $channelArr = array();
+        //获取渠道列表
+        $_channel_list = D('Channel','Service')->getChannelList();
+        $_channel_list = $_channel_list['data']['data'];
+        $_put_data = array();
+        $_channel_arr = array();
         //补全空白天数内容
-        if(!empty($daytime)){
-            $start = $daytime[0];
-            $end = $daytime[1];
-            $diff = strtotime($end) - strtotime($start);
-            $diffDay = $diff / (24*60*60);
-            for ($i = 0; $i <= $diffDay; $i++){
-                $new_time = (strtotime($start) + $i * 24 * 60 * 60 );
-                if(empty($newArr['days'][date('m-d',$new_time)])){
-                    $newArr['days'][date('m-d',$new_time)] = 0;
-                }
+        if(!empty($_logtime)){
+            $_start = $_logtime[0];
+            $_end = $_logtime[1];
+            $_diff = strtotime($_end) - strtotime($_start);
+            $_diffDay = $_diff / (24*60*60);
+            for ($i = 0; $i <= $_diffDay; $i++){
+                $_new_time = (strtotime($_start) + $i * 24 * 60 * 60 );
+                //公式运算结果
+                $_data_num = $this->setAnswer($user_ids,$_department_config['formula'],$_department_config['formula_user'],$_new_time);
+                $_put_data['days'][date('m-d',$_new_time)] = $_data_num;
             }
         }
-        $eArr = array('1'=>'A','2'=>'B','3'=>'C','4'=>'D');
-        foreach($redata as $k=>$v){
-            $channelArr[$v['channel_id']] = $channelArr[$v['channel_id']]+1;
-            $newArr['days'][date('m-d',$v['logtime'])] = $newArr['days'][date('m-d',$v['logtime'])]+1;
-            $newArr['infoquality'][$eArr[$v['infoquality']]] = $newArr['infoquality'][$eArr[$v['infoquality']]]+1;
-            $newArr['course_id'][$v['course_id']] = $newArr['course_id'][$v['course_id']]+1;
-        }
-        $CourseService = new CourseService();
-        $course_list = $CourseService->getCourseList();
-        foreach($newArr['course_id'] as $k=>$v){
-            foreach($course_list['data'] as $v2){
-                if($v2['course_id'] == $k){
-                    $newArr['course_id'][$v2['coursename']] = $v;
-                    unset($newArr['course_id'][$k]);
-                }elseif($k==0 || $k==''){
-                    $newArr['course_id']['无'] = $v;
-                    unset($newArr['course_id'][$k]);
-                }
-            }
-        }
-        $_temp_pchannel = array();
-        $_temp_channel = array();
-        foreach($channel_list as $v){
-            foreach($v['children'] as $v2){
-                if( !empty($channelArr[$v2['channel_id']]) ){
-                    $_temp_pchannel[$v['channelname']] = $_temp_pchannel[$v['channelname']]+$channelArr[$v2['channel_id']];
-                    $_temp_channel[$v2['channelname'].'('.$v2['channel_id'].')'] = array('count'=>$channelArr[$v2['channel_id']],'name'=>$v2['channelname'],'pname'=>$v['channelname']);
-                }
-            }
-        }
-        $newArr['channel']['broad'] = $_temp_pchannel;
-        $newArr['channel']['list'] = $_temp_channel;
-        return array('code'=>0,'data'=>$newArr);
+        $_eArr = array('1'=>'A','2'=>'B','3'=>'C','4'=>'D');
+
+//        print_r($_put_data);exit;
+//        $CourseService = new CourseService();
+//        $course_list = $CourseService->getCourseList();
+//        foreach($_put_data['course_id'] as $k=>$v){
+//            foreach($course_list['data'] as $v2){
+//                if($v2['course_id'] == $k){
+//                    $_put_data['course_id'][$v2['coursename']] = $v;
+//                    unset($_put_data['course_id'][$k]);
+//                }elseif($k==0 || $k==''){
+//                    $_put_data['course_id']['无'] = $v;
+//                    unset($_put_data['course_id'][$k]);
+//                }
+//            }
+//        }
+//        $_temp_pchannel = array();
+//        $_temp_channel = array();
+//        foreach($_channel_list as $v){
+//            foreach($v['children'] as $v2){
+//                if( !empty($_channel_arr[$v2['channel_id']]) ){
+//                    $_temp_pchannel[$v['channelname']] = $_temp_pchannel[$v['channelname']]+$_channel_arr[$v2['channel_id']];
+//                    $_temp_channel[$v2['channelname'].'('.$v2['channel_id'].')'] = array('count'=>$_channel_arr[$v2['channel_id']],'name'=>$v2['channelname'],'pname'=>$v['channelname']);
+//                }
+//            }
+//        }
+//        $_put_data['channel']['broad'] = $_temp_pchannel;
+//        $_put_data['channel']['list'] = $_temp_channel;
+        return array('code'=>0,'data'=>$_put_data);
     }
 
     /*
@@ -691,7 +687,7 @@ class DataService extends BaseService
         $_operator_mun = array();
         foreach($_formula_user as $k=>$v){
             $_is_dep = explode('-', $v);
-            $_where_log[$v] = $user_id;
+            $_where_log[$v] = array('IN',$user_id);
             $_where_log['operattype'] = $_formula_arr[$k];
             $_where_log['logtime'] = array(array('EGT',$logtime),array('ELT',strtotime(date('Y-m-d',$logtime).' 23:59:59')));
             $_data_num = D('DataLogs')->where($_where_log)->count();
