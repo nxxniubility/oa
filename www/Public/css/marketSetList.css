@@ -16,9 +16,9 @@
 .setlist-main {width:100%;margin:20px auto;overflow:hidden;}
 .setlist-main #setlist-table {width:100%;border:1px solid #ebeaea;border-bottom:none;background:#f5f6fa;}
 #setlist-table tr {height:40px;line-height:40px;}
-#setlist-table th, #setlist-table td {text-align:center;border-bottom:1px solid #ebeaea;}
+#setlist-table th, #setlist-table td {font-size:13px;text-align:center;border-bottom:1px solid #ebeaea;}
 #setlist-table th, #setlist-table tr:hover th {font-weight:bold;color:#333;background:#f5f6fa;}
-#setlist-table td {font-size:13px;color:#767676;background:#fff;}
+#setlist-table td {color:#767676;background:#fff;}
 #setlist-table td .edit-link, #setlist-table td .del-link {display:inline-block;padding:0 10px;color:#333;}
 #setlist-table td .edit-link:hover, #setlist-table td .del-link:hover {color:#53b567;text-decoration:underline;}
 #setlist-table tr:hover td {background:#f5f6fa;}
