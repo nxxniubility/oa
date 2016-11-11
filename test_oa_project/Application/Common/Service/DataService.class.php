@@ -802,6 +802,10 @@ class DataService extends BaseService
             $value['about_user'] = $data['about_user'];
             $addData[$key] = $value;
         }
+        $result = D('DataFormula')->getFind(array('department_id'=>$data['department_id']));
+        if ($result) {
+            return array('code'=>301,'msg'=>'已添加过该职位,如需重新添加请先删除');
+        }
         $result = M("data_formula")->addAll($addData);
         if ($result == false) {
             return array('code'=>201,'msg'=>'添加失败');
