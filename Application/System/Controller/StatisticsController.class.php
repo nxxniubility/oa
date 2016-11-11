@@ -13,6 +13,31 @@ class StatisticsController extends SystemController
 
     /*
     |--------------------------------------------------------------------------
+    | 营销统计入口页
+    |--------------------------------------------------------------------------
+    | @author nxx
+    */
+    public function marketIndex()
+    {
+        // $request = I('get.');
+        // //默认时间
+        // if(empty($request['startime'])){
+        //     $request['startime'] = date('Y/m/d', strtotime('-7 day'));
+        // }
+        // if(empty($request['endtime'])){
+        //     $request['endtime'] = date('Y/m/d');
+        // }
+        // $where['daytime'] = $request['startime'].','.$request['endtime'];
+        // $where['zone_id'] = $request['zone_id']?$request['zone_id']:$this->system_user['zone_id'];
+        // $where['role_id'] = $request['role_id'];
+        // $data['my_zone_id'] = $this->system_user['zone_id'];
+
+        // $this->assign('data', $data);
+        // $this->display();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | 营销统计
     |--------------------------------------------------------------------------
     | @author zgt
