@@ -1,0 +1,27 @@
+@charset "utf-8";
+/**/
+.wrapper-box {padding:0 20px;background:#fff;}
+
+.title {height:55px;line-height:55px;border-bottom:1px solid #dedfdf;}
+.title .title-left {line-height:14px;font-size:0;cursor:default;}
+.title .title-left span {float:left;display:block;padding:20px 0;font-size:14px;color:#b9bdc4;}
+.title .title-left span.title-text {color:#53b567;border-bottom:2px solid #53b567;}
+.title .title-left span em {margin:0 4px;}
+.title-right {height:55px;font-size:0;}
+.title-right .setup-btn, .title-right .return {display:inline-block;line-height:14px;margin:10px 0;padding:10px 13px;font-size:14px;color:#9e9e9e;text-align:center;border:1px solid #ddd;background:#f7f7f7;}
+.title-right .setup-btn:hover, .title-right .return:hover {color:#fff;border-color:#53b567;background:#53b567;}
+.title-right .setup-btn {margin-right:20px;}
+
+/*main*/
+.setlist-main {width:100%;margin:20px auto;overflow:hidden;}
+.setlist-main #setlist-table {width:100%;border:1px solid #ebeaea;border-bottom:none;background:#f5f6fa;}
+#setlist-table tr {height:40px;line-height:40px;}
+#setlist-table th, #setlist-table td {text-align:center;border-bottom:1px solid #ebeaea;}
+#setlist-table th, #setlist-table tr:hover th {font-weight:bold;color:#333;background:#f5f6fa;}
+#setlist-table td {font-size:13px;color:#767676;background:#fff;}
+#setlist-table td .edit-link, #setlist-table td .del-link {display:inline-block;padding:0 10px;color:#333;}
+#setlist-table td .edit-link:hover, #setlist-table td .del-link:hover {color:#53b567;text-decoration:underline;}
+#setlist-table tr:hover td {background:#f5f6fa;}
+
+/*没有统计项*/
+.setlist-main p {width:100%;line-height:16px;margin-top:40px;font-size:16px;color:#333;text-align:center;}

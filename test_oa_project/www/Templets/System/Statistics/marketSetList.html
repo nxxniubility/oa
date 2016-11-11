@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="../../../Public/css/common.css">
+		<link rel="stylesheet" href="../../../Public/css/marketSetList.css">
+		<script>
+			var jump_code = "{$jump_code}";
+		</script>
+	</head>
+	<body>
+		<div class="wrapper-box">
+			<div class="title clearfix">
+	            <div class="title-left">
+	            	<span class="title-text">营销统计管理</span>
+	            	<span><em>></em>设置部门统计项</span>
+	            </div>
+	            <div class="title-right fr clearfix">
+	            	<a href="javascript:;" class="setup-btn">添加部门统计项</a>
+	            	<a href="javascript:history.go(-1);" class="return">返回</a>
+	            </div>
+	        </div>
+	        
+	        <div class="setlist-main">
+	        	<table cellpadding="0" cellspacing="0" id="setlist-table">
+	        		<tr>
+	        			<th width="4.8%">统计部门</th>
+	        			<th width="9.7%">统计职位</th>
+	        			<th width="68.3%">统计项</th>
+	        			<th width="9.2%">创建时间</th>
+	        			<th width="8%">操作</th>
+	        		</tr>
+	        		<tr>
+	        			<td width="4.8%">邀约部</td>
+	        			<td width="9.7%">邀约专员、邀约主管</td>
+	        			<td width="68.3%">新增量、出库量、放弃量、到访量、系统回收量、赎回量、已回访量、跟进次数、分配量、签单量、退单量、到访率、成交率、退单率、总转率</td>
+	        			<td width="9.2%">2016-04-21 20:51</td>
+	        			<td width="8%">
+	        				<a href="javascript:;" class="edit-link">修改</a>
+	        				<a href="javascript:;" class="del-link">删除</a>
+	        			</td>
+	        		</tr>
+	        		<tr>
+	        			<td width="4.8%">邀约部</td>
+	        			<td width="9.7%">邀约主管</td>
+	        			<td width="68.3%">已回访量、跟进次数、分配量、签单量、退单量、到访率、成交率、退单率、总转率</td>
+	        			<td width="9.2%">2016-04-21 20:51</td>
+	        			<td width="8%">
+	        				<a href="javascript:;" class="edit-link">修改</a>
+	        				<a href="javascript:;" class="del-link">删除</a>
+	        			</td>
+	        		</tr>
+	        		<tr>
+	        			<td width="4.8%">邀约部</td>
+	        			<td width="9.7%">邀约主管</td>
+	        			<td width="68.3%">新增量、成交率、退单率、总转率</td>
+	        			<td width="9.2%">2016-04-21 20:51</td>
+	        			<td width="8%">
+	        				<a href="javascript:;" class="edit-link">修改</a>
+	        				<a href="javascript:;" class="del-link">删除</a>
+	        			</td>
+	        		</tr>
+	        	</table>
+	        	
+	        	<!--  没有统计项s  -->
+	        	<!--<p>暂无各部门相关职位统计项目，请先新建。</p>-->
+	        	<!--  没有统计项e  -->
+	        	
+	        </div>
+		</div>
+		
+
+		<script>
+			var add_standard_url = '/Api/Data/addStandard';
+			var href_standard = "{:U('System/Statistics/marketStandard')}";
+			var data_standard_id = '';
+		</script>
+		<script src="../../../Public/js/jquery-1.9.1.min.js"></script>
+		<script src="../../../Public/js/layer/layer.js"></script>
+		<script src="../../../Public/js/common.js"></script>
+	</body>
+</html>
