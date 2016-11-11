@@ -25,36 +25,9 @@
 	        	<div class="search clearfix">
 	        		<form method="get" name="" action="{:U('System/Statistics/market')}" onsubmit="return daytime();">
 	        			<!-- 地区选择 -->
-		        		<div class="search_region fl clearfix">
-	        				<span class="city_title"><em>请选择区域</em><i></i></span>
-		        			<div class="seach_city_show dn">
-		        				<div class="show_title">请选择区域</div>
-		        				<div class="show_content">
-		        					<ul class="city_largearea clearfix">
-										<foreach name="data['zoneList']['children']" item="v" key="k">
-											<li class="cur"><a href="javascript:;">{$v.name}</a></li>
-										</foreach>
-		        					</ul>
-									<foreach name="data['zoneList']['children']" item="v" key="k">
-										<foreach name="v['children']" item="v2" key="k2">
-											<div class="show_city_cont active">
-												<div class="section">
-													<span id="zone_{$v2.zone_id}" data-level="{$v2.level}" data-value="{$v2.zone_id}">{$v2.name}</span>
-													<ul class="city_partition clearfix">
-														<foreach name="v2.children" item="v3" key="k3">
-															<li><a href="javascript:;" data-level="{$v3.level}" id="zone_{$v3.zone_id}" data-value="{$v3.zone_id}">{$v3.name}</a></li>
-														</foreach>
-													</ul>
-												</div>
-											</div>
-										</foreach>
-									</foreach>
-									<input type="button" class="reset_btn" value="重置">
-									<input type="hidden" name="zone_id" value="{$data.request.zone_id}" autocomplete="off">
-		        				</div>
-		        			</div>
+		        		<div class="search_region fl clearfix" id="zone_body">
+							<span class="city_title"><em>请选择区域</em><i></i></span>
 		        		</div>
-		        		
 		        		<!-- 职位选择 -->
 		        		<div class="search_position fl clearfix">
 		        			<span class="position_name"><em>请选择职位</em><i></i></span>
@@ -63,29 +36,12 @@
 		        				<div class="position_content">
 		        					<div class="position_allselect">
 		        						<label for="all_select">
-		        							<input type="checkbox" class="ckeck_all" id="all_select" value="1">
+		        							<input type="checkbox" class="ckeck_all" id="all_select" value="1" atuocompolete="off">
 		        							<span>全部</span>
 		        						</label>
 		        					</div>
-		        					<ul class="position_list">
-										<foreach name="data['departmentList']['data']" item="v" key="k">
-											<li>
-												<div class="position_department clearfix">
-													<span>{$v.departmentname}</span>
-													<a href="javascript:;"><i></i></a>
-												</div>
-												<div class="position_destail clearfix">
-													<foreach name="data['roleList']['data']" item="v2" key="k2">
-														<if condition="$v['department_id'] eq $v2['department_id']">
-															<label for="sale{$v2.id}">
-																<input type="checkbox" name="sale_inp" data-name="{$v2.name}" value="{$v2.id}" class="sale"  id="sale{$v2.id}">
-																<span>{$v2.name}</span>
-															</label>
-														</if>
-													</foreach>
-												</div>
-											</li>
-										</foreach>
+		        					<ul class="position_list" id="role_body">
+
 		        					</ul>
 		        					<div class="position_btnbox">
 		        						<input type="button" class="confirm" value="确定">
@@ -95,7 +51,6 @@
 		        				</div>
 		        			</div>
 		        		</div>
-		        		
 		        		<!-- 日期 -->
 		        		<div class="search_day fl clearfix">
 		        			<div class="startime_box fl">
@@ -111,17 +66,14 @@
 		        		<input type="submit" class="search_btn fl" value="搜索">
 	        		</form>
 	        	</div>
-	        	
 	        	<!-- 汇总统计 -->
 	        	<div class="collect" id="count_body">
 	        		<span class="main_title">客户量汇总统计</span>
 	        	</div>
-	        	
 	        	<!-- 单项统计 -->
 	        	<div class="individual_event" id="btn_body">
 	        		<span class="main_title">客户量单项指标统计</span>
 	        	</div>
-	        	
 	        	<!-- 统计报表 -->
 	        	<div class="statistics_report clearfix" id="demo_body">
 	        		<span class="main_title fl">客户量统计报表</span>
@@ -135,7 +87,56 @@
 		</div>	
 			
 		<div id="mask"></div>
-		<script type="text/html" id="demo">
+		<script type="text/html" id="templets_zone">
+			<span class="city_title"><em>请选择区域</em><i></i></span>
+			<div class="seach_city_show dn">
+				<div class="show_title">请选择区域</div>
+				<div class="show_content">
+					{{# if(d.level==1){ }}
+						<ul class="city_largearea clearfix">
+							{{# layui.each(d.children, function(k, v){ }}
+							<li><a href="javascript:;">{{ v.name }}</a></li>
+							{{# }); }}
+						</ul>
+						{{# layui.each(d.children, function(k, v){ }}
+						<div class="show_city_cont">
+							{{# layui.each(v.children, function(k2, v2){ }}
+							<div class="section">
+								<span id="zone_{{ v2.zone_id }}" data-level="{{ v2.level }}" data-value="{{ v2.zone_id }}">{{ v2.name }}</span>
+								<ul class="city_partition clearfix">
+									{{# layui.each(v2.children, function(k3, v3){ }}
+										<li><a href="javascript:;" data-level="{{ v3.level }}" id="zone_{{ v3.zone_id }}" data-value="{{ v3.zone_id }}">{{ v3.name }}</a></li>
+									{{# }); }}
+								</ul>
+							</div>
+							{{# }); }}
+						</div>
+						{{# }); }}
+					{{# } }}
+					<input type="button" class="reset_btn" value="重置">
+					<input type="hidden" name="zone_id" value="{{# $.getUrlParam('zone_id') }}" autocomplete="off">
+				</div>
+			</div>
+		</script>
+		<script type="text/html" id="templets_role">
+			{{# layui.each(d, function(k, v){ }}
+				<li>
+					<div class="position_department clearfix">
+						<span>{{ v.departmentname }}</span>
+						<a href="javascript:;"><i></i></a>
+					</div>
+					<div class="position_destail clearfix">
+						{{# layui.each(v.children, function(k2, v2){ }}
+						<label for="sale{{ v2.id }}">
+							<input type="checkbox" name="sale_inp" data-name="{{ v2.name }}" value="{{ v2.id }}" class="sale"  id="sale{{ v2.id }}">
+							<span>{{ v2.name }}</span>
+						</label>
+						{{# }); }}
+					</div>
+				</li>
+			{{# }); }}
+		</script>
+		<script type="text/html" id="templets_count">
 			<table cellpadding="0" cellspacing="0" id="collecr_table">
 				<tr>
 				{{# layui.each(d.statistics, function(k, v){ }}
@@ -157,7 +158,7 @@
 				</tr>
 			</table>
 		</script>
-		<script type="text/html" id="demo1">
+		<script type="text/html" id="templets_btn">
 			<div class="chart_container">
 				<ul class="chart_tab fl clearfix">
 					{{# layui.each(d.statistics, function(k, v){ }}
@@ -208,10 +209,10 @@
 				{{# }); }}
 			</div>
 		</script>
-		<script type="text/html" id="demo2">
+		<script type="text/html" id="templets_content">
 			<!-- 每日数据 -->
 			<div class="sr_table fl" id="stTab1" style="display:block;">
-				<div class="sr_time">统计时间：{{# $.getUrlParam('logtime') }} 至 {{# $.getUrlParam('logtime') }}</div>
+				<div class="sr_time"></div>
 				<div class="tab-container">
 					<table cellpadding="0" cellspacing="0"  id="sr_everyday">
 						<tr>
@@ -280,42 +281,5 @@
 		<script src="__PUBLIC__/js/highcharts/highcharts.js"></script>
 		<script src="__PUBLIC__/js/highcharts/modules/exporting.js"></script>
 		<script src="__PUBLIC__/js/statistics.market.js"></script>
-		<script>
-			$(function(){
-				var loading_start = layer.alert('正在获取统计数据....', {
-					title:0
-					,time: 0 //不自动关闭
-					,btn: 0
-					,icon:7
-					,closeBtn:0
-				});
-				var data = {
-					department_id : $.getUrlParam('department_id'),
-					logtime : $.getUrlParam('logtime')
-				};
-				$('#count_body,#btn_body,#demo_body').hide();
-				common_ajax2(data, '/SystemApi/data/getDataMarket', 'no', function(redata){
-					layer.close(loading_start);
-					if(redata.data){
-						layui.use('laytpl', function(){
-							var laytpl = layui.laytpl;
-							laytpl(demo.innerHTML).render(redata.data, function(result){
-								$('#count_body').append(result).show();
-							});
-							laytpl(demo1.innerHTML).render(redata.data, function(result){
-								$('#btn_body').append(result).show();
-							});
-							laytpl(demo2.innerHTML).render(redata.data, function(result){
-								$('#demo_body').append(result).show();
-							});
-						});
-					}else{
-						layer.msg(redata.msg,{icon:2});
-						$('.main').append(getNullHint());
-					};
-				},1);
-			});
-
-		</script>
 	</body>
 </html>
