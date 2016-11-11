@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="../../../Public/css/common.css">
+		<link rel="stylesheet" href="../../../Public/js/glDatePicker/glDatePicker.default.css">
+		<link rel="stylesheet" href="../../../Public/css/marketIndex.css">
+		<script>
+			var jump_code = "{$jump_code}";
+		</script>
+	</head>
+	<body>
+		<div class="wrapper_box">
+			<div class="title clearfix">
+	            <div class="title_left">
+	            	<span class="title_text">营销统计管理</span>
+	            </div>
+	            <div class="title_right fr clearfix">
+	            	<a href="javascript:;" class="setup_btn">设置部门统计项</a>
+	            	<a href="javascript:;" class="return">设置合格标准</a>
+	            	<!--<a href="javascript:;" class="export_btn">导出数据</a>-->
+	            </div>
+	        </div>
+	        <div class="main">
+	        	<!--  区域s  -->
+	        	<div class="setlist-row clearfix">
+	        		<div class="left-name"><i>&#42</i>统计区域：</div>
+	        		<div class="right-content">
+	        			<div class="region clearfix">
+		        			<span class="region-name">
+		        				<em>请选择统计区域</em>
+		        				<i></i>
+		        			</span>
+		        			<div class="region-selection dn">
+		        				<div class="selection-tit">请选择统计区域</div>
+		        				<div class="selection-cont">
+		        					<ul class="region-list clearfix">
+		        						<li><a href="javascript:;">华南</a></li>
+		        						<li><a href="javascript:;">华北</a></li>
+		        						<li><a href="javascript:;">华中</a></li>
+		        						<li><a href="javascript:;">华东</a></li>
+		        					</ul>
+		        					<!--  华南/华北/华中/华东 中心选择 s  -->
+		        					<div class="selection-center active">
+		        						<div class="module">
+		        							<span>广州</span>
+		        							<ul class="center-list clearfix">
+		        								<li><a href="javascript:;">越秀中心</a></li>
+		        								<li><a href="javascript:;">荔湾中心</a></li>
+		        								<li><a href="javascript:;">海珠中心</a></li>
+		        								<li><a href="javascript:;">天河中心</a></li>
+		        								<li><a href="javascript:;">白云中心</a></li>
+		        							</ul>
+		        						</div>
+		        						<div class="module">
+		        							<span>深圳</span>
+		        							<ul class="center-list clearfix">
+		        								<li><a href="javascript:;">南山中心</a></li>
+		        								<li><a href="javascript:;">福田中心</a></li>
+		        								<li><a href="javascript:;">宝安中心</a></li>
+		        								<li><a href="javascript:;">罗湖中心</a></li>
+		        								<li><a href="javascript:;">龙岗中心</a></li>
+		        							</ul>
+		        						</div>
+		        					</div>
+		        					<div class="selection-center">
+		        						<div class="module">
+		        							<span>北京</span>
+		        							<ul class="center-list clearfix">
+		        								<li><a href="javascript:;">朝阳中心</a></li>
+		        								<li><a href="javascript:;">海淀中心</a></li>
+		        								<li><a href="javascript:;">丰台中心</a></li>
+		        								<li><a href="javascript:;">东城中心</a></li>
+		        								<li><a href="javascript:;">通州中心</a></li>
+		        							</ul>
+		        						</div>
+		        						<div class="module">
+		        							<span>天津</span>
+		        							<ul class="center-list clearfix">
+		        								<li><a href="javascript:;">北辰中心</a></li>
+		        								<li><a href="javascript:;">西青中心</a></li>
+		        								<li><a href="javascript:;">红桥中心</a></li>
+		        								<li><a href="javascript:;">河北中心</a></li>
+		        								<li><a href="javascript:;">河东中心</a></li>
+		        							</ul>
+		        						</div>
+		        					</div>
+		        					<input type="button" class="reset_btn" value="重置">
+		        				</div>
+		        			</div>
+		        		</div>
+	        		</div>
+	        	</div><!--  区域e  -->
+	        	
+	        	<!--  部门及职位s  -->
+	        	<div class="setlist-row clearfix">
+	        		<div class="left-name"><i>&#42</i>统计部门：</div>
+	        		<div class="right-content">
+	        			<div class="position clearfix">
+		        			<span class="position-name">
+		        				<em>请选择部门及职位</em>
+		        				<i></i>
+		        			</span>
+		        			<div class="position-selection dn">
+		        				<div class="selection-tit">请选择部门及职位</div>
+		        				<div class="selection-cont">
+		        					<!--  职位列表选择s  -->
+		        					<ul class="position-list clearfix">
+		        						<li>
+		        							<div class="position-department clearfix">
+		        								<span>技术部</span>
+		        								<a href="javascript:;"><i></i></a>
+		        							</div>
+		        							<div class="position-choose clearfix">
+		        								<label for="sale1">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale1" />
+		        									<span>技术主管</span>
+		        								</label>
+		        								<label for="sale2">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale2" />
+		        									<span>后台开发</span>
+		        								</label>
+		        								<label for="sale3">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale3" />
+		        									<span>前台开发</span>
+		        								</label>
+		        							</div>
+		        						</li>
+		        						<li>
+		        							<div class="position-department clearfix">
+		        								<span>技术部2</span>
+		        								<a href="javascript:;"><i></i></a>
+		        							</div>
+		        							<div class="position-choose clearfix">
+		        								<label for="sale21">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale21" />
+		        									<span>技术主管</span>
+		        								</label>
+		        								<label for="sale22">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale22" />
+		        									<span>后台开发</span>
+		        								</label>
+		        								<label for="sale23">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale23" />
+		        									<span>前台开发</span>
+		        								</label>
+		        							</div>
+		        						</li>
+		        						<li>
+		        							<div class="position-department clearfix">
+		        								<span>技术部3</span>
+		        								<a href="javascript:;"><i></i></a>
+		        							</div>
+		        							<div class="position-choose clearfix">
+		        								<label for="sale31">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale31" />
+		        									<span>技术主管</span>
+		        								</label>
+		        								<label for="sale32">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale32" />
+		        									<span>后台开发</span>
+		        								</label>
+		        								<label for="sale33">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale33" />
+		        									<span>前台开发</span>
+		        								</label>
+		        							</div>
+		        						</li>
+		        						<li>
+		        							<div class="position-department clearfix">
+		        								<span>技术部4</span>
+		        								<a href="javascript:;"><i></i></a>
+		        							</div>
+		        							<div class="position-choose clearfix">
+		        								<label for="sale41">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale41" />
+		        									<span>技术主管</span>
+		        								</label>
+		        								<label for="sale42">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale42" />
+		        									<span>后台开发</span>
+		        								</label>
+		        								<label for="sale43">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale43" />
+		        									<span>前台开发</span>
+		        								</label>
+		        							</div>
+		        						</li>
+		        						<li>
+		        							<div class="position-department clearfix">
+		        								<span>技术部5</span>
+		        								<a href="javascript:;"><i></i></a>
+		        							</div>
+		        							<div class="position-choose clearfix">
+		        								<label for="sale51">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale51" />
+		        									<span>技术主管</span>
+		        								</label>
+		        								<label for="sale52">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale2" />
+		        									<span>后台开发</span>
+		        								</label>
+		        								<label for="sale53">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale53" />
+		        									<span>前台开发</span>
+		        								</label>
+		        							</div>
+		        						</li>
+		        						<li>
+		        							<div class="position-department clearfix">
+		        								<span>人事部</span>
+		        								<a href="javascript:;"><i></i></a>
+		        							</div>
+		        							<div class="position-choose clearfix">
+		        								<label for="sale11">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale11" />
+		        									<span>人事主管</span>
+		        								</label>
+		        								<label for="sale12">
+		        									<input type="checkbox" name="sale_inp" class="sale" id="sale12" />
+		        									<span>人事专员</span>
+		        								</label>
+		        							</div>
+		        						</li>
+		        					</ul><!--  职位列表选择e  -->
+		        					<!--  职位操作按钮确定/取消 s -->
+		        					<div class="position-operation">
+		        						<input type="button" class="confirm" value="确定">
+		        						<input type="hidden" name="role_id" value="" autocomplete="off">
+		        						<input type="button" class="cancel" value="取消">
+		        					</div><!--  职位操作按钮确定/取消 e -->
+		        				</div>
+		        			</div>
+		        		</div>
+		        	</div>	
+	        	</div><!--  部门及职位e  -->
+	        	
+	        	<!--  统计日起s  -->
+	        	<div class="setlist-row clearfix">
+	        		<div class="left-name"><i>&#42</i>统计日期：</div>
+	        		<div class="right-content setlist-date">
+	        			<input type="text" class="afTime startime" name="startime" value="" readonly="readonly" placeholder="开始时间">
+	        			<span>至</span>
+	        			<input type="text" class="afTime endtime" name="endtime" value="" readonly="readonly" placeholder="结束时间">
+	        		</div>
+	        	</div><!--  统计日起e  -->
+	        	
+	        	<div class="setlist-row clearfix">
+	        		<div class="left-name">&nbsp;</div>
+	        		<div class="right-content setlist-date">
+	        			<input type="submit" class="setlist-submit" value="搜索" />
+	        		</div>
+	        	</div>
+	        	
+	        </div>
+		</div>	
+			
+		<div id="mask"></div>
+		<script>
+			var get_info_url = '/SystemApi/Data/getDataMarketInfo';
+			var market_daytime = '{$data.request.daytime}';
+			var market_zone_id = '{$data.request.zone_id}';
+			var market_role_id = '{$data.request.role_id}';
+			var market_system_user_id = '';
+		</script>
+		<script src="../../../Public/js/jquery-1.9.1.min.js"></script>
+		<script src="../../../Public/js/layer/layer.js"></script>
+		<script src="../../../Public/js/common.js"></script>
+		<script src="../../../Public/js/glDatePicker/glDatePicker.js"></script>
+		<script src="../../../Public/js/marketIndex.js"></script>
+		<script>
+			/*var my_id = "{$data.my_zone_id}";
+			if($('#zone_'+my_id).attr('data-level')==3){
+				//$('#zone_'+my_id).hide().next().hide();
+			}else if($('#zone_'+my_id).attr('data-level')==4){
+				$('.seach_city_show').find('span[data-level="3"]').attr('data-value','');
+				$('#zone_'+my_id).parents('li').siblings().hide();
+			}*/
+		</script>
+	</body>
+</html>

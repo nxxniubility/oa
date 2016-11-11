@@ -1,0 +1,86 @@
+@charset "utf-8";
+/**/
+.wrapper_box {padding:0 20px;background:#fff;}
+#mask {position:fixed;top:0;left:0;bottom:0;display:none;width:100%;height:100%;background:#000;opacity:.3;filter:Alpha(opacity=30);z-index:1000;}
+.dn {display:none;}
+
+.title {height:55px;line-height:55px;border-bottom:1px solid #dedfdf;}
+.title .title_left {line-height:14px;font-size:0;cursor:default;}
+.title .title_left span {float:left;display:block;padding:20px 0;font-size:14px;color:#b9bdc4;}
+.title .title_left span.title_text {color:#53b567;border-bottom:2px solid #53b567;}
+.title .title_left span em {margin:0 4px;}
+.title_right {height:55px;font-size:0;}
+.title_right .setup_btn, .title_right .export_btn, .title_right .return {display:inline-block;line-height:14px;margin:10px 0;padding:10px 13px;font-size:14px;color:#9e9e9e;text-align:center;border:1px solid #ddd;background:#f7f7f7;}
+.title_right .setup_btn:hover, .title_right .export_btn:hover, .title_right .return:hover {color:#fff;border-color:#53b567;background:#53b567;}
+.title_right .setup_btn {margin-right:20px;}
+
+.main {height:auto;min-height:485px;margin:40px auto;}
+.main .setlist-row {height:auto;margin-bottom:20px;}
+.main .left-name {float:left;width:130px;height:42px;line-height:42px;margin-right:20px;color:#333;text-align:right;}
+.left-name i {margin-right:4px;color:#ff0000;}
+.main .right-content {float:left;height:auto;}
+
+.right-content .region, .right-content .position {position:relative;width:502px;height:42px;}
+.right-content .region .region-name, .right-content .position .position-name {display:block;width:500px;height:40px;line-height:40px;color:#333;text-align:left;text-indent:16px;border:1px solid #dedfdf;background:#fff;cursor:pointer;}
+.right-content .region .region-name i, .right-content .position .position-name i {position:absolute;top:0;right:14px;display:block;width:9px;height:38px;background:url(../images/market_search-01.png) no-repeat center center;}
+/*城市与中心*/
+.right-content .region .region-selection {position:absolute;top:0;width:502px;height:372px;z-index:1400;}
+.right-content .region .region-selection .selection-tit {width:100%;height:50px;line-height:50px;color:#fff;text-indent:17px;background:#53b567;}
+.right-content .region .region-selection .selection-cont {width:500px;height:321px;border:1px solid #dedfdf;border-top:none;background:#fff;}
+.right-content .region .region-selection .selection-cont .region-list {width:100%;height:38px;line-height:38px;border-bottom:1px solid #dcdcdc;}
+.right-content .region .region-selection .selection-cont .region-list li {float:left;width:24.8%;height:38px;text-align:center;border-right:1px solid #dcdcdc;}
+.right-content .region .region-selection .selection-cont .region-list li:last-child {border:none;}
+.right-content .region .region-selection .selection-cont .region-list li a {display:block;height:38px;color:#333;}
+.right-content .region .region-selection .selection-cont .region-list li.cur a,
+.right-content .region .region-selection .selection-cont .region-list li:hover a {background:#dcdcdc;}
+.right-content .region .region-selection .selection-cont .selection-center {display:none;width:468px;height:205px;padding:14px 16px;overflow-y:scroll;}
+.right-content .region .region-selection .selection-cont .selection-center.active {display:block;}
+.right-content .region .region-selection .selection-cont .module {width:100%;min-height:90px;}
+.right-content .region .region-selection .selection-cont .selection-center span {float:left;width:93px;height:28px;line-height:28px;margin-right:17px;font-size:14px;color:#333;text-align:center;border:1px solid #ddd;cursor:pointer;}
+.right-content .region .region-selection .selection-cont .selection-center span:hover {color:#53b567;text-decoration:underline;}
+.right-content .region .region-selection .selection-cont .selection-center .center-list {float:left;width:338px;}
+.right-content .region .region-selection .selection-cont .selection-center .center-list li {float:left;height:30px;line-height:30px;margin-bottom:5px;padding:0 14px;background:#fff;}
+.right-content .region .region-selection .selection-cont .selection-center .center-list li a {display:block;color:#333;}
+.right-content .region .region-selection .selection-cont .selection-center .center-list li:hover {background:#53b567;}
+.right-content .region .region-selection .selection-cont .selection-center .center-list li:hover a {color:#fff;}
+.right-content .region .region-selection .selection-cont .reset_btn {display:block;width:100px;height:30px;margin:0 auto;line-height:30px;color:#fff;border:1px solid #ddd;background:#53b567;cursor:pointer;}
+.right-content .region .region-selection .selection-cont .reset_btn:hover {background:#4da45e;}
+/*部门及职位*/
+.right-content .position .position-selection {position:absolute;top:0;width:518px;height:auto;z-index:1600;}
+.right-content .position .position-selection .selection-tit {width:100%;height:50px;line-height:50px;color:#fff;text-indent:17px;background:#53b567;}
+.right-content .position .position-selection .selection-cont {width:516px;height:auto;border:1px solid #dedfdf;border-top:none;background:#fff;overflow:hidden;}
+.border-btm {border-bottom:1px solid #dedfdf;}
+/*全选*/
+.right-content .position .position-selection .selection-cont .position_allselect {height:39px;line-height:39px;color:#333;border-bottom:1px solid #dedfdf;}
+.right-content .position .position-selection .selection-cont .position_allselect label {display:block;cursor:pointer;}
+.right-content .position .position-selection .selection-cont .position_allselect .ckeck_all {margin-left:12px;}
+.right-content .position .position-selection .selection-cont .position_allselect span {margin-left:11px;}
+/*部门职位选择*/
+.right-content .position .position-selection .selection-cont .position-list {height:200px;padding-left:43px;border-bottom:1px solid #dedfdf;overflow-y:scroll;}
+.right-content .position .position-selection .selection-cont .position-list li {width:100%;height:auto;line-height:39px;}
+.right-content .position .position-selection .selection-cont .position-list li .position-department {padding-right:12px;border-bottom:1px solid #dedfdf;cursor:pointer;}
+.right-content .position .position-selection .selection-cont .position-list li:last-child .position-department {border:none;}
+.right-content .position .position-selection .selection-cont .position-list li .position-department.border-btm {border-bottom:1px solid #dedfdf;}
+.position-department span {float:left;height:39px;line-height:39px;color:#333;text-align:left;}
+.position-department a {float:right;width:39px;height:39px;line-height:39px;text-align:center;}
+.position-department a i {display:inline-block;width:12px;height:6px;margin:16px auto;background:url(../images/market_search-02.png) no-repeat 0 0;}
+.position-department a i.up {background:url(../images/market_search-02.png) no-repeat 0 -6px;}
+.selection-cont .position-list li .position-choose {display:none;height:69px;line-height:69px;padding-left:3px;border-bottom:1px solid #dedfdf;}
+.selection-cont .position-list li:last-child .position-choose {border:none;}
+.position-choose label {float:left;margin-right:33px;}
+.position-choose label input {margin-right:4px;vertical-align:middle;}
+.position-choose label span {color:#333;}
+.right-content .position .position-selection .selection-cont .position-operation {width:100%;height:59px;line-height:59px;text-align:center;}
+.right-content .position .position-selection .selection-cont .position-operation input[type="button"] {width:93px;height:30px;line-height:30px;font-size:14px;cursor:pointer;}
+.right-content .position .position-selection .selection-cont .position-operation .confirm {margin-right:51px;color:#fff;border:1px solid #53b567;background:#53b567;}
+.right-content .position .position-selection .selection-cont .position-operation .confirm:hover {background:#4da45e;}
+.right-content .position .position-selection .selection-cont .position-operation .cancel {color:#333;border:1px solid #ddd;background:#fff;}
+.right-content .position .position-selection .selection-cont .position-operation .cancel:hover {background:#c8c8c8;}
+
+/*日期选择*/
+.setlist-date span {float:left;width:64px;height:40px;line-height:40px;text-align:center;}
+.afTime {float:left;display:block;width:181px;height:40px;line-height:40px;color:#333;text-indent:13px;border:1px solid #dedfdf;background:#fff url(../images/market_search-03.png) no-repeat 145px center;}
+.afTime:focus {border-color:#53b567;background:#fff url(../images/market_search-04.png) no-repeat 145px center;}
+
+.right-content .setlist-submit {width:100px;height:40px;line-height:40px;margin-top:20px;font-size:14px;color:#333;text-align:center;border:1px solid #dedfdf;background:#fff;cursor:pointer;}
+.right-content .setlist-submit:hover {color:#fff;background:#53b567;}
