@@ -20,6 +20,7 @@ class ProidController extends SystemApiController
      */
     public function servJsList()
     {
+        
         //获取数据
         $result = D('Proid', 'Service')->getOwnServicecode($own);
         //返回参数

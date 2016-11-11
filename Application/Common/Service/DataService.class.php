@@ -842,7 +842,7 @@ class DataService extends BaseService
         }
         $result = D('DataFormula')->getFind(array('department_id'=>$data['department_id']));
         if ($result) {
-            return array('code'=>301,'msg'=>'已添加过该职位,如需重新添加请先删除');
+            return array('code'=>301,'msg'=>'已添加过该职位,如需重新添加请先确认后删除');
         }
         $result = M("data_formula")->addAll($addData);
         if ($result == false) {
