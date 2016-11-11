@@ -142,14 +142,16 @@ class DataService extends BaseService
     {
         //必传参数
         if(empty($param['logtime'])) return array('code'=>301,'msg'=>'请选择搜索时间');
-        //必传参数
         if(empty($param['department_id']) && empty($param['role_id'])) return array('code'=>302,'msg'=>'请选择部门或者职位');
         if(!empty($param['role_id'])){
             $_role_id = explode(',',$param['role_id']);
-            D('Role','Service')
+            $_role_info = D('Role','Service')->getRoleInfo(array('role_id'=>$_role_id[0]));
+            $_department_id = $_role_info['data']['department_id'];
+        }else{
+            $_department_id = $param['department_id'];
         }
         //获取部门相关公式
-        $_department_config = D('DataFormula')->getFind(array('department_id'=>$param['department_id']));
+        $_department_config = D('DataFormula')->getFind(array('department_id'=>$_department_id));
         //是否有配置公式
         if(empty($_department_config)) return array('code'=>201,'msg'=>'该部门未设置统计公式');
         //时间区间转化格式
@@ -164,6 +166,16 @@ class DataService extends BaseService
         }else{
             $_where_role_id = $param['role_id'];
         }
+        //获取关联地区
+        if(!empty($param['zone_id'])){
+            $_zone_arr = D('Zone','Service')->getZoneIds(array('zone_id'=>$param['zone_id']));
+            if(!empty($_zone_arr['data'])){
+                foreach($_zone_arr['data'] as $k=>$v){
+                    $_zone_ids[] = $v['zone_id'];
+                }
+            }
+            $_where_log['zone_id'] = array('IN', $_zone_ids);
+        }
         if($_department_config['about_user']=='createuser_id'){
             $_where_log['create_role_id'] = array('IN', $_where_role_id);
         }elseif($_department_config['about_user']=='updateuser_id'){
@@ -175,8 +187,9 @@ class DataService extends BaseService
         $_where_log['logtime'] = array(array('EGT',strtotime($logtime[0])),array('ELT',strtotime($logtime[1])));
         //查询时间段内产生数据的员工
         $_data_user = D('DataLogs')->field($_department_config['about_user'])->where($_where_log)->group($_department_config['about_user'])->select();
+        if(empty($_data_user)) return array('code'=>0, 'msg'=>'找不到统计数据');
         //获取部门公式列表
-        $_formula_list = D('DataFormula')->getList(array('department_id'=>$param['department_id']));
+        $_formula_list = D('DataFormula')->getList(array('department_id'=>$_department_id));
         //补全天数内容
         $_start = $logtime[0];
         $_end = $logtime[1];
@@ -196,13 +209,22 @@ class DataService extends BaseService
                 }
                 //获取涉案员工
                 if(empty($_user_list[$v[$_department_config['about_user']]])) {
-                    $_info = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v[$_department_config['about_user']]));
-                    $_user_list[$v[$_department_config['about_user']]] = array(
-                        'system_user_id'=>$_info['data']['system_user_id'],
-                        'realname'=>$_info['data']['realname'],
-                        'face'=>$_info['data']['face'],
-                        'role_names'=>$_info['data']['role_names']
-                    );
+                    if($v[$_department_config['about_user']]==0){
+                        $_user_list[$v[$_department_config['about_user']]] = array(
+                            'system_user_id'=>0,
+                            'realname'=>'系统所属',
+                            'face'=>'',
+                            'role_names'=>''
+                        );
+                    }else{
+                        $_info = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$v[$_department_config['about_user']]));
+                        $_user_list[$v[$_department_config['about_user']]] = array(
+                            'system_user_id'=>$_info['data']['system_user_id'],
+                            'realname'=>$_info['data']['realname'],
+                            'face'=>$_info['data']['face'],
+                            'role_names'=>$_info['data']['role_names']
+                        );
+                    }
                 }
                 $_statistics[$v[$_department_config['about_user']]][$_new_time] = $_data_user_show;
             }
