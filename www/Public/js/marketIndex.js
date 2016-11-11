@@ -17,7 +17,7 @@ if(market_role_id!=''){
 	if(temp_role_names.length>13){
 		temp_role_names = temp_role_names.substring(0,13)+'...';
 	}
-	$('.position_name em').text(temp_role_names);
+	$('.position-name em').text(temp_role_names);
 };
 */
 
@@ -89,11 +89,8 @@ $(document).on('click', '.position-name', function(){
 			$(':input[name="sale_inp"][value="'+v+'"]').prop('checked',true);
 		});
 	}
-	/*if($(':input[name="sale_inp"]:checked').length==$(':input[name="sale_inp"]').length){
-		$('#all_select').prop('checked',true);
-	}*/
 	//  职位赋值
-	//positionChoose();
+	positionChoose();
 	//  点遮罩关闭
 	layerClose();
 	//  点取消关闭
@@ -154,7 +151,7 @@ function positionChoose(){
 		});
 		$(this).next('input').val(_role_ids);
 		
-		//  假如全选，则限制显示前十三个字
+		/*//  假如全选，则限制显示前十三个字
 		if(all_checkfalse){
 			if(_role_names.length>13){
 				_role_names = _role_names.substring(0,13)+'...';
@@ -172,7 +169,7 @@ function positionChoose(){
 				$('.position_name em').text('请选择职位');			
 			}
 		}
-		
+		*/
 		
 		//$('.position_name em').text(_role_names);
 		position_close.closest('.position-selection').addClass('dn');
