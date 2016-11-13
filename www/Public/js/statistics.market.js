@@ -38,7 +38,9 @@ $(function(){
                 $('#stTab1 .sr_time').text('统计时间：'+$.getUrlParam('logtime','@').split('@')[0]+' 至 '+$.getUrlParam('logtime','@').split('@')[1]);
                 $('#stTab2 .sr_time').text('统计员工：'+$('#sr_staff .sr_li').length+' 人');
             });
-            $('.chart_tab li').eq(0).trigger('click');
+            setTimeout(function(){
+                $('.chart_tab').children('li').eq(0).trigger('click');
+            },300);
         }else{
             layer.msg(redata.msg, {icon:2});
             $('.main').append(getNullHint());
