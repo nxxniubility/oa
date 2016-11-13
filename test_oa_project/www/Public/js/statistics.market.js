@@ -1,4 +1,99 @@
 
+
+$(function(){
+    $(':input[name="logtime"]').val($.getUrlParam('logtime'));
+    var str = '<div class=\"wait\"><i></i>正在获取统计数据....</div>';
+    var loading_start = layer.open({
+        type:1
+        ,area:['260px','auto']
+        ,title:false
+        ,shade:.6
+        ,time: 0 //不自动关闭
+        ,shadeClose:false
+        ,shift: 1
+        ,closeBtn:false
+        ,content:str
+    });
+    var data = {
+        zone_id : $.getUrlParam('zone_id'),
+        role_id : $.getUrlParam('role_id'),
+        department_id : $.getUrlParam('department_id'),
+        logtime : $.getUrlParam('logtime')+time_his
+    };
+    $('#count_body,#btn_body,#demo_body').hide();
+    common_ajax2(data, '/SystemApi/data/getDataMarket', 'no', function(redata){
+        layer.close(loading_start);    		//  关闭加载提示
+        if(redata.data){
+            layui.use('laytpl', function(){
+                var laytpl = layui.laytpl;
+                laytpl(templets_count.innerHTML).render(redata.data, function(result){
+                    $('#count_body').append(result).show();
+                });
+                laytpl(templets_btn.innerHTML).render(redata.data, function(result){
+                    $('#btn_body').append(result).show();
+                });
+                laytpl(templets_content.innerHTML).render(redata.data, function(result){
+                    $('#demo_body').append(result).show();
+                });
+                $('#stTab1 .sr_time').text('统计时间：'+$.getUrlParam('logtime','@').split('@')[0]+' 至 '+$.getUrlParam('logtime','@').split('@')[1]);
+                $('#stTab2 .sr_time').text('统计员工：'+$('#sr_staff .sr_li').length+' 人');
+            });
+            $('.chart_tab li').eq(0).trigger('click');
+        }else{
+            layer.msg(redata.msg, {icon:2});
+            $('.main').append(getNullHint());
+        };
+        //获取区域列表
+        common_ajax2('','/SystemApi/Zone/getZoneList','no',function(redata){
+            if(redata.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(templets_zone.innerHTML).render(redata.data, function(result){
+                        $('#zone_body').html(result);
+                        $('.show_city_cont').eq(0).addClass('active');
+                        $('.city_largearea li').eq(0).addClass('cur');
+                        if($.getUrlParam('zone_id')){
+                            if($('#zone_'+$.getUrlParam('zone_id')).text().length>0){
+                                $('.city_title em').text($('#zone_'+$.getUrlParam('zone_id')).text());
+                            }
+                            $(':input[name="zone_id"]').val($.getUrlParam('zone_id'));
+                        };
+                    });
+                });
+            };
+        },1);
+        //获取部门职位列表
+        common_ajax2('','/SystemApi/Department/getDepartmentRoleList','no',function(redata){
+            if(redata.data.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(templets_role.innerHTML).render(redata.data.data, function(result){
+                        $('#role_body').html(result);
+                        //展开部门职位
+                        openPosition();
+                        if($.getUrlParam('role_id')){
+                            var temp_role_id = $.getUrlParam('role_id').split(',');
+                            var temp_role_names = '';
+                            $.each(temp_role_id, function(k, v){
+                                if(temp_role_names==''){
+                                    temp_role_names += $('#sale'+v).attr('data-name');
+                                }else{
+                                    temp_role_names += ','+$('#sale'+v).attr('data-name');
+                                }
+                            });
+                            if(temp_role_names.length>13){
+                                temp_role_names = temp_role_names.substring(0,13)+'...';
+                            }
+                            $('.position_name em').text(temp_role_names);
+                            $(':input[name="role_id"]').val($.getUrlParam('role_id'));
+                        };
+                    });
+                });
+            };
+        },1);
+    },1);
+});
+
 //获取当前时分秒
 var oDate = new Date();
 var time_his = ' '+oDate.getHours()+':'+oDate.getMinutes()+':'+oDate.getSeconds();
@@ -317,8 +412,7 @@ $(document).on('change','.chart_topright select',function(){
         }
         return false;
     };
-    common_ajax2(data,'/SystemApi/Data/getDataMarketInfo','no',getHighcharts);
-    function getHighcharts(redata){
+    common_ajax2(data,'/SystemApi/Data/getDataMarketInfo','no',function(redata){
         if(redata.code==0){
             if(_curVal == '1'){
                 //每日统计
@@ -379,7 +473,7 @@ $(document).on('change','.chart_topright select',function(){
                         for(var i=1;i<_navName.length;i++){
                             _data.push(null);
                         }
-                        _data.push(v.count);
+                        _data.push(parseInt(v.count));
                         _data = {
                             name: v.name,
                             data: _data
@@ -387,8 +481,9 @@ $(document).on('change','.chart_topright select',function(){
                         _values.push(_data);
                     });
                     $.each(redata.data.channel.broad,function(k,v){
-                        _data_pie.push([k, v]);
+                        _data_pie.push([k, parseInt(v)]);
                     });
+                    console.log(_values);
                     channelBar(_navName,_values,_curVal);
                     channelPie(_data_pie,_curVal);
                 };
@@ -415,14 +510,14 @@ $(document).on('change','.chart_topright select',function(){
                         $.each(_navName,function(k2,v2){
                             _data.push(null);
                         });
-                        _data.push(v);
+                        _data.push(parseInt(v));
                         _data = {
                             name: k,
                             data: _data
                         };
                         _navName.push(k);
                         _values.push(_data);
-                        _data_pie.push([k, v]);
+                        _data_pie.push([k, parseInt(v)]);
                     });
                     channelBar(_navName,_values,_curVal);
                     channelPie(_data_pie,_curVal);
@@ -450,14 +545,14 @@ $(document).on('change','.chart_topright select',function(){
                         $.each(_navName,function(k2,v2){
                             _data.push(null);
                         });
-                        _data.push(v);
+                        _data.push(parseInt(v));
                         _data = {
                             name: k,
                             data: _data
                         };
                         _navName.push(k);
                         _values.push(_data);
-                        _data_pie.push([k, v]);
+                        _data_pie.push([k, parseInt(v)]);
                     });
                     channelBar(_navName,_values,_curVal);
                     channelPie(_data_pie,_curVal);
@@ -474,7 +569,7 @@ $(document).on('change','.chart_topright select',function(){
                 _pie3.empty();
             };
         };
-    };
+    },1);
 });
 
 //  各图标初始化
@@ -692,142 +787,42 @@ $(document).ready(function(){
 
 // 开始时间
 $(document).ready(function(){
-    if($.getUrlParam('logtime')){
-        var _daytime = $.getUrlParam('logtime').split('@'),
-            my_date = new Date();
-        setTimeout(function(){
-            $(".startime").val(_daytime[0]).glDatePicker({
-                selectableDateRange: [
-                    {
-                        from: new Date(1990, 1, 1) ,
-                        to: new Date(my_date.getFullYear(), my_date.getMonth(), my_date.getDate())
-                    }
-                ],
-                onClick:function(el, cell, date, data) {
-                    el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
-                    var start_time = el.val();
-                    var end_time = $('.endtime').val();
-                    $(':input[name="logtime"]').val(start_time+'@'+end_time);
+    var _daytime = $.getUrlParam('logtime','@').split('@'),
+        my_date = new Date();
+    setTimeout(function(){
+        $(".startime").val(_daytime[0]).glDatePicker({
+            selectableDateRange: [
+                {
+                    from: new Date(1990, 1, 1) ,
+                    to: new Date(my_date.getFullYear(), my_date.getMonth(), my_date.getDate())
                 }
-            });
-        },500);
-    };
-});
-// 结束时间
-$(document).ready(function(){
-    if($.getUrlParam('logtime')){
-        var _daytime = $.getUrlParam('logtime').split('@'),
-            my_date = new Date();
-        setTimeout(function(){
-            $(".endtime").val(_daytime[1]).glDatePicker({
-                selectableDateRange: [
-                    {
-                        from: new Date(1990, 1, 1) ,
-                        to: new Date(my_date.getFullYear(), my_date.getMonth(), my_date.getDate())
-                    }
-                ],
-                onClick:function(el, cell, date, data) {
-                    el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
-                    var start_time = $('.startime').val();
-                    var end_time = el.val();
-                    $(':input[name="logtime"]').val(start_time+'@'+end_time);
+            ],
+            onClick:function(el, cell, date, data) {
+                el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
+                var start_time = el.val();
+                var end_time = $('.endtime').val();
+                $(':input[name="logtime"]').val(start_time+'@'+end_time);
+            }
+        });
+    },500);
+    // 结束时间
+    var _daytime = $.getUrlParam('logtime','@').split('@'),
+        my_date = new Date();
+    setTimeout(function(){
+        $(".endtime").val(_daytime[1]).glDatePicker({
+            selectableDateRange: [
+                {
+                    from: new Date(1990, 1, 1) ,
+                    to: new Date(my_date.getFullYear(), my_date.getMonth(), my_date.getDate())
                 }
-            });
-        },500);
-    };
+            ],
+            onClick:function(el, cell, date, data) {
+                el.val(date.toLocaleDateString().replace("年","-").replace("月","-").replace("日",""));
+                var start_time = $('.startime').val();
+                var end_time = el.val();
+                $(':input[name="logtime"]').val(start_time+'@'+end_time);
+            }
+        });
+    },500);
 });
 
-
-
-$(function(){
-    $(':input[name="logtime"]').val($.getUrlParam('logtime'));
-    var str = '<div class=\"wait\"><i></i>正在获取统计数据....</div>';
-    var loading_start = layer.open({
-    	type:1
-    	,area:['260px','auto']
-        ,title:false
-        ,shade:.6
-        ,time: 0 //不自动关闭
-        ,shadeClose:false
-        ,shift: 1
-        ,closeBtn:false
-        ,content:str
-    });
-    var data = {
-        zone_id : $.getUrlParam('zone_id'),
-        role_id : $.getUrlParam('role_id'),
-        department_id : $.getUrlParam('department_id'),
-        logtime : $.getUrlParam('logtime')+time_his
-    };
-    $('#count_body,#btn_body,#demo_body').hide();
-    common_ajax2(data, '/SystemApi/data/getDataMarket', 'no', function(redata){
-        layer.close(loading_start);    		//  关闭加载提示
-        if(redata.data){
-            layui.use('laytpl', function(){
-                var laytpl = layui.laytpl;
-                laytpl(templets_count.innerHTML).render(redata.data, function(result){
-                    $('#count_body').append(result).show();
-                });
-                laytpl(templets_btn.innerHTML).render(redata.data, function(result){
-                    $('#btn_body').append(result).show();
-                });
-                laytpl(templets_content.innerHTML).render(redata.data, function(result){
-                    $('#demo_body').append(result).show();
-                }); 
-                $('#stTab1 .sr_time').text('统计时间：'+$.getUrlParam('logtime','@').split('@')[0]+' 至 '+$.getUrlParam('logtime','@').split('@')[1]);
-                $('#stTab2 .sr_time').text('统计员工：'+$('#sr_staff .sr_li').length+' 人');
-            });
-        }else{
-            layer.msg(redata.msg, {icon:2});
-            $('.main').append(getNullHint());
-        };
-        //获取区域列表
-        common_ajax2('','/SystemApi/Zone/getZoneList','no',function(redata){
-            if(redata.data){
-                layui.use('laytpl', function(){
-                    var laytpl = layui.laytpl;
-                    laytpl(templets_zone.innerHTML).render(redata.data, function(result){
-                        $('#zone_body').html(result);
-                        $('.show_city_cont').eq(0).addClass('active');
-                        $('.city_largearea li').eq(0).addClass('cur');
-                        if($.getUrlParam('zone_id')){
-                            if($('#zone_'+$.getUrlParam('zone_id')).text().length>0){
-                                $('.city_title em').text($('#zone_'+$.getUrlParam('zone_id')).text());
-                            }
-                            $(':input[name="zone_id"]').val($.getUrlParam('zone_id'));
-                        };
-                    });
-                });
-            };
-        },1);
-        //获取部门职位列表
-        common_ajax2('','/SystemApi/Department/getDepartmentRoleList','no',function(redata){
-            if(redata.data.data){
-                layui.use('laytpl', function(){
-                    var laytpl = layui.laytpl;
-                    laytpl(templets_role.innerHTML).render(redata.data.data, function(result){
-                        $('#role_body').html(result);
-                        //展开部门职位
-                        openPosition();
-                        if($.getUrlParam('role_id')){
-                            var temp_role_id = $.getUrlParam('role_id').split(',');
-                            var temp_role_names = '';
-                            $.each(temp_role_id, function(k, v){
-                                if(temp_role_names==''){
-                                    temp_role_names += $('#sale'+v).attr('data-name');
-                                }else{
-                                    temp_role_names += ','+$('#sale'+v).attr('data-name');
-                                }
-                            });
-                            if(temp_role_names.length>13){
-                                temp_role_names = temp_role_names.substring(0,13)+'...';
-                            }
-                            $('.position_name em').text(temp_role_names);
-                            $(':input[name="role_id"]').val($.getUrlParam('role_id'));
-                        };
-                    });
-                });
-            };
-        },1);
-    },1);
-});
