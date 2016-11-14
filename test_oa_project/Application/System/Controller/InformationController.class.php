@@ -22,7 +22,6 @@ class InformationController extends SystemController
     public function systemUserInfo()
     {
         $this->display();
-
     }
 
     /*
@@ -78,36 +77,6 @@ class InformationController extends SystemController
     */
     public function sendMsg()
     {
-        if (IS_POST) {
-            $request = I('post.');
-            if($request['type']=='getSystem'){
-                if(empty($request['role_id'])) $this->ajaxReturn(302, '请先选中职位');
-                $where['zone_id'] = !empty($request['zone_id'])?$request['zone_id']:$this->system_user['zone_id'];
-                $where['role_ids'] = array("IN", $request['role_id']);
-                $where['usertype'] = array("NEQ", "10");
-                $where['realname'] = !empty($request['keyname'])?array('LIKE', $request['keyname']):null;
-                //员工列表
-                $reflag = D('SystemUser','Service')->getSystemUsersList($where);
-                if ($reflag['code']==0) $this->ajaxReturn(0, '获取成功', $reflag['data']['data']);
-                else $this->ajaxReturn(303);
-            }else{
-                $result = D('Message', 'Service')->sendMsgs($request);
-                if ($result['code'] != 0) {
-                    $this->ajaxReturn($result['code'], "发送失败");
-                }
-                $this->ajaxReturn(0, "发送成功",  U('System/Information/msgList'));
-            }
-        }
-        //区域
-        $zoneList = D("Zone", 'Service')->getZoneList(array('zone_id'=>$this->system_user['zone_id']));
-        $data['zoneAll'] = $zoneList['data'];
-        //获取部门
-        $departmentAll = D('Department', 'Service')->getDepartmentList();
-        $data['departmentAll'] = $departmentAll['data'];
-        //获取职位
-        $roleAll = D('Role', 'Service')->getRoleList();
-        $data['roleAll'] = $roleAll['data'];
-        $this->assign('data', $data);
         $this->display();
     }
 

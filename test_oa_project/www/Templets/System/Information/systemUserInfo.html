@@ -67,9 +67,9 @@
 						{{# } }}
 					</div>
 					<div class="mcRowRight">
-						<div class="uploadBox">
-							<span>修改头像</span>
-							<input type="file" name="file" autocomplete="off" id="fileupload" class="imUploadBtn" value="">
+						<div class="uploadBox" style="position: relative; height: 31px; margin-top: 70px;">
+							<span style="position: absolute;z-index: 1;">修改头像</span>
+							<input type="file" name="file" autocomplete="off" id="fileupload" class="imUploadBtn" value="" style="position: absolute;z-index: 2;width: 73px;">
 							<input type="hidden" name="" id="img_src" class="faceImg">
 						</div>
 					</div>
@@ -204,40 +204,40 @@
 		<script src="__PUBLIC__/js/layui/layui.js"></script>
 		<include file="Common@Html/post_oss"/>
 		<script type="text/javascript">
+		function upload_oss(url){
+			$('#faceImg').attr('src', url);
+			saveface(url);
+		};
+		function saveface(url){
+            var data = {
+                face:url
+            };
+            common_ajax(data,'/SystemApi/Infomation/systemUserInfo','no',update);
+            function update() {
+            	$('#faceImg').attr('src',url);
+            };
+		};
 		$(function(){
-				var thisObj = $('#infoContMiddle');
-        		thisObj.html(getLoding());
-				getAjax();
-				//获取列表内容
-				function getAjax(){
-					var data = {
+			var thisObj = $('#infoContMiddle');
+    		thisObj.html(getLoding());
+			getAjax();
+			//获取列表内容
+			function getAjax(){
+				var data = {
 
-					};
-					common_ajax2(data,'/SystemApi/SystemUser/getSystemUserInfo','no',_setHtml,1);
-					function _setHtml(redata){
-						layui.use('laytpl', function(){
-							var laytpl = layui.laytpl;
-							laytpl(demo.innerHTML).render(redata.data, function(result){
-								thisObj.html(result);
-							});
-						});
-					};
 				};
+				common_ajax2(data,'/SystemApi/SystemUser/getSystemUserInfo','no',_setHtml,1);
+				function _setHtml(redata){
+					layui.use('laytpl', function(){
+						var laytpl = layui.laytpl;
+						laytpl(demo.innerHTML).render(redata.data, function(result){
+							thisObj.html(result);
+						});
+					});
+				};
+			};
 
-			});
-			function upload_oss(url){
-				$('#faceImg').attr('src', url);
-				saveface(url);
-			};
-			function saveface(url){
-	            var data = {
-	                face:url
-	            };
-	            common_ajax(data,'','no',update);
-	            function update() {
-	            	$('#faceImg').attr('src',url);
-	            };
-			};
+		});
 		</script>
 	</body>
 </html>
