@@ -648,9 +648,9 @@ class SystemUserService extends BaseService
                         $roleName = $v2['name'];
                         $role_id = $v2['id'];
                     }else{
-                        $roleNames .= '，'.$v2['department_name'].'/'.$v2['name'];
-                        $roleName .= '，'.$v2['name'];
-                        $role_id .= '，'.$v2['id'];
+                        $roleNames .= ','.$v2['department_name'].'/'.$v2['name'];
+                        $roleName .= ','.$v2['name'];
+                        $role_id .= ','.$v2['id'];
                     }
                     $_array[$k]['role_ids'][] = $v2['id'];
                 }

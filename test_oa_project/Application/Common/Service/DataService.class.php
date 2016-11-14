@@ -226,7 +226,8 @@ class DataService extends BaseService
                             'system_user_id'=>$_info['data']['system_user_id'],
                             'realname'=>$_info['data']['realname'],
                             'face'=>$_info['data']['face'],
-                            'role_names'=>$_info['data']['role_names']
+                            'role_names'=>$_info['data']['role_names'],
+                            'role_id'=>$_info['data']['role_id']
                         );
                     }
                 }
