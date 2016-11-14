@@ -100,3 +100,7 @@
 /*1019*/
 #sr_everyday th.one-item, #sr_everyday td.one-item {min-width:110px;}
 #sr_everyday .container i {width:20px;}
+
+/*1114*/
+.search_pic span {width:35px;}
+.search-position {height:38px;display:block;line-height:38px;margin:8px 0px 8px 4px;border:1px solid #dedfdf;} 
