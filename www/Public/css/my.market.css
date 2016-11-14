@@ -72,15 +72,15 @@
 #sr_everyday th, #sr_everyday td {color:#333;text-align:center;border-bottom:1px solid #dedfdf;}
 #sr_everyday th {font-size:12px;cursor:pointer;}
 #sr_everyday th .container {position:relative;height:43px;background:#c9c8c8;}
-#sr_everyday .container span {float:left;display:block;width:50%;height:43px;text-align:right;}
-#sr_everyday .container i {/*position:absolute;top:0;right:1px;*/display:inline-block;width:43px;height:43px;background:url(../images/market_sort-01.png) no-repeat center center;}
-#sr_everyday .container i.sr_down {background:url(../images/market_sortdown-01.png) no-repeat center center;}
-#sr_everyday .container i.sr_up {background:url(../images/market_sortup-03.png) no-repeat center center;}
+#sr_everyday .container span {display:block;height:43px;}
+#sr_everyday .container i {position:absolute;top:0;right:1px;display:block;width:43px;height:43px;background:url(../images/market_sort-01.png) no-repeat 2px center;}
+#sr_everyday .container i.sr_down {background:url(../images/market_sortdown-01.png) no-repeat 2px center;}
+#sr_everyday .container i.sr_up {background:url(../images/market_sortup-03.png) no-repeat 2px center;}
 #sr_everyday .container:hover {background:#53b567;}
 #sr_everyday .container:hover span {color:#fff;}
-#sr_everyday .container:hover i {background:url(../images/market_sort-02.png) no-repeat center center}
-#sr_everyday .container:hover i.sr_down {background:url(../images/market_sortdown-02.png) no-repeat center center;}
-#sr_everyday .container:hover i.sr_up {background:url(../images/market_sortup-04.png) no-repeat center center;}
+#sr_everyday .container:hover i {background:url(../images/market_sort-02.png) no-repeat 2px center}
+#sr_everyday .container:hover i.sr_down {background:url(../images/market_sortdown-02.png) no-repeat 2px center;}
+#sr_everyday .container:hover i.sr_up {background:url(../images/market_sortup-04.png) no-repeat 2px center;}
 #sr_everyday td {font-size:14px;color:#696969;background:#fff;}
 #sr_everyday td.red {color:#ff0000;}
 #sr_everyday tr.sr_total:hover td {background:#fff;}
@@ -99,7 +99,7 @@
 
 /*1019*/
 #sr_everyday th.one-item, #sr_everyday td.one-item {min-width:110px;}
-#sr_everyday .container i {width:50%;}
+#sr_everyday .container i {width:20px;}
 
 /*1114*/
 .search_pic .search_name {float:left;width:180px;margin-left:24px;color:#333;}
