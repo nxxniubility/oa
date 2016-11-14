@@ -104,7 +104,6 @@ class DataController extends SystemApiController
         $param['role_id'] = I('param.role_id',null);
         $param['zone_id'] = I('param.zone_id',null);
         $param['system_user_id'] = I('param.system_user_id',null);
-//        $param['system_user_id'] = I('param.system_user_id',null);
         $getService = function($param){
             //去除数组空值
             $param = array_filter($param);

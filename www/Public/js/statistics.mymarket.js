@@ -57,7 +57,7 @@ $(function(){
                         if($.getUrlParam('zone_id')){
                             if($('#zone_'+$.getUrlParam('zone_id')).text().length>0){
                                 $('.city_title em').text($('#zone_'+$.getUrlParam('zone_id')).text());
-                            }
+                            };
                             $(':input[name="zone_id"]').val($.getUrlParam('zone_id'));
                         };
                     });
@@ -81,11 +81,11 @@ $(function(){
                                     temp_role_names += $('#sale'+v).attr('data-name');
                                 }else{
                                     temp_role_names += ','+$('#sale'+v).attr('data-name');
-                                }
+                                };
                             });
                             if(temp_role_names.length>13){
                                 temp_role_names = temp_role_names.substring(0,13)+'...';
-                            }
+                            };
                             $('.position_name em').text(temp_role_names);
                             $(':input[name="role_id"]').val($.getUrlParam('role_id'));
                         };
@@ -102,7 +102,7 @@ var time_his = ' '+oDate.getHours()+':'+oDate.getMinutes()+':'+oDate.getSeconds(
 //  单项指标左侧列表都添加点击事件
 $(function(){
     //$('.chart_tab').children('li').eq(0).trigger('click');
-})
+});
 //  遮罩层-全局
 var mask = $('#mask');
 
@@ -130,7 +130,7 @@ function centralAssignment(){
         cityShow.addClass('dn');
         mask.hide();
     });
-}
+};
 //  城市赋值
 function cityAssignment(){
     $(document).on('click', '.show_city_cont span', function(){
@@ -145,7 +145,7 @@ function cityAssignment(){
             $(':input[name="zone_id"]').val($(this).attr('data-value'));
         };
     });
-}
+};
 
 //  地区重置
 function areaReset(){
@@ -155,7 +155,7 @@ function areaReset(){
         $(this).next('input[name="zone_id"]').val('');
         mask.hide();
     });
-}
+};
 
 
 //  显示职位选择弹层
@@ -172,7 +172,7 @@ $(document).on('click', '.position_name', function(){
     }
     if($(':input[name="sale_inp"]:checked').length==$(':input[name="sale_inp"]').length){
         $('#all_select').prop('checked',true);
-    }
+    };
     //  职位赋值
     positionChoose();
     //  点遮罩关闭
@@ -196,7 +196,7 @@ function openPosition(){
                 $(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');	//  点击其他则收起上一个展开项
             }else {
                 $(this).parent().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
-            }
+            };
             $(this).toggleClass('bor_bottom');
         }else {
             if($(this).parent().find(_other).css('display') == 'none'){
@@ -204,12 +204,12 @@ function openPosition(){
                 $(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
             }else {
                 $(this).parent().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
-            }
+            };
             //$(this).parent().siblings().find(_other).slideUp(500).parent().find(_arrow).removeClass('up');
             $(this).parents('.position_list').find('li').eq(maxLength-1).find(_this).removeClass('bor_bottom');
-        }
+        };
     });
-}
+};
 //  职位赋值
 function positionChoose(){
     $(document).on('click', '.confirm', function(){
@@ -228,7 +228,7 @@ function positionChoose(){
             }else{
                 _role_ids +=  ','+$(this).val();
                 _role_names += ','+$(this).attr('data-name');
-            }
+            };
         });
         $(this).next('input').val(_role_ids);
 
@@ -236,7 +236,7 @@ function positionChoose(){
         if(all_checkfalse){
             if(_role_names.length>13){
                 _role_names = _role_names.substring(0,13)+'...';
-            }
+            };
             $('.position_name em').text(_role_names);
         }else {		//  假如没全选，有两种情况
 
@@ -244,12 +244,12 @@ function positionChoose(){
             if (!all_checkfalse && _checkbox[0] ){
                 if(_role_names.length>13){
                     _role_names = _role_names.substring(0,13)+'...';
-                }
+                };
                 $('.position_name em').text(_role_names);
             }else {		//  全选按钮和职位都没有选
                 $('.position_name em').text('请选择职位');
-            }
-        }
+            };
+        };
 
 
         //$('.position_name em').text(_role_names);
@@ -279,14 +279,14 @@ function allChk(){
     $('input[name="sale_inp"]').each(function () {
         if($(this).is(':checked')){
             chk++;
-        }
+        };
     });
     if(chknum==chk){//全选 
         $("#all_select").prop("checked",true);
     }else{//不全选 
         $("#all_select").prop("checked",false);
-    }
-}
+    };
+};
 
 //  关闭职位弹层
 function cancelClose(){
@@ -295,14 +295,14 @@ function cancelClose(){
         _close.closest('.search_position_show').addClass('dn');
         mask.hide();
     });
-}
+};
 //  点遮罩关闭地区\职位layer
 function layerClose(){
     $(document).on('click', '#mask', function(){
         $('.seach_city_show, .search_position_show').addClass('dn');
         mask.hide();
     });
-}
+};
 
 //  切换
 var curIndex=0;	//  初始化
@@ -314,7 +314,7 @@ $(document).on('click', '.city_largearea li', function(){
         $(".city_largearea li").siblings().removeClass("cur").eq(index).addClass("cur");
         $(".show_city_cont").removeClass("active").eq(index).addClass("active");
         curIndex=index; //  当前下标赋予变量
-    }
+    };
 });
 
 //  每日数据与员工数据
@@ -333,9 +333,9 @@ function doTabClick(o,parm) {
             $(sbId).css('display', 'none');
         } else {
             $(sbId).css('display', 'block');
-        }
-    }
-}
+        };
+    };
+};
 
 //  图表部分
 //  单项数据切换
@@ -349,7 +349,7 @@ $(document).on('click', '.chart_tab li', function(){
     if($(this).attr('flag')!='true'){
         chart_main.eq(index).find('.chart_topright').children('select').trigger('change');
         $(this).attr('flag','true');
-    }
+    };
     //}
 });
 
@@ -410,7 +410,7 @@ $(document).on('change','.chart_topright select',function(){
             _pie4.empty();
         }else{
             _please_select.show();
-        }
+        };
         return false;
     };
     common_ajax2(data,'/SystemApi/Data/getDataMarketInfo','no',function(redata){
