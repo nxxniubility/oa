@@ -5,6 +5,8 @@
     <title>系统首页-{$siteinfo.sitename}</title>
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
     <link rel="stylesheet" href="__PUBLIC__/css/home.css?v20160906">
+    <link rel="stylesheet" href="__PUBLIC__/js/layui/css/layui.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/information.msglist.css">
     <script>
         var jump_code = "{$jump_code}";
     </script>
@@ -68,6 +70,14 @@
             <div class="msgBoxTop">
                 <span>通知公告</span>
                 <em onclick="location.href='javascript:;'" id="informMore">更多&gt;&gt;  </em>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="main">
+
+                        </div>
+                        <div class="paging"></div>
+                    </div>
+                </div>
             </div>
             <ul class="msgBoxCont clearfix"></ul>
         </div>
@@ -115,10 +125,47 @@
     </div>
 </div>
 
+<!--列表模版-->
+<script id="demo" type="text/html">
+    {{#  layui.each(d, function(k, v){ }}
+    <div class="msg_list msg_hgt_out" data-id="{{ v.message_id }}">
+        <div class="list_box">
+            <div class="list_title">
+                {{#  if(v.isread == 1){ }}
+                <i class="layui-icon title_icon">&#xe61d;</i>
+                {{#  }else{ }}
+                <i class="layui-icon title_icon2">&#xe638;</i>
+                {{#  }; }}
+                【{{ v.msgtype_name }}】{{ v.title }}
+            </div>
+            <div class="list_time">{{ v.create_time }}</div>
+            <div class="list_icon dn">
+                <i class="layui-icon remove_msg_btn">&#xe640;</i>
+            </div>
+            <div class="list_content">
+                {{ v.content }}
+                {{#  if(v.href){ }}
+                <a href="{{ v.href }}" class="view-details" target="_blank">查看详情</a>
+                {{#  }; }}
+            </div>
+        </div>
+    </div>
+    {{#  }); }}
+    {{#  if(d.length === 0){ }}
+    <div class="news-box">
+        <div class="news-box-empty">
+            <p>没有新消息</p>
+        </div>
+    </div>
+    {{#  } }}
+</script>
+
+
 <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 <script src="__PUBLIC__/js/layer/layer.js"></script>
 <script src="__PUBLIC__/js/common.js"></script>
 <script src="__PUBLIC__/js/home.js"></script>
+<script src="__PUBLIC__/js/layui/layui.js"></script>
 <script type="text/javascript" src="__PUBLIC__/js/jquery.sortable.js"></script>
 
 <script>
@@ -126,6 +173,73 @@
     $('#informMore').click(function(){
         window.location.href="{:U('System/Information/msgList')}";
     });
+    $(document).on('mouseover','.msg_list',function(){
+        $(this).find('.list_icon').removeClass('dn');
+    }).on('mouseout','.msg_list',function(){
+        $(this).find('.list_icon').addClass('dn');
+    });
+    $(document).on('click','.msg_list',function(){
+        if(!$(this).hasClass('msg_hgt_on')){
+            $(this).css('height',($(this).children('.list_box').height()+10)+'px').addClass('msg_hgt_on').addClass('msg_list_hover');
+            if($(this).find('.title_icon').length>0){
+                $(this).find('.title_icon').addClass('title_icon2').removeClass('title_icon').html('&#xe638;');
+                readMsg($(this).attr('data-id'));
+            };
+        }else{
+            $(this).css('height','65px').removeClass('msg_hgt_on').removeClass('msg_list_hover');
+        };
+    });
+    //TAB
+    layui.use(['element', 'layer'], function(){
+        var element = layui.element(),layer = layui.layer;
+        element.on('tab(test)', function(data){
+            if($('.layui-tab-item').eq($(this).index()).find('.msg_list').length===0){
+                getMsgList($(this).attr('data-value'),1);
+            };
+        });
+    });
+
+    getMsgList('',1);
+    function getMsgList(type,page){
+        var _box = $('.main').eq(0);
+        var _paging = $('.paging').eq(0);
+        var data = {
+            msgtype : type,
+            page : ((page-1)*10)+',10'
+        };
+        common_ajax2(data,'/SystemApi/Message/getMsgList','no',_demoHtml,1);
+        function _demoHtml(redata){
+            if(redata.code==0){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo.innerHTML).render(redata.data.data, function(result){
+                        _box.html(result);
+                    });
+                });
+                if(redata.data.count>0){
+                    layui.use(['laypage', 'layer'], function(){
+                        var laypage = layui.laypage,layer = layui.layer;
+                        laypage({
+                            cont:  _paging
+                            ,pages:  Math.ceil(redata.data.count/10) //总页数
+                            ,groups: 5 //连续显示分页数
+                            ,first: false
+                            ,last: false
+                            ,curr: page
+                            ,skin: '#4dbe88'
+                            ,jump: function(obj, first){
+                                //得到了当前页，用于向服务端请求对应数据
+                                if(!first){
+                                    var curr = obj.curr;
+                                    getMsgList(type,curr);
+                                };
+                            }
+                        });
+                    });
+                };
+            };
+        };
+    };
 </script>
 
 <script>

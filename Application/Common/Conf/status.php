@@ -12,6 +12,7 @@ return array(
         'MSG_TYPE'=>array(
             1 => '系统通知',
             10 => '消息通知',
+            20 => '系统更新',
         ),
         //学习平台
         'USER_LEARNINGTYPE'=>array(

@@ -23,9 +23,16 @@
             <li data-value="" class="layui-this">全部通知</li>
             <li data-value="1">系统通知</li>
             <li data-value="10">消息通知</li>
+            <li data-value="20">系统更新</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
+                <div class="main">
+
+                </div>
+                <div class="paging"></div>
+            </div>
+            <div class="layui-tab-item">
                 <div class="main">
 
                 </div>
@@ -143,6 +150,9 @@
         }else if(type==10){
             var _box = $('.main').eq(2);
             var _paging = $('.paging').eq(2);
+        }else if(type==20){
+            var _box = $('.main').eq(3);
+            var _paging = $('.paging').eq(3);
         }else{
             var _box = $('.main').eq(0);
             var _paging = $('.paging').eq(0);
