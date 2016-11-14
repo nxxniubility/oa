@@ -199,8 +199,13 @@ class DataService extends BaseService
         $_end = $logtime[1];
         $_diff = strtotime($_end) - strtotime($_start);
         $_diffDay = $_diff / (24*60*60);
+        $_diffDay = (int)$_diffDay;
         for ($i = 0; $i <= $_diffDay; $i++){
-            $_new_time = (strtotime($_start) + $i * 24 * 60 * 60 );
+            if($i==$_diffDay){
+                $_new_time = strtotime($_end);
+            }else{
+                $_new_time = (strtotime($_start) + $i * 24 * 60 * 60 );
+            }
             if(empty($_days_count[date('Y-m-d',$_new_time)])) $_days_count[date('Y-m-d',$_new_time)] = array();
             //人员数据
             foreach($_data_user as $k=>$v){
@@ -682,13 +687,20 @@ class DataService extends BaseService
         //获取参数type
         $_formula_arr = explode(',', preg_replace($_reg,',',$department_config['formula']));
         $_formula_user = explode(',', $department_config['formula_user']);
+        //获取时间
+        $_logtime_start = strtotime(date('Y-m-d',$logtime));
+        if(date('Y-m-d', $logtime).'0:0:0' == date('Y-m-d H:i:s', $logtime)){
+            $_logtime_end = strtotime(date('Y-m-d',$logtime).'23:59:59');
+        }else{
+            $_logtime_end = $logtime;
+        }
         //公式ID转化真实数量
         $_operator_mun = array();
         foreach($_formula_user as $k=>$v){
             $_is_dep = explode('-', $v);
             $_where_log[$v] = array('IN',$user_id);
             $_where_log['operattype'] = $_formula_arr[$k];
-            $_where_log['logtime'] = array(array('EGT',$logtime),array('ELT',strtotime(date('Y-m-d',$logtime).'23:59:59')));
+            $_where_log['logtime'] = array(array('EGT',$_logtime_start),array('ELT',$_logtime_end));
             $_data_num = D('DataLogs')->where($_where_log)->count();
             //获取总数
             $_operator_mun[] = $_data_num;
