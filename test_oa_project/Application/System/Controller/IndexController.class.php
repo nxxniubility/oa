@@ -304,5 +304,4 @@ class IndexController extends SystemController
         $this->display();
     }
 
-
 }
