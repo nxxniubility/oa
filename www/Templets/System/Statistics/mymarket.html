@@ -70,7 +70,7 @@
 				</div>
 				<!-- 统计报表 -->
 				<div class="statistics_report clearfix" id="demo_body">
-					<span class="main_title fl">客户量统计报表</span>
+					<span class="main_title">客户量统计报表</span>
 					<div class="dn" id="temp_body"></div>
 				</div>
 	        </div>
@@ -204,14 +204,14 @@
 				</div>
 		</script>
 		<script type="text/html" id="templets_content">
-			<div id="stTab1" class="sr_table fl" style="display: block;">
+			<div id="stTab1" class="sr_table" style="display: block;">
 				<div class="sr_time"></div>
 				<div class="tab-container">
 					<table cellpadding="0" cellspacing="0"  id="sr_everyday">
 						<tr>
-							<th><div class="container"><span>统计时间<i class="on_btn"></i></span></div></th>
+							<th><div class="container clearfix"><span>统计时间</span><i class="on_btn"></i></div></th>
 							{{# layui.each(d.statistics, function(k, v){ }}
-							<th><div class="container"><span>{{ v.name }}<i class="on_btn"></i></span></div></th>
+							<th><div class="container clearfix"><span>{{ v.name }}</span><i class="on_btn"></i></div></th>
 							{{# }); }}
 						</tr>
 						<tr class="sr_total">
@@ -239,6 +239,6 @@
 		<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
 		<script src="__PUBLIC__/js/highcharts/highcharts.js"></script>
 		<script src="__PUBLIC__/js/highcharts/modules/exporting.js"></script>
-		<script src="__PUBLIC__/js/statistics.mymarket.js?v=20160927"></script>
+		<script src="__PUBLIC__/js/statistics.market.js"></script>
 	</body>
 </html>

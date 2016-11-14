@@ -95,8 +95,8 @@
 
 /*单项统计*/
 .main .individual_event {width:100%;margin-bottom:50px;}
-.individual_event .chart_container {width:100%;height:auto;overflow:hidden;}
-.chart_container .chart_tab {width:12.8%;height:auto;border:1px solid #d9d9d9;border-bottom:none;}
+.individual_event .chart_container {width:100%;height:auto;border-bottom:1px solid #d9d9d9;overflow:hidden;}
+.chart_container .chart_tab {width:12.8%;height:auto;min-height:546px;border:1px solid #d9d9d9;border-top:none;border-bottom:none;}
 .chart_container .chart_tab li {float:left;width:100%;height:38px;line-height:38px;color:#333;text-align:center;border-bottom:1px solid #d9d9d9;cursor""}
 .chart_container .chart_tab li.cur, .chart_container .chart_tab li:hover {color:#fff;background:#53b567;}
 .chart_container .chart_main {display:none;width:87%;height:auto;}
@@ -106,7 +106,7 @@
 .chart_main .chart_top .chart_topright {height:25px;line-height:25px;padding:6.5px 10px 6.5px 0;}
 .chart_main .chart_top .chart_topright p {float:left;margin-right:8px;}
 .chart_main .chart_top .chart_topright select {width:205px;height:25px;font-size:12px;border:none;background:white;}
-.chart_main .chart_content {height:507px;border:1px solid #d9d9d9;border-left:none;overflow:hidden;}
+.chart_main .chart_content {height:507px;border:1px solid #d9d9d9;border-left:none;border-bottom:none;overflow:hidden;}
 
 .chart_content.new_amount .please_select {display:none;text-align:center;}
 .chart_content.new_amount .please_select p {margin-top:30px;font-size:18PX;color:#333;}
