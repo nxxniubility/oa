@@ -23,7 +23,7 @@
 	        		
 	        		<form method="get" action="{:U('System/Statistics/mymarket')}" onsubmit="return daytime();">
 	        			<!-- 头像 -->
-		        		<div class="search_pic fl clearfix">
+						<div class="search_pic fl clearfix">
 							<div class="picbox fl">
 								<if condition = "!empty($systemUserInfo[face])">
 									<img src={$systemUserInfo['face']} alt="员工头像">
@@ -33,17 +33,24 @@
 									<img src="__PUBLIC__/images/personalInfo_01-01.jpg">
 								</if>
 							</div>
-		        			<div class="search_name">{$systemUserInfo['realname']}
-		        				<select class="search-position">
-			        				<option value="0" selected="selected">121</option>
-			        				<option value="1">asda</option>
-			        				<option value="2">asda</option>
-			        				<option value="3">asda</option>
-			        			</select>
-		        			</div>
-		        			
-		        		</div>
-
+							<div class="search_name" style="width: 55px;">
+								{$systemUserInfo['realname']}
+							</div>
+						</div>
+						<!-- 职位 -->
+						<div class="search_day fl clearfix select_role_body" style="padding-top: 8px;">
+							<div class="search_name" style="width: 165px;">
+								<select class="search-position select_role" autocomplete="off">
+									<foreach name="systemUserInfo['roles']" item="v">
+										<if condition="$request['role_id'] eq $v.id">
+											<option value="{$v.id}" selected="selected">{$v.department_name}/{$v.name}</option>
+											<else/>
+											<option value="{$v.id}">{$v.department_name}/{$v.name}</option>
+										</if>
+									</foreach>
+								</select>
+							</div>
+						</div>
 						<!-- 日期 -->
 						<div class="search_day fl clearfix">
 							<div class="startime_box fl">
@@ -57,6 +64,8 @@
 						</div>
 						<input type="hidden" name="logtime" value="">
 						<input type="hidden" name="system_user_id" value="">
+						<input type="hidden" name="role_id" value="">
+						<input type="hidden" name="zone_id" value="">
 						<input type="submit" class="search_btn fl" value="搜索" style="margin-top: 16px;">
 	        		</form>
 	        	</div>
@@ -77,55 +86,6 @@
 		</div>
 
 		<div id="mask"></div>
-		<script type="text/html" id="templets_zone">
-			<span class="city_title"><em>请选择区域</em><i></i></span>
-			<div class="seach_city_show dn">
-				<div class="show_title">请选择区域</div>
-				<div class="show_content">
-					{{# if(d.level==1){ }}
-					<ul class="city_largearea clearfix">
-						{{# layui.each(d.children, function(k, v){ }}
-						<li><a href="javascript:;">{{ v.name }}</a></li>
-						{{# }); }}
-					</ul>
-					{{# layui.each(d.children, function(k, v){ }}
-					<div class="show_city_cont">
-						{{# layui.each(v.children, function(k2, v2){ }}
-						<div class="section">
-							<span id="zone_{{ v2.zone_id }}" data-level="{{ v2.level }}" data-value="{{ v2.zone_id }}">{{ v2.name }}</span>
-							<ul class="city_partition clearfix">
-								{{# layui.each(v2.children, function(k3, v3){ }}
-								<li><a href="javascript:;" data-level="{{ v3.level }}" id="zone_{{ v3.zone_id }}" data-value="{{ v3.zone_id }}">{{ v3.name }}</a></li>
-								{{# }); }}
-							</ul>
-						</div>
-						{{# }); }}
-					</div>
-					{{# }); }}
-					{{# } }}
-					<input type="button" class="reset_btn" value="重置">
-					<input type="hidden" name="zone_id" value="{{# $.getUrlParam('zone_id') }}" autocomplete="off">
-				</div>
-			</div>
-		</script>
-		<script type="text/html" id="templets_role">
-			{{# layui.each(d, function(k, v){ }}
-			<li>
-				<div class="position_department clearfix">
-					<span>{{ v.departmentname }}</span>
-					<a href="javascript:;"><i></i></a>
-				</div>
-				<div class="position_destail clearfix">
-					{{# layui.each(v.children, function(k2, v2){ }}
-					<label for="sale{{ v2.id }}">
-						<input type="checkbox" name="sale_inp" data-name="{{ v2.name }}" value="{{ v2.id }}" class="sale"  id="sale{{ v2.id }}">
-						<span>{{ v2.name }}</span>
-					</label>
-					{{# }); }}
-				</div>
-			</li>
-			{{# }); }}
-		</script>
 		<script type="text/html" id="templets_count">
 			<table cellpadding="0" cellspacing="0" id="collecr_table">
 				<tr>
@@ -239,6 +199,6 @@
 		<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
 		<script src="__PUBLIC__/js/highcharts/highcharts.js"></script>
 		<script src="__PUBLIC__/js/highcharts/modules/exporting.js"></script>
-		<script src="__PUBLIC__/js/statistics.market.js"></script>
+		<script src="__PUBLIC__/js/statistics.mymarket.js"></script>
 	</body>
 </html>

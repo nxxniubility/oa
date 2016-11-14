@@ -689,7 +689,7 @@ class DataService extends BaseService
         $_formula_user = explode(',', $department_config['formula_user']);
         //获取时间
         $_logtime_start = strtotime(date('Y-m-d',$logtime));
-        if(date('Y-m-d', $logtime).'0:0:0' == date('Y-m-d H:i:s', $logtime)){
+        if( strtotime(date('Y-m-d', $logtime)) == strtotime(date('Y-m-d H:i:s', $logtime)) ){
             $_logtime_end = strtotime(date('Y-m-d',$logtime).'23:59:59');
         }else{
             $_logtime_end = $logtime;

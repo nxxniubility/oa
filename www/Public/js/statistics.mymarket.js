@@ -1,6 +1,8 @@
 
 
 $(function(){
+    $(':input[name="zone_id"]').val($.getUrlParam('zone_id'));
+    $(':input[name="role_id"]').val($.getUrlParam('role_id'));
     $(':input[name="logtime"]').val($.getUrlParam('logtime'));
     $(':input[name="system_user_id"]').val($.getUrlParam('system_user_id'));
     var str = '<div class=\"wait\"><i></i>正在获取统计数据....</div>';
@@ -45,55 +47,11 @@ $(function(){
             layer.msg(redata.msg, {icon:2});
             $('.main').append(getNullHint());
         };
-        //获取区域列表
-        common_ajax2('','/SystemApi/Zone/getZoneList','no',function(redata){
-            if(redata.data){
-                layui.use('laytpl', function(){
-                    var laytpl = layui.laytpl;
-                    laytpl(templets_zone.innerHTML).render(redata.data, function(result){
-                        $('#zone_body').html(result);
-                        $('.show_city_cont').eq(0).addClass('active');
-                        $('.city_largearea li').eq(0).addClass('cur');
-                        if($.getUrlParam('zone_id')){
-                            if($('#zone_'+$.getUrlParam('zone_id')).text().length>0){
-                                $('.city_title em').text($('#zone_'+$.getUrlParam('zone_id')).text());
-                            };
-                            $(':input[name="zone_id"]').val($.getUrlParam('zone_id'));
-                        };
-                    });
-                });
-            };
-        },1);
-        //获取部门职位列表
-        common_ajax2('','/SystemApi/Department/getDepartmentRoleList','no',function(redata){
-            if(redata.data.data){
-                layui.use('laytpl', function(){
-                    var laytpl = layui.laytpl;
-                    laytpl(templets_role.innerHTML).render(redata.data.data, function(result){
-                        $('#role_body').html(result);
-                        //展开部门职位
-                        openPosition();
-                        if($.getUrlParam('role_id')){
-                            var temp_role_id = $.getUrlParam('role_id').split(',');
-                            var temp_role_names = '';
-                            $.each(temp_role_id, function(k, v){
-                                if(temp_role_names==''){
-                                    temp_role_names += $('#sale'+v).attr('data-name');
-                                }else{
-                                    temp_role_names += ','+$('#sale'+v).attr('data-name');
-                                };
-                            });
-                            if(temp_role_names.length>13){
-                                temp_role_names = temp_role_names.substring(0,13)+'...';
-                            };
-                            $('.position_name em').text(temp_role_names);
-                            $(':input[name="role_id"]').val($.getUrlParam('role_id'));
-                        };
-                    });
-                });
-            };
-        },1);
     },1);
+});
+
+$(document).on('change','.select_role',function(){
+    $(':input[name="role_id"]').val($(this).val());
 });
 
 //获取当前时分秒
