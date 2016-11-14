@@ -1,0 +1,40 @@
+@charset "utf-8";
+/**/
+.wrapper-box {padding:0 20px;background:#fff;}
+.nothing {line-height:18px;margin:30px auto;font-size:18px;color:#333;text-align:center;}
+
+.title {height:55px;line-height:55px;border-bottom:1px solid #dedfdf;}
+.title .title-left {line-height:14px;font-size:0;cursor:default;}
+.title .title-left span {float:left;display:block;padding:20px 0;font-size:14px;color:#b9bdc4;}
+.title .title-left span.title-text {color:#53b567;border-bottom:2px solid #53b567;}
+.title .title-left span em {margin:0 4px;}
+.title-right {height:55px;font-size:0;}
+.title-right .setup-btn, .title-right .return {display:inline-block;width:108px;height:28px;line-height:28px;margin:13px 0 12px;font-size:14px;color:#9e9e9e;text-align:center;border:1px solid #ddd;background:#f7f7f7;}
+.title-right .setup-btn:hover, .title-right .return:hover {color:#fff;border-color:#53b567;background:#53b567;}
+.title-right .setup-btn {margin-right:20px;}
+
+.statistical-term-main {width:100%;height:auto;margin:40px auto;overflow:hidden;}
+.statistical-term-main .statistical-row {min-height:32px;margin-bottom:20px;}
+.statistical-row .row-left {float:left;width:120px;height:32px;line-height:32px;margin-right:20px;color:#333;text-align:right;}
+.statistical-row .row-left i {margin-right:4px;color:#d00202;}
+.statistical-row .row-right {float:left;min-height:32px;}
+.row-right .department-choose {width:378px;height:30px;line-height:30px;font-size:12px;color:#555;text-align:left;text-indent:10px;border:1px solid #ccc;background:#fff;}
+.row-right .employee-type {width:auto;height:32px;font-size:0;}
+.row-right .employee-type span {display:inline-block;line-height:12px;margin-right:10px;padding:10px 15px;font-size:12px;color:#555;border:1px solid #ccc;cursor:pointer;}
+.row-right .employee-type span.selected {color:#fff;border-color:#53b567;background:#53b567;}
+.statistical-row .row-left.singlelist-height {height:82px;line-height:82px;} 
+.statistical-row .row-right.singlelist-height {min-height:82px;}
+.row-right .single-list {width:904px;min-height:80px;}
+.row-right .single-list ul.display-list {float:left;width:728px;padding:16px 10px;border:1px solid #ccc;margin-right:20px;}
+.single-list .display-list li {float:left;min-height:48px;line-height:48px;font-size:14px;color:#555;}
+
+.single-list .operation-btn {height:82px;line-height:82px;font-size:0;}
+.single-list .operation-btn .edit-box, .single-list .operation-btn .delete-box {display:inline-block;}
+.single-list .operation-btn .edit-box {margin-right:18px;}
+.operation-btn .edit-box i, .operation-btn .delete-box i {display:inline-block;width:17px;height:18px;margin-right:13px;vertical-align:middle;}
+.operation-btn .edit-box input, .operation-btn .delete-box input {font-size:14px;color:#3b3a48;vertical-align:middle;border:none;background:transparent;cursor:pointer;}
+.operation-btn .edit-box i {background:url(../images/statistics_add-01.png) no-repeat 0 0;}
+.operation-btn .delete-box i {background:url(../images/statistics_add-01.png) no-repeat 0 -40px;}
+.operation-btn .edit-box:hover i {background:url(../images/statistics_add-01.png) no-repeat 0 -20px;}
+.operation-btn .delete-box:hover i {background:url(../images/statistics_add-01.png) no-repeat 0 -60px;}
+.operation-btn .edit-box:hover input, .operation-btn .delete-box:hover input {color:#53b567;}
