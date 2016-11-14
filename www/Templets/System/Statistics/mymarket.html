@@ -71,10 +71,6 @@
 				<!-- 统计报表 -->
 				<div class="statistics_report clearfix" id="demo_body">
 					<span class="main_title fl">客户量统计报表</span>
-					<div class="sr_tab fl clearfix">
-						<div class="current" id="tab1" onclick="doTabClick(this)">每日数据</div>
-						<div  id="tab2" onclick="doTabClick(this)">员工数据</div>
-					</div>
 					<div class="dn" id="temp_body"></div>
 				</div>
 	        </div>
@@ -208,8 +204,7 @@
 				</div>
 		</script>
 		<script type="text/html" id="templets_content">
-			<!-- 每日数据 -->
-			<div class="sr_table fl" id="stTab1" style="display:block;">
+			<div id="stTab1" class="sr_table fl" style="display: block;">
 				<div class="sr_time"></div>
 				<div class="tab-container">
 					<table cellpadding="0" cellspacing="0"  id="sr_everyday">
@@ -231,40 +226,6 @@
 							{{# layui.each(v, function(k2, v2){ }}
 							<td>{{ v2.count }}</td>
 							{{# }); }}
-						</tr>
-						{{# }); }}
-					</table>
-				</div>
-			</div>
-			<!--员工数据-->
-			<div class="sr_table fl" id="stTab2">
-				<div class="sr_time">统计员工：{{ d.user_list.length }} 人</div>
-				<div class="tab-container">
-					<table cellpadding="0" cellspacing="0" id="sr_staff">
-						<tr>
-							<th><div class="container"><span>员工姓名</span></div></th>
-							<th><div class="container"><span>职位</span></div></th>
-							{{# layui.each(d.statistics, function(k, v){ }}
-							<th><div class="container"><span>{{ v.name }}<i class="on_btn"></i></span></div></th>
-							{{# }); }}
-							<th><div class="container"><span>操作</span></div></th>
-						</tr>
-						<tr class="sr_total">
-							<td>合计</td>
-							<td>&nbsp;</td>
-							{{# layui.each(d.count, function(k, v){ }}
-							<td>{{ v.count }}</td>
-							{{# }); }}
-							<td>&nbsp;</td>
-						</tr>
-						{{# layui.each(d.user_list, function(k, v){ }}
-						<tr class="sr_li">
-							<td>{{ v.realname }}</td>
-							<td class="min-width130">{{ v.role_names }}</td>
-							{{# layui.each(v.data, function(k2, v2){ }}
-							<td>{{ v2.count }}</td>
-							{{# }); }}
-							<td><a target="_blank" href="{:U('System/Statistics/mymarket')}?system_user_id={{ v.system_user_id }}&logtime={{# $.getUrlParam('logtime') }}">详情</a></td>
 						</tr>
 						{{# }); }}
 					</table>
