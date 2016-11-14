@@ -17,6 +17,7 @@
 	            	<span class="title_text">营销统计管理</span>
 	            </div>
 	            <div class="title_right fr clearfix">
+	            	<!--<a href="{:U('System/Statistics/marketSetAdd')}" class="setup_btn">公式测试入口</a>-->
 	            	<a href="{:U('System/Statistics/marketStandard')}" class="return">设置合格标准</a>
 	            	<!--<a href="javascript:;" class="export_btn">导出数据</a>-->
 	            </div>
@@ -76,8 +77,8 @@
 	        	</div>
 	        	<!-- 统计报表 -->
 	        	<div class="statistics_report clearfix" id="demo_body">
-	        		<span class="main_title fl">客户量统计报表</span>
-	        		<div class="sr_tab fl clearfix">
+	        		<span class="main_title">客户量统计报表</span>
+	        		<div class="sr_tab  clearfix">
 	        			<div class="current" id="tab1" onclick="doTabClick(this)">每日数据</div>
 	        			<div  id="tab2" onclick="doTabClick(this)">员工数据</div>
 	        		</div>
@@ -215,7 +216,7 @@
 		</script>
 		<script type="text/html" id="templets_content">
 			<!-- 每日数据 -->
-			<div class="sr_table fl" id="stTab1" style="display:block;">
+			<div class="sr_table" id="stTab1" style="display:block;">
 				<div class="sr_time"></div>
 				<div class="tab-container">
 					<table cellpadding="0" cellspacing="0"  id="sr_everyday">
@@ -243,7 +244,7 @@
 				</div>
 			</div>
 			<!--员工数据-->
-			<div class="sr_table fl" id="stTab2">
+			<div class="sr_table" id="stTab2">
 				<div class="sr_time">统计员工：{{ d.user_list.length }} 人</div>
 				<div class="tab-container">
 					<table cellpadding="0" cellspacing="0" id="sr_staff">
