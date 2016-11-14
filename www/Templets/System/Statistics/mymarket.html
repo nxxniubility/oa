@@ -9,9 +9,6 @@
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/js/glDatePicker/glDatePicker.default.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/my.market.css">
-		<script>
-			var jump_code = "{$jump_code}";
-		</script>
 	</head>
 	<body>
 		<!--<link rel="stylesheet" href="__PUBLIC__/css/common.css">-->
@@ -38,599 +35,241 @@
 							</div>
 		        			<span>{$systemUserInfo['realname']}({$systemUserInfo['role_names']})</span>
 		        		</div>
-		        		
-		        		<!-- 日期 -->
-		        		<div class="search_day fl clearfix">
-		        			<div class="startime_box fl">
-								<span>日期</span>		        				
-			        			<input type="text" class="afTime startime" name="startime" value="" readonly="readonly" placeholder="开始时间">		        			
-			        		</div>
-		        			<p>至</p>
-		        			<div class="endtime_box fl">
-			        			<input type="text" class="afTime endtime" name="endtime" value="" readonly="readonly" placeholder="结束时间">
-		        			</div>
-							<input type="hidden" name="system_user_id" value="{$data.request.system_user_id}">
-			        		<input type="submit" class="search_btn fl" value="搜索">
-			        		<div class="search_des_area fl">{$systemUserInfo['zonename']}</div>
-		        		</div>
+
+						<!-- 日期 -->
+						<div class="search_day fl clearfix">
+							<div class="startime_box fl">
+								<span>日期</span>
+								<input type="text" class="afTime startime" name="startime" value="" readonly="readonly" placeholder="开始时间">
+							</div>
+							<p>至</p>
+							<div class="endtime_box fl">
+								<input type="text" class="afTime endtime" name="endtime" value="" readonly="readonly" placeholder="结束时间">
+							</div>
+						</div>
+						<input type="hidden" name="logtime" value="">
+						<input type="hidden" name="system_user_id" value="">
+						<input type="submit" class="search_btn fl" value="搜索" style="margin-top: 16px;">
 	        		</form>
 	        	</div>
-	        	
-	        	<!-- 汇总统计 -->
-	        	<div class="collect">
-	        		<span class="main_title">客户量汇总统计</span>
-	        		<table cellpadding="0" cellspacing="0" id="collecr_table">
-	        			<tr>
-	        				<th class="firItem">新增量</th>
-	        				<th>分配量</th>
-	        				<th>出库量</th>
-	        				<th>到访量</th>
-	        				<th>订单量</th>
-	        				<th>退款量</th>
-	        				<th>到访率</th>
-	        				<th>成交率</th>
-	        				<th>退款率</th>
-	        				<th>总转率</th>
-	        			</tr>
-	        			<tr>
-	        				<td class="firItem">{$dataMarket['count']['addcount']?$dataMarket['count']['addcount']:0}</td>
-	        				<td>{$dataMarket['count']['allocationcount']?$dataMarket['count']['allocationcount']:0}</td>
-	        				<td>{$dataMarket['count']['acceptcount']?$dataMarket['count']['acceptcount']:0}</td>
-	        				<td>{$dataMarket['count']['visitcount']?$dataMarket['count']['visitcount']:0}</td>
-	        				<td>{$dataMarket['count']['ordercount']?$dataMarket['count']['ordercount']:0}</td>
-	        				<td>{$dataMarket['count']['refundcount']?$dataMarket['count']['refundcount']:0}</td>
-	        				<td>{$dataMarket['count']['visitratio']?$dataMarket['count']['visitratio']:0}%</td>
-	        				<td>{$dataMarket['count']['conversionratio']?$dataMarket['count']['conversionratio']:0}%</td>
-	        				<td>{$dataMarket['count']['chargebackratio']?$dataMarket['count']['chargebackratio']:0}%</td>
-	        				<td>{$dataMarket['count']['totalratio']?$dataMarket['count']['totalratio']:0}%</td>
-	        			</tr>
-	        		</table>
-	        	</div>
-	        	
-	        	<!-- 单项统计 -->
-	        	<div class="individual_event">
-	        		<span class="main_title">客户量单项指标统计</span>
-					<div class="chart_container">
-						<ul class="chart_tab fl clearfix">
-							<li data-value="addcount">新增量</li>
-							<li data-value="acceptcount">出库量</li>
-							<li data-value="switchcount">转出量</li>
-							<li data-value="restartcount">放弃量</li>
-							<li data-value="recyclecount">系统回收量</li>
-							<li data-value="callbackcount">已回访量</li>
-							<li data-value="attitudecount">跟进次数</li>
-							<li data-value="visitcount">到访量</li>
-							<li data-value="ordercount">订单量</li>
-							<li data-value="refundcount">退款量</li>
-							<li data-value="visitratio">到访率</li>
-							<li data-value="conversionratio">成交率</li>
-							<li data-value="chargebackratio">退款率</li>
-							<li data-value="totalratio">总转率</li>
-						</ul>
-						<div class="chart_main active fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">新增量:{$dataMarket.count.addcount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="addcount">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">出库量:{$dataMarket.count.acceptcount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="acceptcount">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">转出量:{$dataMarket.count.switchcount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="switchcount">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats">
-								</div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">放弃量:{$dataMarket.count.restartcount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="restartcount">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">系统回收量:{$dataMarket.count.recyclecount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="recyclecount">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">已回访量:{$dataMarket.count.callbackcount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="callbackcount">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">跟进次数:{$dataMarket.count.attitudecount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="attitudecount">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">到访量:{$dataMarket.count.visitcount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="visitcount">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">订单量:{$dataMarket.count.ordercount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="ordercount">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">退款量:{$dataMarket.count.refundcount}</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-										<option value="2">来源渠道</option>
-										<option value="3">客户质量</option>
-										<option value="4">意向课程</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="refundcount">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-								<!-- 来源渠道 -->
-								<div class="channel_box clearfix daily_channel box2">
-									<div class="channel_bar bar2"></div>
-									<div class="channel_pie pie2"></div>
-								</div>
-								<!-- 信息质量 -->
-								<div class="channel_box clearfix daily_channel box3">
-									<div class="channel_bar bar3"></div>
-									<div class="channel_pie pie3"></div>
-								</div>
-								<!-- 课程 -->
-								<div class="channel_box clearfix daily_channel box4">
-									<div class="channel_bar bar4"></div>
-									<div class="channel_pie pie4"></div>
-								</div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">到访率:{$dataMarket.count.visitratio}%</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="visitratio">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">成交率:{$dataMarket.count.conversionratio}%</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="conversionratio">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">退款率:{$dataMarket.count.chargebackratio}%</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="chargebackratio">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-							</div>
-						</div>
-						<div class="chart_main fl">
-							<div class="chart_top clearfix">
-								<span class="chart_toptitle">总转率:{$dataMarket.count.totalratio}%</span>
-								<div class="chart_topright fr">
-									<p>选择指标:</p>
-									<select autocomplete="off">
-										<option value="1">每日统计</option>
-									</select>
-								</div>
-							</div>
-							<div class="chart_content new_amount" id="totalratio">
-								<div class="please_select">
-									<p><i></i>暂无该项数据.</p>
-								</div>
-								<!-- 每日统计 -->
-								<div class="daily_stats"></div>
-							</div>
-						</div>
-
+				<!-- 汇总统计 -->
+				<div class="collect" id="count_body">
+					<span class="main_title">客户量汇总统计</span>
+				</div>
+				<!-- 单项统计 -->
+				<div class="individual_event" id="btn_body">
+					<span class="main_title">客户量单项指标统计</span>
+				</div>
+				<!-- 统计报表 -->
+				<div class="statistics_report clearfix" id="demo_body">
+					<span class="main_title fl">客户量统计报表</span>
+					<div class="sr_tab fl clearfix">
+						<div class="current" id="tab1" onclick="doTabClick(this)">每日数据</div>
+						<div  id="tab2" onclick="doTabClick(this)">员工数据</div>
 					</div>
-	        	</div>
-	        	
-	        	<!-- 统计报表 -->
-	        	<div class="statistics_report">
-	        		<span class="main_title">客户量统计报表</span>
-	        		<div class="sr_table active">
-		        		<?php $temp_daytime = explode(',', $dataMarket['daytime']); ?>
-		        		<div class="sr_time">统计时间：{$temp_daytime[0]}至{$temp_daytime[1]}</div>
-		        		<div class="tab-container">
-			        		<table cellpadding="0" cellspacing="0"  id="sr_everyday">
-			        			<tr>
-			        				<th><div class="container"><span>统计时间<i class="on_btn"></i></span></div></th>
-			        				<th><div class="container"><span>新增量<i class="on_btn"></i></span></div></th>
-			        				<th><div class="container"><span>分配量<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>出库量<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>转出量<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>放弃量<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>系统回收量<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>赎回量<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>已回访量<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>跟进次数<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>到访量<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>订单量<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>退款量<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>到访率<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>成交率<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>退款率<i class="on_btn"></i></span></div></th>
-									<th><div class="container"><span>总转率<i class="on_btn"></i></span></div></th>
-			        			</tr>
-			        			<tr class="sr_total">
-			        				<td>合计</td>
-			        				<td>{$dataMarket['count']['addcount']?$dataMarket['count']['addcount']:0}</td>
-			        				<td>{$dataMarket['count']['allocationcount']?$dataMarket['count']['allocationcount']:0}</td>
-									<td>{$dataMarket['count']['acceptcount']?$dataMarket['count']['acceptcount']:0}</td>
-									<td>{$dataMarket['count']['switchcount']?$dataMarket['count']['switchcount']:0}</td>
-									<td>{$dataMarket['count']['restartcount']?$dataMarket['count']['restartcount']:0}</td>
-									<td>{$dataMarket['count']['recyclecount']?$dataMarket['count']['recyclecount']:0}</td>
-									<td>{$dataMarket['count']['redeemcount']?$dataMarket['count']['redeemcount']:0}</td>
-									<td>{$dataMarket['count']['callbackcount']?$dataMarket['count']['callbackcount']:0}</td>
-									<td>{$dataMarket['count']['attitudecount']?$dataMarket['count']['attitudecount']:0}</td>
-									<td>{$dataMarket['count']['visitcount']?$dataMarket['count']['visitcount']:0}</td>
-									<td>{$dataMarket['count']['ordercount']?$dataMarket['count']['ordercount']:0}</td>
-									<td>{$dataMarket['count']['refundcount']?$dataMarket['count']['refundcount']:0}</td>
-									<td>{$dataMarket['count']['visitratio']?$dataMarket['count']['visitratio']:0}%</td>
-									<td>{$dataMarket['count']['conversionratio']?$dataMarket['count']['conversionratio']:0}%</td>
-									<td>{$dataMarket['count']['chargebackratio']?$dataMarket['count']['chargebackratio']:0}%</td>
-									<td>{$dataMarket['count']['totalratio']?$dataMarket['count']['totalratio']:0}%</td>
-			        			</tr>
-			        			<foreach name="dataMarket['days']" item="v" key="k">
-									<tr class="sr_li">
-										<td>{$v.day}</td>
-										<td>{$v.addcount}</td>
-										<td>{$v.allocationcount}</td>
-										<td>{$v.acceptcount}</td>
-										<td>{$v.switchcount}</td>
-										<td>{$v.restartcount}</td>
-										<td>{$v.recyclecount}</td>
-										<td>{$v.redeemcount}</td>
-										<td>{$v.callbackcount}</td>
-										<td>{$v.attitudecount}</td>
-										<td>{$v.visitcount}</td>
-										<td>{$v.ordercount}</td>
-										<td>{$v.refundcount}</td>
-										<td>{$v.visitratio}%</td>
-										<td>{$v.conversionratio}%</td>
-										<td>{$v.chargebackratio}%</td>
-										<td>{$v.totalratio}%</td>
-									</tr>
-								</foreach>
-			        		</table>
-			        	</div>
-		        	</div>
-	        	</div>
+					<div class="dn" id="temp_body"></div>
+				</div>
 	        </div>
 		</div>
 
-		<script>
-			var get_info_url = '/SystemApi/Data/getDataMarketInfo';
-			var market_daytime = '{$data.request.daytime}';
-			var market_system_user_id = '{$data.request.system_user_id}';
-			var market_zone_id = '';
-			var market_role_id = '';
+		<div id="mask"></div>
+		<script type="text/html" id="templets_zone">
+			<span class="city_title"><em>请选择区域</em><i></i></span>
+			<div class="seach_city_show dn">
+				<div class="show_title">请选择区域</div>
+				<div class="show_content">
+					{{# if(d.level==1){ }}
+					<ul class="city_largearea clearfix">
+						{{# layui.each(d.children, function(k, v){ }}
+						<li><a href="javascript:;">{{ v.name }}</a></li>
+						{{# }); }}
+					</ul>
+					{{# layui.each(d.children, function(k, v){ }}
+					<div class="show_city_cont">
+						{{# layui.each(v.children, function(k2, v2){ }}
+						<div class="section">
+							<span id="zone_{{ v2.zone_id }}" data-level="{{ v2.level }}" data-value="{{ v2.zone_id }}">{{ v2.name }}</span>
+							<ul class="city_partition clearfix">
+								{{# layui.each(v2.children, function(k3, v3){ }}
+								<li><a href="javascript:;" data-level="{{ v3.level }}" id="zone_{{ v3.zone_id }}" data-value="{{ v3.zone_id }}">{{ v3.name }}</a></li>
+								{{# }); }}
+							</ul>
+						</div>
+						{{# }); }}
+					</div>
+					{{# }); }}
+					{{# } }}
+					<input type="button" class="reset_btn" value="重置">
+					<input type="hidden" name="zone_id" value="{{# $.getUrlParam('zone_id') }}" autocomplete="off">
+				</div>
+			</div>
+		</script>
+		<script type="text/html" id="templets_role">
+			{{# layui.each(d, function(k, v){ }}
+			<li>
+				<div class="position_department clearfix">
+					<span>{{ v.departmentname }}</span>
+					<a href="javascript:;"><i></i></a>
+				</div>
+				<div class="position_destail clearfix">
+					{{# layui.each(v.children, function(k2, v2){ }}
+					<label for="sale{{ v2.id }}">
+						<input type="checkbox" name="sale_inp" data-name="{{ v2.name }}" value="{{ v2.id }}" class="sale"  id="sale{{ v2.id }}">
+						<span>{{ v2.name }}</span>
+					</label>
+					{{# }); }}
+				</div>
+			</li>
+			{{# }); }}
+		</script>
+		<script type="text/html" id="templets_count">
+			<table cellpadding="0" cellspacing="0" id="collecr_table">
+				<tr>
+					{{# layui.each(d.statistics, function(k, v){ }}
+					{{# if(k==0){ }}
+					<th class="firItem">{{ v.name }}</th>
+					{{# }else{ }}
+					<th>{{ v.name }}</th>
+					{{# } }}
+					{{# }); }}
+				</tr>
+				<tr>
+					{{# layui.each(d.count, function(k, v){ }}
+					{{# if(k==0){ }}
+					<td class="firItem">{{ v.count }}</td>
+					{{# }else{ }}
+					<td>{{ v.count }}</td>
+					{{# } }}
+					{{# }); }}
+				</tr>
+			</table>
+		</script>
+		<script type="text/html" id="templets_btn">
+			<div class="chart_container">
+				<ul class="chart_tab fl clearfix">
+					{{# layui.each(d.statistics, function(k, v){ }}
+					{{# if(k==0){ }}
+					<li class="cur" data-value="btn_{{ v.show_id }}">{{ v.name }}</li>
+					{{# }else{ }}
+					<li data-value="btn_{{ v.show_id }}">{{ v.name }}</li>
+					{{# } }}
+					{{# }); }}
+				</ul>
+				{{# layui.each(d.count, function(k, v){ }}
+				{{# if(k==0){ }}
+				<div class="chart_main active fl">
+					{{# }else{ }}
+					<div class="chart_main fl">
+						{{# } }}
+						<div class="chart_top clearfix">
+							<span class="chart_toptitle">{{ v.name }}:{{ v.count }}</span>
+							<div class="chart_topright fr">
+								<p>选择指标:</p>
+								<select autocomplete="off">
+									<option value="1">每日统计</option>
+									<option value="2">来源渠道</option>
+									<option value="3">客户质量</option>
+									<option value="4">意向课程</option>
+								</select>
+							</div>
+						</div>
+						<div class="chart_content new_amount" id="btn_{{ v.show_id }}">
+							<div class="please_select">
+								<p><i></i>暂无该项数据.</p>
+							</div>
+							<!-- 每日统计 -->
+							<div class="daily_stats"></div>
+							<!-- 来源渠道 -->
+							<div class="channel_box clearfix daily_channel box2">
+								<div class="channel_bar bar2"></div>
+								<div class="channel_pie pie2"></div>
+							</div>
+							<!-- 信息质量 -->
+							<div class="channel_box clearfix daily_channel box3">
+								<div class="channel_bar bar3"></div>
+								<div class="channel_pie pie3"></div>
+							</div>
+							<!-- 课程 -->
+							<div class="channel_box clearfix daily_channel box4">
+								<div class="channel_bar bar4"></div>
+								<div class="channel_pie pie4"></div>
+							</div>
+						</div>
+					</div>
+					{{# }); }}
+				</div>
+		</script>
+		<script type="text/html" id="templets_content">
+			<!-- 每日数据 -->
+			<div class="sr_table fl" id="stTab1" style="display:block;">
+				<div class="sr_time"></div>
+				<div class="tab-container">
+					<table cellpadding="0" cellspacing="0"  id="sr_everyday">
+						<tr>
+							<th><div class="container"><span>统计时间<i class="on_btn"></i></span></div></th>
+							{{# layui.each(d.statistics, function(k, v){ }}
+							<th><div class="container"><span>{{ v.name }}<i class="on_btn"></i></span></div></th>
+							{{# }); }}
+						</tr>
+						<tr class="sr_total">
+							<td>合计</td>
+							{{# layui.each(d.count, function(k, v){ }}
+							<td>{{ v.count }}</td>
+							{{# }); }}
+						</tr>
+						{{# layui.each(d.days, function(k, v){ }}
+						<tr class="sr_li">
+							<td>{{ k }}</td>
+							{{# layui.each(v, function(k2, v2){ }}
+							<td>{{ v2.count }}</td>
+							{{# }); }}
+						</tr>
+						{{# }); }}
+					</table>
+				</div>
+			</div>
+			<!--员工数据-->
+			<div class="sr_table fl" id="stTab2">
+				<div class="sr_time">统计员工：{{ d.user_list.length }} 人</div>
+				<div class="tab-container">
+					<table cellpadding="0" cellspacing="0" id="sr_staff">
+						<tr>
+							<th><div class="container"><span>员工姓名</span></div></th>
+							<th><div class="container"><span>职位</span></div></th>
+							{{# layui.each(d.statistics, function(k, v){ }}
+							<th><div class="container"><span>{{ v.name }}<i class="on_btn"></i></span></div></th>
+							{{# }); }}
+							<th><div class="container"><span>操作</span></div></th>
+						</tr>
+						<tr class="sr_total">
+							<td>合计</td>
+							<td>&nbsp;</td>
+							{{# layui.each(d.count, function(k, v){ }}
+							<td>{{ v.count }}</td>
+							{{# }); }}
+							<td>&nbsp;</td>
+						</tr>
+						{{# layui.each(d.user_list, function(k, v){ }}
+						<tr class="sr_li">
+							<td>{{ v.realname }}</td>
+							<td class="min-width130">{{ v.role_names }}</td>
+							{{# layui.each(v.data, function(k2, v2){ }}
+							<td>{{ v2.count }}</td>
+							{{# }); }}
+							<td><a target="_blank" href="{:U('System/Statistics/mymarket')}?system_user_id={{ v.system_user_id }}&logtime={{# $.getUrlParam('logtime') }}">详情</a></td>
+						</tr>
+						{{# }); }}
+					</table>
+				</div>
+			</div>
 		</script>
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layui/layui.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/common.js"></script>
 		<script src="__PUBLIC__/js/glDatePicker/glDatePicker.js"></script>
 		<script src="__PUBLIC__/js/highcharts/highcharts.js"></script>
 		<script src="__PUBLIC__/js/highcharts/modules/exporting.js"></script>
-		<script src="__PUBLIC__/js/layer/layer.js"></script>
-		<script src="__PUBLIC__/js/common.js"></script>
-		<script src="__PUBLIC__/js/my.market.js?v=20160927"></script>
+		<script src="__PUBLIC__/js/statistics.mymarket.js?v=20160927"></script>
 	</body>
 </html>

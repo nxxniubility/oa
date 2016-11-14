@@ -142,7 +142,7 @@ class DataService extends BaseService
     {
         //必传参数
         if(empty($param['logtime'])) return array('code'=>301,'msg'=>'请选择搜索时间');
-        if(empty($param['department_id']) && empty($param['role_id'])) return array('code'=>302,'msg'=>'请选择部门或者职位');
+        if(empty($param['department_id']) && empty($param['role_id']) && empty($param['system_user_id']) ) return array('code'=>302,'msg'=>'请选择部门或者职位');
         if(!empty($param['role_id'])){
             $_role_id = explode(',',$param['role_id']);
             $_role_info = D('Role','Service')->getRoleInfo(array('role_id'=>$_role_id[0]));
@@ -186,7 +186,11 @@ class DataService extends BaseService
         //获取条件 时间区间
         $_where_log['logtime'] = array(array('EGT',strtotime($logtime[0])),array('ELT',strtotime($logtime[1])));
         //查询时间段内产生数据的员工
-        $_data_user = D('DataLogs')->field($_department_config['about_user'])->where($_where_log)->group($_department_config['about_user'])->select();
+        if(empty($param['system_user_id'])){
+            $_data_user = D('DataLogs')->field($_department_config['about_user'])->where($_where_log)->group($_department_config['about_user'])->select();
+        }else{
+            $_data_user[][$_department_config['about_user']] = $param['system_user_id'];
+        }
         if(empty($_data_user)) return array('code'=>0, 'msg'=>'找不到统计数据');
         //获取部门公式列表
         $_formula_list = D('DataFormula')->getList(array('department_id'=>$_department_id));
@@ -307,9 +311,13 @@ class DataService extends BaseService
         //获取条件 时间区间
         $_where_log['logtime'] = array(array('EGT',strtotime($_logtime[0])),array('ELT',strtotime($_logtime[1])));
         //查询时间段内产生数据的员工
-        $_data_user = D('DataLogs')->field($_department_config['about_user'])->where($_where_log)->group($_department_config['about_user'])->select();
-        foreach($_data_user as $k=>$v){
-            $user_ids[] = $v[$_department_config['about_user']];
+        if(empty($param['system_user_id'])){
+            $_data_user = D('DataLogs')->field($_department_config['about_user'])->where($_where_log)->group($_department_config['about_user'])->select();
+            foreach($_data_user as $k=>$v){
+                $user_ids[] = $v[$_department_config['about_user']];
+            }
+        }else{
+            $user_ids[] = $param['system_user_id'];
         }
         $_put_data = array();
         //补全空白天数内容
@@ -326,7 +334,7 @@ class DataService extends BaseService
             }
         }
         //公式运算结果
-        $_put_data_two = $this->setAnswerTwo($_department_config,$_logtime,$param['role_id'],$param['zone_id']);
+        $_put_data_two = $this->setAnswerTwo($user_ids,$_department_config,$_logtime,$param['role_id'],$param['zone_id']);
         $_put_data = array_merge($_put_data,$_put_data_two);
         return array('code'=>0,'data'=>$_put_data);
     }
@@ -645,7 +653,7 @@ class DataService extends BaseService
     /*
      * 公式计算
      */
-    protected function setAnswer($user_id,$department_config,$logtime,$role_id,$zone_id)
+    protected function setAnswer($user_id,$department_config,$logtime,$role_id=null,$zone_id=null)
     {
         //获取关联地区
         if(!empty($zone_id)){
@@ -657,12 +665,14 @@ class DataService extends BaseService
             }
             $_where_log['zone_id'] = array('IN', $_zone_ids);
         }
-        if($department_config['about_user']=='createuser_id'){
-            $_where_log['create_role_id'] = array('IN', $role_id);
-        }elseif($department_config['about_user']=='updateuser_id'){
-            $_where_log['update_role_id'] = array('IN', $role_id);
-        }elseif($department_config['about_user']=='system_user_id'){
-            $_where_log['system_role_id'] = array('IN', $role_id);
+        if(!empty($role_id)){
+            if($department_config['about_user']=='createuser_id'){
+                $_where_log['create_role_id'] = array('IN', $role_id);
+            }elseif($department_config['about_user']=='updateuser_id'){
+                $_where_log['update_role_id'] = array('IN', $role_id);
+            }elseif($department_config['about_user']=='system_user_id'){
+                $_where_log['system_role_id'] = array('IN', $role_id);
+            }
         }
         //换取运运算符号
         $_reg = "/\+|\-|\*|\/|\)\*|\)\//";
@@ -724,7 +734,7 @@ class DataService extends BaseService
     /*
     * 公式计算
     */
-    protected function setAnswerTwo($department_config,$logtime,$role_id,$zone_id)
+    protected function setAnswerTwo($user_id=null,$department_config,$logtime,$role_id=null,$zone_id=null)
     {
         //获取关联地区
         if(!empty($zone_id)){
@@ -736,12 +746,17 @@ class DataService extends BaseService
             }
             $_where_log['zone_id'] = array('IN', $_zone_ids);
         }
-        if($department_config['about_user']=='createuser_id'){
-            $_where_log['create_role_id'] = array('IN', $role_id);
-        }elseif($department_config['about_user']=='updateuser_id'){
-            $_where_log['update_role_id'] = array('IN', $role_id);
-        }elseif($department_config['about_user']=='system_user_id'){
-            $_where_log['system_role_id'] = array('IN', $role_id);
+        if(!empty($role_id)){
+            if($department_config['about_user']=='createuser_id'){
+                $_where_log['create_role_id'] = array('IN', $role_id);
+            }elseif($department_config['about_user']=='updateuser_id'){
+                $_where_log['update_role_id'] = array('IN', $role_id);
+            }elseif($department_config['about_user']=='system_user_id'){
+                $_where_log['system_role_id'] = array('IN', $role_id);
+            }
+        }
+        if(!empty($user_id)){
+            $_where_log[$department_config['about_user']] = array('IN', $user_id);
         }
         //换取运运算符号
         $_reg = "/\+|\-|\*|\/|\)\*|\)\//";
