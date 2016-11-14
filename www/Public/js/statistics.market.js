@@ -35,7 +35,6 @@ $(function(){
                 laytpl(templets_content.innerHTML).render(redata.data, function(result){
                     $('#demo_body').append(result).show();
                     
-                    
 					exceedingWidth();	//  统计报表超出当前分辨率宽度则出现滚动条
                     setWidth();			//  统计报表表头th内容偏多的项修改width;
                 });
