@@ -205,7 +205,7 @@
         var _paging = $('.paging').eq(0);
         var data = {
             msgtype : type,
-            page : ((page-1)*10)+',10'
+            page : ((page-1)*10)+',5'
         };
         common_ajax2(data,'/SystemApi/Message/getMsgList','no',_demoHtml,1);
         function _demoHtml(redata){
