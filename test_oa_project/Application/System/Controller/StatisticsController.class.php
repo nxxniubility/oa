@@ -19,20 +19,6 @@ class StatisticsController extends SystemController
     */
     public function market()
     {
-        $request = I('get.');
-        //默认时间
-        if(empty($request['startime'])){
-            $request['startime'] = date('Y/m/d', strtotime('-7 day'));
-        }
-        if(empty($request['endtime'])){
-            $request['endtime'] = date('Y/m/d');
-        }
-        $where['daytime'] = $request['startime'].','.$request['endtime'];
-        $where['zone_id'] = $request['zone_id']?$request['zone_id']:$this->system_user['zone_id'];
-        $where['role_id'] = $request['role_id'];
-        $data['my_zone_id'] = $this->system_user['zone_id'];
-
-        $this->assign('data', $data);
         $this->display();
     }
 
@@ -44,31 +30,18 @@ class StatisticsController extends SystemController
     */
     public function mymarket()
     {
-        //实例化
-        $DataService = new DataService();
         $request = I('get.');
         if (empty($request['system_user_id'])) {
             $request['system_user_id'] = $this->system_user_id;
         }
-        //默认时间
-        if(empty($request['startime'])){
-            $request['startime'] = date('Y/m/d', strtotime('-7 day'));
-        }
-        if(empty($request['endtime'])){
-            $request['endtime'] = date('Y/m/d');
-        }
         $where['system_user_id'] = $request['system_user_id'];
-        $where['daytime'] = $request['startime'].','.$request['endtime'];
         $result = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$where['system_user_id']));
         $systemUserInfo = $result['data'];
-        $result = $DataService->getDataMarket($where);
-        $dataMarket = $result['data'];
-        $dataMarket['daytime'] = $where['daytime'];
-        $request['daytime'] = $request['startime'].','.$request['endtime'];
-        $data['request'] = $request;
-        $this->assign('dataMarket', $dataMarket);
+        if(empty($request['role_id'])) {
+            redirect(__SELF__.'&role_id='.$systemUserInfo['roles'][0]['id']);
+        }
+        $this->assign('request', $request);
         $this->assign('systemUserInfo', $systemUserInfo);
-        $this->assign('data', $data);
         $this->display();
     }
 

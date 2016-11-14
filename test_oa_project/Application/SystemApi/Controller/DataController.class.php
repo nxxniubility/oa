@@ -22,20 +22,17 @@ class DataController extends SystemApiController
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getDataLogs($requesr=null)
+    public function getDataLogs()
     {
-        //外部调用？
-        if($requesr===null){
-            $where['logtime'] = I('param.logtime',null);
-            $where['operattype'] = I('param.operattype',null);
-            $where['system_user_id'] = I('param.system_user_id',null);
-            $where['updateuser_id'] = I('param.updateuser_id',null);
-            $where['createuser_id'] = I('param.createuser_id',null);
-            $where['user_id'] = I('param.user_id',null);
-            $where['operator_user_id'] = I('param.operator_user_id',null);
-        }else{
-            $where = $requesr;
-        }
+        //获取参数
+        $where['logtime'] = I('param.logtime',null);
+        $where['operattype'] = I('param.operattype',null);
+        $where['system_user_id'] = I('param.system_user_id',null);
+        $where['updateuser_id'] = I('param.updateuser_id',null);
+        $where['createuser_id'] = I('param.createuser_id',null);
+        $where['user_id'] = I('param.user_id',null);
+        $where['operator_user_id'] = I('param.operator_user_id',null);
+
         $getService = function($where) {
             //去除数组空值
             $where = array_filter($where);
@@ -49,11 +46,7 @@ class DataController extends SystemApiController
             return array('code'=>$result['code'],'msg'=>$result['msg']);
         };
         $reData = $getService($where);
-        if(!empty($request)){
-            return $reData;
-        }else{
-            $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
-        }
+        $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
     }
 
     /*
