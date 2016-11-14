@@ -59,8 +59,7 @@ function selectbox2() {
         }
     });
 
-    $(".dt_btn").on( "click",
-        function() {
+    $(document).on( "click", ".dt_btn", function() {
             var url = $(this).attr("data-url");
             if (url != undefined) window.location.href = url;
             var data_value = $(this).attr('data-value');
@@ -74,8 +73,7 @@ function selectbox2() {
             var callback = $(this).attr('callback');
             if (callback) eval(callback + '(this)');
         });
-    $(document).on('click', '.select2 dt',
-        function(){
+    $(document).on('click', '.select2 dt', function(){
             if ($(this).is(".caption")) return false;
             if ($(this).is(".caption2")) return false;
             $(this).parent().find("dd").toggle();
@@ -152,7 +150,7 @@ $(document).on('click', '.nsSelectPost', function() {
         shift: 1, 					//	出现动画
         content: $(".department")	//  加载主体内容
     });
-    $('.nsClose, .nsDetermine').on('click', function() {
+    $(document).on('click', '.nsClose, .nsDetermine', function() {
         layer.closeAll(); 			// 关闭
     });
 });
@@ -264,7 +262,7 @@ function holiday(){
 	});	
 }
 
-$(".nsRight label").click(function(){
+$(document).on('click', ".nsRight label", function(){
     if($(this).find(".man:checked").val()==undefined) {
         $(".nsNone").hide();
         $(".nssNone").show();
@@ -275,7 +273,7 @@ $(".nsRight label").click(function(){
 })
 $(".nssNone").hide();
 
-$(".nsRight label").click(function(){
+$(document).on('click', ".nsRight label", function(){
     if($(this).find(".man:checked").val()==undefined) {
         $(".edsNone").hide();
         $(".edssNone").show();
