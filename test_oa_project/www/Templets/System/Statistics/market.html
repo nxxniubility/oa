@@ -270,7 +270,11 @@
 								{{# layui.each(v.data, function(k2, v2){ }}
 								<td>{{ v2.count }}</td>
 								{{# }); }}
-								<td><a target="_blank" href="{:U('System/Statistics/mymarket')}?system_user_id={{ v.system_user_id }}&logtime={{# $.getUrlParam('logtime') }}">详情</a></td>
+								<td>
+									{{# if(v.system_user_id!=0){ }}
+									<a target="_blank" href="{:U('System/Statistics/mymarket')}?system_user_id={{ v.system_user_id }}&logtime={{= $.getUrlParam('logtime') }}">详情</a>
+									{{# } }}
+								</td>
 							</tr>
 						{{# }); }}
 					</table>
