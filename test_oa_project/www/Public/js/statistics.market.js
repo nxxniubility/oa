@@ -34,6 +34,10 @@ $(function(){
                 });
                 laytpl(templets_content.innerHTML).render(redata.data, function(result){
                     $('#demo_body').append(result).show();
+                    
+                    
+					exceedingWidth();	//  统计报表超出当前分辨率宽度则出现滚动条
+                    setWidth();			//  统计报表表头th内容偏多的项修改width;
                 });
                 $('#stTab1 .sr_time').text('统计时间：'+$.getUrlParam('logtime','@').split('@')[0]+' 至 '+$.getUrlParam('logtime','@').split('@')[1]);
                 $('#stTab2 .sr_time').text('统计员工：'+$('#sr_staff .sr_li').length+' 人');
@@ -737,12 +741,14 @@ function  DateDiff(sDate1,  sDate2){    //sDate1和sDate2是2006-12-18格式
 };
 
 //  统计报表超出当前分辨率宽度则出现滚动条
-$(document).ready(function(){
-    var tab = $('.tab-container');
-    wrap_width = $('.wrapper_box').width();
-
-    tab.width(wrap_width);
-});
+function exceedingWidth(){
+	$(document).ready(function(){
+	    var tab = $('.tab-container'),
+	    wrap_width = $('.wrapper_box').width();
+	
+	    tab.width(wrap_width);
+	});
+}
 //排序
 $(document).on('click','.on_btn',function(){
     var _num = $(this).parents('th').index();
@@ -765,27 +771,27 @@ $(document).on('click','.on_btn',function(){
 });
 
 //  统计报表
-$(document).ready(function(){
-    //  表头
-    $('#sr_everyday th').each(function(k,v){
-        var _index = $(this).index();
-
-        if(_index == 0){
-            $(this).addClass('one-item');
-        }
-        if(_index == 6){
-            $(this).addClass('one-item');
-        }
-        if(_index == 8){
-            $(this).addClass('one-item');
-        }
-        if(_index == 9){
-            $(this).addClass('one-item');
-        }
-    });
-});
-
-
+function setWidth(){
+	$(document).ready(function(){
+	    //  表头
+	    $('#sr_everyday th').each(function(k,v){
+	        var _index = $(this).index();
+	
+	        if(_index == 0){
+	            $(this).addClass('one-item');
+	        }
+	        if(_index == 5){
+	            $(this).addClass('one-item');
+	        }
+	        if(_index == 7){
+	            $(this).addClass('one-item');
+	        }
+	        if(_index == 8){
+	            $(this).addClass('one-item');
+	        }
+	    });
+	});
+}
 
 // 开始时间
 $(document).ready(function(){
