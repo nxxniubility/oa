@@ -46,7 +46,7 @@
     </div>
 
     <div class="msgBox clearfix">
-        <div class="systemUpdate">
+        <!-- <div class="systemUpdate">
             <div class="msgBoxTop clearfix">
                 <span>系统更新</span>
                 <em onclick="location.href='{:U(updateRecord)}'">更多&gt;&gt;</em>
@@ -63,7 +63,7 @@
                     </li>
                 </foreach>
             </ul>
-        </div>
+        </div> -->
         <div class="announcement">
             <div class="msgBoxTop">
                 <span>通知公告</span>
@@ -124,7 +124,7 @@
 <script>
     $('#show_node').sortable();
     $('#informMore').click(function(){
-            alert("功能未开通,暂无任何通告.");
+        window.location.href="{:U('System/Information/msgList')}";
     });
 </script>
 
