@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+		<title>系统首页-{$siteinfo.sitename}</title>
+		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+		<link rel="stylesheet" href="__PUBLIC__/css/marketSetAdd.css">
+		<script>
+			var jump_code = "{$jump_code}";
+		</script>
+	</head>
+	<body>
+		<div class="wrapper-box">
+			<div class="title clearfix">
+	            <div class="title-left">
+	            	<span class="title-text">营销统计管理</span>
+	            	<span><em>></em>设置合格标准</span>
+	            </div>
+	            <div class="title-right fr clearfix">
+	            	<a href="javascript:location.reload();" class="setup-btn">刷新</a>
+	            	<a href="javascript:history.go(-1);" class="return">返回</a>
+	            </div>
+	        </div>
+	        
+	        <!-- 没有部门统计项s -->
+	        <!--<p class="nothing">暂无各部门相关职位统计项目，请先新建。</p>-->
+	        <!-- 没有部门统计项e -->
+	        
+	        <div class="statistical-term-main">
+	        	<div class="statistical-row clearfix">
+	        		<div class="row-left"><i>&#42</i>统计部门：</div>
+	        		<div class="row-right">
+	        			<select class="department-choose">
+	        				<option value="0" selected="selected">请选择统计部门</option>
+	        				<option value="1">客服部</option>
+	        				<option value="2">邀约部</option>
+	        				<option value="3">销售部</option>
+	        				<option value="4">教务部</option>
+	        			</select>
+	        		</div>
+	        	</div>
+	        	<div class="statistical-row clearfix">
+	        		<div class="row-left"><i>&#42</i>员工定位：</div>
+	        		<div class="row-right">
+	        			<div class="employee-type">
+	        				<span class="selected">创建人</span>
+	        				<span>出库人</span>
+	        				<span>所属人</span>
+	        			</div>
+	        		</div>
+	        	</div>
+	        	<div class="statistical-row clearfix">
+	        		<div class="row-left singlelist-height"><i>&#42</i>统计单项：</div>
+	        		<div class="row-right singlelist-height">
+	        			<div class="single-list clearfix">
+	        				<ul class="display-list clearfix">
+	        					<li><span>统计单项：<em>出库量</em></span></li>
+	        					<li><span>统计公式：<em>出库量</em></span></li>
+	        					<li><span>=</span></li>
+	        					
+	        				</ul>
+	        				<div class="operation-btn">
+	        					<div class="edit-box"><i></i><input type="button" class="edit-btn" value="修改" /></div>
+	        					<div class="delete-box"><i></i><input type="button" class="delete-btn" value="删除" /></div>
+	        				</div>
+	        			</div>
+	        		</div>
+	        	</div>
+	        </div>
+	        
+	        
+	        
+		</div>
+		
+		
+		
+		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
+		<script src="__PUBLIC__/js/common.js"></script>
+		<script src="__PUBLIC__/js/marketSetAdd.js"></script>
+	</body>
+</html>
