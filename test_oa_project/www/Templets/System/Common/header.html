@@ -56,21 +56,19 @@
 		        </li>
 		        <li><a href="javascript:;">在线反馈</a></li>
 		        <li class="message">
-		            <a href="javascript:;">
+		            <a href="{:U('System/Information/msgList')}">
 		                <span id="poll_total_msg" flag="yes">0</span>
 		            </a>
 		            <div class="msgbody">
 		                <div class="msg_con">
 		                    <div class="msgtype" style="display: block">
-		                        <p class="msgtype_title">通知</p>
+		                    	<a href="{:U('System/Information/msgList')}">
+		                        	<p class="msgtype_title">查看通知</p>
+		                        </a>
 		                        <div class="msgtype_list" id="poll_msg_bady" style="display: none">
 		                        </div>
-								<p class="MsgNull" style="text-align: center;clear: both;color: #666;display: none">暂无未读通知</p>
 								<img src="__PUBLIC__/images/loading.gif" style="margin-left: 210px; margin-top: 18px; margin-bottom: 18px;">
 		                    </div>
-		                </div>
-		                <div class="msg_bottom" id="poll_msg_more" style="display: none">
-		                    <a href="{:U('System/Information/msgList')}" target="main" id="checkMore">查看更多</a>
 		                </div>
 		            </div>
 		        </li>

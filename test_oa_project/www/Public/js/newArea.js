@@ -89,7 +89,7 @@ $(function(){
         var data={
             zone_id:zone_id
         };
-        //获取职位详情
+        //获取详情
         common_ajax2(data,'/SystemApi/Zone/getZoneInfo','no',function(redata){
             if(redata.data){
                 layui.use('laytpl', function(){

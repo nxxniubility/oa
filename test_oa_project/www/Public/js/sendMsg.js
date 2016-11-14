@@ -140,7 +140,7 @@ function otherSelectStatus() {
 }
 
 /*添加新/编辑模版*/
-$('.nsSelectPost').on('click', function() {
+$(document).on('click', '.nsSelectPost', function() {
     layer.open({
         type: 1, 					//  页面层
         title: false, 				//	不显示标题栏
@@ -156,7 +156,7 @@ $('.nsSelectPost').on('click', function() {
         layer.closeAll(); 			// 关闭
     });
 });
-$('.nsSelectPostMan').on('click', function() {
+$(document).on('click', '.nsSelectPostMan', function() {
     getSystem ($(':input[name="role_id"]').val(),$(':input[name="zone_id"]').val());
     layer.open({
         type: 1,                    //  页面层
