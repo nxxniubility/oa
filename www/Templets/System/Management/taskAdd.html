@@ -8,9 +8,6 @@
 		<title>系统首页-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/taskAdd.css">
-		<script>
-	        var jump_code = "{$jump_code}";
-	    </script>
 	</head>
 	<body>
 		<div class="wrapper-box">
@@ -27,116 +24,48 @@
 	        <div class="taskadd-main">
 	        	<div class="taskadd-rows clearfix">
 	        		<div class="rows-left"><i>&#42</i>设置部门：</div>
-	        		<div class="rows-right">
-	        			<select class="department-choose">
-	        				<option value="0" selected="selected">请选择统计部门</option>
-	        				<option value="1">客服部</option>
-	        				<option value="2">邀约部</option>
-	        				<option value="3">销售部</option>
-	        				<option value="4">教务部</option>
-	        				<option value="4">财务部</option>
-	        			</select>
+	        		<div class="rows-right" id="body_department">
+						<select class="department-choose">
+							<option value="0" selected="selected">请选择统计部门</option>
+						</select>
 	        		</div>
 	        	</div>
 	        	<div class="taskadd-rows clearfix">
 	        		<div class="rows-left"><i>&#42</i>我的今日任务：</div>
-	        		<div class="rows-right">
-	        			<ul class="mission-today clearfix">
-	        				<li>
-	        					<label for="mission-today1">
-	        						<input type="checkbox" name="" id="mission-today1" />
-	        						<span>今日待联系客户量</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="mission-today2">
-	        						<input type="checkbox" name="" id="mission-today2" />
-	        						<span>今日待跟进客户量</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="mission-today3">
-	        						<input type="checkbox" name="" id="mission-today3" />
-	        						<span>今日将要到访的客户量3</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="mission-today4">
-	        						<input type="checkbox" name="" id="mission-today4" />
-	        						<span>今日待联系客户量</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="mission-today5">
-	        						<input type="checkbox" name="" id="mission-today5" />
-	        						<span>今日毕业班级</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="mission-today6">
-	        						<input type="checkbox" name="" id="mission-today6" />
-	        						<span>今日入班学员量6</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="mission-today7">
-	        						<input type="checkbox" name="" id="mission-today7" />
-	        						<span>今日推广计划任务</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="mission-today8">
-	        						<input type="checkbox" name="" id="mission-today8" />
-	        						<span>今日待审核订单量</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="mission-today9">
-	        						<input type="checkbox" name="" id="mission-today9" />
-	        						<span>今日待审核订单量9</span>
-	        					</label>
-	        				</li>
-	        			</ul>
-	        		</div>
-	        	</div>
-	        	<div class="taskadd-rows clearfix">
-	        		<div class="rows-left"><i>&#42</i>我的统计数据：</div>
-	        		<div class="rows-right">
-	        			<ul class="data clearfix">
-	        				<li>
-	        					<label for="statistical-data1">
-	        						<input type="checkbox" name="" id="statistical-data1" />
-	        						<span>今日待联系客户量</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="statistical-data2">
-	        						<input type="checkbox" name="" id="statistical-data2" />
-	        						<span>今日待跟进客户量</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="statistical-data3">
-	        						<input type="checkbox" name="" id="statistical-data3" />
-	        						<span>今日将要到访的客户量3</span>
-	        					</label>
-	        				</li>
-	        				<li>
-	        					<label for="statistical-data4">
-	        						<input type="checkbox" name="" id="statistical-data4" />
-	        						<span>今日待联系客户量</span>
-	        					</label>
-	        				</li>
-	        			</ul>
+	        		<div class="rows-right" id="body_task">
+
 	        		</div>
 	        	</div>
 	        </div>
-	        
 	    </div>
-	    
-	    
+		<!-- 部门列表-->
+		<script type="text/html">
+			<select class="department-choose">
+				<option value="0" selected="selected">请选择统计部门</option>
+				<option value="1">客服部</option>
+				<option value="2">邀约部</option>
+				<option value="3">销售部</option>
+				<option value="4">教务部</option>
+				<option value="4">财务部</option>
+			</select>
+		</script>
+		<!-- 任务列表-->
+		<script type="text/html" id="tp_task">
+			<ul class="mission-today clearfix">
+				{{# layui.each(d, function(k, v){ }}
+				<li>
+					<label for="mission-today{{= (k+1) }}">
+						<input type="checkbox" name="" id="mission-today{{= (k+1) }}" value="{{ v.task_id }}" />
+						<span>{{ v.task_name }}</span>
+					</label>
+				</li>
+				{{# }); }}
+			</ul>
+		</script>
 	    <script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
+		<script src="__PUBLIC__/js/layui/layui.js"></script>
+		<script src="__PUBLIC__/js/layer/layer.js"></script>
 		<script src="__PUBLIC__/js/common.js"></script>
-		<!--<script src="__PUBLIC__/js/statistics.market.js"></script>-->
+		<script src="__PUBLIC__/js/management.taskadd.js"></script>
 	</body>
 </html>

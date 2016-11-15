@@ -16,6 +16,29 @@ class TaskController extends SystemApiController
         parent::_initialize();
     }
 
+
+    /*
+   |--------------------------------------------------------------------------
+   | 获取任务
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function getTask()
+    {
+        $getService = function(){
+            //获取接口服务层
+            $TaskService = new TaskService();
+            $result = $TaskService->getTask();
+            //返回参数
+            if($result['code']==0){
+                return array('code'=>0,'msg'=>$result['msg'],'data'=>$result['data']);
+            }
+            return array('code'=>$result['code'],'msg'=>$result['msg']);
+        };
+        $reData = $getService();
+        $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
+    }
+
     /*
    |--------------------------------------------------------------------------
    | 获取任务设置列表
