@@ -39,14 +39,12 @@
 	        </div>
 	    </div>
 		<!-- 部门列表-->
-		<script type="text/html">
+		<script type="text/html" id="tp_department">
 			<select class="department-choose">
 				<option value="0" selected="selected">请选择统计部门</option>
-				<option value="1">客服部</option>
-				<option value="2">邀约部</option>
-				<option value="3">销售部</option>
-				<option value="4">教务部</option>
-				<option value="4">财务部</option>
+				{{# layui.each(d, function(k, v){ }}
+				<option value="{{ v.department_id }}">{{ v.departmentname }}</option>
+				{{# }); }}
 			</select>
 		</script>
 		<!-- 任务列表-->
