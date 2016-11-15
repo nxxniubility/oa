@@ -20,21 +20,131 @@
 .statistical-row .row-right {float:left;min-height:32px;}
 .row-right .department-choose {width:378px;height:30px;line-height:30px;font-size:12px;color:#555;text-align:left;text-indent:10px;border:1px solid #ccc;background:#fff;}
 .row-right .employee-type {width:auto;height:32px;font-size:0;}
-.row-right .employee-type span {display:inline-block;line-height:12px;margin-right:10px;padding:10px 15px;font-size:12px;color:#555;border:1px solid #ccc;cursor:pointer;}
+.row-right .employee-type span {display:inline-block;line-height:12px;margin-right:10px;padding:9px 15px;font-size:12px;color:#555;border:1px solid #ccc;cursor:pointer;}
 .row-right .employee-type span.selected {color:#fff;border-color:#53b567;background:#53b567;}
 .statistical-row .row-left.singlelist-height {height:82px;line-height:82px;} 
 .statistical-row .row-right.singlelist-height {min-height:82px;}
-.row-right .single-list {width:904px;min-height:80px;}
-.row-right .single-list ul.display-list {float:left;width:728px;padding:16px 10px;border:1px solid #ccc;margin-right:20px;}
-.single-list .display-list li {float:left;min-height:48px;line-height:48px;font-size:14px;color:#555;}
 
-.single-list .operation-btn {height:82px;line-height:82px;font-size:0;}
-.single-list .operation-btn .edit-box, .single-list .operation-btn .delete-box {display:inline-block;}
-.single-list .operation-btn .edit-box {margin-right:18px;}
-.operation-btn .edit-box i, .operation-btn .delete-box i {display:inline-block;width:17px;height:18px;margin-right:13px;vertical-align:middle;}
-.operation-btn .edit-box input, .operation-btn .delete-box input {font-size:14px;color:#3b3a48;vertical-align:middle;border:none;background:transparent;cursor:pointer;}
-.operation-btn .edit-box i {background:url(../images/statistics_add-01.png) no-repeat 0 0;}
-.operation-btn .delete-box i {background:url(../images/statistics_add-01.png) no-repeat 0 -40px;}
-.operation-btn .edit-box:hover i {background:url(../images/statistics_add-01.png) no-repeat 0 -20px;}
-.operation-btn .delete-box:hover i {background:url(../images/statistics_add-01.png) no-repeat 0 -60px;}
-.operation-btn .edit-box:hover input, .operation-btn .delete-box:hover input {color:#53b567;}
+/*已设置好的一列统计单项s*/
+.row-right .single-list {width:902px;min-height:78px;margin-bottom:20px;border:1px solid #ccc;}
+.row-right .single-list.last-one {margin-bottom:0;}
+.single-list .default-list, .single-list .operation-box {float:left;}
+.single-list .default-list {width:705px;min-height:80px;/*margin-right:19px;border:1px solid #ccc;*/}
+.default-list .list-left, .default-list .list-right {float:left;font-size:12px;color:#555;}
+/*统计公式名称s*/
+.default-list .list-left {line-height:80px;padding-right:32px;padding-left:10px;}
+/*统计公式名称e*/
+.default-list .list-right {width:542px;height:auto;}
+.default-list .list-right .right-head, .default-list .list-right .right-body {float:left;}
+/*统计公式等号左侧s*/
+.default-list .list-right .right-head {line-height:80px;padding:0 8px 0 7px;}
+/*统计公式等号左侧e*/
+/*统计公式等号右侧s*/
+.default-list .list-right .right-body {width:407px;line-height:48px;padding:16px 0 10px;}
+/*统计公式等号右侧e*/
+.right-body .formula-element, .right-body dl {float:left;}
+/*通用公式元素s*/
+.right-body .formula-element {width:auto;text-align:center;overflow:hidden;}
+.right-body .formula-element .left-bracket {width:16px;min-height:48px;text-align:center;}
+.right-body .formula-element .reserve {width:11px;min-height:48px;text-align:center;}
+.right-body .formula-element dd {line-height:12px;margin-bottom:6px;}
+.right-body .formula-element .reserve dd {line-height:48px;}
+/*通用公式元素s*/
+/*第一个公式元素s*/
+.right-body .formula-element .left-bracket dd {line-height:48px;}
+.right-body .formula-element.first-item .left-bracket {width:11px;min-height:48px;text-align:center;}
+.right-body .formula-element.first-item .reserve {width:16px;min-height:48px;line-height:48px;text-align:center;}
+.right-body .formula-element.first-item dd {line-height:12px;margin-bottom:6px;}
+.right-body .formula-element.first-item .left-bracket dd {line-height:48px;}
+/*第一个公式元素e*/
+/*运算符s*/
+.right-body .operator {float:left;width:7px;min-height:48px;line-height:48px;text-align:center;}
+/*运算符e*/
+.single-list .operation-box {height:40px;line-height:40px;margin:20px 0;padding-left:36px;font-size:0;border-left:1px solid #ccc;}
+.single-list .operation-box .edit-box, .single-list .operation-box .delete-box {display:inline-block;}
+.single-list .operation-box .edit-box {margin-right:18px;}
+.operation-box .edit-box i, .operation-box .delete-box i {display:inline-block;width:17px;height:18px;margin-right:13px;vertical-align:middle;}
+.operation-box .edit-box input, .operation-box .delete-box input {font-size:14px;color:#3b3a48;vertical-align:middle;border:none;background:transparent;cursor:pointer;}
+.operation-box .edit-box i {background:url(../images/statistics_add-01.png) no-repeat 0 0;}
+.operation-box .delete-box i {background:url(../images/statistics_add-01.png) no-repeat 0 -40px;}
+.operation-box .edit-box:hover i {background:url(../images/statistics_add-01.png) no-repeat 0 -20px;}
+.operation-box .delete-box:hover i {background:url(../images/statistics_add-01.png) no-repeat 0 -60px;}
+.operation-box .edit-box:hover input, .operation-box .delete-box:hover input {color:#53b567;}
+.row-right .add-row {height:29px;line-height:29px;font-size:12px;color:#9e9e9e;text-align:center;border:1px solid #ccc;border-top:none;background:#f7f7f7;cursor:pointer;}
+.row-right .add-row i {display:inline-block;width:14px;height:14px;margin-top:-2px;margin-right:4px;vertical-align:middle;background:url(../images/statistics_add-02.png) no-repeat -3px -22px;}
+/*已设置好的一列统计单项e*/
+
+/*新增或编辑 统计单项s*/
+.row-right .operation {width:902px;height:auto;padding:20px 41px 40px 20px;border:1px solid #ccc;}
+.operation .operation-row {min-height:32px;margin-bottom:20px;}
+.operation .operation-row .operation-left, .operation .operation-row .operation-right {float:left;}
+.operation-row .operation-left {float:left;width:93px;height:32px;line-height:32px;margin-right:20px;color:#333;text-align:right;}
+.operation-row .operation-left i {margin-right:4px;color:#d00202;}
+.operation-row.operation-right {min-height:32px;}
+.operation-left.operation-height {height:65px;line-height:65px;} 
+.operation-right .operation-height {min-height:65px;}
+.operation-row .operation-right .single-choose {width:378px;height:30px;line-height:30px;margin-right:20px;font-size:12px;color:#555;text-align:left;text-indent:10px;border:1px solid #ccc;}
+.operation-row .operation-right .single-add {width:130px;height:32px;line-height:32px;font-size:12px;color:#fff;text-align:center;border:none;background:#53b567;cursor:pointer;}
+.operation-row .operation-right .set-single {width:786px;height:auto;font-size:12px;color:#555;}
+.set-single .single-name, .set-single .single-single-setoption {float:left;}
+.set-single .single-name {min-height:60px;line-height:60px;font-size:0;}
+.set-single .single-name span, .set-single .single-name em {font-size:12px;}
+.set-single .single-name span {display:inline-block;width:130px;height:30px;line-height:30px;margin-right:9px;text-align:left;text-indent:10px;border:1px solid #ccc;}
+.set-single .single-name em {}
+.set-single .single-setoption {width:auto;min-height:65px;line-height:65px;}
+/*通用公式元素s*/
+.single-setoption .formula-element, .single-setoption .formula-element dl {float:left;}
+.single-setoption .formula-element {position:relative;width:auto;line-height:0;margin-bottom:10px;text-align:center;}
+.single-setoption .formula-element .left-bracket {width:16px;min-height:65px;text-align:center;}
+.single-setoption .formula-element .general-term {padding:7px 21px 1px;border:1px solid #ccc;cursor:pointer;}
+.single-setoption .formula-element .general-term.initial {min-height:63px;line-height:63px;padding:0 21px;} 
+.single-setoption .formula-element .reserve {width:11px;min-height:65px;text-align:center;}
+.single-setoption .formula-element dd {line-height:12px;margin-bottom:6px;}
+.single-setoption .formula-element .reserve dd {line-height:65px;}
+.single-setoption .formula-element .general-term.initial dd {margin-bottom:0;line-height:65px;}
+.single-setoption .formula-element i {position:absolute;top:-10px;right:2px;display:block;width:20px;height:20px;background:url(../images/statistics_add-02.png) no-repeat 0 0;cursor:pointer;}
+
+/*通用公式元素s*/
+/*第一个公式元素s*/
+.single-setoption .formula-element .left-bracket dd {line-height:65px;margin-bottom:0;}
+.single-setoption .formula-element.first-item .left-bracket {width:11px;min-height:65px;text-align:center;}
+.single-setoption .formula-element.first-item .reserve {width:16px;min-height:65px;line-height:65px;text-align:center;}
+.single-setoption .formula-element.first-item dd {line-height:12px;margin-bottom:6px;}
+.single-setoption .formula-element.first-item .left-bracket dd {line-height:65px;}
+.single-setoption .formula-element.first-item .general-term.initial dd {line-height:65px;margin-bottom:0;}
+/*第一个公式元素e*/
+/*运算符s*/
+.single-setoption .operator-box {float:left;width:48px;min-height:65px;line-height:65px;text-align:center;}
+.single-setoption .operator-box .operator-item {width:46px;height:30px;line-height:30px;font-size:12px;color:#555;text-align:center;text-indent:2px;border:1px solid #ccc;}
+/*运算符e*/
+.set-single .single-setoption .formula-add {float:left;width:100px;height:30px;line-height:30px;margin-top:20px;margin-left:23px;font-size:12px;color:#fff;text-align:center;border:none;background:#53b567;cursor:pointer;}
+
+.operation-row .operation-right .set-btns {text-align:left;}
+.operation-row .operation-right .set-btns input[type='button'] {width:100px;height;32px;line-height:32px;color:#fff;text-align:center;border:none;cursor:pointer;}
+.operation-row .operation-right .set-btns .btn-save {margin-right:30px;background:#53b567;}
+.operation-row .operation-right .set-btns .btn-delete {background:#dbdddc;}
+
+/*新增或编辑 统计单项e*/
+.statistical-row .row-right .final-submission, .statistical-row .row-right .cancel {width:100px;height:30px;line-height:30px;font-size:14px;color:#fff;text-align:center;border:none;}
+.statistical-row .row-right .final-submission {margin-right:40px;background:#53b567;}
+.statistical-row .row-right .cancel {background:#dbdddc;}
+
+/*设置公式元素*/
+.formula-layer {position:relative;display:none;width:585px;height;auto;background:#fff;}
+.formula-layer .close-icon {position:absolute;top:0;right:0;display:block;width:40px;height:40px;background:url(../images/promotion_list-04.png) no-repeat center center;cursor:pointer;}
+.formula-layer .top-section {height:39px;line-height:39px;font-size:14px;color:#333;text-align:left;text-indent:20px;border-bottom:1px solid #ccc;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
