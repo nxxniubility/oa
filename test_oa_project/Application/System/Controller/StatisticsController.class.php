@@ -97,4 +97,9 @@ class StatisticsController extends SystemController
         $this->assign('data', $data);
         $this->display();
     }
+
+    public function marketSetAdd()
+    {
+        $this->display();
+    }
 }
