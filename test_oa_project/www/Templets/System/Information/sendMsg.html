@@ -39,47 +39,16 @@
             <div class="nsRow clearfix">
                 <div class="nsLeft">所属区域:</div>
                 <div class="nsRight">
-                    <div class="selectbox2 l">
-                        <dl class="select">
-                            <dt>
-                            <div class="select_title l" >请选择所属区域</div>
-                            <div class="arrow r" ></div>
-                            </dt>
-                            <dd class="fxDone" data-value="{$data['zoneAll']['zone_id']}">{$data['zoneAll']['name']}</dd>
-                            <if condition = "$data['zoneAll']['centersign'] neq 10">
-                                <foreach name = "data['zoneAll']['children']" item = "v2">
-                                    <dd class="fxDone zonesele zone_btn{$v2['zone_id']}" data-value="{$v2['zone_id']}">&nbsp;&nbsp;&nbsp;├─ {$v2['name']}</dd>
-                                    <if condition = "!empty($v2['children']) ">
-                                        <foreach name = "v2['children']" item = "v3">
-                                            <dd class="fxDone zonesele zone_btn{$v3['zone_id']}" data-value="{$v3['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v3['name']}</dd>
-                                            <if condition = "!empty($v3['children'])">
-                                                <foreach name = "v3['children']" item = "v4">
-                                                    <dd class="fxDone zonesele zone_btn{$v4['zone_id']}" data-value="{$v4['zone_id']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ {$v4['name']}</dd>
-                                                </foreach>
-                                            </if>
-                                        </foreach>
-                                    </if>
-                                </foreach>
-                            </if>
-                        </dl>
-                        <input type="hidden" name="zone_id"  autocomplete="off">
+                    <div class="selectbox2 l" id="zone_li">
+                        
                     </div>
                 </div>
             </div>
             <div class="nsRow clearfix">
                 <div class="nsLeft"><i>&#42</i>消息类型:</div>
                 <div class="nsRight">
-                    <div class="selectbox2 l">
-                        <dl class="select">
-                            <dt>
-                            <div class="select_title l">请选择消息类型</div>
-                            <div class="arrow r"></div>
-                            </dt>
-                            <dd class="fxDone" data-value="1">系统通知</dd>
-                            <dd class="fxDone" data-value="10">消息通知</dd>
-                            <dd class="fxDone" data-value="20">到访通知</dd>
-                        </dl>
-                        <input type="hidden" name="msgtype">
+                    <div class="selectbox2 l" id="msg_type">
+                        
                     </div>
                 </div>
             </div>
@@ -105,7 +74,7 @@
                 <div class="nsRight">
                 	<div class="send-msgcontent">
 	                    <!--<textarea class="addTxt" name="content" value="" autocomplete="off"></textarea>-->
-	                    <script id="editor" name="advantage"  type="text/plain" >{:htmlspecialchars_decode($data['userInfo']['remark'])}</script>
+	                    <script id="editor" name="advantage"  type="text/plain" >{:htmlspecialchars_decode()}</script>
 	                </div>
                 </div>
             </div>
@@ -118,7 +87,6 @@
         </div>
     </div>
 </div>
-
 <!-- 选择部门 S -->
 <div class="department">
     <div class="nsTop clearfix">
@@ -130,31 +98,21 @@
             <div class="selectbox nsSelectBox l">
                 <dl class="select">
                     <dt>
-                    <div class="select_title l nsSelectSearch_d">全部</div>
-                    <div class="arrow r"></div>
+                        <div class="select_title l nsSelectSearch_d">全部</div>
+                        <div class="arrow r"></div>
                     </dt>
                     <dd class="fxDone" data-value="">全部</dd>
-                    <foreach name="data['departmentAll'][data]" item="v" key="k">
-                        <dd class="fxDone" data-value="{$v.department_id}">{$v.departmentname}</dd>
-                    </foreach>
                 </dl>
             </div>
             <input type="text" class="nsSelectSearch l" name="nsSelectSearch" placeholder="请输入职位">
             <input type="submit" class="nsSearchSubmit nsSearchSubmitRole l" value="搜索">
         </div>
-        <div class="nsDeparMiddle">
+        <div class="nsDeparMiddle" id="role_li">
             <dl class="nsTit clearfix department_title">
                 <dt class="wNsOne">选中</dt>
                 <dt class="wNsTwo">所属部门</dt>
                 <dt class="wNsThr">职位名称</dt>
             </dl>
-            <foreach name="data['roleAll'][data]" item="v" key="k">
-                <dl class="clearfix department_content">
-                    <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}" {:(in_array($v['id'],$data['is_roles']))?'checked="checked"':''}></dd>
-                    <dd class="wNsTwo">{$v.department_name}</dd>
-                    <dd class="wNsThr">{$v.name}</dd>
-                </dl>
-            </foreach>
         </div>
         <div class="ns-bottom clearfix">
         	<label for="chk_all">
@@ -166,15 +124,8 @@
     </div>
 </div>
 <div id="search_body" style="display: none">
-    <foreach name="data['roleAll'][data]" item="v" key="k">
-        <dl class="clearfix department_content">
-            <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{$v.id}"></dd>
-            <dd class="wNsTwo">{$v.department_name}</dd>
-            <dd class="wNsThr">{$v.name}</dd>
-        </dl>
-    </foreach>
+    
 </div>
-<!-- 选择部门 E -->
 
 <!-- 选择人员 S -->
 <div class="departmentMan">
@@ -187,154 +138,77 @@
             <input type="text" class="nsSelectSearch l" placeholder="请输入人员姓名">
             <input type="submit" class="nsSearchSubmit nsSearchSubmitSystem l" value="搜索">
         </div>
-        <div class="nsDeparMiddle system_body">
+        <div class="nsDeparMiddle system_body" id="sysuser_li">
             <dl class="nsTit clearfix">
                 <dt class="wNsOne">选中</dt>
-                <dt class="wNsTwo">所属职位</dt>
-                <dt class="wNsThr">姓名</dt>
+                <dt class="wNsTwo">姓名</dt>
+                <dt class="wNsThr">所属职位</dt>
             </dl>
         </div>
         <input type="button" class="nsDetermine nsDetermineSystem" value="确定">
     </div>
 </div>
-<!-- 选择人员E -->
+<div id="search_body1" style="display: none">
+    
+</div>
+<!--列表模版-->
+<script id="demo1" type="text/html">
+    {{# layui.each(d, function(k, v){ }}
+    <dl class="clearfix department_content">
+        <dd class="wNsOne"><input type="checkbox" name="nsChk" class="nsSelectChk" value="{{ v.id }}"></dd>
+        <dd class="wNsTwo">{{ v.department_name }}</dd>
+        <dd class="wNsThr">{{ v.name }}</dd>
+    </dl>
+    {{#  }); }}
+</script>
 
-<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
-<script src="__PUBLIC__/js/layer/layer.js"></script>
-<script src="__PUBLIC__/js/asDatepicker/dist/jquery-asDatepicker.js"></script>
+<script id="demo2" type="text/html">
+    <dl class="select">
+        <dt>
+        <div class="select_title l">请选择接受通知的区域</div>
+        <div class="arrow r"></div>
+        </dt>
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 10px" data-value="{{ d.zone_id }}">{{ d.name }}</dd>
+        {{# layui.each(d.children, function(k, v){ }}
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 20px" data-value="{{ v.zone_id }}">{{ v.name }}</dd>
+        {{# layui.each(v.children, function(k2, v2){ }}
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 30px" data-value="{{ v2.zone_id }}">{{ v2.name }}</dd>
+        {{# layui.each(v2.children, function(k3, v3){ }}
+        <dd class="fxDone" data-name="zone_id" style="padding-left: 40px" data-value="{{ v3.zone_id }}">{{ v3.name }}</dd>
+        {{# }); }}
+        {{# }); }}
+        {{# }); }}
+    </dl>
+    <input type="hidden" name="zone_id" value="">
+</script>
+
+<script id="demo3" type="text/html">
+    {{# layui.each(d, function(k, v){ }}
+    <dl class="clearfix department_content">
+        <dd class="wNsOne"><input type="checkbox" name="nsChk2" class="nsSelectChk" value="{{ v.system_user_id }}"></dd>
+        <dd class="wNsTwo">{{ v.realname }}</dd>
+        <dd class="wNsThr">{{ v.role_names }}</dd>
+    </dl>
+    {{#  }); }}
+</script>
+
+<script id="demo4" type="text/html">
+    <dl class="select">
+        <dt>
+        <div class="select_title l">请选通知类型</div>
+        <div class="arrow r"></div>
+        </dt>
+        {{# layui.each(d, function(k, v){ }}
+            <dd class="fxDone" data-value="{{ k }}" data-name="msgtype">{{ v }}</dd>
+        {{# }); }}
+    </dl>
+    <input type="hidden" name="msgtype" value="{{# $.getUrlParam('msgtype'); }}">
+</script>
+
+
+<Zelin:js src="jquery-1.9.1.min,layer/layer,layui/layui,asDatepicker/dist/jquery-asDatepicker,common,sendMsg"/>
 <include file="Common@Html/ueditor_simple" />
-<script src="__PUBLIC__/js/sendMsg.js"></script>
-<script src="__PUBLIC__/js/common.js"></script>
 <script>
-    $(function(){
-    	var ue = UE.getEditor('editor',{
-	        toolbars: [
-	            ['fontsize','fontfamily', 'undo', 'redo','underline', 'bold','insertimage','spechars','justifyleft','justifyright','justifycenter','emotion']
-	        ],
-	        initialFrameWidth:460,
-	        initialFrameHeight:100,       
-	        enableAutoSave:false,
-	        elementPathEnabled:false,
-	        maximumWords:1000,
-	        autoFloatEnabled:false
-	    });
-    	
-    	
-    	
-        //选择部门职位
-        $('.nsDetermineRole').click(function(){
-            var role_id = '';
-            var role_name = ''
-            $('.nsMiddle').find('.nssNone').remove();
-            for(var i=0;i<$(':input[name="nsChk"]:checked').length;i++){
-                if(i==0){
-                    role_id += $(':input[name="nsChk"]:checked').eq(i).val();
-                    role_name += $(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsTwo').text()+'/'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text();
-                }else{
-                    role_id += ','+$(':input[name="nsChk"]:checked').eq(i).val();
-                    role_name += '，'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsTwo').text()+'/'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text();
-                }
-                $('.dn .nssNone').children('.nsLeft').html('<i>&#42</i>'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text()+':');
-                $('.nsNone').before( $('.dn .nssNone').clone());
-                
-            }
-            $(':input[name="role_id"]').val(role_id);
-            $(':input[name="role_name"]').val(role_name);
-            $(':input[name="system_name"]').val('');
-            $(':input[name="system_user_id"]').val('');
-        });
-        $('.zonesele').click(function(){
-            $(':input[name="system_name"]').val('');
-            $(':input[name="system_user_id"]').val('');
-        });
-        $('.nsDetermineSystem').click(function(){
-            var system_id = '';
-            var system_name = ''
-            for(var i=0;i<$(':input[name="nsChk2"]:checked').length;i++){
-                if(i==0){
-                    system_id += $(':input[name="nsChk2"]:checked').eq(i).val();//$(':input[name="nsChk2"]:checked').eq(i).parent().siblings('.wNsTwo').text()+'/'+
-                    system_name += $(':input[name="nsChk2"]:checked').eq(i).parent().siblings('.wNsThr').text();
-                }else{
-                    system_id += ','+$(':input[name="nsChk2"]:checked').eq(i).val();
-                    system_name += '，'+$(':input[name="nsChk2"]:checked').eq(i).parent().siblings('.wNsThr').text();
-                }
-            }
-            $(':input[name="system_name"]').val(system_name);
-            $(':input[name="system_user_id"]').val(system_id);
-        });
-        //搜索职位相关-检索
-        $('.nsSearchSubmitRole').click(function(){
-            $(':input[name="nsChk"]').attr('checked',false);
-            var val = $(':input[name="nsSelectSearch"]').val();
-            var d_val = $('.nsSelectSearch_d').text();
-            $('.nsDeparMiddle .department_content').remove();
-            if(val.length>0 || d_val!='全部'){
-                $('#search_body .department_content').each(function(i){
-                    var zmnumReg=new RegExp( val ,'gim');
-                    var zmnumReg2=new RegExp( d_val ,'gim');
-                    var name=$(this);
-                    if(d_val!='全部'){
-                        if( zmnumReg.test(name.children('.wNsThr').text()) && zmnumReg2.test(name.children('.wNsTwo').text()) ){
-                            $('.department_title').after(name.clone());
-                        }
-                    }else{
-                        if( zmnumReg.test(name.children('.wNsThr').text()) ){
-                            $('.department_title').after(name.clone());
-                        }
-                    }
-                });
-            }else{
-                $('.department_title').after( $('#search_body .department_content').clone() );
-            }
-        });
-        $('.nsSubmit').click(function(){
-            var data = {
-                title:$(':input[name="title"]').val(),
-                content:ue.getContent(),
-                href:$(':input[name="href"]').val(),
-                zone_id:$(':input[name="zone_id"]').val(),
-                msgtype:$(':input[name="msgtype"]').val(),
-                role_id:$(':input[name="role_id"]').val(),
-                system_user_id:$(':input[name="system_user_id"]').val()
-            };
-            common_ajax(data);
-        });
-
-        $('.nsSearchSubmitSystem').click(function(){
-            var search_name = $(this).siblings('.nsSelectSearch').val();
-            var role_id = $(':input[name="role_id"]').val();
-            var zone_id = $(':input[name="zone_id"]').val();
-            getSystem (role_id,zone_id,search_name);
-        });
-    });
-    function getSystem (role_ids,zone_id,search_name){
-        $.ajax({
-            url:"{:U('System/Information/sendMsg')}",
-            dataType:'json',
-            type:'post',
-            data:{type:'getSystem',role_id:role_ids,zone_id:zone_id,keyname:search_name},
-            success:function(reflag){
-                $('.systemli').remove();
-                if(reflag.code==0){
-                    var html = '';
-                    $.each(reflag.data,function (k,v) {
-                        html+= '<dl class="clearfix systemli"><dd class="wNsOne"><input type="checkbox" name="nsChk2" class="nsSelectChk" value="'+v.system_user_id+'"></dd><dd class="wNsTwo">'+v.role_names+'</dd><dd class="wNsThr">'+v.realname+'</dd></dl>';
-                    })
-                    $('.system_body').append(html);
-
-                    var ids = $(':input[name="system_user_id"]').val();
-                    if(ids){
-                        ids = ids.split(',');
-                        for(var i=0;i<ids.length;i++){
-                            $('.btn_'+ids[i]).attr('checked',true);
-                        }
-                    }
-                }else{
-                    layer.msg(reflag.msg, {icon:2})
-                }
-            }
-        });
-    }
 </script>
 </body>
 </html>

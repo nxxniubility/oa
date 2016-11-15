@@ -332,48 +332,5 @@ class SystemUserController extends SystemApiController
         }
         $this->ajaxReturn($result['code'],$result['msg']);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 修改密码
-    |--------------------------------------------------------------------------
-    | @author nxx
-    */
-    // public function changePwd()
-    // {
-    //     $userInfo = $this->system_user;
-    //     $username = decryptPhone($userInfo['username'], C('PHONE_CODE_KEY'));
-    //     $request['confirmPassword'] = I('param.', null);
-    //     $request['oldPassword'] = I('param.oldPassword', null);
-    //     $request['password'] = I('param.password', null);
-    //     $request['phoneverify'] = I('param.phoneverify', null);
-    //     $reflag = D('SystemUser', 'Service')->editPwd($request);
-    //     if($reflag['code'] == 0) {
-    //         $this->ajaxReturn(0, '密码修改成功', U('System/Index/main'));
-    //     }else {
-    //         $this->ajaxReturn($reflag['code'], $reflag['msg']);
-    //     }
-        
-    // }
-
-    // /*
-    // |--------------------------------------------------------------------------
-    // | 获取消息列表
-    // |--------------------------------------------------------------------------
-    // | @author nxx
-    // */
-    // public function getMsgList()
-    // {
-    //     $param['msgtype'] = I('param.msgtype', null);
-    //     $msg_list = D('Message', 'Service')->getMsgList($request);
-    //     // }
-    //     if ($msg_list['code']==0) {
-    //         $this->ajaxReturn(0, '获取成功', $msg_list['data']);
-    //     }
-    //     else {
-    //         $this->ajaxReturn($msg_list['code'], $msg_list['msg']);
-    //     }
-    // }
-
     
 }
