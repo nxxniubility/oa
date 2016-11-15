@@ -12,17 +12,16 @@
 .title-right .setup-btn:hover, .title-right .return:hover {color:#fff;border-color:#53b567;background:#53b567;}
 .title-right .setup-btn {margin-right:20px;}
 
-.taskadd-main {width:100%;height:auto;margin-top:30px;overflow:hidden;}
-.taskadd-main .taskadd-rows {min-height:40px;margin-bottom:20px;}
-.taskadd-rows .rows-left {float:left;width:120px;height:40px;line-height:40px;margin-right:20px;color:#333;text-align:right;}
-.taskadd-rows .rows-left i {margin-right:4px;color:#d00202;}
-.taskadd-rows .rows-right {float:left;min-height:40px;}
-.rows-right .department-choose {width:500px;height:38px;line-height:38px;font-size:12px;color:#555;text-align:left;text-indent:10px;border:1px solid #ccc;background:#fff;}
-.rows-right .mission-today, .rows-right .data {width:660px;height:auto;padding:13px 20px 0 20px;border:1px solid #ccc;background:#fff;}
-.mission-today li, .data li {float:left;width:200px;line-height:14px;margin-right:20px;padding-bottom:13px;font-size:14px;color:#555;text-align:left;}
-.mission-today label, .data li label {display:block;width:100%;cursor:pointer;}
-.mission-today label input[type='checkbox'], .data label input[type='checkbox'] {width:14px;height:14px;margin-top:-2px;margin-right:5px;vertical-align:middle;}
-.mission-today label span, .data label span {line-height:14px;}
+.tasklist-main {width:100%;height:auto;margin-top:30px;overflow:hidden;}
+.tasklist-main #tasklist_tabel {width:100%;height:auto;border:1px solid #ebeaea;border-bottom:none;background:#fff;}
+#tasklist_tabel tr {height:40px;line-height:40px;}
+#tasklist_tabel th, #tasklist_tabel td {text-align:center;border-bottom:1px solid #ebeaea;}
+#tasklist_tabel th, #tasklist_tabel tr:hover th {font-weight:bold;color:#333;background:#f5f6fa;}
+#tasklist_tabel th span, #tasklist_tabel th i {float:left;}
+#tasklist_tabel td {color:#696969;background:#fff;}
+#tasklist_tabel td .tasklist-edit, #tasklist_tabel td .tasklist-del {width:40px;height:40px;line-height:40px;color:#999;text-align:center;border:none;background:transparent;cursor:pointer;} 
+#tasklist_tabel td .tasklist-edit:hover, #tasklist_tabel td .tasklist-del:hover {color:#53b567;}
+#tasklist_tabel td .tasklist-edit {margin-right:10px;}
 
 
 
