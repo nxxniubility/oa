@@ -21,23 +21,51 @@ class TaskService extends BaseService
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getTaskList()
+    public function getTaskList($param)
     {
         $system_user_id = $this->system_user_id;
         //获取部门ID
-        $_user_info = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$system_user_id));
-        //获取默认第一个职位的部门ID
-        $_department_id = $_user_info['data']['roles'][0]['department_id'];
-        //获取配置
-        $join = '__TASK__ on __TASK__.task_id=__TASK_DEPARTMENT__.task_id';
-        $_task_list = D('TaskDepartment')->getList(array('department_id'=>$_department_id),'*',null,null,$join);
-        foreach($_task_list as $k=>$v){
-
+        if(empty($param['role_id'])){
+            $_user_info = D('SystemUser','Service')->getSystemUsersInfo(array('system_user_id'=>$system_user_id));
+            //获取默认第一个职位的部门ID
+            $_department_id = $_user_info['data']['roles'][0]['department_id'];
+        }else{
+            $_role_info = D('Role','Service')->getRoleInfo(array('role_id'=>$param['role_id']));
+            $_department_id = $_role_info['data']['department_id'];
         }
-        print_r($_task_list);
-        return array('code'=>'0', 'data'=>$_task_list);
+        //获取配置
+        $_join = '__TASK__ on __TASK__.task_id=__TASK_DEPARTMENT__.task_id';
+        $_task_list = D('TaskDepartment')->getList(array('department_id'=>$_department_id),'*',null,null,$_join);
+        foreach($_task_list as $k=>$v){
+            $_where = ' and (system_user_id='.$system_user_id.' or '.'updateuser_id='.$system_user_id.')';
+            $_task_where_select = str_replace('{Ymd}',date('Y-m-d'),$v['task_where']);
+            $_task_where_select = explode('&',$_task_where_select);
+            $_task_list[$k]['task_where'] = '';
+            foreach($_task_where_select as $k2=>$v2){
+                $_prefix = ($k2==0)?'':' and ';
+                $_prefix_url = ($k2==0)?'':'&';
+                if(strpos($v2,'@')!==false){
+                    $_key = explode('=',$v2);
+                    $_value = explode('@',$_key[1]);
+                    //获取匹配项
+                    $_value = $this->regval($_value);
+                    if(count($_value)>1){
+                        $_task_list[$k]['task_where_select'] .= $_prefix.$_key[0].'>'.$_value[0].' and '.$_key[0].'<'.$_value[1];
+                        $_task_list[$k]['task_where'] .= $_prefix_url.$_key[0].'='.date('Y-m-d',$_value[0]).'@'.date('Y-m-d',$_value[1]);
+                    }else{
+                        $_task_list[$k]['task_where_select'] .= $_prefix.$_key[0].'='.$_value[0];
+                        $_task_list[$k]['task_where'] .= $_prefix_url.$_key[0].'='.date('Y-m-d',$_value[0]);
+                    }
+                }else{
+                    $_task_list[$k]['task_where_select'] .= $_prefix.$v2;
+                    $_task_list[$k]['task_where'] .= $_prefix_url.$v2;
+                }
+            }
+            $_task_list[$k]['task_where_select'] .= $_where;
+            $_task_list[$k]['count'] = D('User')->where($_task_list[$k]['task_where_select'])->count();
+        }
+        return array('code'=>'0', 'msg'=>'获取成功', 'data'=>$_task_list);
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -47,12 +75,43 @@ class TaskService extends BaseService
     */
     public function addTask($param)
     {
-
-        //获取部门ID
-        $_add_flag = D('TaskDepartment')->addData($param);
+        //必传参数
+        if(empty($param['department_id'])) return array('code'=>300, 'msg'=>'请选择部门');
+        if(empty($param['task_id'])) return array('code'=>301, 'msg'=>'任务不能为空');
+        //是否添加多任务
+        $_add_task = array();
+        $_task_ids = explode(',', $param['task_id']);
+        foreach($_task_ids as $v){
+            $_add_task[] = array(
+                'task_id' => $v,
+                'department_id' => $param['department_id']
+            );
+        }
+        //更新数据
+        D()->startTrans();
+        D('TaskDepartment')->delData($param['department_id']);
+        $_add_flag = D('TaskDepartment')->addAll($_add_task);
         if($_add_flag!==false){
+            D()->commit();
             return array('code'=>0,'msg'=>'添加成功');
         }
+        D()->rollback();
         return array('code'=>100,'msg'=>'添加失败');
+    }
+
+
+    /*
+     * 转换条件
+     */
+    protected function regval($array){
+        foreach($array as $k=>$v){
+            if(strpos($v,'{time}')!==false){
+                $array[$k] = time();
+            }elseif(strpos($v,'{day')!==false){
+                preg_match_all('/\{day(.*)?\}/',$v,$result);
+                $array[$k] = strtotime(($result[1][0]).' day');
+            }
+        }
+        return $array;
     }
 }
