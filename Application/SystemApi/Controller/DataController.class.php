@@ -57,7 +57,7 @@ class DataController extends SystemApiController
     */
     public function addDataLogs()
     {
-        //外部调用？
+        //获取参数
         $param['operator_user_id'] = I('param.operator_user_id',null);
         $param['operattype'] = I('param.operattype',null);
         $param['user_id'] = I('param.user_id',null);
@@ -91,7 +91,7 @@ class DataController extends SystemApiController
     */
     public function getDataMarket()
     {
-        //外部调用？
+        //获取参数
         $param['logtime'] = I('param.logtime',null);
         $param['department_id'] = I('param.department_id',null);
         $param['role_id'] = I('param.role_id',null);
@@ -122,7 +122,7 @@ class DataController extends SystemApiController
     */
     public function getDataMarketInfo()
     {
-        //外部调用？
+        //获取参数
         $where['type'] = I('param.type',null);
         $where['logtime'] = I('param.logtime',null);
         $where['role_id'] = I('param.role_id',null);
@@ -151,16 +151,13 @@ class DataController extends SystemApiController
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function addDataMarket($requesr=null)
+    public function addDataMarket()
     {
-        //外部调用？
-        if($requesr===null){
-            $where['user_id'] = I('param.user_id',null);
-            $where['system_user_id'] = I('param.system_user_id',null);
-            $where['name'] = I('param.name',null);
-        }else{
-            $where = $requesr;
-        }
+        //获取参数
+        $where['user_id'] = I('param.user_id',null);
+        $where['system_user_id'] = I('param.system_user_id',null);
+        $where['name'] = I('param.name',null);
+
         $getService = function($where) {
             //去除数组空值
             $where = array_filter($where);
@@ -178,11 +175,7 @@ class DataController extends SystemApiController
             return array('code'=>$result['code'],'msg'=>$result['msg']);
         };
         $reData = $getService($where);
-        if(!empty($request)){
-            return $reData;
-        }else{
-            $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
-        }
+        $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
     }
 
     /*
@@ -268,7 +261,6 @@ class DataController extends SystemApiController
 
         $result = D('Data', 'Service')->addDepartmentFormula($data);
         $this->ajaxReturn($result['code'], $result['msg']);
-
    }
 
 }
