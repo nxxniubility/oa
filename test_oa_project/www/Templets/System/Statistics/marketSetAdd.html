@@ -8,9 +8,6 @@
 		<title>系统首页-{$siteinfo.sitename}</title>
 		<link rel="stylesheet" href="__PUBLIC__/css/common.css">
 		<link rel="stylesheet" href="__PUBLIC__/css/marketSetAdd.css">
-		<script>
-			var jump_code = "{$jump_code}";
-		</script>
 	</head>
 	<body>
 		<div class="wrapper-box">
@@ -55,27 +52,286 @@
 	        	<div class="statistical-row clearfix">
 	        		<div class="row-left singlelist-height"><i>&#42</i>统计单项：</div>
 	        		<div class="row-right singlelist-height">
-	        			<div class="single-list clearfix">
-	        				<ul class="display-list clearfix">
-	        					<li><span>统计单项：<em>出库量</em></span></li>
-	        					<li><span>统计公式：<em>出库量</em></span></li>
-	        					<li><span>=</span></li>
-	        					
-	        				</ul>
-	        				<div class="operation-btn">
+	        			<!-- 已设置好的一列统计单项s -->
+	        			<!--<div class="single-list clearfix">
+	        				<div class="default-list clearfix">
+	        					<div class="list-left">统计单项：出库量</div>
+	        					<div class="list-right">
+	        						<div class="right-head">统计公式：出库量&nbsp;=</div>
+	        						<div class="right-body clearfix">
+	        							<div class="formula-element first-item">
+		        							<dl class="left-bracket"><dd class="dn">(</dd></dl>
+		        							<dl>
+		        								<dd>新增量</dd>
+		        								<dd>销售部</dd>
+		        								<dd>出库人</dd>
+		        							</dl>
+		        							<dl class="reserve"><dd>&nbsp;</dd></dl>
+		        						</div>
+		        						
+		        						<div class="operator">+</div>
+		        						<div class="formula-element">
+		        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+		        							<dl>
+		        								<dd>出库量</dd>
+		        								<dd>出库人</dd>
+		        								<dd>销售部</dd>
+		        							</dl>
+		        							<dl class="reserve"><dd class="dn">)</dd></dl>
+		        						</div>
+		        						
+		        						<div class="operator">+</div>
+		        						<div class="formula-element">
+		        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+		        							<dl>
+		        								<dd>系统出库量</dd>
+		        								<dd>出库人</dd>
+		        								<dd>销售部</dd>
+		        							</dl>
+		        							<dl class="reserve"><dd class="dn">)</dd></dl>
+		        						</div>
+		        						
+		        						<div class="operator">+</div>
+		        						<div class="formula-element">
+		        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+		        							<dl>
+		        								<dd>申请转入量</dd>
+		        								<dd>出库人</dd>
+		        								<dd>销售部</dd>
+		        							</dl>
+		        							<dl class="reserve"><dd class="dn">)</dd></dl>
+		        						</div>
+		        						
+		        						<div class="operator">+</div>
+		        						<div class="formula-element">
+		        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+		        							<dl>
+		        								<dd>赎回量</dd>
+		        								<dd>出库人</dd>
+		        								<dd>销售部</dd>
+		        							</dl>
+		        							<dl class="reserve"><dd class="dn">)</dd></dl>
+		        						</div>
+	        						</div>
+	        					</div>
+	        				</div>
+	        				<div class="operation-box">
 	        					<div class="edit-box"><i></i><input type="button" class="edit-btn" value="修改" /></div>
 	        					<div class="delete-box"><i></i><input type="button" class="delete-btn" value="删除" /></div>
 	        				</div>
 	        			</div>
+	        			
+	        			<div class="single-list last-one clearfix">
+	        				<div class="default-list clearfix">
+	        					<div class="list-left">统计单项：出库量</div>
+	        					<div class="list-right">
+	        						<div class="right-head">统计公式：出库量&nbsp;=</div>
+	        						<div class="right-body clearfix">
+	        							<div class="formula-element first-item">
+		        							<dl class="left-bracket"><dd class="dn">(</dd></dl>
+		        							<dl>
+		        								<dd>新增量</dd>
+		        								<dd>销售部</dd>
+		        								<dd>出库人</dd>
+		        							</dl>
+		        							<dl class="reserve"><dd>&nbsp;</dd></dl>
+		        						</div>
+		        						
+		        						<div class="operator">+</div>
+		        						<div class="formula-element">
+		        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+		        							<dl>
+		        								<dd>出库量</dd>
+		        								<dd>出库人</dd>
+		        								<dd>销售部</dd>
+		        							</dl>
+		        							<dl class="reserve"><dd class="dn">)</dd></dl>
+		        						</div>
+		        						
+		        						<div class="operator">+</div>
+		        						<div class="formula-element">
+		        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+		        							<dl>
+		        								<dd>系统出库量</dd>
+		        								<dd>出库人</dd>
+		        								<dd>销售部</dd>
+		        							</dl>
+		        							<dl class="reserve"><dd class="dn">)</dd></dl>
+		        						</div>
+		        						
+		        						<div class="operator">+</div>
+		        						<div class="formula-element">
+		        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+		        							<dl>
+		        								<dd>申请转入量</dd>
+		        								<dd>出库人</dd>
+		        								<dd>销售部</dd>
+		        							</dl>
+		        							<dl class="reserve"><dd class="dn">)</dd></dl>
+		        						</div>
+		        						
+		        						<div class="operator">+</div>
+		        						<div class="formula-element">
+		        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+		        							<dl>
+		        								<dd>赎回量</dd>
+		        								<dd>出库人</dd>
+		        								<dd>销售部</dd>
+		        							</dl>
+		        							<dl class="reserve"><dd class="dn">)</dd></dl>
+		        						</div>
+	        						</div>
+	        					</div>
+	        				</div>
+	        				<div class="operation-box">
+	        					<div class="edit-box"><i></i><input type="button" class="edit-btn" value="修改" /></div>
+	        					<div class="delete-box"><i></i><input type="button" class="delete-btn" value="删除" /></div>
+	        				</div>
+	        			</div>
+	        			<div class="add-row">
+	        				<i></i>
+	        				<span>新增统计单项</span>
+	        			</div>-->
+	        			<!-- 已设置好的一列统计单项e -->
+	        			
+	        			<!-- 新增或编辑 统计单项s   -->
+	        			<div class="operation">
+	        				<div class="operation-row clearfix">
+		        				<div class="operation-left"><i>&#42</i>统计单项：</div>
+		        				<div class="operation-right">
+		        					<select class="single-choose">
+				        				<option value="0" selected="selected">请选择统计单项</option>
+				        				<option value="1">新增量</option>
+				        				<option value="2">转出量</option>
+				        				<option value="3">放弃量</option>
+				        				<option value="4">系统回收量</option>
+				        				<option value="5">赎回量</option>
+				        				<option value="">已回访量</option>
+				        				<option value="">跟进次数</option>
+				        				<option value="">分配量</option>
+				        				<option value="">签单量</option>
+				        				<option value="">退单量</option>
+				        				<option value="">到访率</option>
+				        				<option value="">成交率</option>
+				        				<option value="">退单率</option>
+				        			</select>
+				        			<input type="button" class="single-add" value="管理统计单项" />
+		        				</div>
+		        			</div>
+		        			<div class="operation-row clearfix">
+		        				<div class="operation-left operation-height"><i>&#42</i>统计公式：</div>
+		        				<div class="operation-right operation-height clearfix">
+		        					<div class="set-single clearfix">
+		        						<div class="single-name">
+		        							<span>请选择统计单项</span>
+		        							<em>=</em>
+		        						</div>
+		        						<div class="single-setoption">
+		        							<div class="formula-element first-item">
+			        							<dl class="left-bracket"><dd class="dn">(</dd></dl>
+			        							<dl class="general-term initial">
+			        								<dd>请设置公式元素</dd>
+			        							</dl>
+			        							<!--<dl class="general-term">
+			        								<dd>新增量</dd>
+			        								<dd>销售部</dd>
+			        								<dd>出库人</dd>
+			        							</dl>-->
+			        							<dl class="reserve"><dd>&nbsp;</dd></dl>
+			        						</div>
+			        						
+			        						<div class="operator-box">
+			        							<select class="operator-item">
+			        								<option value="0" selected="selected">+</option>
+			        								<option value="1">-</option>
+			        								<option value="2">()&nbsp;*</option>
+			        								<option value="3">()&nbsp;/</option>
+			        							</select>
+			        						</div>
+			        						<div class="formula-element">
+			        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+			        							<dl class="general-term">
+			        								<dd>出库量</dd>
+			        								<dd>出库人</dd>
+			        								<dd>销售部</dd>
+			        							</dl>
+			        							<dl class="reserve"><dd class="dn">)</dd></dl>
+			        							<i></i>
+			        						</div>
+			        						
+			        						<div class="operator-box">
+			        							<select class="operator-item">
+			        								<option value="0" selected="selected">+</option>
+			        								<option value="1">-</option>
+			        								<option value="2">()&nbsp;*</option>
+			        								<option value="3">()&nbsp;/</option>
+			        							</select>
+			        						</div>
+			        						<div class="formula-element">
+			        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+			        							<dl class="general-term initial">
+			        								<dd>请设置公式元素</dd>
+			        							</dl>
+			        							<dl class="reserve"><dd class="dn">)</dd></dl>
+			        							<i></i>
+			        						</div>
+			        						
+			        						<div class="operator-box">
+			        							<select class="operator-item">
+			        								<option value="0" selected="selected">+</option>
+			        								<option value="1">-</option>
+			        								<option value="2">()&nbsp;*</option>
+			        								<option value="3">()&nbsp;/</option>
+			        							</select>
+			        						</div>
+			        						<div class="formula-element">
+			        							<dl class="left-bracket"><dd>&nbsp;</dd></dl>
+			        							<dl class="general-term initial">
+			        								<dd>请设置公式元素</dd>
+			        							</dl>
+			        							<dl class="reserve"><dd class="dn">)</dd></dl>
+			        							<i></i>
+			        						</div>
+			        						
+			        						<input type="button" class="formula-add" value="增加元素" />
+		        						</div>
+		        					</div>
+		        				</div>
+		        			</div>
+		        			<div class="operation-row clearfix">
+		        				<div class="operation-left">&nbsp;</div>
+		        				<div class="operation-right">
+		        					<div class="set-btns">
+		        						<input type="button" class="btn-save" value="暂存统计项" />
+		        						<input type="button" class="btn-delete" value="删除" />
+		        					</div>
+		        				</div>
+		        			</div>
+	        			</div>
+	        			<div class="add-row">
+	        				<i></i>
+	        				<span>新增统计单项</span>
+	        			</div>
+	        			<!-- 新增或编辑 统计单项e   -->
 	        		</div>
 	        	</div>
+	        	<div class="statistical-row clearfix">
+	        		<div class="row-left">&nbsp;</div>
+	        		<div class="row-right">
+	        			<input type="button" class="final-submission" value="提交" />
+	        			<input type="button" class="cancel" value="取消" />
+	        		</div>
+	        	</div>
+	        	
 	        </div>
-	        
-	        
-	        
 		</div>
 		
-		
+		<!--  设置公式元素s  -->
+		<div class="formula-layer">
+			<div class="top-section">设置公式元素<i class="close-icon"></i></div>
+			
+		</div>
+		<!--  设置公式元素e  -->
 		
 		<script src="__PUBLIC__/js/jquery-1.9.1.min.js"></script>
 		<script src="__PUBLIC__/js/layer/layer.js"></script>
