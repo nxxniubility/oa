@@ -17,20 +17,43 @@ class TaskController extends SystemApiController
     }
 
     /*
+   |--------------------------------------------------------------------------
+   | 获取任务设置列表
+   |--------------------------------------------------------------------------
+   | @author zgt
+   */
+    public function getTaskList()
+    {
+        $getService = function(){
+            //获取接口服务层
+            $TaskService = new TaskService();
+            $result = $TaskService->getTaskList();
+            //返回参数
+            if($result['code']==0){
+                return array('code'=>0,'msg'=>$result['msg'],'data'=>$result['data']);
+            }
+            return array('code'=>$result['code'],'msg'=>$result['msg']);
+        };
+        $reData = $getService();
+        $this->ajaxReturn($reData['code'], $reData['msg'], $reData['data']);
+    }
+
+
+    /*
     |--------------------------------------------------------------------------
-    | 获取今日任务
+    | 获取自己今日任务
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getTaskList()
+    public function getMyTask()
     {
         //获取参数
         $param['role_id'] = I('param.role_id',null);
-        //获取参数
+        //获取服务层
         $getService = function($param){
             //获取接口服务层
             $TaskService = new TaskService();
-            $result = $TaskService->getTaskList($param);
+            $result = $TaskService->getMyTask($param);
             //返回参数
             if($result['code']==0){
                 return array('code'=>0,'msg'=>$result['msg'],'data'=>$result['data']);
@@ -52,7 +75,7 @@ class TaskController extends SystemApiController
         //获取参数
         $param['task_id'] = I('param.task_id',null);
         $param['department_id'] = I('param.department_id',null);
-        //获取参数
+        //获取服务层
         $getService = function($param){
             //获取接口服务层
             $TaskService = new TaskService();

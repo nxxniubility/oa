@@ -17,11 +17,42 @@ class TaskService extends BaseService
 
     /*
     |--------------------------------------------------------------------------
-    | 获取今日任务
+    | 获取任务设置列表
     |--------------------------------------------------------------------------
     | @author zgt
     */
-    public function getTaskList($param)
+    public function getTaskList()
+    {
+        //获取已设置的部门列表
+        $_department_list = D('TaskDepartment')->group('department_id')->order('department_id desc')->select();
+        if(!empty($_department_list)){
+            foreach($_department_list as $k=>$v){
+                //获取设置项
+                $_join = '__TASK__ on __TASK__.task_id=__TASK_DEPARTMENT__.task_id';
+                $_task_name_list = D('TaskDepartment')->getList(array('department_id'=>$v['department_id']),'task_name',null,null,$_join);
+                $_task_names = '';
+                if(!empty($_task_name_list)){
+                    foreach($_task_name_list as $k2=>$v2){
+                        $_prefix = ($k2==0)?'':',';
+                        $_task_names .= $_prefix.$v2['task_name'];
+                    }
+                }
+                $_department_list[$k]['task_names'] = $_task_names;
+                //获取
+                $_department_info = D('Department','Service')->getDepartmentInfo(array('department_id'=>$v['department_id']));
+                $_department_list[$k]['department_name'] = $_department_info['data']['departmentname'];
+            }
+        }
+        return array('code'=>'0', 'msg'=>'获取成功', 'data'=>$_department_list);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 获取自己今日任务
+    |--------------------------------------------------------------------------
+    | @author zgt
+    */
+    public function getMyTask($param)
     {
         $system_user_id = $this->system_user_id;
         //获取部门ID
