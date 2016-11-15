@@ -510,6 +510,9 @@ class SystemUserService extends BaseService
    */
     public function getSystemUsersList($param)
     {
+        if ($param['role_ids']) {
+            $param['role_ids'] = array("IN", $param['role_ids']);
+        }
         //区域存在时获取子集
         if(!empty($param['zone_id'])){
             $_zone_arr = $this->_getZoneIds($param['zone_id']);

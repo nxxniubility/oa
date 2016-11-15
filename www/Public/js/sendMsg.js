@@ -302,3 +302,198 @@ function chkAll(){
 	}
 });
 }
+
+
+$(function(){
+    var ue = UE.getEditor('editor',{
+        toolbars: [
+            ['fontsize','fontfamily', 'undo', 'redo','underline', 'bold','insertimage','spechars','justifyleft','justifyright','justifycenter','emotion']
+        ],
+        initialFrameWidth:460,
+        initialFrameHeight:100,       
+        enableAutoSave:false,
+        elementPathEnabled:false,
+        maximumWords:1000,
+        autoFloatEnabled:false
+    });
+    
+    //获取职位列表
+    common_ajax2('','/SystemApi/Role/getRoleList','no',function(redata){
+        if(redata.data.data){
+            layui.use('laytpl', function(){
+                var laytpl = layui.laytpl;
+                laytpl(demo1.innerHTML).render(redata.data.data, function(result){
+                    $('#role_li').append(result);
+                    $('#search_body').html(result);
+                });
+            });
+        };
+    },1);
+    //获取区域列表
+    common_ajax2('','/SystemApi/Zone/getZoneList','no',function(redata){
+        if(redata.data){
+            layui.use('laytpl', function(){
+                var laytpl = layui.laytpl;
+                laytpl(demo2.innerHTML).render(redata.data, function(result){
+                    $('#zone_li').html(result);
+                    if($.getUrlParam('zone_id')){
+                        var _zone_title = $('#zone_li').find('.fxDone[data-value="'+$.getUrlParam('zone_id')+'"]').text();
+                        $('#zone_li').find('.select_title').text(_zone_title);
+                        $(':input[name="zone_id"]').val($.getUrlParam('zone_id'));
+                    };
+                });
+            });
+        };
+    },1);
+    //获取通知类型
+    common_ajax2('','/SystemApi/Message/getMsgType','no',function(redata){
+        if(redata.data){
+            layui.use('laytpl', function(){
+                var laytpl = layui.laytpl;
+                laytpl(demo4.innerHTML).render(redata.data, function(result){
+                    $('#msg_type').html(result);
+                    if($.getUrlParam('msgtype')){
+                        var _msgtype_title = $('#msg_type').find('.fxDone[data-value="'+$.getUrlParam('msgtype')+'"]').text();
+                        $('#msg_type').find('.select_title').text(_msgtype_title);
+                        $(':input[name="msgtype"]').val($.getUrlParam('msgtype'));
+                    };
+                });
+            });
+        };
+    },1);
+    //选择部门职位
+    $(document).on('click', '.nsDetermineRole', function(){
+        var role_id = '';
+        var role_name = ''
+        $('.nsMiddle').find('.nssNone').remove();
+        for(var i=0;i<$(':input[name="nsChk"]:checked').length;i++){
+            if(i==0){
+                role_id += $(':input[name="nsChk"]:checked').eq(i).val();
+                role_name += $(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsTwo').text()+'/'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text();
+            }else{
+                role_id += ','+$(':input[name="nsChk"]:checked').eq(i).val();
+                role_name += '，'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsTwo').text()+'/'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text();
+            }
+            $('.dn .nssNone').children('.nsLeft').html('<i>&#42</i>'+$(':input[name="nsChk"]:checked').eq(i).parent().siblings('.wNsThr').text()+':');
+            $('.nsNone').before( $('.dn .nssNone').clone());
+            
+        }
+        $(':input[name="role_id"]').val(role_id);
+        $(':input[name="role_name"]').val(role_name);
+        $(':input[name="system_name"]').val('');
+        $(':input[name="system_user_id"]').val('');
+    });
+
+    //获取员工列表
+    $(document).on('click', '.nsSelectPostMan', function(){
+        data = {
+            role_ids:$(':input[name="role_id"]').val(),
+            zone_id:$(':input[name="zone_id"]').val(),
+        };
+        common_ajax2(data,'/SystemApi/SystemUser/getSystemUserList','no',function(redata){
+            if(redata.data.data){
+                layui.use('laytpl', function(){
+                    var laytpl = layui.laytpl;
+                    laytpl(demo3.innerHTML).render(redata.data.data, function(result){
+                        $('#sysuser_li').append(result);
+                        $('#search_body1').html(result);
+                    });
+                });
+            };
+        },1);
+    });
+    $(document).on('click', '.nsDetermineSystem', function(){
+        var system_id = '';
+        var system_name = ''
+        for(var i=0;i<$(':input[name="nsChk2"]:checked').length;i++){
+            if(i==0){
+                system_id += $(':input[name="nsChk2"]:checked').eq(i).val();
+                system_name += $(':input[name="nsChk2"]:checked').eq(i).parent().siblings('.wNsTwo').text();
+            }else{
+                system_id += ','+$(':input[name="nsChk2"]:checked').eq(i).val();
+                system_name += '，'+$(':input[name="nsChk2"]:checked').eq(i).parent().siblings('.wNsTwo').text();
+            }
+        }
+        $(':input[name="system_name"]').val(system_name);
+        $(':input[name="system_user_id"]').val(system_id);
+    });
+    //搜索职位相关-检索
+    $(document).on('click', '.nsSearchSubmitRole', function(){
+        $(':input[name="nsChk"]').attr('checked',false);
+        var val = $(':input[name="nsSelectSearch"]').val();
+        var d_val = $('.nsSelectSearch_d').text();
+        $('.nsDeparMiddle .department_content').remove();
+        if(val.length>0 || d_val!='全部'){
+            $('#search_body .department_content').each(function(i){
+                var zmnumReg=new RegExp( val ,'gim');
+                var zmnumReg2=new RegExp( d_val ,'gim');
+                var name=$(this);
+                if(d_val!='全部'){
+                    if( zmnumReg.test(name.children('.wNsThr').text()) && zmnumReg2.test(name.children('.wNsTwo').text()) ){
+                        $('.department_title').after(name.clone());
+                    }
+                }else{
+                    if( zmnumReg.test(name.children('.wNsThr').text()) ){
+                        $('.department_title').after(name.clone());
+                    }
+                }
+            });
+        }else{
+            $('.department_title').after( $('#search_body .department_content').clone() );
+        }
+    });
+    $(document).on('click', '.nsSubmit', function(){
+        var data = {
+            title:$(':input[name="title"]').val(),
+            content:ue.getContent(),
+            href:$(':input[name="href"]').val(),
+            zone_id:$(':input[name="zone_id"]').val(),
+            msgtype:$(':input[name="msgtype"]').val(),
+            role_id:$(':input[name="role_id"]').val(),
+            system_user_id:$(':input[name="system_user_id"]').val()
+        };
+        common_ajax2(data,'/SystemApi/Message/sendMsg',0,function(redata){
+            if(redata.code!=0){
+                layer.msg(redata.msg,{icon:2});
+            }else{
+                layer.msg('发送成功',{icon:1});
+                window.location.href = "/System/Information/msgList";
+            };
+        });
+    });
+    $(document).on('click', '.nsSearchSubmitSystem', function(){
+        var search_name = $(this).siblings('.nsSelectSearch').val();
+        var role_id = $(':input[name="role_id"]').val();
+        var zone_id = $(':input[name="zone_id"]').val();
+        getSystem (role_id,zone_id,search_name);
+    });
+
+});
+function getSystem (role_ids,zone_id,search_name){
+    $.ajax({
+        url:"{:U('System/Information/sendMsg')}",
+        dataType:'json',
+        type:'post',
+        data:{type:'getSystem',role_id:role_ids,zone_id:zone_id,keyname:search_name},
+        success:function(reflag){
+            $('.systemli').remove();
+            if(reflag.code==0){
+                var html = '';
+                $.each(reflag.data,function (k,v) {
+                    html+= '<dl class="clearfix systemli"><dd class="wNsOne"><input type="checkbox" name="nsChk2" class="nsSelectChk" value="'+v.system_user_id+'"></dd><dd class="wNsTwo">'+v.role_names+'</dd><dd class="wNsThr">'+v.realname+'</dd></dl>';
+                })
+                $('.sysuser_li').append(html);
+
+                var ids = $(':input[name="system_user_id"]').val();
+                if(ids){
+                    ids = ids.split(',');
+                    for(var i=0;i<ids.length;i++){
+                        $('.btn_'+ids[i]).attr('checked',true);
+                    }
+                }
+            }else{
+                layer.msg(reflag.msg, {icon:2})
+            }
+        }
+    });
+}
