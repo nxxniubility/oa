@@ -15,7 +15,7 @@ class NeteaseController extends ApiBaseController
     {
         parent::_initialize();
         //网易云信Key Secret
-        $AppKey = "145dee3e0853d2bca995849901ee7e31";
+        $AppKey = "";
         $AppSecret = "0488bc857ed9";
         $this->header = array(
             'Content-Type: application/x-www-form-urlencoded;charset=utf-8',
