@@ -16,13 +16,13 @@ class NeteaseController extends ApiBaseController
         parent::_initialize();
         //网易云信Key Secret
         $AppKey = "";
-        $AppSecret = "0488bc857ed9";
+        $AppSecret = "";
         $this->header = array(
             'Content-Type: application/x-www-form-urlencoded;charset=utf-8',
             'AppKey:'.$AppKey,
-            'Nonce:'.'zelin1',
+            'Nonce:'.'',
             'CurTime:'.time(),
-            'CheckSum:'.sha1($AppSecret.'zelin1'.time())
+            'CheckSum:'.sha1($AppSecret.''.time())
         );
     }
 
@@ -37,7 +37,7 @@ class NeteaseController extends ApiBaseController
     {
         $url = 'https://api.netease.im/call/ecp/startcall.action';
         $post_data = array(
-            'callerAcc'=>'zelin1',
+            'callerAcc'=>'',
             'caller'=>$caller,
             'callee'=>$callee,
             'record'=>'true',
