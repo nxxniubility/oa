@@ -14,14 +14,14 @@ class Paging{
     /**
      *
      * page:页码  count:总记录数  shownum:每页显示录数  url:开头  urlhtml:url前半段/结尾 type:分页类型
-     * @author zgt
+     * @author nxx
      */
     public $page=null,$count=null,$shownum=null,$url=null,$urlhtmll=null,$urlhtml=null,$pagecount=null,$type=null;
 
     /**
      * 分页生成
      * $page =$_get['']
-     * @author zgt
+     * @author nxx
      */
     public function createPaging(){
         if($this->count==0) return null;
@@ -32,7 +32,7 @@ class Paging{
 
     /*
      * 分页风格
-     * @author zgt
+     * @author nxx
      */
     protected function typePaging($type){
         switch ($type)
@@ -49,7 +49,7 @@ class Paging{
 
 	/*
      * 后台分页
-     * @author zgt
+     * @author nxx
 	 * 每页显示信息（n/条）:{$this->shownum}
      */
     protected function systemUserList_type(){
@@ -98,7 +98,7 @@ class Paging{
 
     /*
      * 后台分页
-     * @author zgt
+     * @author nxx
      */
     protected function system_type(){
         $create_data =
