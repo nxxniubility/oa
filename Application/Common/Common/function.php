@@ -402,7 +402,7 @@ function outExecl($filename, $headarr, $data, $letter, $cache_type = 0)
  * @param  $headarr  一维的数组
  * @param  $data     二维的数组
  * @param  $letter   列数
- * @return   导出到浏览器 弹出下载框
+ * @return   打包下载excel
  * @author   Nxx
  */
 function outExecls($filename, $headarr, $data, $letter, $cache_type = 0)
